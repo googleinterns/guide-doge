@@ -1,9 +1,9 @@
 {
   "name": "guide-doge",
   "version": "0.0.0",
-  "main": "index.js",
+  "main": "index.ts",
   "repository": "https://github.com/googleinterns/guide-doge.git",
-  "author": "Andrew Koroluk <koroluka@google.com>",
+  "author": "Google",
   "license": "Apache-2.0",
   "contributors": [
     "Andrew Baldwin <thebaldwin@google.com>",
@@ -13,7 +13,8 @@
   ],
   "scripts": {
     "start": "parcel index.html",
-    "build": "parcel build <your entry file>"
+    "build": "parcel build index.html",
+    "test": ""
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
