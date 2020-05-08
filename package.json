@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
+    "@types/d3": "^5.7.2",
     "babel-preset-es2015": "^6.24.1",
     "parcel-bundler": "^1.12.4",
     "typescript": "^3.8.3"

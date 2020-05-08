@@ -20,10 +20,10 @@ export async function createLineChart() {
 
   const data = await getData();
 
-  const xAxis = (g) => g
+  const xAxis = (g: d3.Selection<SVGGElement>) => g
       .attr("transform", `translate(0,${height - margin.bottom})`)
       .call(d3.axisBottom(x).ticks(width / 80).tickSizeOuter(0));
-  const yAxis = (g) => g
+  const yAxis = (g: d3.Selection<SVGGElement>) => g
       .attr("transform", `translate(${margin.left},0)`)
       .call(d3.axisLeft(y))
       .call(g => g.select(".domain").remove())
@@ -31,10 +31,10 @@ export async function createLineChart() {
           .attr("x", 3)
           .attr("text-anchor", "start")
           .attr("font-weight", "bold")
-          .text('$ closing price'));
+          .text('$ GOOG closing price'));
 
   const x = d3.scaleUtc()
-      .domain(d3.extent(data, (d) => d.date))
+      .domain(d3.extent<Data, Date>(data, (d) => d.date) as [Date, Date])
       .range([margin.left, width - margin.right]);
   const y = d3.scaleLinear()
       .domain([0, d3.max(data, (d) => d.value)]).nice()
