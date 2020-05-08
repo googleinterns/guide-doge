@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
+    "lib": ["DOM", "ES2018"],
     "module": "ES2015",
     "noImplicitAny": true,
-    "removeComments": true,
     "preserveConstEnums": true,
+    "removeComments": true,
     "sourceMap": true,
-    "types" : ["node"],
-    "lib": ["DOM", "ES2018"]
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "types" : ["node"]
   }
 }
