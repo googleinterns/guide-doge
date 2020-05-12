@@ -45,7 +45,7 @@ import { Row, Measure, Category, ResultRow, Filter } from "./types";
  * a breakdown based on the requested categories.  For more information, see
  * the documentation for the `getDataFor()` method.
  */
-export class Cube {
+export class DataCube {
   constructor(
     private readonly rows: Row[],
     private readonly measures: Measure[],
@@ -205,13 +205,10 @@ export class Cube {
     sortBy: string[]
   ) {
     function getComparator(sortConcept: string) {
-      const categoryIndex = categoryNames.findIndex(
-        (category) => category === sortConcept
-      );
-      if (categoryIndex >= 0) {
+      if (categoryNames.includes(sortConcept)) {
         return (a: ResultRow, b: ResultRow) => {
-            const aCategory = a.categories.get(sortConcept);
-            const bCategory = b.categories.get(sortConcept);
+            const aCategory = a.categories.get(sortConcept)!;
+            const bCategory = b.categories.get(sortConcept)!;
           if (aCategory < bCategory) {
             return -1;
           }
@@ -221,12 +218,9 @@ export class Cube {
           return 0;
         };
       }
-      const measureIndex = measureNames.findIndex(
-        (measure) => measure === sortConcept
-      );
-      if (measureIndex >= 0) {
+      if (measureNames.includes(sortConcept)) {
         return (a: ResultRow, b: ResultRow) =>
-          a.values.get(sortConcept) - b.values.get(sortConcept);
+          a.values.get(sortConcept)! - b.values.get(sortConcept)!;
       }
       return () => 0;
     }

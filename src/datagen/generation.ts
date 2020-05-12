@@ -7,7 +7,7 @@ import {
   ModelSettings,
   Scope,
 } from "./types";
-import { Cube } from "./cube";
+import { DataCube } from "./cube";
 
 /**
  * Creates fake analytics data based on the model given by settings.
@@ -54,7 +54,7 @@ export function generateCube(
   categories: Category[],
   measures: Measure[],
   settings: Partial<ModelSettings> = {}
-): Cube {
+): DataCube {
   const completeSettings: ModelSettings = { ...defaultSettings, ...settings };
   const actualCategories = addNthDay(
     categories,
@@ -72,7 +72,7 @@ export function generateCube(
     completeSettings
   );
 
-  return new Cube(rows, measures, actualCategories);
+  return new DataCube(rows, measures, actualCategories);
 }
 
 const defaultSettings: ModelSettings = {
@@ -134,8 +134,8 @@ function getNormalizedWeights(categories: Category[]) {
 function binarySearch(
   arr: number[],
   probe: number,
-  start: number,
-  end: number
+  start = 0,
+  end = arr.length
 ): number {
   const len = end - start;
   if (len < 2) {
@@ -171,9 +171,7 @@ function generateHits(
     const session = sessionThunk();
     const rowIndex = binarySearch(
       cumulativeWeights,
-      placement,
-      0,
-      cumulativeWeights.length
+      placement
     );
     for (const [index, measure] of measures.entries()) {
       const newSession = !sessions[session].rowsSeen.has(rowIndex);

@@ -1,9 +1,5 @@
 import { Category, Measure, Scope, MeasureType } from "./datagen/types";
 
-
-
-
-
 export const categories: Category[] = [{
     name: 'country',
     values: [{
@@ -57,8 +53,3 @@ export const categories: Category[] = [{
     scope: Scope.EVENT,
     type: MeasureType.SUM,
   }];
-
-  
-
-  
-  

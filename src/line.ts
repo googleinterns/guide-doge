@@ -25,7 +25,7 @@ function getData(): Data[] {
         );
   return data.map((datum) => ({
       date: startDate.plus({ days: datum.categories.get('nthDay') }),
-      value: datum.values.get('activeUsers'),
+      value: datum.values.get('activeUsers')!,
   }));
 }
 
