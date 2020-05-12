@@ -1,13 +1,32 @@
 import * as d3 from 'd3';
-import goog from './goog.csv';
+import { DateTime } from 'luxon'
+import { generateCube } from './datagen/generation';
+import { categories, measures } from './data_config';
+import { betweenDates } from './datagen/filters';
 
 interface Data {
   date: Date;
   value: number;
 }
 
-async function getData(): Promise<Data[]> {
-  return d3.csv(goog, (d) => ({date: new Date(d.Date), value: Number(d.Close)}));
+const cube = generateCube(categories, measures);
+
+function getData(): Data[] {
+  const endDate = DateTime.local();
+  const startDate = endDate.minus({ day: 30 });
+
+  const data = cube.getDataFor(
+    ['nthDay'], 
+    ['activeUsers'], 
+    [betweenDates(
+        new Date(startDate.toMillis()), 
+        new Date(endDate.toMillis()))
+        ]
+        );
+  return data.map((datum) => ({
+      date: startDate.plus({ days: datum.categories.get('nthDay') }),
+      value: datum.values.get('activeUsers'),
+  }));
 }
 
 export async function createLineChart() {
@@ -18,7 +37,7 @@ export async function createLineChart() {
   const svg = d3.create("svg")
       .attr("viewBox", [0, 0, width, height]);
 
-  const data = await getData();
+  const data = getData();
 
   const xAxis = (g: d3.Selection<SVGGElement>) => g
       .attr("transform", `translate(0,${height - margin.bottom})`)
@@ -31,7 +50,7 @@ export async function createLineChart() {
           .attr("x", 3)
           .attr("text-anchor", "start")
           .attr("font-weight", "bold")
-          .text('$ GOOG closing price'));
+          .text('Active Users'));
 
   const x = d3.scaleUtc()
       .domain(d3.extent<Data, Date>(data, (d) => d.date) as [Date, Date])
