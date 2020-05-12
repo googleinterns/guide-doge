@@ -2,4 +2,4 @@
 # the repo. Unless a later match takes precedence,
 # @global-owner1 and @global-owner2 will be requested for
 # review when someone opens a pull request.
-*       @awk34 @mfitz3 @danielyule @baldwin628
+*       @awk34 @mfitz3 @danielyule @baldwin628 @64json
