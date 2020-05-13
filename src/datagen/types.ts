@@ -1,6 +1,6 @@
 /** A description of a type of value that a hit can belong to. */
 export interface Category {
-  /** The cannonical name for this category. */
+  /** The canonical name for this category. */
   name: string;
 
   /** The possible values the category can take on. */
@@ -21,7 +21,7 @@ export interface CategoryValue {
 
 /** A value that can be measured. */
 export interface Measure {
-  /** The cannonical name for this measure. */
+  /** The canonical name for this measure. */
   name: string;
   /** If this measure applies to events, sessions or users. */
   scope: Scope;
@@ -48,7 +48,7 @@ export enum Scope {
 }
 
 /**
- * Used to control the model for data generation.  More details about how this
+ * Used to control the model for data generation. More details about how this
  * is used is available in [generation.ts](./generation.ts).
  */
 export interface ModelSettings {
@@ -84,18 +84,18 @@ export type Filter = (
 ) => (row: Row) => boolean;
 
 /**
- * The internal storage of the cube.  Although the cube is conceptually an
+ * The internal storage of the cube. Although the cube is conceptually an
  * n-dimensional cube of data, in actuality it is a list of rows, to make for
  * easier querying. */
 export interface Row {
-  /** The category values for this row.  */
+  /** The category values for this row. */
   header: (string | number)[];
   /** The measure values for this row. */
   values: number[];
 }
 
 /**
- * The data returned from a query to a cube.  The category and measure values
+ * The data returned from a query to a cube. The category and measure values
  * are stored in a map keyed on the name of the respective category or
  * dimension.
  */

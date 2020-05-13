@@ -1,6 +1,5 @@
 import {createLineChart} from './line';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const module: any;
 
 if (module.hot) {

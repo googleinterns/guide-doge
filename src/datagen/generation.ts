@@ -12,24 +12,24 @@ import {DataCube} from './cube';
 /**
  * Creates fake analytics data based on the model given by settings.
  *
- * The fake data is returned as a Cube.  See [cube.ts](./cube.ts) for more
+ * The fake data is returned as a Cube. See [cube.ts](./cube.ts) for more
  * information on the properties of the cube.
  *
  * The shape of the cube is determined by the categories and measures that are
- * passed in.  The content is generated based on `settings`.  For details on
+ * passed in. The content is generated based on `settings`. For details on
  * what each property in settings does, see the documentation for the settings
  * type in [types.ts](./types.ts).
  *
- * The nthDay category is added to the categories if not present.  The number of
+ * The nthDay category is added to the categories if not present. The number of
  * values is determined by the `days` setting and the weight of each day is
  * determined according to the dailyVariance setting.
  *
- * The data is generated as a series of hits.  Each hit is randomly assigned
+ * The data is generated as a series of hits. Each hit is randomly assigned
  * to a category value for each category, based on the weights for each value.
  *
  * The hit is then added to a measure if it is a hit scoped measure, or if it
  * is a session scoped measure and part of a new session or if it is a user
- * scoped measure and represents a new user.  For measures of type COUNT, they
+ * scoped measure and represents a new user. For measures of type COUNT, they
  * are incremented by 1, whereas for measures of type SUM a random value in its
  * range is selected and added to the measure for that combination of category
  * values.
@@ -208,9 +208,9 @@ function generateEmptyRows(categories: Category[], measures: Measure[]) {
   // This is going to loop through all combinations of category values.
   // The approach we take is to iterate through all the first category's values.
   // Then we move to the next value in the second category and iterate through
-  // all the values in the first category again.  We then move to the next value
+  // all the values in the first category again. We then move to the next value
   // in the second category, and repeat again and again until we've gone through
-  // all the values in the second category.  We then move to the next value
+  // all the values in the second category. We then move to the next value
   // in the third category, then repeat, and so on and so on until we've gone
   // through every possible value.
   do {

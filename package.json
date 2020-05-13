@@ -16,12 +16,15 @@
     "start": "parcel src/index.html",
     "build": "parcel build src/index.html",
     "test": "",
+    "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
     "@types/d3": "^5.7.2",
+    "@types/luxon": "^1.24.0",
+    "@types/random": "^2.1.1",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
     "babel-preset-es2015": "^6.24.1",

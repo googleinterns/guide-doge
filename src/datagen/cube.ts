@@ -1,12 +1,12 @@
 import {Row, Measure, Category, ResultRow, Filter} from './types';
 
 /**
- * This cube is conceptually an n-dimensioanal array of numbers.  The cube
- * represents categories and measures.  Each category corresponds to a
- * dimensioan of the cube.  Each category has several different values it can
- * take on.  Each category value corresponds to a slice of the cube.
+ * This cube is conceptually an n-dimensioanal array of numbers. The cube
+ * represents categories and measures. Each category corresponds to a
+ * dimension of the cube. Each category has several different values it can
+ * take on. Each category value corresponds to a slice of the cube.
  *
- * For example, look at the following two dimensioanal cube (i.e. a table):
+ * For example, look at the following two dimensional cube (i.e. a table):
  *
  *       \ Chrome \ Firefox
  * -------+--------+--------
@@ -14,19 +14,19 @@ import {Row, Measure, Category, ResultRow, Filter} from './types';
  * Canada |  101   |   34
  * Mexico |   72   |  156
  *
- * This table has two categories: Country and Browser.  Country has three
+ * This table has two categories: Country and Browser. Country has three
  * category values: USA, Canada, Mexico, whereas Browser has two: Chrome and
- * Firefox.  This cube has only one measure (say, Active Users).  So, the table
+ * Firefox. This cube has only one measure (say, Active Users). So, the table
  * is saying that there were 65 active users from the USA using Chrome.
  * Similarly there were 156 Firefox users from Mexico.
  *
- * The slice represented by USA is the list [64, 78].  The slice represented by
+ * The slice represented by USA is the list [65, 78]. The slice represented by
  * Chrome is [65, 101, 72].
  *
  * The cube can support any number of categories, and any number of measures.
  * More categories mean a higher dimensional cube, and more measures means each
  * cell in the cube will be represented by a vector where each element in the
- * vector corresponds to a different measure.  Here is a three dimensional
+ * vector corresponds to a different measure. Here is a three dimensional
  * (Gender, Source and OS) cube with two measures (Average Visit Duration and
  * Event Count):
  *
@@ -40,9 +40,9 @@ import {Row, Measure, Category, ResultRow, Filter} from './types';
  * This cube is saying, for example, that female Linux users coming from
  * Search stayed on the page for an average of 5 seconds.
  *
- * The cube can be queried for specific catgories and measures.  This
+ * The cube can be queried for specific categories and measures. This
  * will combine together the values for all the other categories and give
- * a breakdown based on the requested categories.  For more information, see
+ * a breakdown based on the requested categories. For more information, see
  * the documentation for the `getDataFor()` method.
  */
 export class DataCube {
@@ -56,7 +56,7 @@ export class DataCube {
    * Get a breakdown by the given categories in the given measures.
    *
    * Breaks down the data in the cube by the given categories and returns
-   * the given measures in a table.  So, for the following cube, with
+   * the given measures in a table. So, for the following cube, with
    * categories Gender, Source and OS and measures Event Count and Sessions:
    *
    * Male:                              * Female:
@@ -80,11 +80,11 @@ export class DataCube {
    * The value of the measure Sessions for the category value "Direct",
    * for example, is calculated by adding the the Sessions values
    * across all the other categories
-   * (across the top row: 60 + 23 + 64 + 57 + 65 + 34).  Other category
+   * (across the top row: 60 + 23 + 64 + 57 + 65 + 34). Other category
    * values are calculated similarly.
    *
    * The data can be broken down by multiple categories, and multiple
-   * measures can be provided.  For example, given the same cube as before,
+   * measures can be provided. For example, given the same cube as before,
    * with the category names Gender and OS, and measure Event Count, the
    * resulting table will be:
    *
@@ -99,13 +99,13 @@ export class DataCube {
    * Female | Mac     | 105
    * Female | Linux   | 110
    *
-   * Special handling is applied to the "nthDay" category.  No matter what
+   * Special handling is applied to the "nthDay" category. No matter what
    * actual day it corresponds to, the earliest nthDay will always correspond
    * to 0, the second earliest to 1, and so on.
    *
    * This method also supports filtering by category or measure values.
    * Filtering takes place before the counting is done, so it is possible to
-   * filter on categories that are not in the query.  By default, nothing is
+   * filter on categories that are not in the query. By default, nothing is
    * filtered.
    *
    * It's also possible to sort the results by any category or measure.
@@ -224,6 +224,7 @@ export class DataCube {
       }
       return () => 0;
     }
+
     const comparators = sortBy.map(getComparator);
     const combinedComparator = (a: ResultRow, b: ResultRow) => {
       for (const comparator of comparators) {
