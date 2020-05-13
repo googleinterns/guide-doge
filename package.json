@@ -12,8 +12,8 @@
     "Michael Fitzpatrick <mfitz@google.com>"
   ],
   "scripts": {
-    "start": "parcel index.html",
-    "build": "parcel build index.html",
+    "start": "parcel src/index.html",
+    "build": "parcel build src/index.html",
     "test": "",
     "lint": "eslint src --ext .ts"
   },
