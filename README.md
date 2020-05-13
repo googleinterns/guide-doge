@@ -13,7 +13,7 @@
 WHO (World Health Organization) estimates that at least 2.2 billion people have a visual impairment or blindness. While HTML5 comes with various features to improve screen-reader accessibility including accessible data tables, text alternatives, skip links, etc., most of the data visualization are still inaccessible by visually impaired or blind people.
 
 ## Experiments
-In an attempt to improve accessibility to data visualization, a number of experiments will be done in this repo to find alternatives to it.
+In an attempt to improve accessibility to data visualization, a number of experiments will be done in this repo to explore improvements to data consumption for visually impaired or blind users.
 
 ### Audification
 Like visualization is a way of expressing data as visual imagery for sighted user to have better understanding of the data at a glance, audification can be used to express data as auditory imagery for visually impaired or blind user.
