@@ -1,9 +1,8 @@
-name: Lint
+name: Type Check and Lint
 on: pull_request
 
 jobs:
-  lint:
-    name: Lint
+  typecheck-and-lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -13,5 +12,7 @@ jobs:
           node-version: '12.x'
       - name: Install dependencies
         run: npm ci
-      - name: Run ESLint
+      - name: Type Check
+        run: npm run typecheck
+      - name: Lint
         run: npm run lint
