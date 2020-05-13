@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "downlevelIteration": true,
     "lib": ["DOM", "ES2018"],
     "module": "ES2015",
     "noImplicitAny": true,
