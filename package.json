@@ -16,7 +16,8 @@
     "start": "parcel src/index.html",
     "build": "parcel build src/index.html",
     "test": "",
-    "lint": "eslint src --ext .ts"
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",

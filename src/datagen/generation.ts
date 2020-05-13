@@ -1,4 +1,4 @@
-import random from "random";
+import random from 'random';
 import {
   Category,
   Measure,
@@ -6,8 +6,8 @@ import {
   Row,
   ModelSettings,
   Scope,
-} from "./types";
-import { DataCube } from "./cube";
+} from './types';
+import {DataCube} from './cube';
 
 /**
  * Creates fake analytics data based on the model given by settings.
@@ -55,7 +55,7 @@ export function generateCube(
   measures: Measure[],
   settings: Partial<ModelSettings> = {}
 ): DataCube {
-  const completeSettings: ModelSettings = { ...defaultSettings, ...settings };
+  const completeSettings: ModelSettings = {...defaultSettings, ...settings};
   const actualCategories = addNthDay(
     categories,
     completeSettings.days,
@@ -111,23 +111,23 @@ function initalizeUsersAndSessions({
   const users: User[] = [];
   const sessions: Session[] = [];
   for (let i = 0; i < userCount; i++) {
-    const user = { rowsSeen: new Set<number>() };
+    const user = {rowsSeen: new Set<number>()};
     users.push(user);
     const userSessions = Math.round(sessionThunk());
     for (let j = 0; j < userSessions; j++) {
-      sessions.push({ user, rowsSeen: new Set() });
+      sessions.push({user, rowsSeen: new Set()});
     }
   }
   return sessions;
 }
 
 function getNormalizedWeights(categories: Category[]) {
-  return categories.map((category) => {
+  return categories.map(category => {
     const total = category.values.reduce(
       (total, value) => value.weight + total,
       0
     );
-    return category.values.map((value) => value.weight / total);
+    return category.values.map(value => value.weight / total);
   });
 }
 
@@ -141,7 +141,7 @@ function binarySearch(
   if (len < 2) {
     return start;
   }
-  const index = len % 2 == 0 ? (start + end) / 2 : (start + end - 1) / 2;
+  const index = len % 2 === 0 ? (start + end) / 2 : (start + end - 1) / 2;
   if (arr[index] <= probe) {
     return binarySearch(arr, probe, index, end);
   } else {
@@ -161,7 +161,7 @@ function generateHits(
   measures: Measure[],
   cumulativeWeights: number[],
   sessions: Session[],
-  { avgHits, hitStdDev }: { avgHits: number; hitStdDev: number }
+  {avgHits, hitStdDev}: {avgHits: number; hitStdDev: number}
 ) {
   const hitTotal = Math.round(random.normal(avgHits, hitStdDev)());
   const placementThunk = random.uniform();
@@ -169,10 +169,7 @@ function generateHits(
   for (let i = 0; i < hitTotal; i++) {
     const placement = placementThunk();
     const session = sessionThunk();
-    const rowIndex = binarySearch(
-      cumulativeWeights,
-      placement
-    );
+    const rowIndex = binarySearch(cumulativeWeights, placement);
     for (const [index, measure] of measures.entries()) {
       const newSession = !sessions[session].rowsSeen.has(rowIndex);
       const newUser = !sessions[session].user.rowsSeen.has(rowIndex);
@@ -222,7 +219,7 @@ function generateEmptyRows(categories: Category[], measures: Measure[]) {
       (category, index) => category.values[categoryValueIndices[index]].name
     );
     const values = measures.map(() => 0);
-    rows.push({ header, values });
+    rows.push({header, values});
 
     // Start with the first category
     categoryIndex = 0;
@@ -279,7 +276,7 @@ function addNthDay(
   days: number,
   dailyVariance: number
 ): Category[] {
-  if (categories.find((category) => category.name === "nthDay")) {
+  if (categories.find(category => category.name === 'nthDay')) {
     return categories;
   }
   const dailyThunk = random.normal(1, dailyVariance);
@@ -292,7 +289,7 @@ function addNthDay(
   }
   return [
     {
-      name: "nthDay",
+      name: 'nthDay',
       values,
     },
     ...categories,

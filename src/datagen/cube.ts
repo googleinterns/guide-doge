@@ -1,4 +1,4 @@
-import { Row, Measure, Category, ResultRow, Filter } from "./types";
+import {Row, Measure, Category, ResultRow, Filter} from './types';
 
 /**
  * This cube is conceptually an n-dimensioanal array of numbers.  The cube
@@ -123,23 +123,23 @@ export class DataCube {
     filters: Filter[] = [],
     sortBy?: string[]
   ): ResultRow[] {
-    const measureIndices = measureNames.map((name) =>
-      this.measures.findIndex((measure) => measure.name === name)
+    const measureIndices = measureNames.map(name =>
+      this.measures.findIndex(measure => measure.name === name)
     );
-    const categoryIndices = categoryNames.map((name) =>
-      this.categories.findIndex((category) => category.name === name)
+    const categoryIndices = categoryNames.map(name =>
+      this.categories.findIndex(category => category.name === name)
     );
-    const categoryTrie: TrieNode = { children: {} };
-    const filterFuncs = filters.map((filter) =>
+    const categoryTrie: TrieNode = {children: {}};
+    const filterFuncs = filters.map(filter =>
       filter(this.categories, this.measures)
     );
-    for (const row of this.rows.filter((row) =>
-      filterFuncs.every((filter) => filter(row))
+    for (const row of this.rows.filter(row =>
+      filterFuncs.every(filter => filter(row))
     )) {
       let trieNode = categoryTrie;
       for (const categoryIndex of categoryIndices) {
         if (!trieNode.children[row.header[categoryIndex]]) {
-          trieNode.children[row.header[categoryIndex]] = { children: {} };
+          trieNode.children[row.header[categoryIndex]] = {children: {}};
         }
         trieNode = trieNode.children[row.header[categoryIndex]];
       }
@@ -183,7 +183,7 @@ export class DataCube {
   }
 
   private normalizeNthDay(result: ResultRow[], categoryNames: string[]) {
-    const nthDayIndex = categoryNames.findIndex((name) => name === "nthDay");
+    const nthDayIndex = categoryNames.findIndex(name => name === 'nthDay');
     if (nthDayIndex < 0) {
       return;
     }
@@ -193,7 +193,7 @@ export class DataCube {
       0
     );
     for (const row of result) {
-        const nthDay = row.categories.get('nthDay') as number;
+      const nthDay = row.categories.get('nthDay') as number;
       row.categories.set('nthDay', largestNthDay - nthDay);
     }
   }
@@ -207,8 +207,8 @@ export class DataCube {
     function getComparator(sortConcept: string) {
       if (categoryNames.includes(sortConcept)) {
         return (a: ResultRow, b: ResultRow) => {
-            const aCategory = a.categories.get(sortConcept)!;
-            const bCategory = b.categories.get(sortConcept)!;
+          const aCategory = a.categories.get(sortConcept)!;
+          const bCategory = b.categories.get(sortConcept)!;
           if (aCategory < bCategory) {
             return -1;
           }
