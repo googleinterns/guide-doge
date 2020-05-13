@@ -1,4 +1,4 @@
-import {createLineChart} from './src/line';
+import {createLineChart} from './line';
 
 if (module.hot) {
   module.hot.accept();

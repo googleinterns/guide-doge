@@ -12,14 +12,18 @@
     "Michael Fitzpatrick <mfitz@google.com>"
   ],
   "scripts": {
-    "start": "parcel index.html",
-    "build": "parcel build index.html",
-    "test": ""
+    "start": "parcel src/index.html",
+    "build": "parcel build src/index.html",
+    "test": "",
+    "lint": "eslint src --ext .ts"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
     "@types/d3": "^5.7.2",
+    "@typescript-eslint/eslint-plugin": "^2.33.0",
+    "@typescript-eslint/parser": "^2.33.0",
     "babel-preset-es2015": "^6.24.1",
+    "eslint": "^7.0.0",
     "parcel-bundler": "^1.12.4",
     "sass": "^1.26.5",
     "typescript": "^3.8.3"
