@@ -9,7 +9,8 @@
     "Andrew Baldwin <thebaldwin@google.com>",
     "Andrew Koroluk <koroluka@google.com>",
     "Daniel Yule <danielyule@google.com>",
-    "Michael Fitzpatrick <mfitz@google.com>"
+    "Michael Fitzpatrick <mfitz@google.com>",
+    "Jinseo Park <jinseo@google.com>"
   ],
   "scripts": {
     "start": "parcel src/index.html",
