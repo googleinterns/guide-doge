@@ -1,14 +1,17 @@
 {
   "compilerOptions": {
     "downlevelIteration": true,
-    "lib": ["DOM", "ES2018"],
-    "module": "ES2015",
+    "lib": [
+      "dom",
+      "es2018"
+    ],
+    "module": "es2015",
     "noImplicitAny": true,
+    "esModuleInterop": true,
     "preserveConstEnums": true,
     "removeComments": true,
     "sourceMap": true,
     "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "types" : ["node"]
+    "strictFunctionTypes": true
   }
 }
