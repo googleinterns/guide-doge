@@ -1,4 +1,4 @@
-import d3 from 'd3';
+import * as d3 from 'd3';
 import {DateTime} from 'luxon';
 import {generateCube} from './datagen/generation';
 import {categories, measures} from './data_config';
@@ -37,28 +37,6 @@ export async function createLineChart() {
 
   const data = getData();
 
-  const xAxis = (g: d3.Selection<SVGGElement, any, any, any>) =>
-    g.attr('transform', `translate(0,${height - margin.bottom})`).call(
-      d3
-        .axisBottom(x)
-        .ticks(width / 80)
-        .tickSizeOuter(0)
-    );
-  const yAxis = (g: d3.Selection<SVGGElement, any, any, any>) =>
-    g
-      .attr('transform', `translate(${margin.left},0)`)
-      .call(d3.axisLeft(y))
-      .call(g => g.select('.domain').remove())
-      .call(g =>
-        g
-          .select('.tick:last-of-type text')
-          .clone()
-          .attr('x', 3)
-          .attr('text-anchor', 'start')
-          .attr('font-weight', 'bold')
-          .text('Active Users')
-      );
-
   const x = d3
     .scaleUtc()
     .domain(d3.extent<Datum, Date>(data, d => d.date) as [Date, Date])
@@ -75,9 +53,30 @@ export async function createLineChart() {
     .x(d => x(d.date))
     .y(d => y(d.value));
 
-  svg.append('g').call(xAxis);
+  svg
+    .append('g')
+    .attr('transform', `translate(0,${height - margin.bottom})`)
+    .call(
+      d3
+        .axisBottom(x)
+        .ticks(width / 80)
+        .tickSizeOuter(0)
+    );
 
-  svg.append('g').call(yAxis);
+  svg
+    .append('g')
+    .attr('transform', `translate(${margin.left},0)`)
+    .call(d3.axisLeft(y))
+    .call(g => g.select('.domain').remove())
+    .call(g =>
+      g
+        .select('.tick:last-of-type text')
+        .clone()
+        .attr('x', 3)
+        .attr('text-anchor', 'start')
+        .attr('font-weight', 'bold')
+        .text('Active Users')
+    );
 
   svg
     .append('path')
