@@ -1,4 +1,4 @@
-import {Row, Measure, Category, ResultRow, Filter} from './types';
+import {Row, Measure, Category, ResultRow, Filter, TrieNode} from './types';
 
 /**
  * This cube is conceptually an n-dimensioanal array of numbers. The cube
@@ -237,9 +237,4 @@ export class DataCube {
     };
     results.sort(combinedComparator);
   }
-}
-
-interface TrieNode {
-  children: Record<string, TrieNode>;
-  values?: number[];
 }

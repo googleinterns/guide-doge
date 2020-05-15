@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import {DateTime} from 'luxon';
-import {generateCube} from './datagen/generation';
+import {MockDataCube} from './datagen/MockDataCube';
 import {categories, measures} from './data_config';
 import {betweenDates} from './datagen/filters';
 
@@ -9,7 +9,7 @@ interface Datum {
   value: number;
 }
 
-const cube = generateCube(categories, measures);
+const cube = new MockDataCube(categories, measures);
 
 function getData(): Datum[] {
   const endDate = DateTime.local();
