@@ -5,6 +5,7 @@
       "dom",
       "es2018"
     ],
+    "target": "es2015",
     "module": "es2015",
     "noImplicitAny": true,
     "esModuleInterop": true,

@@ -1,6 +1,8 @@
-export interface Margins {
-  top: number;
-  bottom: number;
-  left: number;
-  right: number;
+export interface RenderOptions {
+  height: number;
+  width: number;
+  marginTop: number;
+  marginRight: number;
+  marginBottom: number;
+  marginLeft: number;
 }

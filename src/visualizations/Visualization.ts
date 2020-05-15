@@ -2,6 +2,7 @@ import * as d3 from 'd3';
 import {DateTime} from 'luxon';
 import {DataCube} from '../datagen/DataCube';
 import {betweenDates} from '../datagen/filters';
+import {RenderOptions} from './types';
 
 export interface Datum {
   date: Date;
@@ -9,7 +10,16 @@ export interface Datum {
 }
 
 export abstract class Visualization {
-  protected data: Datum[];
+  static defaultRenderOptions: RenderOptions = {
+    height: 500,
+    width: 800,
+    marginTop: 20,
+    marginRight: 30,
+    marginBottom: 30,
+    marginLeft: 40,
+  };
+
+  public data: Datum[];
 
   constructor(cube: DataCube, day = 30) {
     const endDate = DateTime.local();
@@ -29,7 +39,7 @@ export abstract class Visualization {
       }));
   }
 
-  abstract async render(): Promise<
-    d3.Selection<SVGSVGElement, undefined, null, undefined>
-  >;
+  abstract async render(
+    renderOptions?: Partial<RenderOptions>
+  ): Promise<d3.Selection<SVGSVGElement, undefined, null, undefined>>;
 }
