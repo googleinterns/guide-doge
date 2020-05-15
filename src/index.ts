@@ -1,4 +1,13 @@
-import {createLineChart} from './line';
+import {LineChart} from './visualizations/LineChart';
+import {MockDataCube} from './datagen/MockDataCube';
+import {
+  activeUserMeasure,
+  browserCategory,
+  countryCategory,
+  eventCountMeasure,
+  revenueMeasure,
+  sourceCategory,
+} from './datagen/presets';
 
 declare const module: any;
 
@@ -18,11 +27,17 @@ const chartDiv = assertExists(
 );
 
 function init() {
-  createLineChart().then(node => {
+  const dataCube = new MockDataCube(
+    [countryCategory, browserCategory, sourceCategory],
+    [activeUserMeasure, revenueMeasure, eventCountMeasure]
+  );
+  const lineChart = new LineChart(dataCube);
+  lineChart.render().then(node => {
     chartDiv.textContent = '';
     chartDiv.appendChild(node);
   });
 }
+
 init();
 
 if (module.hot) {
