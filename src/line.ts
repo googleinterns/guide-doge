@@ -1,7 +1,14 @@
 import * as d3 from 'd3';
 import {DateTime} from 'luxon';
 import {MockDataCube} from './datagen/MockDataCube';
-import {categories, measures} from './data_config';
+import {
+  activeUserMeasure,
+  browserCategory,
+  countryCategory,
+  eventCountMeasure,
+  revenueMeasure,
+  sourceCategory,
+} from './datagen/presets';
 import {betweenDates} from './datagen/filters';
 
 interface Datum {
@@ -9,7 +16,10 @@ interface Datum {
   value: number;
 }
 
-const cube = new MockDataCube(categories, measures);
+const cube = new MockDataCube(
+  [countryCategory, browserCategory, sourceCategory],
+  [activeUserMeasure, revenueMeasure, eventCountMeasure]
+);
 
 function getData(): Datum[] {
   const endDate = DateTime.local();
