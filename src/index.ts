@@ -32,9 +32,9 @@ function init() {
     [activeUserMeasure, revenueMeasure, eventCountMeasure]
   );
   const lineChart = new LineChart(dataCube);
-  lineChart.render().then(node => {
+  lineChart.render().then(svg => {
     chartDiv.textContent = '';
-    chartDiv.appendChild(node);
+    chartDiv.appendChild(svg.node()!);
   });
 }
 

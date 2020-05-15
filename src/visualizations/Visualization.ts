@@ -1,3 +1,4 @@
+import * as d3 from 'd3';
 import {DateTime} from 'luxon';
 import {DataCube} from '../datagen/DataCube';
 import {betweenDates} from '../datagen/filters';
@@ -28,5 +29,7 @@ export abstract class Visualization {
       }));
   }
 
-  abstract async render(): Promise<Element>;
+  abstract async render(): Promise<
+    d3.Selection<SVGSVGElement, undefined, null, undefined>
+  >;
 }
