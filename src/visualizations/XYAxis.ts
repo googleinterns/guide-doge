@@ -51,6 +51,8 @@ export abstract class XYAxis extends Visualization {
           .text('Active Users')
       );
 
+    svg.selectAll('g.tick').attr('aria-hidden', true);
+
     return svg;
   }
 }
