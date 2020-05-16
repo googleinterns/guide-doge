@@ -1,14 +1,9 @@
 import * as d3 from 'd3';
-import {RenderOptions} from './types';
-import {Datum, Visualization} from './Visualization';
+import {Datum, RenderOptions, SVGSelection} from './types';
+import {Visualization} from './Visualization';
 
 export abstract class XYAxis extends Visualization {
-  protected scaleX: d3.ScaleTime<number, number>;
-  protected scaleY: d3.ScaleLinear<number, number>;
-  public xAxis: d3.Selection<SVGGElement, undefined, null, undefined>;
-  public yAxis: d3.Selection<SVGGElement, undefined, null, undefined>;
-
-  async render(renderOptions?: Partial<RenderOptions>) {
+  render(renderOptions?: Partial<RenderOptions>) {
     const {height, width, marginTop, marginRight, marginBottom, marginLeft} = {
       ...Visualization.defaultRenderOptions,
       ...renderOptions,
@@ -18,31 +13,31 @@ export abstract class XYAxis extends Visualization {
       .create('svg')
       .attr('viewBox', [0, 0, width, height].join(' '));
 
-    this.scaleX = d3
+    const scaleX = d3
       .scaleUtc()
       .domain(d3.extent<Datum, Date>(this.data, d => d.date) as [Date, Date])
       .range([marginLeft, width - marginRight]);
 
-    this.scaleY = d3
+    const scaleY = d3
       .scaleLinear()
       .domain([0, d3.max(this.data, d => d.value)!])
       .nice()
       .range([height - marginBottom, marginTop]);
 
-    this.xAxis = svg
+    svg
       .append('g')
       .attr('transform', `translate(0,${height - marginBottom})`)
       .call(
         d3
-          .axisBottom(this.scaleX)
+          .axisBottom(scaleX)
           .ticks(width / 80)
           .tickSizeOuter(0)
       );
 
-    this.yAxis = svg
+    svg
       .append('g')
       .attr('transform', `translate(${marginLeft},0)`)
-      .call(d3.axisLeft(this.scaleY))
+      .call(d3.axisLeft(scaleY))
       // .call(g => g.select('.domain').remove())
       .call(g =>
         g
@@ -56,6 +51,14 @@ export abstract class XYAxis extends Visualization {
 
     svg.selectAll('g.tick').attr('aria-hidden', true);
 
+    this.appendChart(svg, scaleX, scaleY);
+
     return svg;
   }
+
+  abstract appendChart(
+    svg: SVGSelection,
+    scaleX: d3.ScaleTime<number, number>,
+    scaleY: d3.ScaleLinear<number, number>
+  ): void;
 }

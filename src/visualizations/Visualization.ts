@@ -1,13 +1,7 @@
-import * as d3 from 'd3';
-import {DateTime} from 'luxon';
 import {DataCube} from '../datagen/DataCube';
 import {betweenDates} from '../datagen/filters';
-import {RenderOptions} from './types';
-
-export interface Datum {
-  date: Date;
-  value: number;
-}
+import {Datum, RenderOptions, SVGSelection} from './types';
+import {DateTime} from 'luxon';
 
 export abstract class Visualization {
   static defaultRenderOptions: RenderOptions = {
@@ -39,7 +33,5 @@ export abstract class Visualization {
       }));
   }
 
-  abstract async render(
-    renderOptions?: Partial<RenderOptions>
-  ): Promise<d3.Selection<SVGSVGElement, undefined, null, undefined>>;
+  abstract render(renderOptions?: Partial<RenderOptions>): SVGSelection;
 }

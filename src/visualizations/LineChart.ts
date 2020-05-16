@@ -1,17 +1,18 @@
 import * as d3 from 'd3';
-import {Datum} from './Visualization';
+import {Datum, SVGSelection} from './types';
 import {XYAxis} from './XYAxis';
-import {RenderOptions} from './types';
 
 export class LineChart extends XYAxis {
-  async render(renderOptions?: Partial<RenderOptions>) {
-    const svg = await super.render(renderOptions);
-
+  appendChart(
+    svg: SVGSelection,
+    scaleX: d3.ScaleTime<number, number>,
+    scaleY: d3.ScaleLinear<number, number>
+  ) {
     const line = d3
       .line<Datum>()
       .defined(d => !isNaN(d.value))
-      .x(d => this.scaleX(d.date))
-      .y(d => this.scaleY(d.value));
+      .x(d => scaleX(d.date))
+      .y(d => scaleY(d.value));
 
     svg
       .append('path')
@@ -22,7 +23,5 @@ export class LineChart extends XYAxis {
       .attr('stroke-linejoin', 'round')
       .attr('stroke-linecap', 'round')
       .attr('d', line);
-
-    return svg;
   }
 }

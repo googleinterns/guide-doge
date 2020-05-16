@@ -26,19 +26,18 @@ const chartDiv = assertExists(
   document.getElementById('chart') as HTMLDivElement
 );
 
-function init() {
+async function init() {
   const dataCube = new MockDataCube(
     [countryCategory, browserCategory, sourceCategory],
     [activeUserMeasure, revenueMeasure, eventCountMeasure]
   );
   const lineChart = new LineChart(dataCube);
-  lineChart.render().then(svg => {
-    chartDiv.textContent = '';
-    chartDiv.appendChild(svg.node()!);
-  });
+  const svg = lineChart.render();
+  chartDiv.textContent = '';
+  chartDiv.appendChild(svg.node()!);
 }
 
-init();
+init().catch(console.error);
 
 if (module.hot) {
   module.hot.dispose(() => {
@@ -46,6 +45,6 @@ if (module.hot) {
   });
 
   module.hot.accept(() => {
-    init();
+    init().catch(console.error);
   });
 }
