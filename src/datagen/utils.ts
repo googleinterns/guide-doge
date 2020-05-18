@@ -179,14 +179,7 @@ export function generateCumulativeWeights(rows: Row[], categories: Category[]) {
   );
 }
 
-export function addNthDay(
-  categories: Category[],
-  days: number,
-  dailyVariance: number
-): Category[] {
-  if (categories.find(category => category.name === 'nthDay')) {
-    return categories;
-  }
+export function generateNthDay(days: number, dailyVariance: number): Category {
   const dailyThunk = random.normal(1, dailyVariance);
   const values = [];
   for (let day = 0; day < days; day++) {
@@ -195,11 +188,8 @@ export function addNthDay(
       weight: dailyThunk(),
     });
   }
-  return [
-    {
-      name: 'nthDay',
-      values,
-    },
-    ...categories,
-  ];
+  return {
+    name: 'nthDay',
+    values,
+  };
 }

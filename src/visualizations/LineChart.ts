@@ -1,8 +1,8 @@
 import * as d3 from 'd3';
 import {Datum, SVGSelection} from './types';
-import {XYAxis} from './XYAxis';
+import {XYChart} from './XYChart';
 
-export class LineChart extends XYAxis {
+export class LineChart extends XYChart {
   appendChart(
     svg: SVGSelection,
     scaleX: d3.ScaleTime<number, number>,

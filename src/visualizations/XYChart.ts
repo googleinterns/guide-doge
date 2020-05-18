@@ -1,8 +1,33 @@
 import * as d3 from 'd3';
 import {Datum, RenderOptions, SVGSelection} from './types';
 import {Visualization} from './Visualization';
+import {DataCube} from '../datagen/DataCube';
+import {DateTime} from 'luxon';
+import {betweenDates} from '../datagen/filters';
 
-export abstract class XYAxis extends Visualization {
+export abstract class XYChart extends Visualization {
+  protected data: Datum[];
+
+  constructor(dataCube: DataCube, categoryName: string, measureName: string) {
+    super(dataCube);
+
+    const endDate = DateTime.local();
+    const startDate = endDate.minus({day: 30});
+
+    this.data = dataCube
+      .getDataFor(
+        [categoryName],
+        [measureName],
+        [betweenDates(startDate.toJSDate(), endDate.toJSDate())]
+      )
+      .map(datum => ({
+        date: startDate
+          .plus({days: datum.categories.get(categoryName) as number})
+          .toJSDate(),
+        value: datum.values.get(measureName)!,
+      }));
+  }
+
   render(renderOptions?: Partial<RenderOptions>) {
     const {height, width, marginTop, marginRight, marginBottom, marginLeft} = {
       ...Visualization.defaultRenderOptions,

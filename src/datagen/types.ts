@@ -83,6 +83,8 @@ export interface SessionGenerationSettings {
 }
 
 export interface NthDayGenerationSettings {
+  /** Whether to generate nth day category or not */
+  nthDay: boolean;
   /** The number of days worth of data to generate. */
   days: number;
   /** How much the number of hits can vary from day to day. */

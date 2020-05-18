@@ -1,10 +1,10 @@
 import {Category, Measure, ModelSettings} from './types';
 import {DataCube} from './DataCube';
 import {
-  addNthDay,
   generateCumulativeWeights,
   generateEmptyRows,
   generateHits,
+  generateNthDay,
   generateUsersAndSessions,
 } from './utils';
 
@@ -54,6 +54,7 @@ export class MockDataCube extends DataCube {
     userStdDev: 100,
     avgSessionsPerUser: 5,
     sessionsPerUserStdDev: 3,
+    nthDay: true,
     days: 60,
     dailyStdDev: 0.1,
   };
@@ -67,11 +68,14 @@ export class MockDataCube extends DataCube {
       ...MockDataCube.defaultSettings,
       ...settings,
     };
-    const actualCategories = addNthDay(
-      categories,
-      completeSettings.days,
-      completeSettings.dailyStdDev
-    );
+    const actualCategories = [...categories];
+    if (completeSettings.nthDay) {
+      const nthDayCategory = generateNthDay(
+        completeSettings.days,
+        completeSettings.dailyStdDev
+      );
+      actualCategories.push(nthDayCategory);
+    }
     const rows = generateEmptyRows(actualCategories, measures);
     const cumulativeWeights = generateCumulativeWeights(rows, actualCategories);
 

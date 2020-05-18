@@ -9,9 +9,9 @@ export interface RenderOptions {
   marginLeft: number;
 }
 
-export interface Datum {
-  date: Date;
-  value: number;
+export interface Datum<X = Date, Y = number> {
+  date: X;
+  value: Y;
 }
 
 export type SVGSelection = d3.Selection<

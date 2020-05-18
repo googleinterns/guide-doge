@@ -1,13 +1,6 @@
 import {LineChart} from './visualizations/LineChart';
 import {MockDataCube} from './datagen/MockDataCube';
-import {
-  activeUserMeasure,
-  browserCategory,
-  countryCategory,
-  eventCountMeasure,
-  revenueMeasure,
-  sourceCategory,
-} from './datagen/presets';
+import {activeUserMeasure,} from './datagen/presets';
 
 declare const module: any;
 
@@ -27,11 +20,15 @@ const chartDiv = assertExists(
 );
 
 async function init() {
-  const dataCube = new MockDataCube(
-    [countryCategory, browserCategory, sourceCategory],
-    [activeUserMeasure, revenueMeasure, eventCountMeasure]
-  );
-  const lineChart = new LineChart(dataCube);
+  const dataCube = new MockDataCube([], [activeUserMeasure], {
+    avgHits: 10000,
+    hitStdDev: 100,
+    avgUsers: 100,
+    userStdDev: 1,
+    avgSessionsPerUser: 5,
+    sessionsPerUserStdDev: 3,
+  });
+  const lineChart = new LineChart(dataCube, 'nthDay', activeUserMeasure.name);
   const svg = lineChart.render();
   chartDiv.textContent = '';
   chartDiv.appendChild(svg.node()!);

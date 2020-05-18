@@ -1,7 +1,5 @@
+import {RenderOptions, SVGSelection} from './types';
 import {DataCube} from '../datagen/DataCube';
-import {betweenDates} from '../datagen/filters';
-import {Datum, RenderOptions, SVGSelection} from './types';
-import {DateTime} from 'luxon';
 
 export abstract class Visualization {
   static defaultRenderOptions: RenderOptions = {
@@ -13,25 +11,7 @@ export abstract class Visualization {
     marginLeft: 40,
   };
 
-  public data: Datum[];
-
-  constructor(cube: DataCube, day = 30) {
-    const endDate = DateTime.local();
-    const startDate = endDate.minus({day});
-
-    this.data = cube
-      .getDataFor(
-        ['nthDay'],
-        ['activeUsers'],
-        [betweenDates(startDate.toJSDate(), endDate.toJSDate())]
-      )
-      .map(datum => ({
-        date: startDate
-          .plus({days: datum.categories.get('nthDay') as number})
-          .toJSDate(),
-        value: datum.values.get('activeUsers')!,
-      }));
-  }
+  protected constructor(protected dataCube: DataCube) {}
 
   abstract render(renderOptions?: Partial<RenderOptions>): SVGSelection;
 }
