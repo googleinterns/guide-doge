@@ -1,6 +1,6 @@
 import {LineChart} from './visualizations/LineChart';
 import {MockDataCube} from './datagen/MockDataCube';
-import {activeUserMeasure,} from './datagen/presets';
+import {activeUserMeasure} from './datagen/presets';
 
 declare const module: any;
 
