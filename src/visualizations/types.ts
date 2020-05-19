@@ -20,3 +20,5 @@ export type SVGSelection = d3.Selection<
   null,
   undefined
 >;
+
+export type ElementSelection = d3.Selection<any, undefined, null, undefined>;
