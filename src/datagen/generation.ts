@@ -1,13 +1,15 @@
 import random from 'random';
 import {
   Category,
+  HitGenerationSettings,
   Measure,
   MeasureType,
-  Row,
   ModelSettings,
+  Row,
   Scope,
+  SessionGenerationSettings,
 } from './types';
-import {DataCube} from './cube';
+import {DataCube} from './DataCube';
 
 /**
  * Creates fake analytics data based on the model given by settings.
@@ -55,12 +57,18 @@ export function generateCube(
   measures: Measure[],
   settings: Partial<ModelSettings> = {}
 ): DataCube {
-  const completeSettings: ModelSettings = {...defaultSettings, ...settings};
-  const actualCategories = addNthDay(
-    categories,
-    completeSettings.days,
-    completeSettings.dailyStdDev
-  );
+  const completeSettings: ModelSettings = {
+    ...defaultSettings,
+    ...settings,
+  };
+  const actualCategories = [...categories];
+  if (completeSettings.nthDay) {
+    const nthDayCategory = generateNthDay(
+      completeSettings.days,
+      completeSettings.dailyStdDev
+    );
+    actualCategories.push(nthDayCategory);
+  }
   const rows = generateEmptyRows(actualCategories, measures);
   const cumulativeWeights = generateCumulativeWeights(rows, actualCategories);
 
@@ -68,7 +76,7 @@ export function generateCube(
     rows,
     measures,
     cumulativeWeights,
-    initalizeUsersAndSessions(completeSettings),
+    generateUsersAndSessions(completeSettings),
     completeSettings
   );
 
@@ -82,6 +90,7 @@ const defaultSettings: ModelSettings = {
   userStdDev: 100,
   avgSessionsPerUser: 5,
   sessionsPerUserStdDev: 3,
+  nthDay: true,
   days: 60,
   dailyStdDev: 0.1,
 };
@@ -95,24 +104,17 @@ interface Session {
   rowsSeen: Set<number>;
 }
 
-function initalizeUsersAndSessions({
+function generateUsersAndSessions({
   avgUsers,
   userStdDev,
   avgSessionsPerUser,
   sessionsPerUserStdDev,
-}: {
-  avgUsers: number;
-  userStdDev: number;
-  avgSessionsPerUser: number;
-  sessionsPerUserStdDev: number;
-}) {
+}: SessionGenerationSettings) {
   const userCount = Math.round(random.normal(avgUsers, userStdDev)());
   const sessionThunk = random.normal(avgSessionsPerUser, sessionsPerUserStdDev);
-  const users: User[] = [];
   const sessions: Session[] = [];
   for (let i = 0; i < userCount; i++) {
     const user = {rowsSeen: new Set<number>()};
-    users.push(user);
     const userSessions = Math.round(sessionThunk());
     for (let j = 0; j < userSessions; j++) {
       sessions.push({user, rowsSeen: new Set()});
@@ -161,7 +163,7 @@ function generateHits(
   measures: Measure[],
   cumulativeWeights: number[],
   sessions: Session[],
-  {avgHits, hitStdDev}: {avgHits: number; hitStdDev: number}
+  {avgHits, hitStdDev}: HitGenerationSettings
 ) {
   const hitTotal = Math.round(random.normal(avgHits, hitStdDev)());
   const placementThunk = random.uniform();
@@ -271,14 +273,7 @@ function generateCumulativeWeights(rows: Row[], categories: Category[]) {
   );
 }
 
-function addNthDay(
-  categories: Category[],
-  days: number,
-  dailyVariance: number
-): Category[] {
-  if (categories.find(category => category.name === 'nthDay')) {
-    return categories;
-  }
+function generateNthDay(days: number, dailyVariance: number): Category {
   const dailyThunk = random.normal(1, dailyVariance);
   const values = [];
   for (let day = 0; day < days; day++) {
@@ -287,11 +282,8 @@ function addNthDay(
       weight: dailyThunk(),
     });
   }
-  return [
-    {
-      name: 'nthDay',
-      values,
-    },
-    ...categories,
-  ];
+  return {
+    name: 'nthDay',
+    values,
+  };
 }

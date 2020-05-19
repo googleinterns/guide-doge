@@ -51,11 +51,18 @@ export enum Scope {
  * Used to control the model for data generation. More details about how this
  * is used is available in [generation.ts](./generation.ts).
  */
-export interface ModelSettings {
+export type ModelSettings = HitGenerationSettings &
+  SessionGenerationSettings &
+  NthDayGenerationSettings;
+
+export interface HitGenerationSettings {
   /** The average number of hits over the lifetime of the data generation. */
   avgHits: number;
-  /** The standard deviation of htis over the time lifetime of the data generation. */
+  /** The standard deviation of hits over the time lifetime of the data generation. */
   hitStdDev: number;
+}
+
+export interface SessionGenerationSettings {
   /** The average number of users for this data generation. */
   avgUsers: number;
   /** The standard deviation of users for this data generation. */
@@ -64,6 +71,11 @@ export interface ModelSettings {
   avgSessionsPerUser: number;
   /** The standard deviation of sessions per user. */
   sessionsPerUserStdDev: number;
+}
+
+export interface NthDayGenerationSettings {
+  /** Whether to generate nth day category or not */
+  nthDay: boolean;
   /** The number of days worth of data to generate. */
   days: number;
   /** How much the number of hits can vary from day to day. */

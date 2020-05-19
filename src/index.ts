@@ -1,4 +1,13 @@
-import {createLineChart} from './line';
+import {LineChart} from './visualizations/LineChart';
+import {generateCube} from './datagen/generation';
+import {
+  activeUserMeasure,
+  browserCategory,
+  countryCategory,
+  eventCountMeasure,
+  revenueMeasure,
+  sourceCategory,
+} from './datagen/presets';
 
 declare const module: any;
 
@@ -17,13 +26,26 @@ const chartDiv = assertExists(
   document.getElementById('chart') as HTMLDivElement
 );
 
-function init() {
-  createLineChart().then(node => {
-    chartDiv.textContent = '';
-    chartDiv.appendChild(node);
-  });
+async function init() {
+  const dataCube = generateCube(
+    [countryCategory, browserCategory, sourceCategory],
+    [activeUserMeasure, revenueMeasure, eventCountMeasure],
+    {
+      avgHits: 10000,
+      hitStdDev: 100,
+      avgUsers: 100,
+      userStdDev: 1,
+      avgSessionsPerUser: 5,
+      sessionsPerUserStdDev: 3,
+    }
+  );
+  const lineChart = new LineChart(dataCube, 'nthDay', activeUserMeasure.name);
+  const svg = lineChart.render();
+  chartDiv.textContent = '';
+  chartDiv.appendChild(svg.node()!);
 }
-init();
+
+init().catch(console.error);
 
 if (module.hot) {
   module.hot.dispose(() => {
@@ -31,6 +53,6 @@ if (module.hot) {
   });
 
   module.hot.accept(() => {
-    init();
+    init().catch(console.error);
   });
 }

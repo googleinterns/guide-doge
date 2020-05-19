@@ -1,7 +1,7 @@
 import {Row, Measure, Category, ResultRow, Filter} from './types';
 
 /**
- * This cube is conceptually an n-dimensioanal array of numbers. The cube
+ * This cube is conceptually an n-dimensional array of numbers. The cube
  * represents categories and measures. Each category corresponds to a
  * dimension of the cube. Each category has several different values it can
  * take on. Each category value corresponds to a slice of the cube.
