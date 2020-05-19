@@ -47,18 +47,9 @@ export enum Scope {
   USER,
 }
 
-export interface User {
-  rowsSeen: Set<number>;
-}
-
-export interface Session {
-  user: User;
-  rowsSeen: Set<number>;
-}
-
 /**
  * Used to control the model for data generation. More details about how this
- * is used is available in [MockDataCube.ts](./MockDataCube.ts).
+ * is used is available in [generation.ts](./generation.ts).
  */
 export type ModelSettings = HitGenerationSettings &
   SessionGenerationSettings &
@@ -123,9 +114,4 @@ export interface Row {
 export interface ResultRow {
   categories: Map<string, string | number>;
   values: Map<string, number>;
-}
-
-export interface TrieNode {
-  children: Record<string, TrieNode>;
-  values?: number[];
 }
