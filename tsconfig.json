@@ -14,7 +14,11 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "removeComments": true,
+    "preserveConstEnums": true
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,

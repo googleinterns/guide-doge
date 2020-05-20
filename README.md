@@ -1,27 +1,64 @@
-# GuideDoge
+# Project Guide-Doge
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.6.
+> #### Table of Contents
+> - [Problem](#problem)
+> - [Experiments](#experiments)
+>   - [Audification](#audification)
+>   - Data Table
+>   - Text Summary of Key Points
+> - [References](#references)
+> - [Contributing](#contributing)
 
-## Development server
+## Problem
+WHO (World Health Organization) estimates that at least 2.2 billion people have a visual impairment or blindness. While HTML5 comes with various features to improve screen-reader accessibility including accessible data tables, text alternatives, skip links, etc., most of the data visualization are still inaccessible by visually impaired or blind people.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Experiments
+In an attempt to improve accessibility to data visualization, a number of experiments will be done in this repo to explore improvements to data consumption for visually impaired or blind users.
 
-## Code scaffolding
+### Audification
+Like visualization is a way of expressing data as visual imagery for sighted user to have better understanding of the data at a glance, audification can be used to express data as auditory imagery for visually impaired or blind user.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Audification would require "dimensions" for data to be projected onto, just like visualization projects data onto 2D, 3D, or 4D (with the dimension of time) space. Some psychological properties of sound that can be used as dimensions are as follows:
+- Pitch
+- Loudness
+- Timbre (type of instruments)
+- Sound Location (left, right, or combination of those)
+- Envelope (legato, pizzicato, staccato, sforzando, etc.)
+- Time (speed, delay, etc.)
 
-## Build
+Pitch, loudness, and time can express numerical data; and the others can express categorical data. While it is theoretically possible to express in 6+D, this experiment will focus on the more practical dimensions of pitch, loudness, and time.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+| Data Dimensions | Visualization | Audification |
+| --- | --- | --- |
+| 2 Numerical<br/>(e.g., Δ in population over time) | Line Chart / Bar Chart / Scatter Plot | [Time + Pitch](#) |
+| | | [Time + Loudness](#) |
+| 1 Categorical + 1 Numerical<br/>(e.g., # of users per browser) | Pie Chart / Radar Chart / Bar Chart / Geographic Map | [Time + Pitch](#) |
+| | | [Time + Loudness](#) |
+| 1 Categorical + 2 Numerical<br/>(e.g., # of users per age and gender) | Stacked Bar Chart | [Time + Pitch + Loudness](#) |
 
-## Running unit tests
+### Data Table
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### Text Summary of Key Points
 
-## Running end-to-end tests
+## References
+- https://www.who.int/news-room/fact-sheets/detail/blindness-and-visual-impairment
+- http://qcpages.qc.cuny.edu/hhowe/music733.1/Properties.html
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+## Contributing
 
-## Further help
+### Prerequisites
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+ - Node.js (Suggest using [nvm](https://github.com/nvm-sh/nvm/blob/master/README.md#installing-and-updating))
+
+```shell script
+$ cd guide-doge
+$ npm install
+```
+
+### Developing
+
+```shell script
+$ npm start
+
+Server running at http://localhost:4200
+```

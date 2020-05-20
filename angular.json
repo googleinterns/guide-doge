@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "guide-doge"
+    }
+  },
+  "defaultProject": "guide-doge",
+  "cli": {
+    "analytics": false
+  }
 }
