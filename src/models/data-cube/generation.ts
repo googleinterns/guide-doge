@@ -10,7 +10,7 @@ import {
   Scope,
   SessionGenerationSettings,
 } from './types';
-import { DataCube } from './data.cube';
+import { DataCube } from './data-cube.model';
 
 /**
  * Creates fake analytics data based on the model given by settings.
