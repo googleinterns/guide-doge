@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { BaseD3 } from '../base.d3';
+import { BaseD3 } from './base.d3';
 
 export interface Datum {
   date: Date;

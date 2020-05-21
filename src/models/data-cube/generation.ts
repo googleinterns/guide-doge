@@ -10,7 +10,7 @@ import {
   Scope,
   SessionGenerationSettings,
 } from './types';
-import { DataCubeModel } from './data-cube.model';
+import { DataCube } from './data.cube';
 
 /**
  * Creates fake analytics data based on the model given by settings.
@@ -57,7 +57,7 @@ export function generateCube(
   categories: Category[],
   measures: Measure[],
   settings: Partial<ModelSettings> = {},
-): DataCubeModel {
+): DataCube {
   const completeSettings: ModelSettings = {
     ...defaultSettings,
     ...settings,
@@ -81,7 +81,7 @@ export function generateCube(
     completeSettings,
   );
 
-  return new DataCubeModel(rows, measures, actualCategories);
+  return new DataCube(rows, measures, actualCategories);
 }
 
 const defaultSettings: ModelSettings = {

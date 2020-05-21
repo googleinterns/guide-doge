@@ -45,7 +45,7 @@ import { Category, Filter, Measure, ResultRow, Row } from './types';
  * a breakdown based on the requested categories. For more information, see
  * the documentation for the `getDataFor()` method.
  */
-export class DataCubeModel {
+export class DataCube {
   constructor(
     private readonly rows: Row[],
     private readonly measures: Measure[],

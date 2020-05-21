@@ -1,34 +1,9 @@
 import * as Tone from 'tone';
-import { BaseD3 } from '../base.d3';
 
-export interface RenderOptions {
-  pitchRange: [number, number];
-  duration: number;
-}
-
-export class AudificationD3 extends BaseD3<RenderOptions> {
+export class AudificationService {
   protected synth = new Tone.Synth().toDestination();
 
-  protected render(renderOptions: RenderOptions) {
-    /*const svg = this.container.selectAll('svg');
-    svg.attr('role', 'img');
-    svg.attr('aria-label', 'hmm');
-    svg.on('focus', async () => {
-      if (Tone.getContext().state === 'suspended') {
-        await Tone.start();
-      }
-      const dispose = this.audify([], [0, 0], 0);
-      svg.on('blur', () => {
-        svg.on('blur', null);
-        dispose();
-      });
-    });*/
-
-    return () => {
-    };
-  }
-
-  /*private audify(
+  audify(
     values: (number | null)[],
     pitchRange: [number, number],
     duration: number,
@@ -51,5 +26,5 @@ export class AudificationD3 extends BaseD3<RenderOptions> {
       part.dispose();
       Tone.Transport.stop();
     };
-  }*/
+  }
 }

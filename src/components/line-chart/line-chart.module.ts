@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { LineChartComponent } from './line-chart.component';
 import { DataModule } from '../../services/data/data.module';
+import { LineChartAudificationModule } from '../line-chart-audification/line-chart-audification.module';
 
 @NgModule({
   declarations: [
@@ -8,6 +9,7 @@ import { DataModule } from '../../services/data/data.module';
   ],
   imports: [
     DataModule,
+    LineChartAudificationModule,
   ],
   exports: [
     LineChartComponent,
