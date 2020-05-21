@@ -98,7 +98,8 @@ export type Filter = (
 /**
  * The internal storage of the cube. Although the cube is conceptually an
  * n-dimensional cube of data, in actuality it is a list of rows, to make for
- * easier querying. */
+ * easier querying.
+ */
 export interface Row {
   /** The category values for this row. */
   header: (string | number)[];

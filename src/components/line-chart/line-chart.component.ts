@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { LineChartD3 } from '../../d3/line-chart.d3';
 import { DataService } from '../../services/data/data.service';
+import { LineChartD3 } from '../../d3/visualizations/line-chart.d3';
 
 @Component({
   selector: 'app-line-chart',

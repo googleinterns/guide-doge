@@ -1,10 +1,9 @@
 import * as Tone from 'tone';
-import { BaseD3 } from './base.d3';
-import RenderOptions = Audification.RenderOptions;
+import { BaseD3 } from '../base.d3';
 
-export namespace Audification {
-  export interface RenderOptions {
-  }
+export interface RenderOptions {
+  pitchRange: [number, number];
+  duration: number;
 }
 
 export class AudificationD3 extends BaseD3<RenderOptions> {

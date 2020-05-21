@@ -9,8 +9,6 @@ import {
 } from '../../models/data-cube/presets';
 import { betweenDates } from '../../models/data-cube/filters';
 import { generateCube } from 'src/models/data-cube/generation';
-import { XYChart } from '../../d3/xy-chart.d3';
-import Datum = XYChart.Datum;
 
 export class DataService {
   private dataCube = generateCube(
@@ -26,7 +24,7 @@ export class DataService {
     },
   );
 
-  getMeasureOverDays(measureName: string, days = 30): Datum[] {
+  getMeasureOverDays(measureName: string, days = 30) {
     const categoryName = 'nthDay';
     const endDate = DateTime.local();
     const startDate = endDate.minus({ day: days });

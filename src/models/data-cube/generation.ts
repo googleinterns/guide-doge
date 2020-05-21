@@ -126,10 +126,7 @@ function generateUsersAndSessions({
 
 function getNormalizedWeights(categories: Category[]) {
   return categories.map(category => {
-    const total = category.values.reduce(
-      (total, value) => value.weight + total,
-      0,
-    );
+    const total = category.values.reduce((accumulator, value) => value.weight + accumulator, 0);
     return category.values.map(value => value.weight / total);
   });
 }
@@ -259,15 +256,9 @@ function generateCumulativeWeights(rows: Row[], categories: Category[]) {
   );
   return rows.reduce(
     (cumulativeWeights, row) => {
-      const weightDelta = row.header.reduce(
-        (weightDelta, label, categoryIndex) =>
-          (weightDelta as number) *
-          (nameToWeightMapping[categoryIndex].get(label) ?? 0),
-        1,
-      ) as number;
-      cumulativeWeights.push(
-        weightDelta + cumulativeWeights[cumulativeWeights.length - 1],
-      );
+      const rowWeights = row.header.map((label, categoryIndex) => nameToWeightMapping[categoryIndex].get(label) ?? 0);
+      const weightDelta = rowWeights.reduce((accumulator, weight) => accumulator * weight, 1);
+      cumulativeWeights.push(weightDelta + cumulativeWeights[cumulativeWeights.length - 1]);
       return cumulativeWeights;
     },
     [0],

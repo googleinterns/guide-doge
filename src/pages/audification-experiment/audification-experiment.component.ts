@@ -1,5 +1,5 @@
 import { AfterViewChecked, Component, ElementRef } from '@angular/core';
-import { AudificationD3 } from '../../d3/audification.d3';
+import { AudificationD3 } from '../../d3/experiments/audification.d3';
 
 @Component({
   selector: 'app-audification-experiment',
@@ -13,7 +13,10 @@ export class AudificationExperimentComponent implements AfterViewChecked {
   }
 
   ngAfterViewChecked() {
-    this.audificationD3.apply(this);
+    this.audificationD3.apply({
+      duration: 0,
+      pitchRange: [0, 0],
+    });
   }
 
 }

@@ -134,23 +134,23 @@ export class DataCubeModel {
     const filterFuncs = filters.map(filter =>
       filter(this.categories, this.measures),
     );
-    for (const row of this.rows.filter(row =>
-      filterFuncs.every(filter => filter(row)),
-    )) {
-      let trieNode = categoryTrie;
-      for (const categoryIndex of categoryIndices) {
-        if (!trieNode.children[row.header[categoryIndex]]) {
-          trieNode.children[row.header[categoryIndex]] = { children: {} };
+    this.rows
+      .filter(row => filterFuncs.every(filter => filter(row)))
+      .forEach(row => {
+        let trieNode = categoryTrie;
+        for (const categoryIndex of categoryIndices) {
+          if (!trieNode.children[row.header[categoryIndex]]) {
+            trieNode.children[row.header[categoryIndex]] = { children: {} };
+          }
+          trieNode = trieNode.children[row.header[categoryIndex]];
         }
-        trieNode = trieNode.children[row.header[categoryIndex]];
-      }
-      if (!trieNode.values) {
-        trieNode.values = measureNames.map(() => 0);
-      }
-      for (const [index, measureIndex] of measureIndices.entries()) {
-        trieNode.values[index] += row.values[measureIndex];
-      }
-    }
+        if (!trieNode.values) {
+          trieNode.values = measureNames.map(() => 0);
+        }
+        for (const [index, measureIndex] of measureIndices.entries()) {
+          trieNode.values[index] += row.values[measureIndex];
+        }
+      });
 
     const result: ResultRow[] = [];
     const labelList: string[] = [];
@@ -183,17 +183,12 @@ export class DataCubeModel {
     return result;
   }
 
-  private normalizeNthDay(result: ResultRow[], categoryNames: string[]) {
-    const nthDayIndex = categoryNames.findIndex(name => name === 'nthDay');
-    if (nthDayIndex < 0) {
+  private normalizeNthDay(rows: ResultRow[], categoryNames: string[]) {
+    if (!categoryNames.includes('nthDay')) {
       return;
     }
-    const largestNthDay = result.reduce(
-      (largestNthDay, row) =>
-        Math.max(largestNthDay, row.categories.get('nthDay') as number),
-      0,
-    );
-    for (const row of result) {
+    const largestNthDay = Math.max(...rows.map(row => row.categories.get('nthDay') as number));
+    for (const row of rows) {
       const nthDay = row.categories.get('nthDay') as number;
       row.categories.set('nthDay', largestNthDay - nthDay);
     }

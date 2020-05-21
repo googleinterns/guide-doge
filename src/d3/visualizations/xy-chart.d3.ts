@@ -1,31 +1,27 @@
 import * as d3 from 'd3';
-import { BaseD3 } from './base.d3';
-import Datum = XYChart.Datum;
-import RenderOptions = XYChart.RenderOptions;
+import { BaseD3 } from '../base.d3';
 
-export namespace XYChart {
-  export interface Datum {
-    date: Date;
-    value: number;
-  }
+export interface Datum {
+  date: Date;
+  value: number;
+}
 
-  export interface RenderOptions {
-    data: Datum[];
-    height: number;
-    width: number;
-    marginTop: number;
-    marginRight: number;
-    marginBottom: number;
-    marginLeft: number;
-  }
+export interface RenderOptions {
+  data: Datum[];
+  height: number;
+  width: number;
+  marginTop: number;
+  marginRight: number;
+  marginBottom: number;
+  marginLeft: number;
 }
 
 export abstract class XYChartD3 extends BaseD3<RenderOptions> {
   protected render({
-           data,
-           height, width,
-           marginTop, marginRight, marginBottom, marginLeft,
-         }: XYChart.RenderOptions) {
+                     data,
+                     height, width,
+                     marginTop, marginRight, marginBottom, marginLeft,
+                   }: RenderOptions) {
     const svg = this.container
       .append('svg')
       .attr('viewBox', [0, 0, width, height].join(' '));

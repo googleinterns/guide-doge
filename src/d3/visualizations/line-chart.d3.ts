@@ -1,6 +1,5 @@
-import { XYChart, XYChartD3 } from './xy-chart.d3';
+import { Datum, XYChartD3 } from './xy-chart.d3';
 import * as d3 from 'd3';
-import Datum = XYChart.Datum;
 
 export class LineChartD3 extends XYChartD3 {
   protected appendChart(
