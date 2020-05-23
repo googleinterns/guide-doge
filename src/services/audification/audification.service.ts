@@ -1,30 +1,28 @@
 import * as Tone from 'tone';
 
 export class AudificationService {
-  protected synth = new Tone.Synth().toDestination();
+  private synth = new Tone.Synth().toDestination();
 
   audify(
-    values: (number | null)[],
-    pitchRange: [number, number],
-    duration: number,
+    values: number[],
+    frequencyRange: [number, number],
+    duration,
   ) {
-    const part = new Tone.Part(
-      (time, event) => {
-        this.synth.triggerAttackRelease(event.note, event.dur, time);
+    const minValue = Math.min(...values);
+    const maxValue = Math.max(...values);
+    const [minFrequency, maxFrequency] = frequencyRange;
+    const minN = Math.log2(minFrequency);
+    const maxN = Math.log2(maxFrequency);
+    const sequence = new Tone.Sequence(
+      (time, value) => {
+        const n = (value - minValue) / (maxValue - minValue) * (maxN - minN) + minN;
+        const frequency = Math.pow(2, n);
+        this.synth.triggerAttackRelease(frequency, '4n', time);
       },
-      [
-        { time: 0, note: 'C4', dur: '4n' },
-        { time: { '4n': 1, '8n': 1 }, note: 'E4', dur: '8n' },
-        { time: '2n', note: 'G4', dur: '16n' },
-        { time: { '2n': 1, '8t': 1 }, note: 'B4', dur: '4n' },
-      ],
+      values,
     );
-    part.start(0);
-    Tone.Transport.start();
-
-    return () => {
-      part.dispose();
-      Tone.Transport.stop();
-    };
+    sequence.playbackRate = (values.length / 4) / duration;
+    sequence.loop = 1;
+    return sequence;
   }
 }

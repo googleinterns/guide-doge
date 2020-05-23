@@ -1,26 +1,29 @@
 import { ElementRef } from '@angular/core';
 import * as d3 from 'd3';
 
-type Teardown = () => void;
+export type DestroyHandler = () => void;
 
 export abstract class BaseD3<RenderOptions> {
   protected container = d3.select(this.elementRef.nativeElement);
-  private teardown?: Teardown;
+  private handleDestroy?: DestroyHandler;
+  protected transition: d3.Transition<any, unknown, null, undefined> = d3.transition()
+    .duration(300)
+    .ease(d3.easeLinear);
 
   constructor(private elementRef: ElementRef) {
   }
 
-  apply(renderOptions: RenderOptions) {
-    this.unapply();
-    this.teardown = this.render(renderOptions);
+  init(renderOptions: RenderOptions) {
+    this.destroy();
+    this.handleDestroy = this.render(renderOptions);
   }
 
-  unapply() {
-    if (this.teardown) {
-      this.teardown();
-      this.teardown = undefined;
+  destroy() {
+    if (this.handleDestroy) {
+      this.handleDestroy();
+      this.handleDestroy = undefined;
     }
   }
 
-  protected abstract render(renderOptions: RenderOptions): Teardown;
+  protected abstract render(renderOptions: RenderOptions): DestroyHandler;
 }
