@@ -68,7 +68,13 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy {
     }
     this.reversed = reversed;
     const offset = this.inclusive ? 0 : this.reversed ? -1 : +1;
-    let nextSeconds = this.getSeconds(this.currentIndex + offset);
+    let nextIndex = this.currentIndex + offset;
+    if (reversed && nextIndex < 0) {
+      nextIndex = this.data.length - 1;
+    } else if (!reversed && nextIndex >= this.data.length) {
+      nextIndex = 0;
+    }
+    let nextSeconds = this.getSeconds(nextIndex);
     if (this.reversed) {
       this.backwardSequence?.start(0);
       this.forwardSequence?.stop(0);
