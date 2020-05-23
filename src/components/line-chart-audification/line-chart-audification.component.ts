@@ -30,6 +30,10 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy {
     return 1 / this.data.length * this.duration;
   }
 
+  get currentSeconds() {
+    return this.reversed ? this.duration - Tone.Transport.seconds : Tone.Transport.seconds;
+  }
+
   ngOnInit() {
     this.dataSubscription = this.component.dataObservable.subscribe(data => {
       this.data = data;
@@ -37,8 +41,11 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy {
       const reversedValues = [...values].reverse();
       this.forwardSequence?.dispose();
       this.backwardSequence?.dispose();
-      this.forwardSequence = this.audificationService.audify(values, this.frequencyRange, this.duration);
-      this.backwardSequence = this.audificationService.audify(reversedValues, this.frequencyRange, this.duration);
+      const noteCallback = () => {
+        this.seekTo(this.currentSeconds);
+      };
+      this.forwardSequence = this.audificationService.audify(values, this.frequencyRange, this.duration, noteCallback);
+      this.backwardSequence = this.audificationService.audify(reversedValues, this.frequencyRange, this.duration, noteCallback);
     });
   }
 
@@ -60,7 +67,8 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy {
     }
     if (key === ' ') {
       this.reversed = shiftKey;
-      let nextSeconds = this.getSeconds(this.currentIndex + (this.inclusive ? 0 : (this.reversed ? -1 : +1)));
+      const offset = this.inclusive ? 0 : this.reversed ? -1 : +1;
+      let nextSeconds = this.getSeconds(this.currentIndex + offset);
       if (this.reversed) {
         this.backwardSequence?.start(0);
         this.forwardSequence?.stop(0);

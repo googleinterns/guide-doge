@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { BaseD3, DestroyHandler } from './base.d3';
+import { BaseD3, HandleDestroy } from './base.d3';
 import { Observable } from 'rxjs';
 
 export interface Datum {
@@ -80,12 +80,12 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
     dataObservable: Observable<Datum[]>,
     scaleX: d3.ScaleTime<number, number>,
     scaleY: d3.ScaleLinear<number, number>,
-  ): DestroyHandler;
+  ): HandleDestroy;
 
   protected abstract renderActiveIndicator(
     svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
     activeDatumObservable: Observable<Datum | null>,
     scaleX: d3.ScaleTime<number, number>,
     scaleY: d3.ScaleLinear<number, number>,
-  ): DestroyHandler;
+  ): HandleDestroy;
 }

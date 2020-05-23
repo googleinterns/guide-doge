@@ -53,6 +53,7 @@ export class LineChartD3 extends XYChartD3 {
         return;
       }
       circle
+        .transition(this.getTransition(50))
         .attr('display', 'inherit')
         .attr('cx', scaleX(activeDatum.date))
         .attr('cy', scaleY(activeDatum.value));

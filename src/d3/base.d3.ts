@@ -1,16 +1,17 @@
 import { ElementRef } from '@angular/core';
 import * as d3 from 'd3';
 
-export type DestroyHandler = () => void;
+export type HandleDestroy = () => void;
 
 export abstract class BaseD3<RenderOptions> {
   protected container = d3.select(this.elementRef.nativeElement);
-  private handleDestroy?: DestroyHandler;
-  protected transition: d3.Transition<any, unknown, null, undefined> = d3.transition()
-    .duration(300)
-    .ease(d3.easeLinear);
+  private handleDestroy?: HandleDestroy;
 
   constructor(private elementRef: ElementRef) {
+  }
+
+  protected get transition() {
+    return this.getTransition(300);
   }
 
   init(renderOptions: RenderOptions) {
@@ -25,5 +26,11 @@ export abstract class BaseD3<RenderOptions> {
     }
   }
 
-  protected abstract render(renderOptions: RenderOptions): DestroyHandler;
+  protected getTransition(duration: number): d3.Transition<any, unknown, null, undefined> {
+    return d3.transition()
+      .duration(duration)
+      .ease(d3.easeLinear);
+  }
+
+  protected abstract render(renderOptions: RenderOptions): HandleDestroy;
 }

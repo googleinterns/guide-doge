@@ -1,5 +1,7 @@
 import * as Tone from 'tone';
 
+export type NoteCallback = (time: number, value: number) => void;
+
 export class AudificationService {
   private synth = new Tone.Synth().toDestination();
 
@@ -7,6 +9,7 @@ export class AudificationService {
     values: number[],
     frequencyRange: [number, number],
     duration,
+    noteCallback?: NoteCallback,
   ) {
     const minValue = Math.min(...values);
     const maxValue = Math.max(...values);
@@ -15,6 +18,7 @@ export class AudificationService {
     const maxN = Math.log2(maxFrequency);
     const sequence = new Tone.Sequence(
       (time, value) => {
+        noteCallback?.(time, value);
         const n = (value - minValue) / (maxValue - minValue) * (maxN - minN) + minN;
         const frequency = Math.pow(2, n);
         this.synth.triggerAttackRelease(frequency, '4n', time);

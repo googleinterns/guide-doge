@@ -2,7 +2,7 @@ import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChang
 import { DataService } from '../../services/data/data.service';
 import { LineChartD3 } from '../../d3/line-chart.d3';
 import { BehaviorSubject } from 'rxjs';
-import { Datum } from '../../d3/xy-chart.d3';
+import { Datum, RenderOptions } from '../../d3/xy-chart.d3';
 
 @Component({
   selector: 'app-line-chart',
@@ -10,7 +10,7 @@ import { Datum } from '../../d3/xy-chart.d3';
     <app-line-chart-audification></app-line-chart-audification>
   `,
 })
-export class LineChartComponent implements OnChanges, OnInit, OnDestroy {
+export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnDestroy {
   @Input() height = 500;
   @Input() width = 800;
   @Input() marginTop = 20;
@@ -49,6 +49,7 @@ export class LineChartComponent implements OnChanges, OnInit, OnDestroy {
     if ('measureName' in changes) {
       const data = this.dataService.getMeasureOverDays(this.measureName);
       this.dataSubject.next(data);
+      this.activeDatumSubject.next(null);
     }
   }
 }
