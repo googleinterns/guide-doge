@@ -27,6 +27,8 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
                    }: RenderOptions) {
     const svg = this.container
       .append('svg')
+      .attr('role', 'img')
+      .attr('aria-label', 'Hold down SPACE to play audification and SHIFT + SPACE to play it backward. Press 0 to 9 to move playhead.')
       .attr('viewBox', [0, 0, width, height].join(' '));
 
     const scaleX = d3
