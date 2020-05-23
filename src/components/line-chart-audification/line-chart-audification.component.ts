@@ -12,6 +12,7 @@ import { Datum } from '../../d3/xy-chart.d3';
 export class LineChartAudificationComponent implements OnInit, OnDestroy {
   @Input() frequencyRange: [number, number] = [256, 2048];
   @Input() duration = 5;
+  private element = this.component.element.nativeElement;
   private forwardSequence?: Tone.Sequence;
   private backwardSequence?: Tone.Sequence;
   private dataSubscription?: Subscription = new Subscription();
@@ -24,6 +25,8 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy {
     @Host() public component: LineChartComponent,
     private audificationService: AudificationService,
   ) {
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.handleKeyUp = this.handleKeyUp.bind(this);
   }
 
   get noteDuration() {
@@ -47,12 +50,44 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy {
       this.forwardSequence = this.audificationService.audify(values, this.frequencyRange, this.duration, noteCallback);
       this.backwardSequence = this.audificationService.audify(reversedValues, this.frequencyRange, this.duration, noteCallback);
     });
+    this.element.addEventListener('keydown', this.handleKeyDown);
+    this.element.addEventListener('keyup', this.handleKeyUp);
   }
 
   ngOnDestroy() {
+    this.element.removeEventListener('keyup', this.handleKeyUp);
+    this.element.removeEventListener('keydown', this.handleKeyDown);
     this.dataSubscription?.unsubscribe();
     this.forwardSequence?.dispose();
     this.backwardSequence?.dispose();
+  }
+
+  async resumeMelody(reversed: boolean) {
+    if (Tone.getContext().state === 'suspended') {
+      await Tone.start();
+    }
+    this.reversed = reversed;
+    const offset = this.inclusive ? 0 : this.reversed ? -1 : +1;
+    let nextSeconds = this.getSeconds(this.currentIndex + offset);
+    if (this.reversed) {
+      this.backwardSequence?.start(0);
+      this.forwardSequence?.stop(0);
+      nextSeconds += this.noteDuration / 2;
+      Tone.Transport.start(undefined, this.duration - nextSeconds);
+    } else {
+      this.backwardSequence?.stop(0);
+      this.forwardSequence?.start(0);
+      nextSeconds -= this.noteDuration / 2;
+      Tone.Transport.start(undefined, nextSeconds);
+    }
+  }
+
+  pauseMelody() {
+    if (Tone.Transport.state === 'started') {
+      Tone.Transport.pause();
+      const currentSeconds = this.reversed ? this.duration - Tone.Transport.seconds : Tone.Transport.seconds;
+      this.seekTo(currentSeconds);
+    }
   }
 
   async handleKeyDown($event: KeyboardEvent) {
@@ -62,24 +97,8 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy {
     if (repeat) {
       return;
     }
-    if (Tone.getContext().state === 'suspended') {
-      await Tone.start();
-    }
     if (key === ' ') {
-      this.reversed = shiftKey;
-      const offset = this.inclusive ? 0 : this.reversed ? -1 : +1;
-      let nextSeconds = this.getSeconds(this.currentIndex + offset);
-      if (this.reversed) {
-        this.backwardSequence?.start(0);
-        this.forwardSequence?.stop(0);
-        nextSeconds += this.noteDuration / 2;
-        Tone.Transport.start(undefined, this.duration - nextSeconds);
-      } else {
-        this.backwardSequence?.stop(0);
-        this.forwardSequence?.start(0);
-        nextSeconds -= this.noteDuration / 2;
-        Tone.Transport.start(undefined, nextSeconds);
-      }
+      await this.resumeMelody(shiftKey);
     } else if ('0' <= key && key <= '9') {
       this.seekTo(this.duration * (+key / 10), true);
     }
@@ -88,11 +107,7 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy {
   handleKeyUp($event: KeyboardEvent) {
     $event.preventDefault();
     $event.stopPropagation();
-    if (Tone.Transport.state === 'started') {
-      Tone.Transport.pause();
-      const currentSeconds = this.reversed ? this.duration - Tone.Transport.seconds : Tone.Transport.seconds;
-      this.seekTo(currentSeconds);
-    }
+    this.pauseMelody();
   }
 
   private seekTo(seconds: number, inclusive = false) {

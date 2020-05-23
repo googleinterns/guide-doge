@@ -28,7 +28,7 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
 
   constructor(
     private dataService: DataService,
-    element: ElementRef,
+    public element: ElementRef<HTMLElement>,
   ) {
     this.lineChartD3 = new LineChartD3(element);
   }
