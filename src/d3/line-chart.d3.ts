@@ -41,22 +41,37 @@ export class LineChartD3 extends XYChartD3 {
     activeDatumObservable: Observable<Datum | null>,
     scaleX: d3.ScaleTime<number, number>,
     scaleY: d3.ScaleLinear<number, number>,
+    xAxis: d3.Axis<Date>,
+    yAxis: d3.Axis<number>,
   ) {
-    const circle = svg
+    const g = svg.append('g');
+
+    g
       .append('circle')
       .attr('r', 4)
       .attr('fill', 'steelblue');
 
+    const text = g
+      .append('text')
+      .attr('y', 20)
+      .attr('text-anchor', 'middle')
+      .attr('font-family', 'sans-serif')
+      .attr('font-size', 10);
+
+    const formatX = xAxis.tickFormat() ?? (v => v);
+    const formatY = yAxis.tickFormat() ?? (v => v);
+
     const activeDatumSubscription = activeDatumObservable.subscribe(activeDatum => {
       if (!activeDatum) {
-        circle.attr('display', 'none');
+        g.attr('display', 'none');
         return;
       }
-      circle
+      const { date, value } = activeDatum;
+      g
         .transition(this.getTransition(50))
         .attr('display', 'inherit')
-        .attr('cx', scaleX(activeDatum.date))
-        .attr('cy', scaleY(activeDatum.value));
+        .attr('transform', `translate(${scaleX(date)},${scaleY(value)})`);
+      text.text(`${formatY(value, 0)} on ${formatX(date, 0)}`);
     });
 
     return () => {

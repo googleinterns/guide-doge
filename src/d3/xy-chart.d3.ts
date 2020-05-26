@@ -41,11 +41,12 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
       .range([height - marginBottom, marginTop]);
 
     const xAxis = d3
-      .axisBottom(scaleX)
+      .axisBottom<Date>(scaleX)
       .ticks(width / 80)
+      .tickFormat(d3.timeFormat('%B %d'))
       .tickSizeOuter(0);
 
-    const yAxis = d3.axisLeft(scaleY);
+    const yAxis = d3.axisLeft<number>(scaleY);
 
     const xAxisG = svg
       .append('g')
@@ -67,7 +68,9 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
     });
 
     const handleDestroyData = this.renderData(svg, dataObservable, scaleX, scaleY);
-    const handleDestroyActiveIndicator = this.renderActiveIndicator(svg, activeDatumObservable, scaleX, scaleY);
+    const handleDestroyActiveIndicator = this.renderActiveIndicator(
+      svg, activeDatumObservable, scaleX, scaleY, xAxis, yAxis,
+    );
 
     return () => {
       handleDestroyActiveIndicator();
@@ -89,5 +92,7 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
     activeDatumObservable: Observable<Datum | null>,
     scaleX: d3.ScaleTime<number, number>,
     scaleY: d3.ScaleLinear<number, number>,
+    xAxis: d3.Axis<Date>,
+    yAxis: d3.Axis<number>,
   ): HandleDestroy;
 }
