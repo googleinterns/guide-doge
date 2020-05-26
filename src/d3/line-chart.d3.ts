@@ -36,6 +36,7 @@ export class LineChartD3 extends XYChartD3 {
 
     return () => {
       dataSubscription.unsubscribe();
+      path.remove();
     };
   }
 
@@ -91,6 +92,7 @@ export class LineChartD3 extends XYChartD3 {
 
     return () => {
       activeDatumSubscription.unsubscribe();
+      g.remove();
     };
   }
 }
