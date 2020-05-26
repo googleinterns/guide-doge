@@ -18,6 +18,7 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy {
   @Input() frequencyRange: [number, number] = [256, 2048];
   @Input() duration = 5;
   private element = this.component.element.nativeElement;
+  private lineChartD3 = this.component.lineChartD3;
   private forwardSequence?: Tone.Sequence;
   private backwardSequence?: Tone.Sequence;
   private dataSubscription?: Subscription = new Subscription();
@@ -110,6 +111,10 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy {
     }
     if (key === ' ') {
       await this.resumeMelody(shiftKey);
+    } else if (key === 'x') {
+      this.readOut(this.lineChartD3.xAxisId);
+    } else if (key === 'y') {
+      this.readOut(this.lineChartD3.yAxisId);
     } else if ('0' <= key && key <= '9') {
       this.seekTo(this.duration * (+key / 10), {
         inclusive: true,
@@ -159,7 +164,7 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy {
     this.currentIndex = index;
     this.inclusive = inclusive;
     if (readOut) {
-      this.readOut(this.component.lineChartD3.activeGroupId);
+      this.readOut(this.lineChartD3.activeGroupId);
     }
   }
 

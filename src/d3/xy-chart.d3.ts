@@ -19,6 +19,9 @@ export interface RenderOptions {
 }
 
 export abstract class XYChartD3 extends BaseD3<RenderOptions> {
+  xAxisId = this.createId('x-axis');
+  yAxisId = this.createId('y-axis');
+
   protected render({
                      dataObservable,
                      activeDatumObservable,
@@ -52,19 +55,21 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
       .append('g')
       .attr('transform', `translate(0,${height - marginBottom})`)
       .attr('role', 'img')
-      .attr('tabindex', -1);
+      .attr('tabindex', -1)
+      .attr('id', this.xAxisId);
 
     const yAxisG = svg
       .append('g')
       .attr('transform', `translate(${marginLeft},0)`)
       .attr('role', 'img')
-      .attr('tabindex', -1);
+      .attr('tabindex', -1)
+      .attr('id', this.yAxisId);
 
     const dataSubscription = dataObservable.subscribe(data => {
       scaleX.domain(d3.extent<Datum, Date>(data, d => d.date) as [Date, Date]);
       scaleY.domain([0, d3.max(data, d => d.value)!]);
 
-      const domain = data.map(d => d.date).sort();
+      const domain = data.map(d => d.date).sort((a, b) => a.getTime() - b.getTime());
       const range = data.map(d => d.value).sort();
 
       const xFormatter = xAxis.tickFormat() ?? (v => v);

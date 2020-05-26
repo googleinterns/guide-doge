@@ -6,14 +6,14 @@ export type HandleDestroy = () => void;
 
 export abstract class BaseD3<RenderOptions> {
   protected container = d3.select(this.elementRef.nativeElement);
-  private handleDestroy?: HandleDestroy;
   protected idSuffix = uuid.v4();
+  private handleDestroy?: HandleDestroy;
 
   constructor(private elementRef: ElementRef) {
   }
 
   protected get transition() {
-    return this.getTransition(300);
+    return this.createTransition(300);
   }
 
   init(renderOptions: RenderOptions) {
@@ -28,7 +28,11 @@ export abstract class BaseD3<RenderOptions> {
     }
   }
 
-  protected getTransition(duration: number): d3.Transition<any, unknown, null, undefined> {
+  protected createId(prefix: string) {
+    return `${prefix}-${this.idSuffix}`;
+  }
+
+  protected createTransition(duration: number): d3.Transition<any, unknown, null, undefined> {
     return d3.transition()
       .duration(duration)
       .ease(d3.easeLinear);

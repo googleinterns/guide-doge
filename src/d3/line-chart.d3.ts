@@ -3,8 +3,8 @@ import * as d3 from 'd3';
 import { Observable } from 'rxjs';
 
 export class LineChartD3 extends XYChartD3 {
-  activeLabelId = `active-label-${this.idSuffix}`;
-  activeGroupId = `active-group-${this.idSuffix}`;
+  activeLabelId = this.createId('active-label');
+  activeGroupId = this.createId('active-group');
 
   protected renderData(
     svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
@@ -81,7 +81,7 @@ export class LineChartD3 extends XYChartD3 {
       }
       const { date, value } = activeDatum;
       g
-        .transition(this.getTransition(50))
+        .transition(this.createTransition(50))
         .attr('display', 'inherit')
         .attr('aria-hidden', false)
         .attr('tabindex', -1)
