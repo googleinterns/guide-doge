@@ -5,6 +5,11 @@ import * as Tone from 'tone';
 import { Subscription } from 'rxjs';
 import { Datum } from '../../d3/xy-chart.d3';
 
+interface SeekToOptions {
+  inclusive: boolean;
+  readOut: boolean;
+}
+
 @Component({
   selector: 'app-line-chart-audification',
   templateUrl: './line-chart-audification.component.html',
@@ -45,7 +50,9 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy {
       this.forwardSequence?.dispose();
       this.backwardSequence?.dispose();
       const noteCallback = () => {
-        this.seekTo(this.currentSeconds);
+        this.seekTo(this.currentSeconds, {
+          readOut: false,
+        });
       };
       this.forwardSequence = this.audificationService.audify(values, this.frequencyRange, this.duration, noteCallback);
       this.backwardSequence = this.audificationService.audify(reversedValues, this.frequencyRange, this.duration, noteCallback);
@@ -97,8 +104,6 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy {
   }
 
   async handleKeyDown($event: KeyboardEvent) {
-    $event.preventDefault();
-    $event.stopPropagation();
     const { key, shiftKey, repeat } = $event;
     if (repeat) {
       return;
@@ -106,19 +111,46 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy {
     if (key === ' ') {
       await this.resumeMelody(shiftKey);
     } else if ('0' <= key && key <= '9') {
-      this.seekTo(this.duration * (+key / 10), true);
+      this.seekTo(this.duration * (+key / 10), {
+        inclusive: true,
+      });
+    } else {
+      return;
     }
+    $event.preventDefault();
+    $event.stopPropagation();
   }
 
   handleKeyUp($event: KeyboardEvent) {
+    const { key } = $event;
+    if (key === ' ') {
+      this.pauseMelody();
+    } else {
+      return;
+    }
     $event.preventDefault();
     $event.stopPropagation();
-    this.pauseMelody();
   }
 
-  private seekTo(seconds: number, inclusive = false) {
+  private readOut(id: string, refocus = true) {
+    if (refocus) {
+      this.element.focus();
+      window.setTimeout(() => {
+        this.readOut(id, false);
+      }, 500);
+    } else {
+      document.getElementById(id)?.focus();
+    }
+  }
+
+  private seekTo(seconds: number, seekToOptions: Partial<SeekToOptions> = {}) {
+    const { inclusive, readOut } = {
+      inclusive: false,
+      readOut: true,
+      ...seekToOptions,
+    };
     let index = this.getDatumIndex(seconds);
-    this.component.activeDatum = this.data[index] ?? null;
+    this.component.activeDatum = this.data[index];
     if (this.reversed && index === 0) {
       index--;
     } else if (!this.reversed && index === this.data.length - 1) {
@@ -126,6 +158,9 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy {
     }
     this.currentIndex = index;
     this.inclusive = inclusive;
+    if (readOut) {
+      this.readOut(this.component.lineChartD3.activeGroupId);
+    }
   }
 
   private getSeconds(index: number) {

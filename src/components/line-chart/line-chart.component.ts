@@ -18,7 +18,7 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
   @Input() marginBottom = 30;
   @Input() marginLeft = 40;
   @Input() measureName: string;
-  private lineChartD3: LineChartD3;
+  lineChartD3: LineChartD3;
 
   private dataSubject = new BehaviorSubject<Datum[]>([]);
   dataObservable = this.dataSubject.asObservable();

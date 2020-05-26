@@ -27,7 +27,7 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
                    }: RenderOptions) {
     const svg = this.container
       .append('svg')
-      .attr('role', 'img')
+      .attr('role', 'figure')
       .attr('aria-label', 'Hold down SPACE to play audification and SHIFT + SPACE to play it backward. Press 0 to 9 to move playhead.')
       .attr('viewBox', [0, 0, width, height].join(' '));
 
@@ -50,21 +50,37 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
 
     const xAxisG = svg
       .append('g')
-      .attr('transform', `translate(0,${height - marginBottom})`);
+      .attr('transform', `translate(0,${height - marginBottom})`)
+      .attr('role', 'img')
+      .attr('tabindex', -1);
 
     const yAxisG = svg
       .append('g')
-      .attr('transform', `translate(${marginLeft},0)`);
+      .attr('transform', `translate(${marginLeft},0)`)
+      .attr('role', 'img')
+      .attr('tabindex', -1);
 
     const dataSubscription = dataObservable.subscribe(data => {
       scaleX.domain(d3.extent<Datum, Date>(data, d => d.date) as [Date, Date]);
       scaleY.domain([0, d3.max(data, d => d.value)!]);
+
+      const domain = data.map(d => d.date).sort();
+      const range = data.map(d => d.value).sort();
+
+      const xFormatter = xAxis.tickFormat() ?? (v => v);
+      const yFormatter = yAxis.tickFormat() ?? (v => v);
+      const formatX = (v, index = 0) => xFormatter(v, index);
+      const formatY = (v, index = 0) => yFormatter(v, index);
+
       xAxisG
         .transition(this.transition)
-        .call(xAxis);
+        .call(xAxis)
+        .attr('aria-label', `Domain from ${formatX(domain[0])} to ${formatX(domain[domain.length - 1])}`);
+
       yAxisG
         .transition(this.transition)
-        .call(yAxis);
+        .call(yAxis)
+        .attr('aria-label', `Range from ${formatY(range[0])} to ${formatY(range[range.length - 1])}`);
     });
 
     const handleDestroyData = this.renderData(svg, dataObservable, scaleX, scaleY);

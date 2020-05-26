@@ -3,6 +3,9 @@ import * as d3 from 'd3';
 import { Observable } from 'rxjs';
 
 export class LineChartD3 extends XYChartD3 {
+  activeLabelId = `active-label-${this.idSuffix}`;
+  activeGroupId = `active-group-${this.idSuffix}`;
+
   protected renderData(
     svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
     dataObservable: Observable<Datum[]>,
@@ -44,7 +47,11 @@ export class LineChartD3 extends XYChartD3 {
     xAxis: d3.Axis<Date>,
     yAxis: d3.Axis<number>,
   ) {
-    const g = svg.append('g');
+    const g = svg
+      .append('g')
+      .attr('role', 'img')
+      .attr('id', this.activeGroupId)
+      .attr('aria-labelledby', this.activeLabelId);
 
     g
       .append('circle')
@@ -53,25 +60,33 @@ export class LineChartD3 extends XYChartD3 {
 
     const text = g
       .append('text')
+      .attr('id', this.activeLabelId)
       .attr('y', 20)
       .attr('text-anchor', 'middle')
       .attr('font-family', 'sans-serif')
       .attr('font-size', 10);
 
-    const formatX = xAxis.tickFormat() ?? (v => v);
-    const formatY = yAxis.tickFormat() ?? (v => v);
+    const xFormatter = xAxis.tickFormat() ?? (v => v);
+    const yFormatter = yAxis.tickFormat() ?? (v => v);
+    const formatX = (v, index = 0) => xFormatter(v, index);
+    const formatY = (v, index = 0) => yFormatter(v, index);
 
     const activeDatumSubscription = activeDatumObservable.subscribe(activeDatum => {
       if (!activeDatum) {
-        g.attr('display', 'none');
+        g
+          .attr('display', 'none')
+          .attr('aria-hidden', true)
+          .attr('tabindex', null);
         return;
       }
       const { date, value } = activeDatum;
       g
         .transition(this.getTransition(50))
         .attr('display', 'inherit')
+        .attr('aria-hidden', false)
+        .attr('tabindex', -1)
         .attr('transform', `translate(${scaleX(date)},${scaleY(value)})`);
-      text.text(`${formatY(value, 0)} on ${formatX(date, 0)}`);
+      text.text(`${formatY(value)} on ${formatX(date)}`);
     });
 
     return () => {
