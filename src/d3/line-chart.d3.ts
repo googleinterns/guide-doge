@@ -1,6 +1,7 @@
 import { Datum, XYChartD3 } from './xy-chart.d3';
 import * as d3 from 'd3';
 import { Observable } from 'rxjs';
+import { t } from '../assets/i18n/utils';
 
 export class LineChartD3 extends XYChartD3 {
   activeLabelId = this.createId('active-label');
@@ -87,7 +88,10 @@ export class LineChartD3 extends XYChartD3 {
         .attr('aria-hidden', false)
         .attr('tabindex', -1)
         .attr('transform', `translate(${scaleX(date)},${scaleY(value)})`);
-      text.text(`${formatY(value)} on ${formatX(date)}`);
+      text.text(t('audification.active_datum', {
+        x: formatX(date),
+        y: formatY(value),
+      }));
     });
 
     return () => {
