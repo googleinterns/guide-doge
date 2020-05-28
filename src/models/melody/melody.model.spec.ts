@@ -5,7 +5,7 @@ describe('Melody', () => {
   const values = [1, 2, 3, 4, 5, 4, 3, 2, 1];
   const frequencyRange: [number, number] = [256, 2048];
   const duration = 5;
-  const delay = 100;
+  const delay = 200;
   let melody: Melody;
 
   beforeAll(async () => {
