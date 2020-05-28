@@ -33,6 +33,7 @@ module.exports = function (config) {
         base: 'ChromeHeadless',
         flags: [
           '--no-sandbox',
+          '--disable-gpu',
           '--use-fake-ui-for-media-stream',
           '--use-fake-device-for-media-stream',
           '--autoplay-policy=no-user-gesture-required',
