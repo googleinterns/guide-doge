@@ -5,7 +5,12 @@ describe('Melody', () => {
   const values = [1, 2, 3, 4, 5, 4, 3, 2, 1];
   const frequencyRange: [number, number] = [256, 2048];
   const duration = 5;
+  const delay = 100;
   let melody: Melody;
+
+  beforeAll(async () => {
+    await Tone.start();
+  });
 
   beforeEach(() => {
     melody = new Melody(values, frequencyRange, duration);
@@ -32,7 +37,6 @@ describe('Melody', () => {
     await melody.resume(false);
     expect(melody.isPlaying).toBeTrue();
     expect(melody.isEnded).toBeFalse();
-    const delay = 50;
     await new Promise(resolve => window.setTimeout(resolve, delay));
     expect(melody.currentSeconds).toBeGreaterThan(0);
   });
@@ -41,7 +45,6 @@ describe('Melody', () => {
     await melody.resume(true);
     expect(melody.isPlaying).toBeTrue();
     expect(melody.isEnded).toBeFalse();
-    const delay = 50;
     await new Promise(resolve => window.setTimeout(resolve, delay));
     expect(melody.currentSeconds).toBeLessThan(duration);
   });
