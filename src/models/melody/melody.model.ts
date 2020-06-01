@@ -50,6 +50,14 @@ export class Melody {
     return this.currentIndex + offset;
   }
 
+  private static getKeyNumber(frequency: number) {
+    return Math.log2(frequency / 440) * 12 + 49;
+  }
+
+  private static getFrequency(keyNumber: number) {
+    return Math.pow(2, (keyNumber - 49) / 12) * 440;
+  }
+
   async resume(reversed: boolean) {
     if (Tone.getContext().state === 'suspended') {
       await Tone.start();
@@ -99,13 +107,13 @@ export class Melody {
     const minValue = Math.min(...values);
     const maxValue = Math.max(...values);
     const [minFrequency, maxFrequency] = this.frequencyRange;
-    const minPower = Math.log2(minFrequency);
-    const maxPower = Math.log2(maxFrequency);
+    const minKeyNumber = Melody.getKeyNumber(minFrequency);
+    const maxKeyNumber = Melody.getKeyNumber(maxFrequency);
     const sequence = new Tone.Sequence(
       (time, value) => {
         this.seekTo(this.currentSeconds);
-        const power = (value - minValue) / (maxValue - minValue) * (maxPower - minPower) + minPower;
-        const frequency = Math.pow(2, power);
+        const keyNumber = (value - minValue) / (maxValue - minValue) * (maxKeyNumber - minKeyNumber) + minKeyNumber;
+        const frequency = Melody.getFrequency(keyNumber);
         this.synth.triggerAttackRelease(frequency, '4n', time);
       },
       values,
