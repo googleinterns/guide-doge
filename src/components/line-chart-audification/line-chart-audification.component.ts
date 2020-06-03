@@ -2,14 +2,17 @@ import { Component, Host, Input, OnDestroy, OnInit } from '@angular/core';
 import { LineChartComponent } from '../line-chart/line-chart.component';
 import { Subscription } from 'rxjs';
 import { Melody } from '../../models/melody/melody.model';
+import { t } from '../../assets/i18n/utils';
 
 @Component({
   selector: 'app-line-chart-audification',
   templateUrl: './line-chart-audification.component.html',
+  styleUrls: ['./line-chart-audification.component.scss'],
 })
 export class LineChartAudificationComponent implements OnInit, OnDestroy {
   @Input() frequencyRange: [number, number] = [256, 2048];
   @Input() duration = 5;
+  t = t;
   private element = this.component.element.nativeElement;
   private lineChartD3 = this.component.lineChartD3;
   private melody?: Melody;

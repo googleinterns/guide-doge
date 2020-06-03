@@ -13,7 +13,7 @@ import { LineChartAudificationModule } from '../line-chart-audification/line-cha
   ],
   exports: [
     LineChartComponent,
-  ]
+  ],
 })
 export class LineChartModule {
 }

@@ -51,9 +51,7 @@ export class LineChartD3 extends XYChartD3 {
   ) {
     const g = svg
       .append('g')
-      .attr('role', 'img')
       .attr('id', this.activeGroupId)
-      .attr('aria-labelledby', this.activeLabelId);
 
     g
       .append('circle')

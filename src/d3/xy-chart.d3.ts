@@ -30,9 +30,7 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
                      marginTop, marginRight, marginBottom, marginLeft,
                    }: RenderOptions) {
     const svg = this.container
-      .append('svg')
-      .attr('role', 'figure')
-      .attr('aria-label', t('audification.instructions'))
+      .insert('svg', ':first-child')
       .attr('viewBox', [0, 0, width, height].join(' '));
 
     const scaleX = d3
@@ -55,14 +53,12 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
     const xAxisG = svg
       .append('g')
       .attr('transform', `translate(0,${height - marginBottom})`)
-      .attr('role', 'img')
       .attr('tabindex', -1)
       .attr('id', this.xAxisId);
 
     const yAxisG = svg
       .append('g')
       .attr('transform', `translate(${marginLeft},0)`)
-      .attr('role', 'img')
       .attr('tabindex', -1)
       .attr('id', this.yAxisId);
 

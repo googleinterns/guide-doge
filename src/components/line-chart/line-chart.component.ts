@@ -6,9 +6,8 @@ import { Datum, RenderOptions } from '../../d3/xy-chart.d3';
 
 @Component({
   selector: 'app-line-chart',
-  template: `
-    <app-line-chart-audification></app-line-chart-audification>
-  `,
+  templateUrl: './line-chart.component.html',
+  styleUrls: ['./line-chart.component.scss'],
 })
 export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnDestroy {
   @Input() height = 500;
