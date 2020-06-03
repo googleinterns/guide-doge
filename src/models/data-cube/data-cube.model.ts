@@ -1,4 +1,4 @@
-import {Row, Measure, Category, ResultRow, Filter} from './types';
+import { Category, Filter, Measure, ResultRow, Row } from './types';
 
 /**
  * This cube is conceptually an n-dimensional array of numbers. The cube
@@ -49,8 +49,9 @@ export class DataCube {
   constructor(
     private readonly rows: Row[],
     private readonly measures: Measure[],
-    private readonly categories: Category[]
-  ) {}
+    private readonly categories: Category[],
+  ) {
+  }
 
   /**
    * Get a breakdown by the given categories in the given measures.
@@ -121,35 +122,35 @@ export class DataCube {
     categoryNames: string[],
     measureNames: string[],
     filters: Filter[] = [],
-    sortBy?: string[]
+    sortBy?: string[],
   ): ResultRow[] {
     const measureIndices = measureNames.map(name =>
-      this.measures.findIndex(measure => measure.name === name)
+      this.measures.findIndex(measure => measure.name === name),
     );
     const categoryIndices = categoryNames.map(name =>
-      this.categories.findIndex(category => category.name === name)
+      this.categories.findIndex(category => category.name === name),
     );
-    const categoryTrie: TrieNode = {children: {}};
+    const categoryTrie: TrieNode = { children: {} };
     const filterFuncs = filters.map(filter =>
-      filter(this.categories, this.measures)
+      filter(this.categories, this.measures),
     );
-    for (const row of this.rows.filter(row =>
-      filterFuncs.every(filter => filter(row))
-    )) {
-      let trieNode = categoryTrie;
-      for (const categoryIndex of categoryIndices) {
-        if (!trieNode.children[row.header[categoryIndex]]) {
-          trieNode.children[row.header[categoryIndex]] = {children: {}};
+    this.rows
+      .filter(row => filterFuncs.every(filter => filter(row)))
+      .forEach(row => {
+        let trieNode = categoryTrie;
+        for (const categoryIndex of categoryIndices) {
+          if (!trieNode.children[row.header[categoryIndex]]) {
+            trieNode.children[row.header[categoryIndex]] = { children: {} };
+          }
+          trieNode = trieNode.children[row.header[categoryIndex]];
         }
-        trieNode = trieNode.children[row.header[categoryIndex]];
-      }
-      if (!trieNode.values) {
-        trieNode.values = measureNames.map(() => 0);
-      }
-      for (const [index, measureIndex] of measureIndices.entries()) {
-        trieNode.values[index] += row.values[measureIndex];
-      }
-    }
+        if (!trieNode.values) {
+          trieNode.values = measureNames.map(() => 0);
+        }
+        for (const [index, measureIndex] of measureIndices.entries()) {
+          trieNode.values[index] += row.values[measureIndex];
+        }
+      });
 
     const result: ResultRow[] = [];
     const labelList: string[] = [];
@@ -157,10 +158,10 @@ export class DataCube {
       if (node.values) {
         result.push({
           categories: new Map(
-            labelList.map((label, index) => [categoryNames[index], label])
+            labelList.map((label, index) => [categoryNames[index], label]),
           ),
           values: new Map(
-            node.values.map((value, index) => [measureNames[index], value])
+            node.values.map((value, index) => [measureNames[index], value]),
           ),
         });
       } else {
@@ -177,22 +178,17 @@ export class DataCube {
       result,
       categoryNames,
       measureNames,
-      sortBy ?? [...categoryNames, ...measureNames]
+      sortBy ?? [...categoryNames, ...measureNames],
     );
     return result;
   }
 
-  private normalizeNthDay(result: ResultRow[], categoryNames: string[]) {
-    const nthDayIndex = categoryNames.findIndex(name => name === 'nthDay');
-    if (nthDayIndex < 0) {
+  private normalizeNthDay(rows: ResultRow[], categoryNames: string[]) {
+    if (!categoryNames.includes('nthDay')) {
       return;
     }
-    const largestNthDay = result.reduce(
-      (largestNthDay, row) =>
-        Math.max(largestNthDay, row.categories.get('nthDay') as number),
-      0
-    );
-    for (const row of result) {
+    const largestNthDay = Math.max(...rows.map(row => row.categories.get('nthDay') as number));
+    for (const row of rows) {
       const nthDay = row.categories.get('nthDay') as number;
       row.categories.set('nthDay', largestNthDay - nthDay);
     }
@@ -202,7 +198,7 @@ export class DataCube {
     results: ResultRow[],
     categoryNames: string[],
     measureNames: string[],
-    sortBy: string[]
+    sortBy: string[],
   ) {
     function getComparator(sortConcept: string) {
       if (categoryNames.includes(sortConcept)) {

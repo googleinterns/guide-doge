@@ -60,5 +60,5 @@ $ npm install
 ```shell script
 $ npm start
 
-Server running at http://localhost:1234
+Server running at http://localhost:4200
 ```

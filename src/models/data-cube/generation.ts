@@ -1,6 +1,7 @@
-import random from 'random';
+import * as random from 'random';
 import {
   Category,
+  CategoryValue,
   HitGenerationSettings,
   Measure,
   MeasureType,
@@ -9,7 +10,7 @@ import {
   Scope,
   SessionGenerationSettings,
 } from './types';
-import {DataCube} from './DataCube';
+import { DataCube } from './data-cube.model';
 
 /**
  * Creates fake analytics data based on the model given by settings.
@@ -55,7 +56,7 @@ import {DataCube} from './DataCube';
 export function generateCube(
   categories: Category[],
   measures: Measure[],
-  settings: Partial<ModelSettings> = {}
+  settings: Partial<ModelSettings> = {},
 ): DataCube {
   const completeSettings: ModelSettings = {
     ...defaultSettings,
@@ -65,7 +66,7 @@ export function generateCube(
   if (completeSettings.nthDay) {
     const nthDayCategory = generateNthDay(
       completeSettings.days,
-      completeSettings.dailyStdDev
+      completeSettings.dailyStdDev,
     );
     actualCategories.push(nthDayCategory);
   }
@@ -77,7 +78,7 @@ export function generateCube(
     measures,
     cumulativeWeights,
     generateUsersAndSessions(completeSettings),
-    completeSettings
+    completeSettings,
   );
 
   return new DataCube(rows, measures, actualCategories);
@@ -105,19 +106,19 @@ interface Session {
 }
 
 function generateUsersAndSessions({
-  avgUsers,
-  userStdDev,
-  avgSessionsPerUser,
-  sessionsPerUserStdDev,
-}: SessionGenerationSettings) {
+                                    avgUsers,
+                                    userStdDev,
+                                    avgSessionsPerUser,
+                                    sessionsPerUserStdDev,
+                                  }: SessionGenerationSettings) {
   const userCount = Math.round(random.normal(avgUsers, userStdDev)());
   const sessionThunk = random.normal(avgSessionsPerUser, sessionsPerUserStdDev);
   const sessions: Session[] = [];
   for (let i = 0; i < userCount; i++) {
-    const user = {rowsSeen: new Set<number>()};
+    const user = { rowsSeen: new Set<number>() };
     const userSessions = Math.round(sessionThunk());
     for (let j = 0; j < userSessions; j++) {
-      sessions.push({user, rowsSeen: new Set()});
+      sessions.push({ user, rowsSeen: new Set() });
     }
   }
   return sessions;
@@ -125,10 +126,7 @@ function generateUsersAndSessions({
 
 function getNormalizedWeights(categories: Category[]) {
   return categories.map(category => {
-    const total = category.values.reduce(
-      (total, value) => value.weight + total,
-      0
-    );
+    const total = category.values.reduce((accumulator, value) => value.weight + accumulator, 0);
     return category.values.map(value => value.weight / total);
   });
 }
@@ -137,7 +135,7 @@ function binarySearch(
   arr: number[],
   probe: number,
   start = 0,
-  end = arr.length
+  end = arr.length,
 ): number {
   const len = end - start;
   if (len < 2) {
@@ -163,7 +161,7 @@ function generateHits(
   measures: Measure[],
   cumulativeWeights: number[],
   sessions: Session[],
-  {avgHits, hitStdDev}: HitGenerationSettings
+  { avgHits, hitStdDev }: HitGenerationSettings,
 ) {
   const hitTotal = Math.round(random.normal(avgHits, hitStdDev)());
   const placementThunk = random.uniform();
@@ -218,10 +216,10 @@ function generateEmptyRows(categories: Category[], measures: Measure[]) {
   do {
     // Get the current combination of values and add them to the list
     const header = categories.map(
-      (category, index) => category.values[categoryValueIndices[index]].name
+      (category, index) => category.values[categoryValueIndices[index]].name,
     );
     const values = measures.map(() => 0);
-    rows.push({header, values});
+    rows.push({ header, values });
 
     // Start with the first category
     categoryIndex = 0;
@@ -237,7 +235,7 @@ function generateEmptyRows(categories: Category[], measures: Measure[]) {
     } while (
       categoryValueIndices[categoryIndex - 1] === 0 &&
       categoryIndex < categories.length
-    );
+      );
     // If we ended up with the first value in the previous category, then
     // that means we ran off the end of the list of possible categories, so
     // we should end the loop
@@ -253,29 +251,23 @@ function generateCumulativeWeights(rows: Row[], categories: Category[]) {
         category.values.map((value, index) => [
           value.name,
           weights[categoryIndex][index],
-        ])
-      )
+        ]),
+      ),
   );
   return rows.reduce(
     (cumulativeWeights, row) => {
-      const weightDelta = row.header.reduce(
-        (weightDelta, label, categoryIndex) =>
-          (weightDelta as number) *
-          (nameToWeightMapping[categoryIndex].get(label) ?? 0),
-        1
-      ) as number;
-      cumulativeWeights.push(
-        weightDelta + cumulativeWeights[cumulativeWeights.length - 1]
-      );
+      const rowWeights = row.header.map((label, categoryIndex) => nameToWeightMapping[categoryIndex].get(label) ?? 0);
+      const weightDelta = rowWeights.reduce((accumulator, weight) => accumulator * weight, 1);
+      cumulativeWeights.push(weightDelta + cumulativeWeights[cumulativeWeights.length - 1]);
       return cumulativeWeights;
     },
-    [0]
+    [0],
   );
 }
 
 function generateNthDay(days: number, dailyVariance: number): Category {
   const dailyThunk = random.normal(1, dailyVariance);
-  const values = [];
+  const values: CategoryValue[] = [];
   for (let day = 0; day < days; day++) {
     values.push({
       name: day,

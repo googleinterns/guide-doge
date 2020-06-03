@@ -1,17 +1,17 @@
-import {Category, Row, Filter} from './types';
+import { Category, Filter, Row } from './types';
 
 const millisecondsPerDay = 24 * 60 * 60 * 1000;
 
 export function betweenDates(startDate: Date, endDate: Date): Filter {
   return (categories: Category[]) => {
     const nThDayIndex = categories.findIndex(
-      category => category.name === 'nthDay'
+      category => category.name === 'nthDay',
     );
     const startIndex = Math.round(
-      (Date.now() - startDate.getTime()) / millisecondsPerDay
+      (Date.now() - startDate.getTime()) / millisecondsPerDay,
     );
     const endIndex = Math.round(
-      (Date.now() - endDate.getTime()) / millisecondsPerDay
+      (Date.now() - endDate.getTime()) / millisecondsPerDay,
     );
     return (row: Row) =>
       row.header[nThDayIndex] <= startIndex &&

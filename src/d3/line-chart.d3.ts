@@ -1,13 +1,13 @@
+import { Datum, XYChartD3 } from './xy-chart.d3';
 import * as d3 from 'd3';
-import {Datum, SVGSelection} from './types';
-import {XYChart} from './XYChart';
 
-export class LineChart extends XYChart {
-  appendChart(
-    svg: SVGSelection,
+export class LineChartD3 extends XYChartD3 {
+  protected appendChart(
+    svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
+    data: Datum[],
     scaleX: d3.ScaleTime<number, number>,
-    scaleY: d3.ScaleLinear<number, number>
-  ) {
+    scaleY: d3.ScaleLinear<number, number>,
+  ): void {
     const line = d3
       .line<Datum>()
       .defined(d => !isNaN(d.value))
@@ -16,7 +16,7 @@ export class LineChart extends XYChart {
 
     svg
       .append('path')
-      .datum(this.data)
+      .datum(data)
       .attr('fill', 'none')
       .attr('stroke', 'steelblue')
       .attr('stroke-width', 1.5)

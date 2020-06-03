@@ -1,4 +1,4 @@
-import {Category, Measure, MeasureType, Scope} from './types';
+import { Category, Measure, MeasureType, Scope } from './types';
 
 export const countryCategory: Category = {
   name: 'country',

@@ -1,17 +1,27 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
-    "downlevelIteration": true,
-    "lib": [
-      "dom",
-      "es2018"
-    ],
-    "module": "es2015",
-    "noImplicitAny": true,
-    "esModuleInterop": true,
-    "preserveConstEnums": true,
-    "removeComments": true,
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
     "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2015",
+    "lib": [
+      "es2018",
+      "dom"
+    ],
     "strictNullChecks": true,
-    "strictFunctionTypes": true
+    "strictFunctionTypes": true,
+    "removeComments": true,
+    "preserveConstEnums": true
+  },
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
   }
 }
