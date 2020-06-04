@@ -30,14 +30,17 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy, OnChan
     this.handleSeek = this.handleSeek.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
   }
 
   ngOnInit() {
     this.element.addEventListener('keydown', this.handleKeyDown);
     this.element.addEventListener('keyup', this.handleKeyUp);
+    this.element.addEventListener('blur', this.handleBlur);
   }
 
   ngOnDestroy() {
+    this.element.removeEventListener('blur', this.handleBlur);
     this.element.removeEventListener('keyup', this.handleKeyUp);
     this.element.removeEventListener('keydown', this.handleKeyDown);
     this.melody?.dispose();
@@ -104,6 +107,10 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy, OnChan
     }
     $event.preventDefault();
     $event.stopPropagation();
+  }
+
+  handleBlur() {
+    this.melody?.pause();
   }
 
   private readOut(text: string) {
