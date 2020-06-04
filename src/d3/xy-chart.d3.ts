@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 import { BaseD3, HandleDestroy } from './base.d3';
 import { Observable } from 'rxjs';
+import { AUDIFICATION, t } from '../assets/i18n';
 
 export interface Datum {
   date: Date;
@@ -31,7 +32,7 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
     const svg = this.container
       .append('svg')
       .attr('role', 'figure')
-      .attr('aria-label', 'Hold down SPACE to play audification and SHIFT + SPACE to play it backward. Press 0 to 9 to move playhead.')
+      .attr('aria-label', t(AUDIFICATION.INSTRUCTIONS))
       .attr('viewBox', [0, 0, width, height].join(' '));
 
     const scaleX = d3
@@ -80,12 +81,18 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
       xAxisG
         .transition(this.transition)
         .call(xAxis)
-        .attr('aria-label', `Domain from ${formatX(domain[0])} to ${formatX(domain[domain.length - 1])}`);
+        .attr('aria-label', t(AUDIFICATION.DOMAIN, {
+          min: formatX(domain[0]),
+          max: formatX(domain[domain.length - 1]),
+        }));
 
       yAxisG
         .transition(this.transition)
         .call(yAxis)
-        .attr('aria-label', `Range from ${formatY(range[0])} to ${formatY(range[range.length - 1])}`);
+        .attr('aria-label', t(AUDIFICATION.RANGE, {
+          min: formatY(range[0]),
+          max: formatY(range[range.length - 1]),
+        }));
     });
 
     const handleDestroyData = this.renderData(svg, dataObservable, scaleX, scaleY);
