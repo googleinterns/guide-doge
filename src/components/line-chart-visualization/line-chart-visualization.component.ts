@@ -6,7 +6,6 @@ import { Datum, RenderOptions } from '../../d3/xy-chart.d3';
 @Component({
   selector: 'app-line-chart-visualization',
   template: '',
-  styleUrls: ['./line-chart-visualization.component.scss'],
 })
 export class LineChartVisualizationComponent implements RenderOptions, OnChanges, OnInit, OnDestroy {
   @Input() height = 500;

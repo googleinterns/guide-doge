@@ -8,13 +8,36 @@
   background-color: $color-background;
 
   .header {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
     background-color: white;
     border-bottom: 1px solid $color-border;
-    padding: 1rem;
+    padding: 0 2rem;
+    height: 4rem;
 
     .logo {
       font-family: 'Quicksand', sans-serif;
+      font-weight: 700;
       font-size: $font-size-large;
+      display: flex;
+      align-items: center;
+    }
+
+    .links {
+      display: flex;
+      align-items: stretch;
+
+      a {
+        padding: 0 1rem;
+        display: flex;
+        align-items: center;
+
+        &.active {
+          font-weight: 500;
+          border-bottom: 2px solid $color-highlight;
+        }
+      }
     }
   }
 
