@@ -1,0 +1,27 @@
+@import "./utils/constants";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-height: 100vh;
+  background-color: $color-background;
+
+  .header {
+    background-color: white;
+    border-bottom: 1px solid $color-border;
+    padding: 1rem;
+
+    .logo {
+      font-family: 'Quicksand', sans-serif;
+      font-size: $font-size-large;
+    }
+  }
+
+  .container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
