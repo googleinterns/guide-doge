@@ -2,11 +2,9 @@ import { Datum, XYChartD3 } from './xy-chart.d3';
 import * as d3 from 'd3';
 import { Observable } from 'rxjs';
 import { t } from '../assets/i18n/utils';
+import { formatX, formatY } from '../utils/formatters';
 
 export class LineChartD3 extends XYChartD3 {
-  activeLabelId = this.createId('active-label');
-  activeGroupId = this.createId('active-group');
-
   protected renderData(
     svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
     dataObservable: Observable<Datum[]>,
@@ -50,10 +48,7 @@ export class LineChartD3 extends XYChartD3 {
     yAxis: d3.Axis<number>,
   ) {
     const g = svg
-      .append('g')
-      .attr('role', 'img')
-      .attr('id', this.activeGroupId)
-      .attr('aria-labelledby', this.activeLabelId);
+      .append('g');
 
     g
       .append('circle')
@@ -62,31 +57,21 @@ export class LineChartD3 extends XYChartD3 {
 
     const text = g
       .append('text')
-      .attr('id', this.activeLabelId)
       .attr('y', 20)
       .attr('text-anchor', 'middle')
       .attr('font-family', 'sans-serif')
       .attr('font-size', 10);
 
-    const xFormatter = xAxis.tickFormat() ?? (v => v);
-    const yFormatter = yAxis.tickFormat() ?? (v => v);
-    const formatX = (v, index = 0) => xFormatter(v, index);
-    const formatY = (v, index = 0) => yFormatter(v, index);
-
     const activeDatumSubscription = activeDatumObservable.subscribe(activeDatum => {
       if (!activeDatum) {
         g
-          .attr('display', 'none')
-          .attr('aria-hidden', true)
-          .attr('tabindex', null);
+          .attr('display', 'none');
         return;
       }
       const { date, value } = activeDatum;
       g
         .transition(this.createTransition(50))
         .attr('display', 'inherit')
-        .attr('aria-hidden', false)
-        .attr('tabindex', -1)
         .attr('transform', `translate(${scaleX(date)},${scaleY(value)})`);
       text.text(t('audification.active_datum', {
         x: formatX(date),

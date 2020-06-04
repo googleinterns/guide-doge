@@ -1,0 +1,8 @@
+<button (click)="toggleMeasure()">Toggle Measure</button>
+<app-line-chart-visualization role="img"
+                              [attr.aria-label]="t('visualization')"
+                              [data]="data"
+                              [(activeDatum)]="activeDatum"></app-line-chart-visualization>
+<app-line-chart-audification tabindex="0"
+                             [data]="data"
+                             [(activeDatum)]="activeDatum"></app-line-chart-audification>
