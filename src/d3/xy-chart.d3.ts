@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import { BaseD3, HandleDestroy } from './base.d3';
 import { Observable } from 'rxjs';
-import { t } from '../assets/i18n/utils';
+import { AUDIFICATION, t } from '../assets/i18n';
 
 export interface Datum {
   date: Date;
@@ -32,7 +32,7 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
     const svg = this.container
       .append('svg')
       .attr('role', 'figure')
-      .attr('aria-label', t('audification.instructions'))
+      .attr('aria-label', t(AUDIFICATION.INSTRUCTIONS))
       .attr('viewBox', [0, 0, width, height].join(' '));
 
     const scaleX = d3
@@ -81,7 +81,7 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
       xAxisG
         .transition(this.transition)
         .call(xAxis)
-        .attr('aria-label', t('audification.domain', {
+        .attr('aria-label', t(AUDIFICATION.DOMAIN, {
           min: formatX(domain[0]),
           max: formatX(domain[domain.length - 1]),
         }));
@@ -89,7 +89,7 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
       yAxisG
         .transition(this.transition)
         .call(yAxis)
-        .attr('aria-label', t('audification.range', {
+        .attr('aria-label', t(AUDIFICATION.RANGE, {
           min: formatY(range[0]),
           max: formatY(range[range.length - 1]),
         }));
