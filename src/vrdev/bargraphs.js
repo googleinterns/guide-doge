@@ -1,3 +1,4 @@
+function myFunction(){
 // fake data
 var data = [ 10, 20, 30, 15, 25, 35, 40,
             45, 50, 70, 100, 120, 130,
@@ -62,4 +63,4 @@ bars.attr({
     metalness: 0,
     width: 0.5
   })
-})    
+})    }
