@@ -19,6 +19,18 @@
       </span>
       <input type="number" [defaultValue]="167"/>
     </label>
+    <label>
+      <span>
+        Read out before playing
+      </span>
+      <app-switch></app-switch>
+    </label>
+    <label>
+      <span>
+        Read out after playing
+      </span>
+      <app-switch></app-switch>
+    </label>
   </app-preference>
   <app-preference title="Data Table" [(enabled)]="dataTableEnabled">
   </app-preference>

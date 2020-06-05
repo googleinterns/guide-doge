@@ -3,6 +3,7 @@ import { DashboardComponent } from './dashboard.component';
 import { LineChartModule } from '../line-chart/line-chart.module';
 import { PreferenceModule } from '../preference/preference.module';
 import { FormsModule } from '@angular/forms';
+import { SwitchModule } from '../switch/switch.module';
 
 @NgModule({
   declarations: [
@@ -12,6 +13,7 @@ import { FormsModule } from '@angular/forms';
     LineChartModule,
     PreferenceModule,
     FormsModule,
+    SwitchModule,
   ],
   exports: [
     DashboardComponent,

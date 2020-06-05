@@ -1,9 +1,7 @@
-<div class="header" [class.enabled]="enabled" (click)="toggleEnabled()" role="button">
-  <h3 class="title">
+<label class="header" [class.enabled]="enabled">
+  <span class="title">
     {{title}}
-  </h3>
-  <div class="switch" [class.active]="enabled">
-    <div class="handle"></div>
-  </div>
-</div>
+  </span>
+  <app-switch [(value)]="enabled"></app-switch>
+</label>
 <ng-content *ngIf="enabled"></ng-content>

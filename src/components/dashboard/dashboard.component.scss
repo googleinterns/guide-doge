@@ -1,6 +1,7 @@
 @import "../../utils/constants";
 
 :host {
+  flex: 1;
   display: flex;
 
   .sidebar {
@@ -24,6 +25,7 @@
         align-items: stretch;
         justify-content: space-between;
         padding: 0 1rem;
+        cursor: pointer;
 
         span {
           margin: 1rem 1rem 1rem 0;
@@ -32,6 +34,10 @@
         input {
           flex: 1;
           text-align: right;
+        }
+
+        app-switch {
+          align-self: center;
         }
       }
     }
