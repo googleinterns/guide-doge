@@ -25,6 +25,22 @@ a {
   text-decoration: none;
 }
 
+input {
+  border: none;
+  background: none;
+  outline: none;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  min-width: 0;
+
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    margin: 0;
+  }
+}
+
 * {
   box-sizing: border-box;
 }

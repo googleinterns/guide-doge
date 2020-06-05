@@ -1,9 +1,40 @@
+@import "../../utils/constants";
+
 :host {
   display: flex;
 
   .sidebar {
     padding: 1rem;
-    width: 16rem;
+    width: 20rem;
+    border-right: 1px solid $color-border;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    .sidebar-title {
+      font-size: $font-size-large;
+      margin: 1rem 0;
+    }
+
+    app-preference {
+      margin: 0 -1rem;
+      margin-bottom: .5rem;
+
+      label {
+        display: flex;
+        align-items: stretch;
+        justify-content: space-between;
+        padding: 0 1rem;
+
+        span {
+          margin: 1rem 1rem 1rem 0;
+        }
+
+        input {
+          flex: 1;
+          text-align: right;
+        }
+      }
+    }
   }
 
   .card-container {
@@ -13,6 +44,7 @@
     flex: 1;
     padding-top: 1rem;
     padding-left: 1rem;
+    overflow-y: auto;
 
     .row {
       display: flex;

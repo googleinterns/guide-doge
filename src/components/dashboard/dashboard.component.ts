@@ -6,4 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent {
+  audificationEnabled = true;
+  dataTableEnabled = false;
+  textSummaryEnabled = false;
 }
