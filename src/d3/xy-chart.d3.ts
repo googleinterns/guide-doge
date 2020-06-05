@@ -28,6 +28,8 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
                    }: RenderOptions) {
     const svg = this.container
       .append('svg')
+      .style('width', width)
+      .style('height', height)
       .attr('viewBox', [0, 0, width, height].join(' '));
 
     const scaleX = d3
@@ -41,9 +43,8 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
 
     const xAxis = d3
       .axisBottom<Date>(scaleX)
-      .ticks(width / 80)
-      .tickFormat(formatX)
-      .tickSizeOuter(0);
+      .ticks(d3.timeWeek.every(1))
+      .tickFormat(formatX);
 
     const yAxis = d3.axisLeft<number>(scaleY);
 
@@ -61,11 +62,13 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
 
       xAxisG
         .transition(this.transition)
-        .call(xAxis);
+        .call(xAxis)
+        .attr('font-size', 12);
 
       yAxisG
         .transition(this.transition)
-        .call(yAxis);
+        .call(yAxis)
+        .attr('font-size', 12);
     });
 
     const handleDestroyData = this.renderData(svg, dataObservable, scaleX, scaleY);

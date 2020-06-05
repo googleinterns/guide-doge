@@ -1,8 +1,6 @@
 import { Datum, XYChartD3 } from './xy-chart.d3';
 import * as d3 from 'd3';
 import { Observable } from 'rxjs';
-import { t } from '../assets/i18n/utils';
-import { formatX, formatY } from '../utils/formatters';
 
 export class LineChartD3 extends XYChartD3 {
   protected renderData(
@@ -20,8 +18,8 @@ export class LineChartD3 extends XYChartD3 {
     const path = svg
       .append('path')
       .attr('fill', 'none')
-      .attr('stroke', 'steelblue')
-      .attr('stroke-width', 1.5)
+      .attr('stroke', this.colorHighlight)
+      .attr('stroke-width', 2)
       .attr('stroke-linejoin', 'round')
       .attr('stroke-linecap', 'round');
 
@@ -47,41 +45,34 @@ export class LineChartD3 extends XYChartD3 {
     xAxis: d3.Axis<Date>,
     yAxis: d3.Axis<number>,
   ) {
-    const g = svg
-      .append('g');
-
-    g
+    const circle = svg
       .append('circle')
       .attr('r', 4)
-      .attr('fill', 'steelblue');
+      .attr('fill', this.colorHighlight);
 
-    const text = g
-      .append('text')
-      .attr('y', 20)
-      .attr('text-anchor', 'middle')
-      .attr('font-family', 'sans-serif')
-      .attr('font-size', 10);
+    const toast = this.container.select('.active-indicator');
 
     const activeDatumSubscription = activeDatumObservable.subscribe(activeDatum => {
       if (!activeDatum) {
-        g
-          .attr('display', 'none');
+        circle.attr('display', 'none');
+        toast.style('opacity', 0);
         return;
       }
       const { date, value } = activeDatum;
-      g
+      circle
         .transition(this.createTransition(50))
         .attr('display', 'inherit')
         .attr('transform', `translate(${scaleX(date)},${scaleY(value)})`);
-      text.text(t('audification.active_datum', {
-        x: formatX(date),
-        y: formatY(value),
-      }));
+      toast
+        .transition(this.createTransition(50))
+        .style('opacity', .8)
+        .style('top', `${scaleY(value) + 16}px`)
+        .style('left', `${scaleX(date) - 64}px`);
     });
 
     return () => {
       activeDatumSubscription.unsubscribe();
-      g.remove();
+      circle.remove();
     };
   }
 }

@@ -1,12 +1,13 @@
 import { ElementRef } from '@angular/core';
 import * as d3 from 'd3';
-import * as uuid from 'uuid';
 
 export type HandleDestroy = () => void;
 
 export abstract class BaseD3<RenderOptions> {
+  protected colorFont = 'rgb(34, 34, 34)';
+  protected colorHighlight = 'rgb(66, 133, 244)';
+
   protected container = d3.select(this.elementRef.nativeElement);
-  protected idSuffix = uuid.v4();
   private handleDestroy?: HandleDestroy;
 
   constructor(private elementRef: ElementRef) {
@@ -26,10 +27,6 @@ export abstract class BaseD3<RenderOptions> {
       this.handleDestroy();
       this.handleDestroy = undefined;
     }
-  }
-
-  protected createId(prefix: string) {
-    return `${prefix}-${this.idSuffix}`;
   }
 
   protected createTransition(duration: number): d3.Transition<any, unknown, null, undefined> {

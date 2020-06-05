@@ -1,7 +1,5 @@
-<div role="img"
+<div role="img" class="instructions"
      [innerHTML]="t('audification.instructions')"
      [attr.aria-label]="tA11y('audification.instructions')">
 </div>
-<div class="live-text" aria-live="assertive">
-  {{liveText}}
-</div>
+<div class="live-text" aria-live="assertive" [innerText]="liveText"></div>
