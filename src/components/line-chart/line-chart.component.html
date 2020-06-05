@@ -1,10 +1,20 @@
-<app-card title="Line Chart">
-  <button (click)="toggleMeasure()">Toggle Measure</button>
-  <app-line-chart-visualization role="img"
-                                [attr.aria-label]="t('visualization')"
-                                [data]="data"
-                                [(activeDatum)]="activeDatum"></app-line-chart-visualization>
-  <app-line-chart-audification tabindex="0"
-                               [data]="data"
-                               [(activeDatum)]="activeDatum"></app-line-chart-audification>
+<app-card class="card" title="Line Chart">
+  <div class="measures">
+    <div *ngFor="let measureName of measureNames"
+         class="measure" [class.active]="measureName === currentMeasureName"
+         (click)="setMeasureName(measureName)" role="button">
+      {{humanizeMeasureName(measureName)}}
+    </div>
+  </div>
+  <app-fold>
+    <app-line-chart-visualization role="img"
+                                  [attr.aria-label]="t('visualization')"
+                                  [data]="data"
+                                  [(activeDatum)]="activeDatum"></app-line-chart-visualization>
+  </app-fold>
+  <app-fold>
+    <app-line-chart-audification tabindex="0"
+                                 [data]="data"
+                                 [(activeDatum)]="activeDatum"></app-line-chart-audification>
+  </app-fold>
 </app-card>
