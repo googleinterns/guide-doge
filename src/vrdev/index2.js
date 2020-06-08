@@ -1,18 +1,19 @@
 function main(){
-    var data = [ 10, 20, 30,40,50,60,70,80]
+    var data = [ 10, 20, 30, 40,50,60,70,80]
 
-// we scale the height of our bars using d3's linear scale
+// create a scale so that there is correspondence between data set and screen render
 var hscale = d3.scale.linear()
-.domain([0, d3.max(data)])
-.range([0, 3])
+.domain([0, d3.max(data)])                  //max of dataset
+.range([0, 10])                             //linear mapping of data set from 0 to 10
 
 // we select the scene object just like an svg
 var scene = d3.select("a-scene")
 
 // we use d3's enter/update/exit pattern to draw and bind our dom elements
+//enter identifies any DOM elements to be added when # array elements doesn't match
 var dataPt = scene.selectAll("a-sphere.dataPt").data(data)
 dataPt.enter().append("a-sphere").classed("dataPt", true)
-// we set attributes on our cubes to determine how they are rendered
+// we set attributes on spheres to determine how they are rendered
 dataPt.attr({
 position: function(d,i) {
 
@@ -21,8 +22,7 @@ var y = i*5;
 var z = -d/10;
 return x + " " + y + " " + z
 },
-// radius: function(d) { return hscale(d/5)},
-radius: function(){return 1},
+radius: function(d) { return hscale(d/5)},
 opacity: function(d,i) { return 0.6 + (i/data.length) * 0.4},
 //metalness: function(d,i) { return i/data.length}
 })
@@ -52,11 +52,3 @@ width: 0.5
 })   
 }
 
-function loadScript(url)
-{    
-    var head = document.getElementsByTagName('head')[0];
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = url;
-    head.appendChild(script);
-}
