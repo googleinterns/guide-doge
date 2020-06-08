@@ -1,55 +1,38 @@
-import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component } from '@angular/core';
+import { activeUserMeasure, eventCountMeasure, revenueMeasure } from '../../models/data-cube/presets';
 import { DataService } from '../../services/data/data.service';
-import { LineChartD3 } from '../../d3/line-chart.d3';
-import { BehaviorSubject } from 'rxjs';
-import { Datum, RenderOptions } from '../../d3/xy-chart.d3';
+import { Datum } from '../../d3/xy-chart.d3';
+import { GUIDE_DOGE, t } from '../../assets/i18n';
 
 @Component({
   selector: 'app-line-chart',
-  template: `
-    <app-line-chart-audification></app-line-chart-audification>
-  `,
+  templateUrl: './line-chart.component.html',
 })
-export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnDestroy {
-  @Input() height = 500;
-  @Input() width = 800;
-  @Input() marginTop = 20;
-  @Input() marginRight = 30;
-  @Input() marginBottom = 30;
-  @Input() marginLeft = 40;
-  @Input() measureName: string;
-  lineChartD3: LineChartD3;
-
-  private dataSubject = new BehaviorSubject<Datum[]>([]);
-  dataObservable = this.dataSubject.asObservable();
-
-  private activeDatumSubject = new BehaviorSubject<Datum | null>(null);
-  activeDatumObservable = this.activeDatumSubject.asObservable();
+export class LineChartComponent {
+  activeDatum: Datum | null;
+  data: Datum[];
+  private measureNames = [activeUserMeasure, revenueMeasure, eventCountMeasure].map(measure => measure.name);
+  private measureName: string;
 
   constructor(
     private dataService: DataService,
-    public element: ElementRef<HTMLElement>,
   ) {
-    this.lineChartD3 = new LineChartD3(element);
+    this.setMeasureIndex(0);
   }
 
-  set activeDatum(activeDatum: Datum | null) {
-    this.activeDatumSubject.next(activeDatum);
+  get VISUALIZATION() {
+    return t(GUIDE_DOGE.VISUALIZATION);
   }
 
-  ngOnInit() {
-    this.lineChartD3.init(this);
+  toggleMeasure() {
+    const index = this.measureNames.indexOf(this.measureName);
+    const nextIndex = (index + 1) % this.measureNames.length;
+    this.setMeasureIndex(nextIndex);
   }
 
-  ngOnDestroy() {
-    this.lineChartD3.destroy();
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if ('measureName' in changes) {
-      const data = this.dataService.getMeasureOverDays(this.measureName);
-      this.dataSubject.next(data);
-      this.activeDatumSubject.next(null);
-    }
+  setMeasureIndex(index) {
+    this.measureName = this.measureNames[index];
+    this.data = this.dataService.getMeasureOverDays(this.measureName);
+    this.activeDatum = null;
   }
 }

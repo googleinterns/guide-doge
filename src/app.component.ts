@@ -7,7 +7,7 @@ import { GUIDE_DOGE, t } from './assets/i18n';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  get title() {
+  get TITLE() {
     return t(GUIDE_DOGE.TITLE);
   }
 }

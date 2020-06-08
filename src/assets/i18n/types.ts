@@ -1,5 +1,7 @@
 export enum GUIDE_DOGE {
   TITLE = 0x000, // explicitly inits the first value of each enum with a different value to prevent i18n key conflicts
+  VISUALIZATION,
+  AUDIFICATION
 }
 
 export enum VISUALIZATION {

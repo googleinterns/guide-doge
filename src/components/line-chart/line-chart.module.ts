@@ -1,19 +1,19 @@
 import { NgModule } from '@angular/core';
 import { LineChartComponent } from './line-chart.component';
-import { DataModule } from '../../services/data/data.module';
-import { LineChartAudificationModule } from '../line-chart-audification/line-chart-audification.module';
+import { LineChartVisualizationModule } from '../../components/line-chart-visualization/line-chart-visualization.module';
+import { LineChartAudificationModule } from '../../components/line-chart-audification/line-chart-audification.module';
 
 @NgModule({
   declarations: [
     LineChartComponent,
   ],
   imports: [
-    DataModule,
+    LineChartVisualizationModule,
     LineChartAudificationModule,
   ],
   exports: [
     LineChartComponent,
-  ]
+  ],
 })
 export class LineChartModule {
 }
