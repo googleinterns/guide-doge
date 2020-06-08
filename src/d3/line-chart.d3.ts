@@ -1,7 +1,7 @@
 import { Datum, XYChartD3 } from './xy-chart.d3';
 import * as d3 from 'd3';
 import { Observable } from 'rxjs';
-import { t } from '../assets/i18n/utils';
+import { AUDIFICATION, t } from '../assets/i18n';
 import { formatX, formatY } from '../utils/formatters';
 
 export class LineChartD3 extends XYChartD3 {
@@ -73,7 +73,7 @@ export class LineChartD3 extends XYChartD3 {
         .transition(this.createTransition(50))
         .attr('display', 'inherit')
         .attr('transform', `translate(${scaleX(date)},${scaleY(value)})`);
-      text.text(t('audification.active_datum', {
+      text.text(t(AUDIFICATION.ACTIVE_DATUM, {
         x: formatX(date),
         y: formatY(value),
       }));

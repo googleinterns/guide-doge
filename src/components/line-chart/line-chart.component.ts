@@ -2,14 +2,13 @@ import { Component } from '@angular/core';
 import { activeUserMeasure, eventCountMeasure, revenueMeasure } from '../../models/data-cube/presets';
 import { DataService } from '../../services/data/data.service';
 import { Datum } from '../../d3/xy-chart.d3';
-import { t } from '../../assets/i18n/utils';
+import { GUIDE_DOGE, t } from '../../assets/i18n';
 
 @Component({
   selector: 'app-line-chart',
   templateUrl: './line-chart.component.html',
 })
 export class LineChartComponent {
-  t = t;
   activeDatum: Datum | null;
   data: Datum[];
   private measureNames = [activeUserMeasure, revenueMeasure, eventCountMeasure].map(measure => measure.name);
@@ -19,6 +18,10 @@ export class LineChartComponent {
     private dataService: DataService,
   ) {
     this.setMeasureIndex(0);
+  }
+
+  get VISUALIZATION() {
+    return t(GUIDE_DOGE.VISUALIZATION);
   }
 
   toggleMeasure() {

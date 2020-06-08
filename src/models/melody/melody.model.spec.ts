@@ -4,9 +4,9 @@ import * as Tone from 'tone';
 describe('Melody', () => {
   const values = [1, 2, 3, 4, 5, 4, 3, 2, 1];
   const frequencyRange: [number, number] = [256, 2048];
-  const duration = 5;
-  const delay = 200;
+  const duration = 5; // duration (in seconds) of the melody to generate
   let melody: Melody;
+  const delay = 200; // delay (in ms) between playing the melody and evaluating playhead
 
   beforeAll(async () => {
     await Tone.start();

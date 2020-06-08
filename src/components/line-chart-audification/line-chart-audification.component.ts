@@ -1,8 +1,9 @@
 import { Component, ElementRef, EventEmitter, Input, NgZone, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Melody } from '../../models/melody/melody.model';
-import { t, tA11y } from '../../assets/i18n/utils';
+import { t, tA11y } from '../../assets/i18n';
 import { Datum } from '../../d3/xy-chart.d3';
 import { formatX, formatY } from '../../utils/formatters';
+import { AUDIFICATION } from '../../assets/i18n';
 
 @Component({
   selector: 'app-line-chart-audification',
@@ -15,8 +16,6 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy, OnChan
   @Output() activeDatumChange = new EventEmitter<Datum | null>();
   @Input() frequencyRange: [number, number] = [256, 2048];
   @Input() duration = 5;
-  t = t;
-  tA11y = tA11y;
   liveText: string | null = null;
   private melody?: Melody;
   private element = this.elementRef.nativeElement;
@@ -30,6 +29,14 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy, OnChan
     this.handleSeek = this.handleSeek.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
+  }
+
+  get INSTRUCTIONS() {
+    return t(AUDIFICATION.INSTRUCTIONS);
+  }
+
+  get INSTRUCTIONS_A11Y() {
+    return tA11y(AUDIFICATION.INSTRUCTIONS);
   }
 
   ngOnInit() {
@@ -61,7 +68,7 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy, OnChan
     this.zone.run((() => {
       this.activeDatumChange.emit(datum);
       if (!playing) {
-        this.readOut(t('audification.active_datum', {
+        this.readOut(t(AUDIFICATION.ACTIVE_DATUM, {
           x: formatX(date),
           y: formatY(value),
         }));
@@ -77,12 +84,12 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy, OnChan
     if (key === ' ') {
       await this.melody?.resume(shiftKey);
     } else if (key === 'x') {
-      this.readOut(t('audification.domain', {
+      this.readOut(t(AUDIFICATION.DOMAIN, {
         min: formatX(this.domain[0]),
         max: formatX(this.domain[this.domain.length - 1]),
       }));
     } else if (key === 'y') {
-      this.readOut(t('audification.range', {
+      this.readOut(t(AUDIFICATION.RANGE, {
         min: formatY(this.range[0]),
         max: formatY(this.range[this.range.length - 1]),
       }));
