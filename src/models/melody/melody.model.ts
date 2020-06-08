@@ -64,7 +64,8 @@ export class Melody {
     }
     if (!this.isPlaying) {
       this.reversed = reversed;
-      let nextSeconds = this.getSeconds(this.nextIndex);
+      this.currentIndex = this.nextIndex;
+      let nextSeconds = this.getSeconds(this.currentIndex);
       if (this.reversed) {
         this.backwardSequence?.start(0);
         this.forwardSequence?.stop(0);
@@ -84,6 +85,10 @@ export class Melody {
       Tone.Transport.pause();
       this.seekTo(this.currentSeconds);
     }
+  }
+
+  getCurrentIndex() {
+    return this.currentIndex;
   }
 
   seekTo(seconds: number, inclusive = false) {
