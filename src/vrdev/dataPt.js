@@ -1,8 +1,18 @@
-AFRAME.registerComponent('dataPt', {
+
+  AFRAME.registerComponent('dataPt', {
     schema: {
-        color: {default: '#EEEEEE'}
-        x: 1;
-    }
+        
+       
     },
-    init: function () {}
+    init: function () {
+        //let point = document.createElement('a-box');
+        this.setAttribute('light', {color: '#CCC', intensity: 1});
+        this.setAttribute('geometry', {
+            primitive: 'box',
+            height: 1,
+            width: 1
   });
+    }
+  });
+
+  //30points in scatter
