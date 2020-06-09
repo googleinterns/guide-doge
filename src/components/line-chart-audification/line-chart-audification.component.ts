@@ -1,25 +1,116 @@
-import { Component, Host } from '@angular/core';
-import { LineChartComponent } from '../line-chart/line-chart.component';
-import { AudificationService } from '../../services/audification/audification.service';
-import * as Tone from 'tone';
+import { Component, EventEmitter, HostListener, Input, NgZone, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import { Melody } from '../../models/melody/melody.model';
+import { AUDIFICATION, t, tA11y } from '../../assets/i18n';
+import { Datum } from '../../d3/xy-chart.d3';
+import { formatX, formatY } from '../../utils/formatters';
 
 @Component({
   selector: 'app-line-chart-audification',
   templateUrl: './line-chart-audification.component.html',
+  styleUrls: ['./line-chart-audification.component.scss'],
 })
-export class LineChartAudificationComponent {
-  public disposeMelody?: () => void;
+export class LineChartAudificationComponent implements OnDestroy, OnChanges {
+  @Input() data: Datum[];
+  @Input() activeDatum: Datum | null;
+  @Output() activeDatumChange = new EventEmitter<Datum | null>();
+  @Input() frequencyRange: [number, number] = [256, 2048];
+  @Input() duration = 5;
+  liveText: string | null = null;
+  private melody?: Melody;
+  private domain: Date[];
+  private range: number[];
 
   constructor(
-    @Host() public component: LineChartComponent,
-    private audificationService: AudificationService,
+    private zone: NgZone,
   ) {
+    this.handleSeek = this.handleSeek.bind(this);
   }
 
-  async playMelody() {
-    if (Tone.getContext().state === 'suspended') {
-      await Tone.start();
+  get INSTRUCTIONS() {
+    return t(AUDIFICATION.INSTRUCTIONS);
+  }
+
+  get INSTRUCTIONS_A11Y() {
+    return tA11y(AUDIFICATION.INSTRUCTIONS);
+  }
+
+  ngOnDestroy() {
+    this.melody?.dispose();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if ('data' in changes) {
+      const values = this.data.map(datum => datum.value);
+      this.domain = this.data.map(d => d.date).sort((a, b) => a.getTime() - b.getTime());
+      this.range = this.data.map(d => d.value).sort();
+      this.melody?.dispose();
+      this.melody = new Melody(values, this.frequencyRange, this.duration, this.handleSeek);
     }
-    this.disposeMelody = this.audificationService.audify([], [0, 0], 0);
+  }
+
+  handleSeek(index, playing) {
+    const datum = this.data[index];
+    const { date, value } = datum;
+
+    // since Tone.js is running outside of the Angular zone, it needs to reenter the zone to trigger change detection.
+    this.zone.run((() => {
+      this.activeDatumChange.emit(datum);
+      if (!playing) {
+        this.readOut(t(AUDIFICATION.ACTIVE_DATUM, {
+          x: formatX(date),
+          y: formatY(value),
+        }));
+      }
+    }));
+  }
+
+  @HostListener('keydown', ['$event'])
+  async handleKeyDown($event: KeyboardEvent) {
+    const { key, shiftKey, repeat } = $event;
+    if (repeat) {
+      return;
+    }
+    if (key === ' ') {
+      await this.melody?.resume(shiftKey);
+    } else if (key === 'x') {
+      this.readOut(t(AUDIFICATION.DOMAIN, {
+        min: formatX(this.domain[0]),
+        max: formatX(this.domain[this.domain.length - 1]),
+      }));
+    } else if (key === 'y') {
+      this.readOut(t(AUDIFICATION.RANGE, {
+        min: formatY(this.range[0]),
+        max: formatY(this.range[this.range.length - 1]),
+      }));
+    } else if ('0' <= key && key <= '9') {
+      this.melody?.seekTo(this.duration * (+key / 10), true);
+    } else {
+      return;
+    }
+    $event.preventDefault();
+    $event.stopPropagation();
+  }
+
+  @HostListener('keyup', ['$event'])
+  handleKeyUp($event: KeyboardEvent) {
+    const { key } = $event;
+    if (key === ' ') {
+      this.melody?.pause();
+    } else {
+      return;
+    }
+    $event.preventDefault();
+    $event.stopPropagation();
+  }
+
+  private readOut(text: string) {
+    if (this.liveText === text) {
+      this.liveText = null; // empty the text for a short period of time when the same text needs to be read out consequently
+      window.setTimeout(() => {
+        this.readOut(text);
+      }, 500);
+    } else {
+      this.liveText = text;
+    }
   }
 }
