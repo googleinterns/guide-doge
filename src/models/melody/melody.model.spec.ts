@@ -59,7 +59,7 @@ describe('Melody', () => {
   it('should seek to the closest note to the given second.', () => {
     for (let index = 0; index < duration; index++) {
       melody.seekTo(index * melody.noteDuration);
-      expect(melody.getCurrentIndex()).toBe(index);
+      expect(melody.getCurrentDatumIndex()).toBe(index);
     }
   });
 });
