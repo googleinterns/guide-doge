@@ -33,11 +33,11 @@ export class LineChartVisualizationComponent implements RenderOptions, OnChanges
   }
 
   ngOnInit() {
-    this.lineChartD3.init(this);
+    this.lineChartD3.render(this);
   }
 
   ngOnDestroy() {
-    this.lineChartD3.destroy();
+    this.lineChartD3.clear();
   }
 
   ngOnChanges(changes: SimpleChanges): void {

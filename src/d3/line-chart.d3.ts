@@ -1,23 +1,22 @@
-import { Datum, XYChartD3 } from './xy-chart.d3';
+import { Datum, RenderOptions, XYChartD3 } from './xy-chart.d3';
 import * as d3 from 'd3';
-import { Observable } from 'rxjs';
 import { AUDIFICATION, t } from '../assets/i18n';
 import { formatX, formatY } from '../utils/formatters';
+import { takeUntil } from 'rxjs/operators';
 
 export class LineChartD3 extends XYChartD3 {
-  protected renderData(
-    svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
-    dataObservable: Observable<Datum[]>,
-    scaleX: d3.ScaleTime<number, number>,
-    scaleY: d3.ScaleLinear<number, number>,
-  ) {
+  render(renderOptions: RenderOptions) {
+    super.render(renderOptions);
+  }
+
+  protected renderData({ dataObservable }: RenderOptions) {
     const line = d3
       .line<Datum>()
       .defined(d => !isNaN(d.value))
-      .x(d => scaleX(d.date))
-      .y(d => scaleY(d.value));
+      .x(d => this.scaleX(d.date))
+      .y(d => this.scaleY(d.value));
 
-    const path = svg
+    const path = this.svg
       .append('path')
       .attr('fill', 'none')
       .attr('stroke', 'steelblue')
@@ -25,29 +24,18 @@ export class LineChartD3 extends XYChartD3 {
       .attr('stroke-linejoin', 'round')
       .attr('stroke-linecap', 'round');
 
-
-    const dataSubscription = dataObservable.subscribe(data => {
-      path
-        .datum(data)
-        .transition(this.transition)
-        .attr('d', line);
-    });
-
-    return () => {
-      dataSubscription.unsubscribe();
-      path.remove();
-    };
+    dataObservable
+      .pipe(takeUntil(this.clear$))
+      .subscribe(data => {
+        path
+          .datum(data)
+          .transition(this.transition)
+          .attr('d', line);
+      });
   }
 
-  protected renderActiveIndicator(
-    svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
-    activeDatumObservable: Observable<Datum | null>,
-    scaleX: d3.ScaleTime<number, number>,
-    scaleY: d3.ScaleLinear<number, number>,
-    xAxis: d3.Axis<Date>,
-    yAxis: d3.Axis<number>,
-  ) {
-    const g = svg
+  protected renderActiveIndicator({ activeDatumObservable }: RenderOptions) {
+    const g = this.svg
       .append('g');
 
     g
@@ -62,26 +50,22 @@ export class LineChartD3 extends XYChartD3 {
       .attr('font-family', 'sans-serif')
       .attr('font-size', 10);
 
-    const activeDatumSubscription = activeDatumObservable.subscribe(activeDatum => {
-      if (!activeDatum) {
+    activeDatumObservable
+      .pipe(takeUntil(this.clear$))
+      .subscribe(activeDatum => {
+        if (!activeDatum) {
+          g.attr('display', 'none');
+          return;
+        }
+        const { date, value } = activeDatum;
         g
-          .attr('display', 'none');
-        return;
-      }
-      const { date, value } = activeDatum;
-      g
-        .transition(this.createTransition(50))
-        .attr('display', 'inherit')
-        .attr('transform', `translate(${scaleX(date)},${scaleY(value)})`);
-      text.text(t(AUDIFICATION.ACTIVE_DATUM, {
-        x: formatX(date),
-        y: formatY(value),
-      }));
-    });
-
-    return () => {
-      activeDatumSubscription.unsubscribe();
-      g.remove();
-    };
+          .transition(this.createTransition(50))
+          .attr('display', 'inherit')
+          .attr('transform', `translate(${this.scaleX(date)},${this.scaleY(value)})`);
+        text.text(t(AUDIFICATION.ACTIVE_DATUM, {
+          x: formatX(date),
+          y: formatY(value),
+        }));
+      });
   }
 }
