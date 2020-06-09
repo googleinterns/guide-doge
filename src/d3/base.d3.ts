@@ -4,6 +4,7 @@ import { MonoTypeOperatorFunction, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 export interface RenderOptions {
+  elementRef: ElementRef<HTMLElement>;
   height: number;
   width: number;
   marginTop: number;
@@ -12,19 +13,29 @@ export interface RenderOptions {
   marginLeft: number;
 }
 
-export abstract class BaseD3 {
-  protected container = d3.select(this.elementRef.nativeElement);
+export abstract class BaseD3<T extends RenderOptions> {
   protected svg: d3.Selection<SVGSVGElement, unknown, null, undefined>;
   private clear$?: Subject<undefined>;
 
-  constructor(private elementRef: ElementRef) {
+  constructor(protected renderOptions: T) {
   }
 
   protected get transition() {
     return this.createTransition(300);
   }
 
-  render({ width, height }: RenderOptions) {
+  protected get container() {
+    return d3.select(this.renderOptions.elementRef.nativeElement);
+  }
+
+  config(renderOptions: T) {
+    this.renderOptions = renderOptions;
+    return this;
+  }
+
+  render() {
+    const { width, height } = this.renderOptions;
+
     this.clear();
     this.clear$ = new Subject();
 
@@ -44,7 +55,7 @@ export abstract class BaseD3 {
     this.svg.remove();
   }
 
-  protected takeUntilCleared<T>(): MonoTypeOperatorFunction<T> {
+  protected takeUntilCleared<R>(): MonoTypeOperatorFunction<R> {
     if (!this.clear$) {
       throw new Error(`Subject 'clear$' is not defined.`);
     }

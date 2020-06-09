@@ -27,13 +27,13 @@ export class LineChartVisualizationComponent implements RenderOptions, OnChanges
   activeDatumObservable = this.activeDatumSubject.asObservable();
 
   constructor(
-    private element: ElementRef<HTMLElement>,
+    public elementRef: ElementRef<HTMLElement>,
   ) {
-    this.lineChartD3 = new LineChartD3(element);
+    this.lineChartD3 = new LineChartD3(this);
   }
 
   ngOnInit() {
-    this.lineChartD3.render(this);
+    this.lineChartD3.render();
   }
 
   ngOnDestroy() {

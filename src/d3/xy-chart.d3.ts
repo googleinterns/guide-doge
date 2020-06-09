@@ -13,64 +13,85 @@ export interface RenderOptions extends BaseRenderOptions {
   activeDatumObservable: Observable<Datum | null>;
 }
 
-export abstract class XYChartD3 extends BaseD3 {
+export abstract class XYChartD3 extends BaseD3<RenderOptions> {
   protected scaleX: d3.ScaleTime<number, number>;
   protected scaleY: d3.ScaleLinear<number, number>;
+  protected xAxis: d3.Axis<Date>;
+  protected yAxis: d3.Axis<number>;
+  protected xAxisG: d3.Selection<SVGGElement, unknown, null, undefined>;
+  protected yAxisG: d3.Selection<SVGGElement, unknown, null, undefined>;
 
-  render(renderOptions: RenderOptions) {
-    super.render(renderOptions);
+  render() {
+    super.render();
 
     const {
-      dataObservable,
+      dataObservable, activeDatumObservable,
+    } = this.renderOptions;
+
+    this.renderAxis();
+    this.renderData();
+    this.renderActiveDatum();
+
+    dataObservable
+      .pipe(this.takeUntilCleared())
+      .subscribe(data => {
+        this.updateAxis(data);
+        this.updateData(data);
+      });
+
+    activeDatumObservable
+      .pipe(this.takeUntilCleared())
+      .subscribe(activeDatum => {
+        this.updateActiveDatum(activeDatum);
+      });
+  }
+
+  protected renderAxis() {
+    const {
       height, width,
       marginTop, marginRight, marginBottom, marginLeft,
-    } = renderOptions;
+    } = this.renderOptions;
 
     this.scaleX = d3
       .scaleUtc()
       .range([marginLeft, width - marginRight]);
-
     this.scaleY = d3
       .scaleLinear()
       .nice()
       .range([height - marginBottom, marginTop]);
 
-    const xAxis = d3
+    this.xAxis = d3
       .axisBottom<Date>(this.scaleX)
       .ticks(width / 80)
       .tickFormat(formatX)
       .tickSizeOuter(0);
+    this.yAxis = d3.axisLeft<number>(this.scaleY);
 
-    const yAxis = d3.axisLeft<number>(this.scaleY);
-
-    const xAxisG = this.svg
+    this.xAxisG = this.svg
       .append('g')
       .attr('transform', `translate(0,${height - marginBottom})`);
-
-    const yAxisG = this.svg
+    this.yAxisG = this.svg
       .append('g')
       .attr('transform', `translate(${marginLeft},0)`);
-
-    dataObservable
-      .pipe(this.takeUntilCleared())
-      .subscribe(data => {
-        this.scaleX.domain(d3.extent<Datum, Date>(data, d => d.date) as [Date, Date]);
-        this.scaleY.domain([0, d3.max(data, d => d.value)!]);
-
-        xAxisG
-          .transition(this.transition)
-          .call(xAxis);
-
-        yAxisG
-          .transition(this.transition)
-          .call(yAxis);
-      });
-
-    this.renderData(renderOptions);
-    this.renderActiveIndicator(renderOptions);
   }
 
-  protected abstract renderData(renderOptions: RenderOptions);
+  protected updateAxis(data: Datum[]) {
+    this.scaleX.domain(d3.extent<Datum, Date>(data, d => d.date) as [Date, Date]);
+    this.scaleY.domain([0, d3.max(data, d => d.value)!]);
 
-  protected abstract renderActiveIndicator(renderOptions: RenderOptions);
+    this.xAxisG
+      .transition(this.transition)
+      .call(this.xAxis);
+    this.yAxisG
+      .transition(this.transition)
+      .call(this.yAxis);
+  }
+
+  protected abstract renderData();
+
+  protected abstract updateData(data: Datum[]);
+
+  protected abstract renderActiveDatum();
+
+  protected abstract updateActiveDatum(activeDatum: Datum | null);
 }
