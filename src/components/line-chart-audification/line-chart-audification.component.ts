@@ -105,7 +105,7 @@ export class LineChartAudificationComponent implements OnDestroy, OnChanges {
 
   private readOut(text: string) {
     if (this.liveText === text) {
-      this.liveText = null;
+      this.liveText = null; // empty the text for a short period of time when the same text needs to be read out consequently
       window.setTimeout(() => {
         this.readOut(text);
       }, 500);
