@@ -13,7 +13,7 @@ export class Melody {
   constructor(
     private values: number[],
     private frequencyRange: [number, number],
-    private duration: number,
+    private duration: number, // duration (in seconds) of the melody
     private onSeek?: OnSeek,
   ) {
     const reversedValues = [...values].reverse();
@@ -114,11 +114,11 @@ export class Melody {
         this.seekTo(this.currentSeconds);
         const keyNumber = (value - minValue) / (maxValue - minValue) * (maxKeyNumber - minKeyNumber) + minKeyNumber;
         const frequency = Melody.getFrequency(keyNumber);
-        this.synth.triggerAttackRelease(frequency, '4n', time);
+        this.synth.triggerAttackRelease(frequency, this.noteDuration, time);
       },
       values,
+      this.noteDuration,
     );
-    sequence.playbackRate = values.length / 4 / this.duration;
     sequence.loop = 1;
     return sequence;
   }
