@@ -2,7 +2,6 @@ import * as d3 from 'd3';
 import { BaseD3, RenderOptions as BaseRenderOptions } from './base.d3';
 import { Observable } from 'rxjs';
 import { formatX } from '../utils/formatters';
-import { takeUntil } from 'rxjs/operators';
 
 export interface Datum {
   date: Date;
@@ -53,7 +52,7 @@ export abstract class XYChartD3 extends BaseD3 {
       .attr('transform', `translate(${marginLeft},0)`);
 
     dataObservable
-      .pipe(takeUntil(this.clear$))
+      .pipe(this.takeUntilCleared())
       .subscribe(data => {
         this.scaleX.domain(d3.extent<Datum, Date>(data, d => d.date) as [Date, Date]);
         this.scaleY.domain([0, d3.max(data, d => d.value)!]);

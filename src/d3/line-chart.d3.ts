@@ -25,7 +25,7 @@ export class LineChartD3 extends XYChartD3 {
       .attr('stroke-linecap', 'round');
 
     dataObservable
-      .pipe(takeUntil(this.clear$))
+      .pipe(this.takeUntilCleared())
       .subscribe(data => {
         path
           .datum(data)
@@ -51,7 +51,7 @@ export class LineChartD3 extends XYChartD3 {
       .attr('font-size', 10);
 
     activeDatumObservable
-      .pipe(takeUntil(this.clear$))
+      .pipe(this.takeUntilCleared())
       .subscribe(activeDatum => {
         if (!activeDatum) {
           g.attr('display', 'none');

@@ -1,6 +1,7 @@
 import { ElementRef } from '@angular/core';
 import * as d3 from 'd3';
-import { Subject } from 'rxjs';
+import { MonoTypeOperatorFunction, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 export interface RenderOptions {
   height: number;
@@ -14,8 +15,7 @@ export interface RenderOptions {
 export abstract class BaseD3 {
   protected container = d3.select(this.elementRef.nativeElement);
   protected svg: d3.Selection<SVGSVGElement, unknown, null, undefined>;
-  protected clear$ = new Subject();
-  protected rendered = false;
+  private clear$?: Subject<undefined>;
 
   constructor(private elementRef: ElementRef) {
   }
@@ -26,7 +26,7 @@ export abstract class BaseD3 {
 
   render({ width, height }: RenderOptions) {
     this.clear();
-    this.rendered = true;
+    this.clear$ = new Subject();
 
     this.svg = this.container
       .append('svg')
@@ -34,13 +34,21 @@ export abstract class BaseD3 {
   }
 
   clear() {
-    if (!this.rendered) {
+    if (!this.clear$) {
       return;
     }
-    this.rendered = false;
-
     this.clear$.next();
+    this.clear$.complete();
+    this.clear$ = undefined;
+
     this.svg.remove();
+  }
+
+  protected takeUntilCleared<T>(): MonoTypeOperatorFunction<T> {
+    if (!this.clear$) {
+      throw new Error(`Subject 'clear$' is not defined.`);
+    }
+    return takeUntil(this.clear$);
   }
 
   protected createTransition(duration: number): d3.Transition<any, unknown, null, undefined> {
