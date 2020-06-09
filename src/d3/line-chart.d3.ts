@@ -2,13 +2,8 @@ import { Datum, RenderOptions, XYChartD3 } from './xy-chart.d3';
 import * as d3 from 'd3';
 import { AUDIFICATION, t } from '../assets/i18n';
 import { formatX, formatY } from '../utils/formatters';
-import { takeUntil } from 'rxjs/operators';
 
 export class LineChartD3 extends XYChartD3 {
-  render(renderOptions: RenderOptions) {
-    super.render(renderOptions);
-  }
-
   protected renderData({ dataObservable }: RenderOptions) {
     const line = d3
       .line<Datum>()
