@@ -1,16 +1,15 @@
-import { Component, ElementRef, EventEmitter, Input, NgZone, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, NgZone, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 import { Melody } from '../../models/melody/melody.model';
-import { t, tA11y } from '../../assets/i18n';
+import { AUDIFICATION, t, tA11y } from '../../assets/i18n';
 import { Datum } from '../../d3/xy-chart.d3';
 import { formatX, formatY } from '../../utils/formatters';
-import { AUDIFICATION } from '../../assets/i18n';
 
 @Component({
   selector: 'app-line-chart-audification',
   templateUrl: './line-chart-audification.component.html',
   styleUrls: ['./line-chart-audification.component.scss'],
 })
-export class LineChartAudificationComponent implements OnInit, OnDestroy, OnChanges {
+export class LineChartAudificationComponent implements OnDestroy, OnChanges {
   @Input() data: Datum[];
   @Input() activeDatum: Datum | null;
   @Output() activeDatumChange = new EventEmitter<Datum | null>();
@@ -18,17 +17,13 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy, OnChan
   @Input() duration = 5;
   liveText: string | null = null;
   private melody?: Melody;
-  private element = this.elementRef.nativeElement;
   private domain: Date[];
   private range: number[];
 
   constructor(
-    private elementRef: ElementRef<HTMLElement>,
     private zone: NgZone,
   ) {
     this.handleSeek = this.handleSeek.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
-    this.handleKeyUp = this.handleKeyUp.bind(this);
   }
 
   get INSTRUCTIONS() {
@@ -39,14 +34,7 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy, OnChan
     return tA11y(AUDIFICATION.INSTRUCTIONS);
   }
 
-  ngOnInit() {
-    this.element.addEventListener('keydown', this.handleKeyDown);
-    this.element.addEventListener('keyup', this.handleKeyUp);
-  }
-
   ngOnDestroy() {
-    this.element.removeEventListener('keyup', this.handleKeyUp);
-    this.element.removeEventListener('keydown', this.handleKeyDown);
     this.melody?.dispose();
   }
 
@@ -76,6 +64,7 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy, OnChan
     }));
   }
 
+  @HostListener('keydown', ['$event'])
   async handleKeyDown($event: KeyboardEvent) {
     const { key, shiftKey, repeat } = $event;
     if (repeat) {
@@ -102,6 +91,7 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy, OnChan
     $event.stopPropagation();
   }
 
+  @HostListener('keyup', ['$event'])
   handleKeyUp($event: KeyboardEvent) {
     const { key } = $event;
     if (key === ' ') {
