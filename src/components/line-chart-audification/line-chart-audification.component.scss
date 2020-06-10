@@ -29,9 +29,5 @@
     &:before {
       content: '🔊 ';
     }
-
-    &:empty:after {
-      content: '-';
-    }
   }
 }
