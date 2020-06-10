@@ -6,14 +6,14 @@ export class Melody {
   private synth = new Tone.Synth().toDestination();
   private forwardSequence: Tone.Sequence;
   private backwardSequence: Tone.Sequence;
-  private currentIndex = 0;
-  private inclusive = true; // if true, playing the melody starting inclusively from currentIndex
+  private currentDatumIndex = 0;
+  private inclusive = true; // if true, playing the melody starting inclusively from currentDatumIndex
   private reversed = false; // if true, playing the melody backward
 
   constructor(
     private values: number[],
     private frequencyRange: [number, number],
-    private duration: number,
+    private duration: number, // duration (in seconds) of the melody
     private onSeek?: OnSeek,
   ) {
     const reversedValues = [...values].reverse();
@@ -37,17 +37,17 @@ export class Melody {
 
   get isEnded() {
     return (
-      this.reversed && this.currentIndex === 0 ||
-      !this.reversed && this.currentIndex === this.values.length - 1
+      this.reversed && this.currentDatumIndex === 0 ||
+      !this.reversed && this.currentDatumIndex === this.values.length - 1
     );
   }
 
   get nextIndex() {
     if (this.isEnded) {
-      return (this.values.length - 1) - this.currentIndex; // bring playhead to the opposite end
+      return (this.values.length - 1) - this.currentDatumIndex; // bring playhead to the opposite end
     }
     const offset = this.inclusive ? 0 : (this.reversed ? -1 : +1);
-    return this.currentIndex + offset;
+    return this.currentDatumIndex + offset;
   }
 
   private static getKeyNumber(frequency: number) {
@@ -64,8 +64,8 @@ export class Melody {
     }
     if (!this.isPlaying) {
       this.reversed = reversed;
-      this.currentIndex = this.nextIndex;
-      let nextSeconds = this.getSeconds(this.currentIndex);
+      this.currentDatumIndex = this.nextIndex;
+      let nextSeconds = this.getSeconds(this.currentDatumIndex);
       if (this.reversed) {
         this.backwardSequence.start(0);
         this.forwardSequence.stop(0);
@@ -89,14 +89,14 @@ export class Melody {
     }
   }
 
-  getCurrentIndex() {
-    return this.currentIndex;
+  getCurrentDatumIndex() {
+    return this.currentDatumIndex;
   }
 
   seekTo(seconds: number, inclusive = false) {
-    this.currentIndex = this.getDatumIndex(seconds);
+    this.currentDatumIndex = this.getDatumIndex(seconds);
     this.inclusive = this.isEnded || inclusive;
-    this.onSeek?.(this.currentIndex, this.isPlaying);
+    this.onSeek?.(this.currentDatumIndex, this.isPlaying);
   }
 
   dispose() {
@@ -116,11 +116,11 @@ export class Melody {
         this.seekTo(this.currentSeconds);
         const keyNumber = (value - minValue) / (maxValue - minValue) * (maxKeyNumber - minKeyNumber) + minKeyNumber;
         const frequency = Melody.getFrequency(keyNumber);
-        this.synth.triggerAttackRelease(frequency, '4n', time);
+        this.synth.triggerAttackRelease(frequency, this.noteDuration, time);
       },
       values,
+      this.noteDuration,
     );
-    sequence.playbackRate = values.length / 4 / this.duration;
     sequence.loop = 1;
     return sequence;
   }

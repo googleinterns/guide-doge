@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Datum, RenderOptions } from '../../d3/xy-chart.d3';
 import { t } from '../../assets/i18n/utils';
 import { formatX, formatY } from '../../utils/formatters';
+import { AUDIFICATION } from '../../assets/i18n';
 
 @Component({
   selector: 'app-line-chart-visualization',
@@ -20,7 +21,6 @@ export class LineChartVisualizationComponent implements RenderOptions, OnChanges
   @Input() data: Datum[];
   @Input() activeDatum: Datum | null;
   @Output() activeDatumChange = new EventEmitter<Datum | null>();
-  t = t;
   private lineChartD3: LineChartD3;
 
   private dataSubject = new BehaviorSubject<Datum[]>([]);
@@ -30,9 +30,9 @@ export class LineChartVisualizationComponent implements RenderOptions, OnChanges
   activeDatumObservable = this.activeDatumSubject.asObservable();
 
   constructor(
-    private element: ElementRef<HTMLElement>,
+    public elementRef: ElementRef<HTMLElement>,
   ) {
-    this.lineChartD3 = new LineChartD3(element);
+    this.lineChartD3 = new LineChartD3(this);
   }
 
   get formattedActiveDatum() {
@@ -40,18 +40,18 @@ export class LineChartVisualizationComponent implements RenderOptions, OnChanges
       return null;
     }
     const { date, value } = this.activeDatum;
-    return t('audification.active_datum', {
+    return t(AUDIFICATION.ACTIVE_DATUM, {
       x: formatX(date),
       y: formatY(value),
     });
   }
 
   ngOnInit() {
-    this.lineChartD3.init(this);
+    this.lineChartD3.render();
   }
 
   ngOnDestroy() {
-    this.lineChartD3.destroy();
+    this.lineChartD3.clear();
   }
 
   ngOnChanges(changes: SimpleChanges): void {

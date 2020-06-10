@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { activeUserMeasure, eventCountMeasure, revenueMeasure } from '../../models/data-cube/presets';
 import { DataService } from '../../services/data/data.service';
 import { Datum } from '../../d3/xy-chart.d3';
-import { t } from '../../assets/i18n/utils';
+import { GUIDE_DOGE, t } from '../../assets/i18n';
 import { humanizeMeasureName } from 'src/utils/formatters';
 
 @Component({
@@ -11,7 +11,6 @@ import { humanizeMeasureName } from 'src/utils/formatters';
   styleUrls: ['./line-chart.component.scss'],
 })
 export class LineChartComponent {
-  t = t;
   humanizeMeasureName = humanizeMeasureName;
   activeDatum: Datum | null;
   data: Datum[];
@@ -22,6 +21,10 @@ export class LineChartComponent {
     private dataService: DataService,
   ) {
     this.setMeasureName(this.measureNames[0]);
+  }
+
+  get VISUALIZATION() {
+    return t(GUIDE_DOGE.VISUALIZATION);
   }
 
   setMeasureName(measureName) {

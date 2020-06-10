@@ -1,6 +1,6 @@
-import { Component, ElementRef, EventEmitter, Input, NgZone, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, NgZone, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 import { Melody } from '../../models/melody/melody.model';
-import { t, tA11y } from '../../assets/i18n/utils';
+import { AUDIFICATION, t, tA11y } from '../../assets/i18n';
 import { Datum } from '../../d3/xy-chart.d3';
 import { formatX, formatY } from '../../utils/formatters';
 
@@ -9,40 +9,32 @@ import { formatX, formatY } from '../../utils/formatters';
   templateUrl: './line-chart-audification.component.html',
   styleUrls: ['./line-chart-audification.component.scss'],
 })
-export class LineChartAudificationComponent implements OnInit, OnDestroy, OnChanges {
+export class LineChartAudificationComponent implements OnDestroy, OnChanges {
   @Input() data: Datum[];
   @Input() activeDatum: Datum | null;
   @Output() activeDatumChange = new EventEmitter<Datum | null>();
   @Input() frequencyRange: [number, number] = [256, 2048];
   @Input() duration = 5;
-  t = t;
-  tA11y = tA11y;
   liveText: string | null = null;
   private melody?: Melody;
-  private element = this.elementRef.nativeElement;
   private domain: Date[];
   private range: number[];
 
   constructor(
-    private elementRef: ElementRef<HTMLElement>,
     private zone: NgZone,
   ) {
     this.handleSeek = this.handleSeek.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
-    this.handleKeyUp = this.handleKeyUp.bind(this);
-    this.handleBlur = this.handleBlur.bind(this);
   }
 
-  ngOnInit() {
-    this.element.addEventListener('keydown', this.handleKeyDown);
-    this.element.addEventListener('keyup', this.handleKeyUp);
-    this.element.addEventListener('blur', this.handleBlur);
+  get INSTRUCTIONS() {
+    return t(AUDIFICATION.INSTRUCTIONS);
+  }
+
+  get INSTRUCTIONS_A11Y() {
+    return tA11y(AUDIFICATION.INSTRUCTIONS);
   }
 
   ngOnDestroy() {
-    this.element.removeEventListener('blur', this.handleBlur);
-    this.element.removeEventListener('keyup', this.handleKeyUp);
-    this.element.removeEventListener('keydown', this.handleKeyDown);
     this.melody?.dispose();
   }
 
@@ -64,7 +56,7 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy, OnChan
     this.zone.run((() => {
       this.activeDatumChange.emit(datum);
       if (!playing) {
-        this.readOut(t('audification.active_datum', {
+        this.readOut(t(AUDIFICATION.ACTIVE_DATUM, {
           x: formatX(date),
           y: formatY(value),
         }));
@@ -72,6 +64,7 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy, OnChan
     }));
   }
 
+  @HostListener('keydown', ['$event'])
   async handleKeyDown($event: KeyboardEvent) {
     $event.preventDefault();
     $event.stopPropagation();
@@ -82,12 +75,12 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy, OnChan
     if (key === ' ') {
       await this.melody?.resume(shiftKey);
     } else if (key === 'x') {
-      this.readOut(t('audification.domain', {
+      this.readOut(t(AUDIFICATION.DOMAIN, {
         min: formatX(this.domain[0]),
         max: formatX(this.domain[this.domain.length - 1]),
       }));
     } else if (key === 'y') {
-      this.readOut(t('audification.range', {
+      this.readOut(t(AUDIFICATION.RANGE, {
         min: formatY(this.range[0]),
         max: formatY(this.range[this.range.length - 1]),
       }));
@@ -96,6 +89,7 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy, OnChan
     }
   }
 
+  @HostListener('keyup', ['$event'])
   handleKeyUp($event: KeyboardEvent) {
     $event.preventDefault();
     $event.stopPropagation();
@@ -105,13 +99,14 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy, OnChan
     }
   }
 
+  @HostListener('blur', ['$event'])
   handleBlur() {
     this.melody?.pause();
   }
 
   private readOut(text: string) {
     if (this.liveText === text) {
-      this.liveText = null;
+      this.liveText = null; // empty the text for a short period of time when the same text needs to be read out consequently
       window.setTimeout(() => {
         this.readOut(text);
       }, 500);

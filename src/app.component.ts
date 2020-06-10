@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { GUIDE_DOGE, t } from './assets/i18n';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'guide-doge';
+  get TITLE() {
+    return t(GUIDE_DOGE.TITLE);
+  }
 }
