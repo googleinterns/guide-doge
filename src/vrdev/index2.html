@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <meta http-equiv="Cache-control" content="no-cache">
+  <meta charset="utf-8">
+  <base href='http://localhost:8000/'>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script> -->
+  <script src="https://d3js.org/d3.v5.js"></script>
+  <script src="https://aframe.io/releases/latest/aframe.min.js"></script>
+  <!-- <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script> -->
+  <script src="index.js"></script>
+
+  <head></head>
+  <body>
+  <a-scene>
+  </a-scene>
+    <script>
+      window.addEventListener('DOMContentLoaded', (event) => {
+        //console.log("DOM fully loaded and parsed");
+        var scatter = new Scatter()
+        scatter.init();
+      });
+    </script>
+  </body>
+</html>
