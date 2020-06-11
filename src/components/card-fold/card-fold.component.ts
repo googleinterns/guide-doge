@@ -1,11 +1,11 @@
 import { Component, ComponentFactoryResolver, Type, ViewContainerRef } from '@angular/core';
 
 @Component({
-  selector: 'app-fold',
-  templateUrl: './fold.component.html',
-  styleUrls: ['./fold.component.scss'],
+  selector: 'app-card-fold',
+  templateUrl: './card-fold.component.html',
+  styleUrls: ['./card-fold.component.scss'],
 })
-export class FoldComponent {
+export class CardFoldComponent {
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver,
     private viewContainerRef: ViewContainerRef,

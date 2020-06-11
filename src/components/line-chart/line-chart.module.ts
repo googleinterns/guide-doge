@@ -4,7 +4,7 @@ import { LineChartVisualizationModule } from '../line-chart-visualization/line-c
 import { CardModule } from '../card/card.module';
 import { CommonModule } from '@angular/common';
 import { A11yHostModule } from '../../directives/a11y-host/a11y-host.module';
-import { FoldModule } from '../fold/fold.module';
+import { CardFoldModule } from '../card-fold/card-fold.module';
 
 @NgModule({
   declarations: [
@@ -14,7 +14,7 @@ import { FoldModule } from '../fold/fold.module';
     CardModule,
     LineChartVisualizationModule,
     A11yHostModule,
-    FoldModule,
+    CardFoldModule,
     CommonModule,
   ],
   exports: [

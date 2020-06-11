@@ -1,11 +1,11 @@
 import { ComponentFactoryResolver, Directive, Type, ViewContainerRef } from '@angular/core';
-import { FoldComponent } from '../../components/fold/fold.component';
+import { CardFoldComponent } from '../../components/card-fold/card-fold.component';
 
 @Directive({
   selector: '[appA11yHost]',
 })
 export class A11yHostDirective {
-  wrapperFactory = this.componentFactoryResolver.resolveComponentFactory(FoldComponent);
+  wrapperFactory = this.componentFactoryResolver.resolveComponentFactory(CardFoldComponent);
 
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver,

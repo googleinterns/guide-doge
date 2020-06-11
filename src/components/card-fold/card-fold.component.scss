@@ -3,7 +3,7 @@
 :host {
   padding: 1.5rem;
 
-  app-fold + & {
+  app-card-fold + & {
     border-top: 1px solid $color-border;
   }
 }

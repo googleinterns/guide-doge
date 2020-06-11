@@ -3,7 +3,7 @@ import { activeUserMeasure, eventCountMeasure, revenueMeasure } from '../../mode
 import { DataService } from '../../services/data/data.service';
 import { Datum } from '../../d3/xy-chart.d3';
 import { GUIDE_DOGE, t } from '../../assets/i18n';
-import { humanizeMeasureName } from 'src/utils/formatters';
+import { humanizeMeasureName } from '../../utils/formatters';
 import { A11yHostDirective } from '../../directives/a11y-host/a11y-host.directive';
 
 @Component({

@@ -3,6 +3,7 @@
 :host {
   flex: 1;
   display: flex;
+  overflow: hidden;
 
   .sidebar {
     padding: 1rem;

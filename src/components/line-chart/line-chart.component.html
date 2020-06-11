@@ -6,11 +6,11 @@
       {{humanizeMeasureName(measureName)}}
     </div>
   </div>
-  <app-fold>
+  <app-card-fold>
     <app-line-chart-visualization role="img"
                                   [attr.aria-label]="VISUALIZATION"
                                   [data]="data"
                                   [(activeDatum)]="activeDatum"></app-line-chart-visualization>
-  </app-fold>
+  </app-card-fold>
   <ng-template appA11yHost></ng-template>
 </app-card>
