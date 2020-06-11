@@ -3,7 +3,7 @@ import { LineChartComponent } from './line-chart.component';
 import { LineChartVisualizationModule } from '../line-chart-visualization/line-chart-visualization.module';
 import { LineChartAudificationModule } from '../line-chart-audification/line-chart-audification.module';
 import { CardModule } from '../card/card.module';
-import { FoldModule } from '../fold/fold.module';
+import { CardFoldModule } from '../card-fold/card-fold.module';
 import { CommonModule } from '@angular/common';
 
 @NgModule({
@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
     CardModule,
     LineChartVisualizationModule,
     LineChartAudificationModule,
-    FoldModule,
+    CardFoldModule,
     CommonModule,
   ],
   exports: [

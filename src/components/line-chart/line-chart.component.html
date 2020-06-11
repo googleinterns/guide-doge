@@ -6,15 +6,15 @@
       {{humanizeMeasureName(measureName)}}
     </div>
   </div>
-  <app-fold>
+  <app-card-fold>
     <app-line-chart-visualization role="img"
                                   [attr.aria-label]="VISUALIZATION"
                                   [data]="data"
                                   [(activeDatum)]="activeDatum"></app-line-chart-visualization>
-  </app-fold>
-  <app-fold>
+  </app-card-fold>
+  <app-card-fold>
     <app-line-chart-audification tabindex="0"
                                  [data]="data"
                                  [(activeDatum)]="activeDatum"></app-line-chart-audification>
-  </app-fold>
+  </app-card-fold>
 </app-card>
