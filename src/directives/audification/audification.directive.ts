@@ -14,12 +14,14 @@ export class AudificationDirective implements OnInit {
   }
 
   ngOnInit() {
-    this.loadComponent();
+    this.attach();
   }
 
-  loadComponent() {
+  attach() {
     if (this.lineChartComponent) {
-      this.lineChartComponent.a11yHost.addComponent(LineChartAudificationComponent, {});
+      this.lineChartComponent.a11yHost.addComponent(LineChartAudificationComponent, {
+        data: this.lineChartComponent.data,
+      });
     }
   }
 }

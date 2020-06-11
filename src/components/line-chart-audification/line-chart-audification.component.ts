@@ -1,4 +1,15 @@
-import { Component, EventEmitter, HostListener, Input, NgZone, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostBinding,
+  HostListener,
+  Input,
+  NgZone,
+  OnChanges,
+  OnDestroy,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { Melody } from '../../models/melody/melody.model';
 import { AUDIFICATION, t, tA11y } from '../../assets/i18n';
 import { Datum } from '../../d3/xy-chart.d3';
@@ -19,6 +30,7 @@ export class LineChartAudificationComponent implements OnDestroy, OnChanges {
   private melody?: Melody;
   private domain: Date[];
   private range: number[];
+  @HostBinding('attr.tabindex') private readonly tabindex = 0;
 
   constructor(
     private zone: NgZone,

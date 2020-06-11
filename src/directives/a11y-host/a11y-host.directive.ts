@@ -5,7 +5,7 @@ import { CardFoldComponent } from '../../components/card-fold/card-fold.componen
   selector: '[appA11yHost]',
 })
 export class A11yHostDirective {
-  wrapperFactory = this.componentFactoryResolver.resolveComponentFactory(CardFoldComponent);
+  private wrapperFactory = this.componentFactoryResolver.resolveComponentFactory(CardFoldComponent);
 
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver,
@@ -16,6 +16,12 @@ export class A11yHostDirective {
   addComponent<T>(A11yComponent: Type<T>, payload: Partial<T>) {
     this.viewContainerRef.clear();
     const wrapperRef = this.viewContainerRef.createComponent(this.wrapperFactory);
-    wrapperRef.instance.addComponent(A11yComponent, payload);
+    const wrapper = wrapperRef.instance;
+
+    wrapper.viewContainerRef.clear();
+    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(A11yComponent);
+    const componentRef = wrapper.viewContainerRef.createComponent(componentFactory);
+    const component = componentRef.instance;
+    Object.assign(component, payload);
   }
 }
