@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  height: 100vh;
+  min-height: 100vh;
   background-color: $color-background;
 
   .header {
@@ -15,6 +15,7 @@
     border-bottom: 1px solid $color-border;
     padding: 0 2rem;
     height: 4rem;
+    flex-shrink: 0;
 
     &:hover {
       background: linear-gradient(135deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3, #ff2400) repeat-x;
