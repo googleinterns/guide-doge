@@ -4,6 +4,7 @@ import { LineChartModule } from '../line-chart/line-chart.module';
 import { PreferenceModule } from '../preference/preference.module';
 import { FormsModule } from '@angular/forms';
 import { SwitchModule } from '../switch/switch.module';
+import { AudificationModule } from '../../directives/audification/audification.module';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import { SwitchModule } from '../switch/switch.module';
     PreferenceModule,
     FormsModule,
     SwitchModule,
+    AudificationModule,
   ],
   exports: [
     DashboardComponent,

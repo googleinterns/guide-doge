@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, ComponentFactoryResolver, Type, ViewContainerRef } from '@angular/core';
 
 @Component({
   selector: 'app-fold',
@@ -6,5 +6,18 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./fold.component.scss'],
 })
 export class FoldComponent {
-  @Input() title: string;
+  constructor(
+    private componentFactoryResolver: ComponentFactoryResolver,
+    private viewContainerRef: ViewContainerRef,
+  ) {
+  }
+
+  addComponent<T>(A11yComponent: Type<T>, payload: Partial<T>) {
+    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(A11yComponent);
+
+    this.viewContainerRef.clear();
+
+    const componentRef = this.viewContainerRef.createComponent(componentFactory);
+    Object.assign(componentRef.instance, payload);
+  }
 }

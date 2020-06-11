@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { activeUserMeasure, eventCountMeasure, revenueMeasure } from '../../models/data-cube/presets';
 import { DataService } from '../../services/data/data.service';
 import { Datum } from '../../d3/xy-chart.d3';
 import { GUIDE_DOGE, t } from '../../assets/i18n';
 import { humanizeMeasureName } from 'src/utils/formatters';
+import { A11yHostDirective } from '../../directives/a11y-host/a11y-host.directive';
 
 @Component({
   selector: 'app-line-chart',
@@ -11,6 +12,8 @@ import { humanizeMeasureName } from 'src/utils/formatters';
   styleUrls: ['./line-chart.component.scss'],
 })
 export class LineChartComponent {
+  @ViewChild(A11yHostDirective, { static: true }) a11yHost: A11yHostDirective;
+
   humanizeMeasureName = humanizeMeasureName;
   activeDatum: Datum | null;
   data: Datum[];
