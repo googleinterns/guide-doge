@@ -1,3 +1,21 @@
-class dataPt{
-    constructor()
-}
+<!DOCTYPE html>
+<html>
+  <meta charset="utf-8">
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script> -->
+  <script src="https://d3js.org/d3.v5.js"></script>
+  <script src="https://aframe.io/releases/latest/aframe.min.js"></script>
+  <script src="index.js"></script>
+
+  <head></head>
+  <body>
+  <a-scene>
+  </a-scene>
+    <script>
+      window.addEventListener('DOMContentLoaded', (event) => {
+        //console.log("DOM fully loaded and parsed");
+        var scatter = new Scatter()
+        scatter.init();
+      });
+    </script>
+  </body>
+</html>
