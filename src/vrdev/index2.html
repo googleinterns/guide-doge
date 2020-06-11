@@ -1,24 +1,43 @@
 <!DOCTYPE html>
 <html>
-  <meta http-equiv="Cache-control" content="no-cache">
-  <meta charset="utf-8">
-  <base href='http://localhost:8000/'>
-  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script> -->
-  <script src="https://d3js.org/d3.v5.js"></script>
-  <script src="https://aframe.io/releases/latest/aframe.min.js"></script>
-  <!-- <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script> -->
-  <script src="index.js"></script>
+ 
 
-  <head></head>
+  <head>
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta charset="utf-8">
+    <base href='http://localhost:8000/'>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script> -->
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <!-- <script src="https://aframe.io/releases/latest/aframe.min.js"></script> -->
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="index.js"></script>
+  </head>
   <body>
   <a-scene>
-  </a-scene>
     <script>
       window.addEventListener('DOMContentLoaded', (event) => {
+  //         
+        var scener = d3.select("a-scene");
+        
+  //       var data = [10, 20, 30]
+  //       var dataPt = scener.selectAll("a-sphere").data(data)
+  //  dataPt.enter().append("a-sphere");
+  //   console.log(data)
+     
+    // dataPt.attr("position", (d,i) => {                         //attr("position", (d,i) => { IS CORRECT FUNCTION NOTATION
+    //   var x = 0;
+    //   var y = i;
+    //   var z = -d/10;
+    //   return (x + " " + y + " " + z);
+    // }); 
         //console.log("DOM fully loaded and parsed");
-        var scatter = new Scatter()
-        scatter.init();
+         var scatter = new Scatter()
+         scatter.init();
       });
     </script>
+  </a-scene>
+
+ 
+    
   </body>
 </html>
