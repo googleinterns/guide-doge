@@ -391,7 +391,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     /*! ./types */
     "./src/assets/i18n/types.ts");
 
-    var en = (_en = {}, _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].TITLE, 'Guide-Doge'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].VISUALIZATION, 'Data visualization'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].AUDIFICATION, 'Data audification'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["VISUALIZATION"].ACTIVE_DATUM, '%(y)s on %(x)s'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].INSTRUCTIONS, 'Hold down <kbd>SPACE</kbd> to play audification and <kbd>SHIFT</kbd> + <kbd>SPACE</kbd> to play it backward. <br/>Press <kbd>X</kbd> or <kbd>Y</kbd> to read the domain and range. <br/>Press <kbd>0</kbd> ... <kbd>9</kbd> to move playhead.'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].DOMAIN, 'Domain from %(min)s to %(max)s'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].RANGE, 'Range from %(min)s to %(max)s'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].ACTIVE_DATUM, '%(y)s on %(x)s'), _en);
+    var en = (_en = {}, _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].TITLE, 'Guide-Doge'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].VISUALIZATION, 'Data visualization'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].AUDIFICATION, 'Data audification'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["VISUALIZATION"].ACTIVE_DATUM, '%(y)s on %(x)s'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].INSTRUCTIONS, ['Hold down <kbd>SPACE</kbd> to play audification and <kbd>SHIFT</kbd> + <kbd>SPACE</kbd> to play it backward.', 'Press <kbd>X</kbd> or <kbd>Y</kbd> to read out the domain and range.', 'Press <kbd>L</kbd> to read out the legend items.', 'Press <kbd>0</kbd> ... <kbd>9</kbd> to move playhead.'].join(' <br/>')), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].DOMAIN, 'Domain from %(min)s to %(max)s'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].RANGE, 'Range from %(min)s to %(max)s'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].ACTIVE_DATUM, '%(y)s on %(x)s'), _en);
     /* harmony default export */
 
     __webpack_exports__["default"] = en;
@@ -1382,6 +1382,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         min: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatY"])(this.range[0]),
                         max: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatY"])(this.range[this.range.length - 1])
                       }));
+                    } else if (key === 'l') {
+                      this.readOut(Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["humanizeMeasureName"])(this.measureName));
                     } else if ('0' <= key && key <= '9') {
                       (_b = this.melody) === null || _b === void 0 ? void 0 : _b.seekTo(this.duration * (+key / 10), true);
                     }
@@ -1463,6 +1465,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       },
       inputs: {
         data: "data",
+        measureName: "measureName",
         activeDatum: "activeDatum",
         frequencyRange: "frequencyRange",
         duration: "duration"
@@ -1491,7 +1494,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("innerText", ctx.liveText);
         }
       },
-      styles: ["@charset \"UTF-8\";\n[_nghost-%COMP%]   .instructions[_ngcontent-%COMP%] {\n  font-size: 12px;\n  line-height: 2em;\n  margin-bottom: 0.5rem;\n}\n[_nghost-%COMP%]   .live-text[_ngcontent-%COMP%] {\n  color: #4285f4;\n  font-weight: 500;\n}\n[_nghost-%COMP%]   .live-text[_ngcontent-%COMP%]:before {\n  content: \"\uD83D\uDD0A \";\n}\n[_nghost-%COMP%]   .live-text[_ngcontent-%COMP%]:empty:after {\n  content: \"-\";\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9jb21wb25lbnRzL2xpbmUtY2hhcnQtYXVkaWZpY2F0aW9uL2xpbmUtY2hhcnQtYXVkaWZpY2F0aW9uLmNvbXBvbmVudC5zY3NzIiwiL2hvbWUvcnVubmVyL3dvcmsvZ3VpZGUtZG9nZS9ndWlkZS1kb2dlL3NyYy9jb21wb25lbnRzL2xpbmUtY2hhcnQtYXVkaWZpY2F0aW9uL2xpbmUtY2hhcnQtYXVkaWZpY2F0aW9uLmNvbXBvbmVudC5zY3NzIiwiL2hvbWUvcnVubmVyL3dvcmsvZ3VpZGUtZG9nZS9ndWlkZS1kb2dlL3NyYy91dGlscy9jb25zdGFudHMuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxnQkFBZ0I7QUNHZDtFQUNFLGVDS2M7RURKZCxnQkFBQTtFQUNBLHFCQUFBO0FEREo7QUNJRTtFQUNFLGNDUGM7RURRZCxnQkFBQTtBREZKO0FDSUk7RUFDRSxjQUFBO0FERk47QUNLSTtFQUNFLFlBQUE7QURITiIsImZpbGUiOiJzcmMvY29tcG9uZW50cy9saW5lLWNoYXJ0LWF1ZGlmaWNhdGlvbi9saW5lLWNoYXJ0LWF1ZGlmaWNhdGlvbi5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIkBjaGFyc2V0IFwiVVRGLThcIjtcbjpob3N0IC5pbnN0cnVjdGlvbnMge1xuICBmb250LXNpemU6IDEycHg7XG4gIGxpbmUtaGVpZ2h0OiAyZW07XG4gIG1hcmdpbi1ib3R0b206IDAuNXJlbTtcbn1cbjpob3N0IC5saXZlLXRleHQge1xuICBjb2xvcjogIzQyODVmNDtcbiAgZm9udC13ZWlnaHQ6IDUwMDtcbn1cbjpob3N0IC5saXZlLXRleHQ6YmVmb3JlIHtcbiAgY29udGVudDogXCLwn5SKIFwiO1xufVxuOmhvc3QgLmxpdmUtdGV4dDplbXB0eTphZnRlciB7XG4gIGNvbnRlbnQ6IFwiLVwiO1xufSIsIkBpbXBvcnQgXCIuLi8uLi91dGlscy9jb25zdGFudHNcIjtcblxuOmhvc3Qge1xuICAuaW5zdHJ1Y3Rpb25zIHtcbiAgICBmb250LXNpemU6ICRmb250LXNpemUtc21hbGw7XG4gICAgbGluZS1oZWlnaHQ6IDJlbTtcbiAgICBtYXJnaW4tYm90dG9tOiAuNXJlbTtcbiAgfVxuXG4gIC5saXZlLXRleHQge1xuICAgIGNvbG9yOiAkY29sb3ItaGlnaGxpZ2h0O1xuICAgIGZvbnQtd2VpZ2h0OiA1MDA7XG5cbiAgICAmOmJlZm9yZSB7XG4gICAgICBjb250ZW50OiAn8J+UiiAnO1xuICAgIH1cblxuICAgICY6ZW1wdHk6YWZ0ZXIge1xuICAgICAgY29udGVudDogJy0nO1xuICAgIH1cbiAgfVxufVxuIiwiJGNvbG9yLWJhY2tncm91bmQ6IHJnYigyNDgsIDI0OSwgMjUwKTtcbiRjb2xvci1ib3JkZXI6IHJnYigyMTgsIDIyMCwgMjI0KTtcbiRjb2xvci1mb250OiByZ2IoMzQsIDM0LCAzNCk7XG4kY29sb3ItaGlnaGxpZ2h0OiByZ2IoNjYsIDEzMywgMjQ0KTtcbiRjb2xvci1wb3NpdGl2ZTogcmdiKDE1LCAxNTcsIDg4KTtcbiRjb2xvci1uZWdhdGl2ZTogcmdiKDIxOSwgNjgsIDU1KTtcblxuJGZvbnQtc2l6ZS1sYXJnZTogMjRweDtcbiRmb250LXNpemUtbWVkaXVtOiAxNnB4O1xuJGZvbnQtc2l6ZS1zbWFsbDogMTJweDtcblxuQG1peGluIGNhcmQtc2hhZG93IHtcbiAgYm94LXNoYWRvdzogcmdiYSgwLCAwLCAwLCAwLjIpIDAgMXB4IDNweCAwLCByZ2JhKDAsIDAsIDAsIDAuMTQpIDAgMXB4IDFweCAwLCByZ2JhKDAsIDAsIDAsIDAuMTIpIDAgMnB4IDFweCAtMXB4O1xufVxuIl19 */"]
+      styles: ["@charset \"UTF-8\";\n[_nghost-%COMP%]   .instructions[_ngcontent-%COMP%] {\n  font-size: 12px;\n  line-height: 2em;\n  margin-bottom: 0.5rem;\n}\n[_nghost-%COMP%]   .live-text[_ngcontent-%COMP%] {\n  color: #4285f4;\n  font-weight: 500;\n}\n[_nghost-%COMP%]   .live-text[_ngcontent-%COMP%]:before {\n  content: \"\uD83D\uDD0A \";\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9jb21wb25lbnRzL2xpbmUtY2hhcnQtYXVkaWZpY2F0aW9uL2xpbmUtY2hhcnQtYXVkaWZpY2F0aW9uLmNvbXBvbmVudC5zY3NzIiwiL2hvbWUvcnVubmVyL3dvcmsvZ3VpZGUtZG9nZS9ndWlkZS1kb2dlL3NyYy9jb21wb25lbnRzL2xpbmUtY2hhcnQtYXVkaWZpY2F0aW9uL2xpbmUtY2hhcnQtYXVkaWZpY2F0aW9uLmNvbXBvbmVudC5zY3NzIiwiL2hvbWUvcnVubmVyL3dvcmsvZ3VpZGUtZG9nZS9ndWlkZS1kb2dlL3NyYy91dGlscy9jb25zdGFudHMuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxnQkFBZ0I7QUNHZDtFQUNFLGVDS2M7RURKZCxnQkFBQTtFQUNBLHFCQUFBO0FEREo7QUNJRTtFQUNFLGNDUGM7RURRZCxnQkFBQTtBREZKO0FDSUk7RUFDRSxjQUFBO0FERk4iLCJmaWxlIjoic3JjL2NvbXBvbmVudHMvbGluZS1jaGFydC1hdWRpZmljYXRpb24vbGluZS1jaGFydC1hdWRpZmljYXRpb24uY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyJAY2hhcnNldCBcIlVURi04XCI7XG46aG9zdCAuaW5zdHJ1Y3Rpb25zIHtcbiAgZm9udC1zaXplOiAxMnB4O1xuICBsaW5lLWhlaWdodDogMmVtO1xuICBtYXJnaW4tYm90dG9tOiAwLjVyZW07XG59XG46aG9zdCAubGl2ZS10ZXh0IHtcbiAgY29sb3I6ICM0Mjg1ZjQ7XG4gIGZvbnQtd2VpZ2h0OiA1MDA7XG59XG46aG9zdCAubGl2ZS10ZXh0OmJlZm9yZSB7XG4gIGNvbnRlbnQ6IFwi8J+UiiBcIjtcbn0iLCJAaW1wb3J0IFwiLi4vLi4vdXRpbHMvY29uc3RhbnRzXCI7XG5cbjpob3N0IHtcbiAgLmluc3RydWN0aW9ucyB7XG4gICAgZm9udC1zaXplOiAkZm9udC1zaXplLXNtYWxsO1xuICAgIGxpbmUtaGVpZ2h0OiAyZW07XG4gICAgbWFyZ2luLWJvdHRvbTogLjVyZW07XG4gIH1cblxuICAubGl2ZS10ZXh0IHtcbiAgICBjb2xvcjogJGNvbG9yLWhpZ2hsaWdodDtcbiAgICBmb250LXdlaWdodDogNTAwO1xuXG4gICAgJjpiZWZvcmUge1xuICAgICAgY29udGVudDogJ/CflIogJztcbiAgICB9XG4gIH1cbn1cbiIsIiRjb2xvci1iYWNrZ3JvdW5kOiByZ2IoMjQ4LCAyNDksIDI1MCk7XG4kY29sb3ItYm9yZGVyOiByZ2IoMjE4LCAyMjAsIDIyNCk7XG4kY29sb3ItZm9udDogcmdiKDM0LCAzNCwgMzQpO1xuJGNvbG9yLWhpZ2hsaWdodDogcmdiKDY2LCAxMzMsIDI0NCk7XG4kY29sb3ItcG9zaXRpdmU6IHJnYigxNSwgMTU3LCA4OCk7XG4kY29sb3ItbmVnYXRpdmU6IHJnYigyMTksIDY4LCA1NSk7XG5cbiRmb250LXNpemUtbGFyZ2U6IDI0cHg7XG4kZm9udC1zaXplLW1lZGl1bTogMTZweDtcbiRmb250LXNpemUtc21hbGw6IDEycHg7XG5cbkBtaXhpbiBjYXJkLXNoYWRvdyB7XG4gIGJveC1zaGFkb3c6IHJnYmEoMCwgMCwgMCwgMC4yKSAwIDFweCAzcHggMCwgcmdiYSgwLCAwLCAwLCAwLjE0KSAwIDFweCAxcHggMCwgcmdiYSgwLCAwLCAwLCAwLjEyKSAwIDJweCAxcHggLTFweDtcbn1cbiJdfQ== */"]
     });
 
     (function () {
@@ -1508,6 +1511,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }];
       }, {
         data: [{
+          type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"]
+        }],
+        measureName: [{
           type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"]
         }],
         activeDatum: [{
@@ -2049,8 +2055,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       type: LineChartComponent,
       selectors: [["app-line-chart"]],
       decls: 7,
-      vars: 6,
-      consts: [["title", "Line Chart", 1, "card"], [1, "measures"], ["class", "measure", "role", "button", 3, "active", "click", 4, "ngFor", "ngForOf"], ["role", "img", 3, "data", "activeDatum", "activeDatumChange"], ["tabindex", "0", 3, "data", "activeDatum", "activeDatumChange"], ["role", "button", 1, "measure", 3, "click"]],
+      vars: 7,
+      consts: [["title", "Line Chart", 1, "card"], [1, "measures"], ["class", "measure", "role", "button", 3, "active", "click", 4, "ngFor", "ngForOf"], ["role", "img", 3, "data", "activeDatum", "activeDatumChange"], ["tabindex", "0", 3, "data", "measureName", "activeDatum", "activeDatumChange"], ["role", "button", 1, "measure", 3, "click"]],
       template: function LineChartComponent_Template(rf, ctx) {
         if (rf & 1) {
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "app-card", 0);
@@ -2101,7 +2107,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("data", ctx.data)("activeDatum", ctx.activeDatum);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("data", ctx.data)("measureName", ctx.currentMeasureName)("activeDatum", ctx.activeDatum);
         }
       },
       directives: [_card_card_component__WEBPACK_IMPORTED_MODULE_5__["CardComponent"], _angular_common__WEBPACK_IMPORTED_MODULE_6__["NgForOf"], _card_fold_card_fold_component__WEBPACK_IMPORTED_MODULE_7__["CardFoldComponent"], _line_chart_visualization_line_chart_visualization_component__WEBPACK_IMPORTED_MODULE_8__["LineChartVisualizationComponent"], _line_chart_audification_line_chart_audification_component__WEBPACK_IMPORTED_MODULE_9__["LineChartAudificationComponent"]],
