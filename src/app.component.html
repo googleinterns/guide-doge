@@ -1,5 +1,14 @@
-<div class="container">
-  <h1>{{TITLE}}</h1>
-  <app-line-chart></app-line-chart>
-</div>
-<router-outlet></router-outlet>
+<header class="header">
+  <div class="logo" role="banner">{{TITLE}}</div>
+  <div class="links" role="navigation">
+    <a routerLink="/" class="link active">
+      Dashboard
+    </a>
+    <a href="#" class="link">
+      WebVR
+    </a>
+  </div>
+</header>
+<main class="container">
+  <router-outlet></router-outlet>
+</main>

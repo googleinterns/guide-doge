@@ -67,13 +67,13 @@ export class Melody {
       this.currentDatumIndex = this.nextIndex;
       let nextSeconds = this.getSeconds(this.currentDatumIndex);
       if (this.reversed) {
-        this.backwardSequence?.start(0);
-        this.forwardSequence?.stop(0);
+        this.backwardSequence.start(0);
+        this.forwardSequence.stop(0);
         nextSeconds += this.noteDuration / 2;
         Tone.Transport.start(undefined, this.duration - nextSeconds);
       } else {
-        this.backwardSequence?.stop(0);
-        this.forwardSequence?.start(0);
+        this.backwardSequence.stop(0);
+        this.forwardSequence.start(0);
         nextSeconds -= this.noteDuration / 2;
         Tone.Transport.start(undefined, nextSeconds);
       }
@@ -83,6 +83,8 @@ export class Melody {
   pause() {
     if (this.isPlaying) {
       Tone.Transport.pause();
+      this.backwardSequence.stop(0);
+      this.forwardSequence.stop(0);
       this.seekTo(this.currentSeconds);
     }
   }

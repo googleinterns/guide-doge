@@ -1,7 +1,17 @@
+@import "../../utils/constants";
+
 :host {
-  ::ng-deep {
-    svg {
-      max-width: 1280px;
-    }
+  position: relative;
+  display: block;
+
+  .active-indicator {
+    @include card-shadow;
+    position: absolute;
+    font-weight: 500;
+    padding: 1rem;
+    background-color: white;
+    white-space: nowrap;
+    color: $color-highlight;
+    opacity: 0;
   }
 }

@@ -2,10 +2,13 @@ import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnIni
 import { LineChartD3 } from '../../d3/line-chart.d3';
 import { BehaviorSubject } from 'rxjs';
 import { Datum, RenderOptions } from '../../d3/xy-chart.d3';
+import { t } from '../../assets/i18n/utils';
+import { formatX, formatY } from '../../utils/formatters';
+import { AUDIFICATION } from '../../assets/i18n';
 
 @Component({
   selector: 'app-line-chart-visualization',
-  template: '',
+  templateUrl: './line-chart-visualization.component.html',
   styleUrls: ['./line-chart-visualization.component.scss'],
 })
 export class LineChartVisualizationComponent implements RenderOptions, OnChanges, OnInit, OnDestroy {
@@ -30,6 +33,17 @@ export class LineChartVisualizationComponent implements RenderOptions, OnChanges
     public elementRef: ElementRef<HTMLElement>,
   ) {
     this.lineChartD3 = new LineChartD3(this);
+  }
+
+  get formattedActiveDatum() {
+    if (!this.activeDatum) {
+      return null;
+    }
+    const { date, value } = this.activeDatum;
+    return t(AUDIFICATION.ACTIVE_DATUM, {
+      x: formatX(date),
+      y: formatY(value),
+    });
   }
 
   ngOnInit() {

@@ -14,6 +14,8 @@ export interface RenderOptions {
 }
 
 export abstract class BaseD3<T extends RenderOptions> {
+  protected colorHighlight = 'rgb(66, 133, 244)';
+
   protected svg: d3.Selection<SVGSVGElement, unknown, null, undefined>;
   private clear$?: Subject<undefined>;
 
@@ -41,6 +43,8 @@ export abstract class BaseD3<T extends RenderOptions> {
 
     this.svg = this.container
       .append('svg')
+      .style('width', width)
+      .style('height', height)
       .attr('viewBox', [0, 0, width, height].join(' '));
   }
 

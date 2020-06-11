@@ -66,6 +66,8 @@ export class LineChartAudificationComponent implements OnDestroy, OnChanges {
 
   @HostListener('keydown', ['$event'])
   async handleKeyDown($event: KeyboardEvent) {
+    $event.preventDefault();
+    $event.stopPropagation();
     const { key, shiftKey, repeat } = $event;
     if (repeat) {
       return;
@@ -84,23 +86,22 @@ export class LineChartAudificationComponent implements OnDestroy, OnChanges {
       }));
     } else if ('0' <= key && key <= '9') {
       this.melody?.seekTo(this.duration * (+key / 10), true);
-    } else {
-      return;
     }
-    $event.preventDefault();
-    $event.stopPropagation();
   }
 
   @HostListener('keyup', ['$event'])
   handleKeyUp($event: KeyboardEvent) {
+    $event.preventDefault();
+    $event.stopPropagation();
     const { key } = $event;
     if (key === ' ') {
       this.melody?.pause();
-    } else {
-      return;
     }
-    $event.preventDefault();
-    $event.stopPropagation();
+  }
+
+  @HostListener('blur', ['$event'])
+  handleBlur() {
+    this.melody?.pause();
   }
 
   private readOut(text: string) {

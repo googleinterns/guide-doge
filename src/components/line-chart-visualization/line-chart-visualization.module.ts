@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { LineChartVisualizationComponent } from './line-chart-visualization.component';
 import { DataModule } from '../../services/data/data.module';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -8,6 +9,7 @@ import { DataModule } from '../../services/data/data.module';
   ],
   imports: [
     DataModule,
+    CommonModule,
   ],
   exports: [
     LineChartVisualizationComponent,

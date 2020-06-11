@@ -1,0 +1,9 @@
+@import "../../utils/constants";
+
+:host {
+  padding: 1.5rem;
+
+  app-card-fold + & {
+    border-top: 1px solid $color-border;
+  }
+}

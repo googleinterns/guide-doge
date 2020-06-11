@@ -1,7 +1,5 @@
-<div role="img"
+<div role="img" class="instructions"
      [innerHTML]="INSTRUCTIONS"
      [attr.aria-label]="INSTRUCTIONS_A11Y">
 </div>
-<div class="live-text" aria-live="assertive">
-  {{liveText}}
-</div>
+<div class="live-text" aria-live="assertive" [innerText]="liveText"></div>

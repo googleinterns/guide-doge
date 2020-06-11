@@ -1,0 +1,24 @@
+@import "../../utils/constants";
+
+:host {
+  .card {
+    .measures {
+      display: flex;
+      align-items: stretch;
+      height: 4rem;
+
+      .measure {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+        &.active {
+          border-top: 4px solid $color-highlight;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+}

@@ -62,9 +62,8 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
 
     this.xAxis = d3
       .axisBottom<Date>(this.scaleX)
-      .ticks(width / 80)
-      .tickFormat(formatX)
-      .tickSizeOuter(0);
+      .ticks(d3.timeWeek.every(1))
+      .tickFormat(formatX);
     this.yAxis = d3.axisLeft<number>(this.scaleY);
 
     this.xAxisG = this.svg
@@ -81,10 +80,12 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
 
     this.xAxisG
       .transition(this.transition)
-      .call(this.xAxis);
+      .call(this.xAxis)
+      .attr('font-size', 12);
     this.yAxisG
       .transition(this.transition)
-      .call(this.yAxis);
+      .call(this.yAxis)
+      .attr('font-size', 12);
   }
 
   protected abstract renderData();
