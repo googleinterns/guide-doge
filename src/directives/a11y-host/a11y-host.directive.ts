@@ -1,4 +1,4 @@
-import { ComponentFactoryResolver, Directive, Injector, Type, ViewContainerRef } from '@angular/core';
+import { ComponentFactoryResolver, ComponentRef, Directive, Injector, Type, ViewContainerRef } from '@angular/core';
 
 @Directive({
   selector: '[appA11yHost]',
@@ -19,7 +19,14 @@ export class A11yHostDirective<HostComponent> {
         useValue: host,
       }],
     });
-    const componentRef = this.viewContainerRef.createComponent(componentFactory, 0, injector);
-    return componentRef.instance;
+    return this.viewContainerRef.createComponent(componentFactory, 0, injector);
+  }
+
+  removeComponent<T>(componentRef: ComponentRef<T>) {
+    const index = this.viewContainerRef.indexOf(componentRef.hostView);
+    if (index >= 0) {
+      this.viewContainerRef.remove(index);
+    }
+    componentRef.destroy();
   }
 }
