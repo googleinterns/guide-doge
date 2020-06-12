@@ -22,14 +22,9 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
   @Input() marginRight = 30;
   @Input() marginBottom = 30;
   @Input() marginLeft = 40;
-
+  data$ = new BehaviorSubject<Datum[]>([]);
+  activeDatum$ = new BehaviorSubject<Datum | null>(null);
   private lineChartD3: LineChartD3;
-
-  private dataSubject = new BehaviorSubject<Datum[]>([]);
-  dataObservable = this.dataSubject.asObservable();
-
-  private activeDatumSubject = new BehaviorSubject<Datum | null>(null);
-  activeDatumObservable = this.activeDatumSubject.asObservable();
 
   constructor(
     private dataService: DataService,
@@ -39,19 +34,19 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
   }
 
   get data() {
-    return this.dataSubject.value;
+    return this.data$.value;
   }
 
   set data(data) {
-    this.dataSubject.next(data);
+    this.data$.next(data);
   }
 
   get activeDatum() {
-    return this.activeDatumSubject.value;
+    return this.activeDatum$.value;
   }
 
   set activeDatum(activeDatum) {
-    this.activeDatumSubject.next(activeDatum);
+    this.activeDatum$.next(activeDatum);
   }
 
   get formattedActiveDatum() {

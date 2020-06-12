@@ -49,9 +49,9 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.host.dataObservable
+    this.host.data$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(data => { // TODO: take until destroy
+      .subscribe(data => {
         const values = data.map(datum => datum.value);
         this.domain = data.map(d => d.date).sort((a, b) => a.getTime() - b.getTime());
         this.range = data.map(d => d.value).sort();
