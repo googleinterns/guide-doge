@@ -47,6 +47,7 @@
   .card-container {
     display: flex;
     flex: 1 0;
+    align-items: flex-start;
     justify-content: center;
     flex-wrap: wrap;
     padding-top: 1rem;

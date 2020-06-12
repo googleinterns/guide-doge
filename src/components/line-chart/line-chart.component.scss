@@ -1,18 +1,23 @@
 @import "../../utils/constants";
 
 :host {
-  position: relative;
-  display: block;
-  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
 
-  .active-indicator {
-    @include card-shadow;
-    position: absolute;
-    font-weight: 500;
-    padding: 1rem;
-    background-color: white;
-    white-space: nowrap;
-    color: $color-highlight;
-    opacity: 0;
+  .svg-wrapper {
+    box-sizing: content-box;
+    position: relative;
+    margin: 1.5rem;
+
+    .active-indicator {
+      @include card-shadow;
+      position: absolute;
+      font-weight: 500;
+      padding: 1rem;
+      background-color: white;
+      white-space: nowrap;
+      color: $color-highlight;
+      opacity: 0;
+    }
   }
 }
