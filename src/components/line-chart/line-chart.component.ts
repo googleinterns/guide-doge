@@ -13,7 +13,7 @@ import { DataService } from '../../services/data/data.service';
   styleUrls: ['./line-chart.component.scss'],
 })
 export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnDestroy {
-  @ViewChild(A11yHostDirective, { static: true }) a11yHost: A11yHostDirective;
+  @ViewChild(A11yHostDirective, { static: true }) a11yHost: A11yHostDirective<LineChartComponent>;
 
   @Input() measureName: string;
   @Input() height = 500;
@@ -42,8 +42,16 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
     return this.dataSubject.value;
   }
 
+  set data(data) {
+    this.dataSubject.next(data);
+  }
+
   get activeDatum() {
     return this.activeDatumSubject.value;
+  }
+
+  set activeDatum(activeDatum) {
+    this.activeDatumSubject.next(activeDatum);
   }
 
   get formattedActiveDatum() {
@@ -67,9 +75,8 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
 
   ngOnChanges(changes: SimpleChanges): void {
     if ('measureName' in changes) {
-      const data = this.dataService.getMeasureOverDays(this.measureName);
-      this.dataSubject.next(data);
-      this.activeDatumSubject.next(null);
+      this.data = this.dataService.getMeasureOverDays(this.measureName);
+      this.activeDatum = null;
     }
   }
 }

@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Datum } from '../../d3/xy-chart.d3';
 import { GUIDE_DOGE, t } from '../../assets/i18n';
 import { humanizeMeasureName } from '../../utils/formatters';
 
@@ -16,8 +15,6 @@ export class CardComponent implements OnInit {
   @Input() type: CardType;
   @Input() measureNames: string[];
   humanizeMeasureName = humanizeMeasureName;
-  activeDatum: Datum | null;
-  data: Datum[];
   currentMeasureName: string;
 
   get VISUALIZATION() {

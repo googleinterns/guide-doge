@@ -19,9 +19,7 @@ export class AudificationDirective implements OnInit {
 
   attach() {
     if (this.lineChartComponent) {
-      this.lineChartComponent.a11yHost.addComponent(LineChartAudificationComponent, {
-        data: this.lineChartComponent.data,
-      });
+      this.lineChartComponent.a11yHost.addComponent(LineChartAudificationComponent, this.lineChartComponent);
     }
   }
 }

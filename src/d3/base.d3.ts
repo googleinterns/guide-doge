@@ -57,7 +57,7 @@ export abstract class BaseD3<T extends RenderOptions> {
     this.clear$.complete();
     this.clear$ = undefined;
 
-    this.svg.remove();
+    this.svg.html('');
   }
 
   protected takeUntilCleared<R>(): MonoTypeOperatorFunction<R> {
