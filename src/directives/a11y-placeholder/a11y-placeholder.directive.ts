@@ -1,16 +1,16 @@
 import { ComponentFactoryResolver, ComponentRef, Directive, Injector, Type, ViewContainerRef } from '@angular/core';
 
 @Directive({
-  selector: '[appA11yHost]',
+  selector: '[appA11yPlaceholder]',
 })
-export class A11yHostDirective<HostComponent> {
+export class A11yPlaceholderDirective<Host> {
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver,
     private viewContainerRef: ViewContainerRef,
   ) {
   }
 
-  addComponent<T>(A11yComponent: Type<T>, host: HostComponent) {
+  addComponent<T>(A11yComponent: Type<T>, host: Host) {
     this.viewContainerRef.clear();
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(A11yComponent);
     const injector = Injector.create({

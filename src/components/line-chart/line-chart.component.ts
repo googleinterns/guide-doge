@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Datum, RenderOptions } from '../../d3/xy-chart.d3';
 import { AUDIFICATION, t } from '../../assets/i18n';
 import { formatX, formatY } from '../../utils/formatters';
-import { A11yHostDirective } from '../../directives/a11y-host/a11y-host.directive';
+import { A11yPlaceholderDirective } from '../../directives/a11y-placeholder/a11y-placeholder.directive';
 import { DataService } from '../../services/data/data.service';
 
 @Component({
@@ -13,7 +13,7 @@ import { DataService } from '../../services/data/data.service';
   styleUrls: ['./line-chart.component.scss'],
 })
 export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnDestroy {
-  @ViewChild(A11yHostDirective, { static: true }) a11yHost: A11yHostDirective<LineChartComponent>;
+  @ViewChild(A11yPlaceholderDirective, { static: true }) a11yPlaceholder: A11yPlaceholderDirective<LineChartComponent>;
 
   @Input() measureName: string;
   @Input() height = 500;
@@ -22,6 +22,7 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
   @Input() marginRight = 30;
   @Input() marginBottom = 30;
   @Input() marginLeft = 40;
+
   data$ = new BehaviorSubject<Datum[]>([]);
   activeDatum$ = new BehaviorSubject<Datum | null>(null);
   private lineChartD3: LineChartD3;

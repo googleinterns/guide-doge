@@ -12,11 +12,12 @@ export class AudificationDirective implements OnInit, OnDestroy {
     // candidate host components
     @Host() @Self() @Optional() private lineChartComponent: LineChartComponent | null,
     // @Host() @Self() @Optional() private barChartComponent: BarChartComponent | null,
+    // etc.
   ) {
   }
 
-  get component() {
-    const component = this.lineChartComponent;
+  get host() {
+    const component = this.lineChartComponent; // later it will be like: this.lineChartComponent || this.barChartComponent || ...
     if (!component) {
       throw new Error('The component does not support audification.');
     }
@@ -34,13 +35,13 @@ export class AudificationDirective implements OnInit, OnDestroy {
   attach() {
     this.detach();
 
-    const { component } = this;
-    this.audificationComponentRef = component.a11yHost.addComponent(LineChartAudificationComponent, component);
+    const { host } = this;
+    this.audificationComponentRef = host.a11yPlaceholder.addComponent(LineChartAudificationComponent, host);
   }
 
   detach() {
     if (this.audificationComponentRef) {
-      this.component.a11yHost.removeComponent(this.audificationComponentRef);
+      this.host.a11yPlaceholder.removeComponent(this.audificationComponentRef);
       this.audificationComponentRef = null;
     }
   }
