@@ -1,4 +1,14 @@
 <h2 class="card-title">{{title}}</h2>
 <div class="card-content">
-  <ng-content></ng-content>
+  <div class="tabs" *ngIf="tabbed">
+    <div *ngFor="let measureName of measureNames"
+         class="tab" [class.active]="measureName === currentMeasureName"
+         (click)="setMeasureName(measureName)" role="button">
+      {{humanizeMeasureName(measureName)}}
+    </div>
+  </div>
+  <app-line-chart role="img" appAudification
+                  [attr.aria-label]="VISUALIZATION"
+                  [data]="data"
+                  [(activeDatum)]="activeDatum"></app-line-chart>
 </div>
