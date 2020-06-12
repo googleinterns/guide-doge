@@ -7,7 +7,12 @@ const en: I18n = {
 
   [VISUALIZATION.ACTIVE_DATUM]: '%(y)s on %(x)s',
 
-  [AUDIFICATION.INSTRUCTIONS]: 'Hold down <kbd>SPACE</kbd> to play audification and <kbd>SHIFT</kbd> + <kbd>SPACE</kbd> to play it backward. <br/>Press <kbd>X</kbd> or <kbd>Y</kbd> to read the domain and range. <br/>Press <kbd>0</kbd> ... <kbd>9</kbd> to move playhead.',
+  [AUDIFICATION.INSTRUCTIONS]: [
+    'Hold down <kbd>SPACE</kbd> to play audification and <kbd>SHIFT</kbd> + <kbd>SPACE</kbd> to play it backward.',
+    'Press <kbd>X</kbd> or <kbd>Y</kbd> to read out the domain and range.',
+    'Press <kbd>L</kbd> to read out the legend items.',
+    'Press <kbd>0</kbd> ... <kbd>9</kbd> to move playhead.',
+  ].join(' <br/>'),
   [AUDIFICATION.DOMAIN]: 'Domain from %(min)s to %(max)s',
   [AUDIFICATION.RANGE]: 'Range from %(min)s to %(max)s',
   [AUDIFICATION.ACTIVE_DATUM]: '%(y)s on %(x)s',

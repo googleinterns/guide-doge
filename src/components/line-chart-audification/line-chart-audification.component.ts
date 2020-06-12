@@ -13,7 +13,7 @@ import {
 import { Melody } from '../../models/melody/melody.model';
 import { AUDIFICATION, t, tA11y } from '../../assets/i18n';
 import { Datum } from '../../d3/xy-chart.d3';
-import { formatX, formatY } from '../../utils/formatters';
+import { formatX, formatY, humanizeMeasureName } from '../../utils/formatters';
 
 @Component({
   selector: 'app-line-chart-audification',
@@ -22,6 +22,7 @@ import { formatX, formatY } from '../../utils/formatters';
 })
 export class LineChartAudificationComponent implements OnDestroy, OnChanges {
   @Input() data: Datum[];
+  @Input() measureName: string;
   @Input() activeDatum: Datum | null;
   @Output() activeDatumChange = new EventEmitter<Datum | null>();
   @Input() frequencyRange: [number, number] = [256, 2048];
@@ -96,6 +97,8 @@ export class LineChartAudificationComponent implements OnDestroy, OnChanges {
         min: formatY(this.range[0]),
         max: formatY(this.range[this.range.length - 1]),
       }));
+    } else if (key === 'l') {
+      this.readOut(humanizeMeasureName(this.measureName));
     } else if ('0' <= key && key <= '9') {
       this.melody?.seekTo(this.duration * (+key / 10), true);
     }
