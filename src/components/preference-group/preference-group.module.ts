@@ -1,19 +1,19 @@
 import { NgModule } from '@angular/core';
-import { PreferenceComponent } from './preference.component';
+import { PreferenceGroupComponent } from './preference-group.component';
 import { CommonModule } from '@angular/common';
 import { SwitchModule } from '../switch/switch.module';
 
 @NgModule({
   declarations: [
-    PreferenceComponent,
+    PreferenceGroupComponent,
   ],
   imports: [
     CommonModule,
     SwitchModule,
   ],
   exports: [
-    PreferenceComponent,
+    PreferenceGroupComponent,
   ],
 })
-export class PreferenceModule {
+export class PreferenceGroupModule {
 }

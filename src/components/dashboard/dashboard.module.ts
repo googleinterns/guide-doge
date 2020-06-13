@@ -1,18 +1,18 @@
 import { NgModule } from '@angular/core';
 import { DashboardComponent } from './dashboard.component';
-import { PreferenceModule } from '../preference/preference.module';
+import { PreferenceGroupModule } from '../preference-group/preference-group.module';
 import { FormsModule } from '@angular/forms';
-import { SwitchModule } from '../switch/switch.module';
 import { CardModule } from '../card/card.module';
+import { PreferenceItemModule } from '../preference-item/preference-item.module';
 
 @NgModule({
   declarations: [
     DashboardComponent,
   ],
   imports: [
-    PreferenceModule,
+    PreferenceGroupModule,
+    PreferenceItemModule,
     FormsModule,
-    SwitchModule,
     CardModule,
   ],
   exports: [
