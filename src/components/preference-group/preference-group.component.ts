@@ -1,4 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { PreferenceKey, PreferencesService } from '../../services/preferences/preferences.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-preference-group',
@@ -7,10 +9,22 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class PreferenceGroupComponent {
   @Input() title: string;
-  @Input() enabled: boolean;
-  @Output() enabledChange = new EventEmitter<boolean>();
+  @Input() key: PreferenceKey;
 
-  toggleEnabled() {
-    this.enabledChange.emit(!this.enabled);
+  constructor(
+    public preferencesService: PreferencesService,
+  ) {
+  }
+
+  get enabled$() {
+    return this.preferencesService[this.key] as BehaviorSubject<boolean>;
+  }
+
+  get enabled() {
+    return this.enabled$.value;
+  }
+
+  set enabled(value) {
+    this.enabled$.next(value);
   }
 }

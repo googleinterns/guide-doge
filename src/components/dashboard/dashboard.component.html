@@ -1,15 +1,25 @@
 <aside class="sidebar">
   <h2 class="sidebar-title">Customization</h2>
-  <app-preference-group title="Audification" [(enabled)]="audificationEnabled">
-    <app-preference-item name="Lowest note (Hz)" type="number"></app-preference-item>
-    <app-preference-item name="Highest note (Hz)" type="number"></app-preference-item>
-    <app-preference-item name="Note duration (ms)" type="number"></app-preference-item>
-    <app-preference-item name="Read out before playing" type="boolean"></app-preference-item>
-    <app-preference-item name="Read out after playing" type="boolean"></app-preference-item>
+  <app-preference-group title="Audification" key="audification">
+    <app-preference-item name="Lowest note (Hz)"
+                         key="audification.lowestPitch"
+                         type="number"></app-preference-item>
+    <app-preference-item name="Highest note (Hz)"
+                         key="audification.highestPitch"
+                         type="number"></app-preference-item>
+    <app-preference-item name="Note duration (ms)"
+                         key="audification.noteDuration"
+                         type="number"></app-preference-item>
+    <app-preference-item name="Read out before playing"
+                         key="audification.readBefore"
+                         type="boolean"></app-preference-item>
+    <app-preference-item name="Read out after playing"
+                         key="audification.readAfter"
+                         type="boolean"></app-preference-item>
   </app-preference-group>
-  <app-preference-group title="Data Table" [(enabled)]="dataTableEnabled">
+  <app-preference-group title="Data Table" key="dataTable">
   </app-preference-group>
-  <app-preference-group title="Text Summary" [(enabled)]="textSummaryEnabled">
+  <app-preference-group title="Text Summary" key="textSummary">
   </app-preference-group>
 </aside>
 <div class="card-container">
