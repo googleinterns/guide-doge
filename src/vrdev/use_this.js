@@ -1,4 +1,5 @@
 class Scatter{
+
   constructor(){
     this.x = 2;
     this.y = 2;
@@ -36,7 +37,7 @@ class dataPt{
       var x = 0;
       var y = i*5;
       var z = -d;
-      return (x + " " + y + " " + z);
+      return (x + " " + y + " "   + z);
     });
   }
   setColor(color){
