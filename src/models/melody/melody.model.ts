@@ -13,7 +13,7 @@ export class Melody {
   constructor(
     private values: number[],
     private frequencyRange: [number, number],
-    public noteDuration: number, // duration (in seconds) of a note
+    private noteDuration: number, // duration (in seconds) of a note
     private onSeek?: OnSeek,
   ) {
     const reversedValues = [...values].reverse();
