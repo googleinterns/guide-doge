@@ -1,23 +1,31 @@
 //run tsc Scatterplot.ts to compile into Scatterplot.js file
-import * as _d3 from "d3";
 
-declare global {
-  const d3: typeof _d3;
-}
+// for running on browser
+// import * as _d3 from "d3";
 
-class Scatterplot{
+// declare global {
+//   const d3: typeof _d3;
+// }
+
+//for unit testing
+import * as d3 from "d3";
+
+
+export class Scatterplot{
     data: number[];
     shape: string;
 
   constructor(){
     this.data = [0, 0];
   }
-  init(){
+  init(data: number[]){
     // create a scale so that there is correspondence between data set and screen render
-    this.data = [10,20,30,40,50,60,70,80];
+    this.data = data;
+    
     this.generatePts("a-sphere");  
     this.setColor("blue");
     //console.log("hello");
+    return this.data;
   }
   generatePts(shape: string){
     this.shape = shape;
@@ -31,9 +39,9 @@ class Scatterplot{
     //select all shapes within scene 
     //d is data at index, i within 
     d3.selectAll(shape).attr("position", (d, i) => {
-      let x = 0;
-      let y = i*5;
-      let z = -this.data[i];
+      let x = hscale(i*5);
+      let y = hscale(i*10);
+      let z = hscale(-this.data[i]*10);
       return (x + " " + y + " "   + z);
     });
   }
