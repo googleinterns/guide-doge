@@ -1,3 +1,4 @@
+//run tsc Scatterplot.ts to compile into Scatterplot.js file
 import * as _d3 from "d3";
 
 declare global {
