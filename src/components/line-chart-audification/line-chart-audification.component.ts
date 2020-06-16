@@ -5,15 +5,22 @@ import { formatX, formatY, humanizeMeasureName } from '../../utils/formatters';
 import { LineChartComponent } from '../line-chart/line-chart.component';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { AudificationPreference } from '../../services/preference/types';
 
 @Component({
   selector: 'app-line-chart-audification',
   templateUrl: './line-chart-audification.component.html',
   styleUrls: ['./line-chart-audification.component.scss'],
 })
-export class LineChartAudificationComponent implements OnInit, OnDestroy {
-  @Input() frequencyRange: [number, number] = [256, 2048];
-  @Input() duration = 5;
+export class LineChartAudificationComponent implements AudificationPreference, OnInit, OnDestroy {
+  // even though change detection doesn't work for dynamically loaded components, leave @Input() to indicate that they will be injected.
+  @Input() enabled: boolean;
+  @Input() lowestPitch: number;
+  @Input() highestPitch: number;
+  @Input() noteDuration: number;
+  @Input() readBefore: boolean;
+  @Input() readAfter: boolean;
+
   liveText: string | null = null;
   private destroy$ = new Subject();
   private melody?: Melody;
@@ -56,7 +63,7 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy {
         this.domain = data.map(d => d.date).sort((a, b) => a.getTime() - b.getTime());
         this.range = data.map(d => d.value).sort();
         this.melody?.dispose();
-        this.melody = new Melody(values, this.frequencyRange, this.duration, this.handleSeek);
+        this.melody = new Melody(values, [this.lowestPitch, this.highestPitch], this.noteDuration, this.handleSeek);
       });
   }
 
@@ -105,7 +112,7 @@ export class LineChartAudificationComponent implements OnInit, OnDestroy {
     } else if (key === 'l') {
       this.readOut(humanizeMeasureName(this.measureName));
     } else if ('0' <= key && key <= '9') {
-      this.melody?.seekTo(this.duration * (+key / 10), true);
+      this.melody?.seekTo(this.melody.duration * (+key / 10), true);
     }
   }
 

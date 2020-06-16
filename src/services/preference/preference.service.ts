@@ -1,5 +1,6 @@
 import { BehaviorSubject, combineLatest, Observable, ObservedValueOf } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { AudificationPreference, DataTablePreference, TextSummaryPreference } from './types';
 
 type ObservableDictionary = { [key: string]: Observable<any> };
 type ObservedDictionaryOf<T extends ObservableDictionary> = { [key in keyof T]: ObservedValueOf<T[key]> };
@@ -9,21 +10,23 @@ export class PreferenceService {
     enabled: new BehaviorSubject(true),
     lowestPitch: new BehaviorSubject(256),
     highestPitch: new BehaviorSubject(1024),
-    noteDuration: new BehaviorSubject(167),
+    noteDuration: new BehaviorSubject(.167),
     readBefore: new BehaviorSubject(false),
     readAfter: new BehaviorSubject(true),
   };
-  audification$ = this.combineObservableDictionary(this.audification);
+  audification$: Observable<AudificationPreference> = this.combineObservableDictionary(this.audification);
 
   dataTable = {
-    enabled$: new BehaviorSubject(false),
+    enabled: new BehaviorSubject(false),
+    placeholder: new BehaviorSubject(null),
   };
-  datatable$ = this.combineObservableDictionary(this.dataTable);
+  datatable$: Observable<DataTablePreference> = this.combineObservableDictionary(this.dataTable);
 
   textSummary = {
-    enabled$: new BehaviorSubject(false),
+    enabled: new BehaviorSubject(false),
+    placeholder: new BehaviorSubject(null),
   };
-  textSummary$ = this.combineObservableDictionary(this.textSummary);
+  textSummary$: Observable<TextSummaryPreference> = this.combineObservableDictionary(this.textSummary);
 
   /**
    * Creates a combined Observable that emits a dictionary of observed values.

@@ -13,7 +13,7 @@ export class Melody {
   constructor(
     private values: number[],
     private frequencyRange: [number, number],
-    private duration: number, // duration (in seconds) of the melody
+    private noteDuration: number, // duration (in seconds) of a note
     private onSeek?: OnSeek,
   ) {
     const reversedValues = [...values].reverse();
@@ -21,8 +21,8 @@ export class Melody {
     this.backwardSequence = this.createSequence(reversedValues);
   }
 
-  get noteDuration() {
-    return this.duration / this.values.length;
+  get duration() {
+    return this.noteDuration * this.values.length;
   }
 
   get currentSeconds() {
