@@ -4,7 +4,7 @@ import { PreferenceGroupModule } from '../preference-group/preference-group.modu
 import { FormsModule } from '@angular/forms';
 import { CardModule } from '../card/card.module';
 import { PreferenceItemModule } from '../preference-item/preference-item.module';
-import { PreferencesModule } from '../../services/preferences/preferences.module';
+import { PreferenceModule } from '../../services/preference/preference.module';
 import { CommonModule } from '@angular/common';
 
 @NgModule({
@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
     DashboardComponent,
   ],
   imports: [
-    PreferencesModule,
+    PreferenceModule,
     PreferenceGroupModule,
     PreferenceItemModule,
     FormsModule,

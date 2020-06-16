@@ -4,7 +4,7 @@ import { map } from 'rxjs/operators';
 type ObservableDictionary = { [key: string]: Observable<any> };
 type ObservedDictionaryOf<T extends ObservableDictionary> = { [key in keyof T]: ObservedValueOf<T[key]> };
 
-export class PreferencesService {
+export class PreferenceService {
   audification = { // mimic namespace
     enabled: new BehaviorSubject(true),
     lowestPitch: new BehaviorSubject(256),

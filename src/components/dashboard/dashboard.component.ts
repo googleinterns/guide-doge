@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PreferencesService } from '../../services/preferences/preferences.service';
+import { PreferenceService } from '../../services/preference/preference.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,12 +8,12 @@ import { PreferencesService } from '../../services/preferences/preferences.servi
 })
 export class DashboardComponent {
   // manual destructuring for easy access in template
-  audification = this.preferencesService.audification;
-  dataTable = this.preferencesService.dataTable;
-  textSummary = this.preferencesService.textSummary;
+  audification = this.preferenceService.audification;
+  dataTable = this.preferenceService.dataTable;
+  textSummary = this.preferenceService.textSummary;
 
   constructor(
-    private preferencesService: PreferencesService,
+    private preferenceService: PreferenceService,
   ) {
   }
 }
