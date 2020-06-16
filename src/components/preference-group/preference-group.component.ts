@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { PreferenceKey, PreferencesService } from '../../services/preferences/preferences.service';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
@@ -9,22 +8,13 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class PreferenceGroupComponent {
   @Input() title: string;
-  @Input() key: PreferenceKey;
-
-  constructor(
-    public preferencesService: PreferencesService,
-  ) {
-  }
-
-  get enabled$() {
-    return this.preferencesService[this.key] as BehaviorSubject<boolean>;
-  }
+  @Input() subject: BehaviorSubject<boolean>;
 
   get enabled() {
-    return this.enabled$.value;
+    return this.subject.value;
   }
 
   set enabled(value) {
-    this.enabled$.next(value);
+    this.subject.next(value);
   }
 }

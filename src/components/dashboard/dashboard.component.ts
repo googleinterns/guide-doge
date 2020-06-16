@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { PreferencesService } from '../../services/preferences/preferences.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -6,4 +7,13 @@ import { Component } from '@angular/core';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent {
+  // manual destructuring for easy access in template
+  audification = this.preferencesService.audification;
+  dataTable = this.preferencesService.dataTable;
+  textSummary = this.preferencesService.textSummary;
+
+  constructor(
+    private preferencesService: PreferencesService,
+  ) {
+  }
 }
