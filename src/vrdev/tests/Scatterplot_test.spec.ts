@@ -1,54 +1,72 @@
 import { Scatterplot } from '../src/Scatterplot';
-
-  describe('creates a scatterplot object', function() {
-    it('assigns 2 element 0 array to scatterplot object', function() {
-      let scatterplot = new Scatterplot();
-      let result = scatterplot.data;
-      //constructor initializes data to [0, 0]
-      expect(result).toEqual([0, 0]);
-    });
-  });
-
   //can't send null or undefined bc scatterplot.init only accepts number[]
   //write error handling for .init???
   describe('initializes accompanying data for scatterplot', function() {
+
+    let element = document.createElement('a-scene');
     it('sends short array', function() {
       let scatterplot = new Scatterplot();
-      let result = scatterplot.init([0, 10, 20]);
+      let result = scatterplot.init(element, [0, 10, 20]);
       expect(result).toEqual([0, 10, 20]);
     });
     it('sends longer array', function() {
       let scatterplot = new Scatterplot();
-      let result = scatterplot.init([0, 10, 20, 30, 40, 50, 60]);
+      let result = scatterplot.init(element, [0, 10, 20, 30, 40, 50, 60]);
       expect(result).toEqual([0, 10, 20, 30, 40, 50, 60]);
     });
     it('sends one element array', function() {
       let scatterplot = new Scatterplot();
-      let result = scatterplot.init([1]);
+      let result = scatterplot.init(element, [1]);
       expect(result).toEqual([1]);
     });
     it('sends empty array', function() {  
       let scatterplot = new Scatterplot();
-      let result = scatterplot.init([]);
+      let result = scatterplot.init(element, []);
       expect(result).toEqual([]);
     });
   });
 
   describe('places scatter points on plot', function() {
-   //it function below results in failed test since document is never initialized with unit testing (document is null)
+    var THREE = require('three');
+    it('places no points bc 1:1 correspondence with empty element array', function() {
+      let element = document.createElement('a-scene');
+      let scatterplot = new Scatterplot();
+      scatterplot.data = [];
+      //expected output based on position function in scatterplot
+      let expectedPosArray = [];
+      scatterplot.container = element;
+      let result = scatterplot.generatePts('a-sphere');
+      expect(result).toEqual(expectedPosArray);
+    });
     it('places points for each element in a one element array', function() {
+      let element = document.createElement('a-scene');
       let scatterplot = new Scatterplot();
       scatterplot.data = [10];
-      scatterplot.generatePts("a-sphere");
-      let result = document.querySelector('a-sphere')!.getAttribute('position');
-      console.log(result);
-      expect(result).toEqual("0 0 -100");
-      
+      //expected output based on position function in scatterplot
+      let expectedPosArray = ['0 0 -20'];
+      scatterplot.container = element;
+      let result = scatterplot.generatePts('a-sphere');
+      expect(result).toEqual(expectedPosArray);
     });
-    // it('places spherical points for each element in a short array', function() {
-    //   let scatterplot = new Scatterplot();
-    //   scatterplot.data = [0, 10, 20, 30];
-    //   let result = scatterplot.generatePts("a-sphere");
-    //   //figure out what expect should be
-    // });
+    it('places points for each element in a two element array', function() {
+      let element = document.createElement('a-scene');
+      let scatterplot = new Scatterplot();
+      scatterplot.data = [10, 10];
+      //expected output based on position function in scatterplot
+      let expectedPosArray = ['0 0 -20', '5 10 -20'];
+      scatterplot.container = element;
+      let result = scatterplot.generatePts('a-sphere');
+      expect(result).toEqual(expectedPosArray);
+    });
+    it('places points for each element in a eight element array', function() {
+      let element = document.createElement('a-scene');
+      let scatterplot = new Scatterplot();
+      scatterplot.data = [10, 10, 20, 20, 30, 30, 40, 40];
+      //expected output based on position function in scatterplot
+      let expectedPosArray = ['0 0 -20', '5 10 -20', '10 20 -40', '15 30 -40', '20 40 -60', '25 50 -60', '30 60 -80', '35 70 -80'];
+      scatterplot.container = element;
+      let result = scatterplot.generatePts('a-sphere');
+      expect(result).toEqual(expectedPosArray);
+    });
+    
   });
