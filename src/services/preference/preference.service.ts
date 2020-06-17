@@ -10,7 +10,7 @@ export class PreferenceService {
     enabled: new BehaviorSubject(true),
     lowestPitch: new BehaviorSubject(256),
     highestPitch: new BehaviorSubject(1024),
-    noteDuration: new BehaviorSubject(.167),
+    noteDuration: new BehaviorSubject(167),
     readBefore: new BehaviorSubject(false),
     readAfter: new BehaviorSubject(true),
   };

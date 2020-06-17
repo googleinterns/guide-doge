@@ -18,7 +18,6 @@ describe('Melody', () => {
 
   afterEach(() => {
     melody.dispose();
-    Tone.Transport.stop();
   });
 
   it('should instantiate.', () => {
