@@ -4,7 +4,7 @@ import * as Tone from 'tone';
 describe('Melody', () => {
   const values = [1, 2, 3, 4, 5, 4, 3, 2, 1];
   const frequencyRange: [number, number] = [256, 2048];
-  const duration = 5; // duration (in seconds) of the melody to generate
+  const noteDuration = 0.1; // duration (in seconds) of a note
   let melody: Melody;
   const delay = 200; // delay (in ms) between playing the melody and evaluating playhead
 
@@ -13,7 +13,7 @@ describe('Melody', () => {
   });
 
   beforeEach(() => {
-    melody = new Melody(values, frequencyRange, duration);
+    melody = new Melody(values, frequencyRange, noteDuration);
   });
 
   afterEach(() => {
@@ -24,8 +24,8 @@ describe('Melody', () => {
     expect(melody).toBeInstanceOf(Melody);
   });
 
-  it('should calculate the duration of a note correctly.', () => {
-    expect(melody.noteDuration).toBe(duration / values.length);
+  it('should calculate the duration correctly.', () => {
+    expect(melody.duration).toBe(noteDuration * values.length);
   });
 
   it('should have playhead at the very beginning of the sequence', () => {
@@ -45,7 +45,7 @@ describe('Melody', () => {
     expect(melody.isPlaying).toBeTrue();
     expect(melody.isEnded).toBeFalse();
     await new Promise(resolve => window.setTimeout(resolve, delay));
-    expect(melody.currentSeconds).toBeLessThan(duration);
+    expect(melody.currentSeconds).toBeLessThan(melody.duration);
   });
 
   it('should pause the sequence.', async () => {
@@ -56,8 +56,8 @@ describe('Melody', () => {
   });
 
   it('should seek to the closest note to the given second.', () => {
-    for (let index = 0; index < duration; index++) {
-      melody.seekTo(index * melody.noteDuration);
+    for (let index = 0; index < values.length; index++) {
+      melody.seekTo(index * noteDuration);
       expect(melody.getCurrentDatumIndex()).toBe(index);
     }
   });
