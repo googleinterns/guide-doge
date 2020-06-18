@@ -15,8 +15,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "test": "ng test",
-    "test-ci": "ng test --watch=false",
+    "test": "ng test --codeCoverage=true",
+    "test-ci": "npm test -- --watch=false",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
