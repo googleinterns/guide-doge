@@ -22,8 +22,6 @@ export class Scatterplot{
   init(container: HTMLElement, data: number[]){
     this.data = data;
     this.container = container;
-    this.generatePts("a-sphere");  
-    this.setColor("blue");
     return this.data;
   }
   generatePts(shape: string): string[]{
