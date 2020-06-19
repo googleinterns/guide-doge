@@ -27,9 +27,6 @@ module.exports = function (config) {
     autoWatch: true,
     browsers: ['Chrome'],
     singleRun: false,
-    restartOnFileChange: true,
-    files:[
-      'app/components/d3/d3'
-    ]
+    restartOnFileChange: true
   });
 };
