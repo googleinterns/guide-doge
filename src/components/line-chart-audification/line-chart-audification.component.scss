@@ -1,6 +1,10 @@
 @import "../../utils/constants";
 
 :host {
+  display: block;
+  padding: 1.5rem;
+  border-top: 1px solid $color-border;
+
   .instructions {
     font-size: $font-size-small;
     line-height: 2em;

@@ -1,21 +1,7 @@
-<app-card class="card" title="Line Chart">
-  <div class="measures">
-    <div *ngFor="let measureName of measureNames"
-         class="measure" [class.active]="measureName === currentMeasureName"
-         (click)="setMeasureName(measureName)" role="button">
-      {{humanizeMeasureName(measureName)}}
-    </div>
+<div class="svg-wrapper">
+  <svg></svg>
+  <div class="active-indicator">
+    {{formattedActiveDatum}}
   </div>
-  <app-card-fold>
-    <app-line-chart-visualization role="img"
-                                  [attr.aria-label]="VISUALIZATION"
-                                  [data]="data"
-                                  [(activeDatum)]="activeDatum"></app-line-chart-visualization>
-  </app-card-fold>
-  <app-card-fold>
-    <app-line-chart-audification tabindex="0"
-                                 [data]="data"
-                                 [measureName]="currentMeasureName"
-                                 [(activeDatum)]="activeDatum"></app-line-chart-audification>
-  </app-card-fold>
-</app-card>
+</div>
+<ng-template appA11yPlaceholder></ng-template>

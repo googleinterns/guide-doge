@@ -1,24 +1,23 @@
 @import "../../utils/constants";
 
 :host {
-  .card {
-    .measures {
-      display: flex;
-      align-items: stretch;
-      height: 4rem;
+  display: flex;
+  flex-direction: column;
 
-      .measure {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
+  .svg-wrapper {
+    box-sizing: content-box;
+    position: relative;
+    margin: 1.5rem;
 
-        &.active {
-          border-top: 4px solid $color-highlight;
-          font-weight: 500;
-        }
-      }
+    .active-indicator {
+      @include card-shadow;
+      position: absolute;
+      font-weight: 500;
+      padding: 1rem;
+      background-color: white;
+      white-space: nowrap;
+      color: $color-highlight;
+      opacity: 0;
     }
   }
 }

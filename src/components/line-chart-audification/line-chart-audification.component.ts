@@ -1,27 +1,29 @@
-import { Component, EventEmitter, HostListener, Input, NgZone, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import { Component, HostBinding, HostListener, Inject, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { Melody } from '../../models/melody/melody.model';
 import { AUDIFICATION, t, tA11y } from '../../assets/i18n';
-import { Datum } from '../../d3/xy-chart.d3';
 import { formatX, formatY, humanizeMeasureName } from '../../utils/formatters';
+import { LineChartComponent } from '../line-chart/line-chart.component';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { ascendingDate, ascendingNumber } from '../../utils/comparators';
 
 @Component({
   selector: 'app-line-chart-audification',
   templateUrl: './line-chart-audification.component.html',
   styleUrls: ['./line-chart-audification.component.scss'],
 })
-export class LineChartAudificationComponent implements OnDestroy, OnChanges {
-  @Input() data: Datum[];
-  @Input() measureName: string;
-  @Input() activeDatum: Datum | null;
-  @Output() activeDatumChange = new EventEmitter<Datum | null>();
+export class LineChartAudificationComponent implements OnInit, OnDestroy {
   @Input() frequencyRange: [number, number] = [256, 2048];
   @Input() duration = 5;
   liveText: string | null = null;
+  private destroy$ = new Subject();
   private melody?: Melody;
   private domain: Date[];
   private range: number[];
+  @HostBinding('attr.tabindex') private readonly tabindex = 0;
 
   constructor(
+    @Inject('host') private host: LineChartComponent,
     private zone: NgZone,
   ) {
     this.handleSeek = this.handleSeek.bind(this);
@@ -35,18 +37,34 @@ export class LineChartAudificationComponent implements OnDestroy, OnChanges {
     return tA11y(AUDIFICATION.INSTRUCTIONS);
   }
 
-  ngOnDestroy() {
-    this.melody?.dispose();
+  get data() {
+    return this.host.data;
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if ('data' in changes) {
-      const values = this.data.map(datum => datum.value);
-      this.domain = this.data.map(d => d.date).sort((a, b) => a.getTime() - b.getTime());
-      this.range = this.data.map(d => d.value).sort();
-      this.melody?.dispose();
-      this.melody = new Melody(values, this.frequencyRange, this.duration, this.handleSeek);
-    }
+  get measureName() {
+    return this.host.measureName;
+  }
+
+  set activeDatum(activeDatum) {
+    this.host.activeDatum = activeDatum;
+  }
+
+  ngOnInit() {
+    this.host.data$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(data => {
+        const values = data.map(datum => datum.value);
+        this.domain = data.map(d => d.date).sort(ascendingDate);
+        this.range = data.map(d => d.value).sort(ascendingNumber);
+        this.melody?.dispose();
+        this.melody = new Melody(values, this.frequencyRange, this.duration, this.handleSeek);
+      });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.melody?.dispose();
   }
 
   handleSeek(index, playing) {
@@ -55,7 +73,7 @@ export class LineChartAudificationComponent implements OnDestroy, OnChanges {
 
     // since Tone.js is running outside of the Angular zone, it needs to reenter the zone to trigger change detection.
     this.zone.run((() => {
-      this.activeDatumChange.emit(datum);
+      this.activeDatum = datum;
       if (!playing) {
         this.readOut(t(AUDIFICATION.ACTIVE_DATUM, {
           x: formatX(date),

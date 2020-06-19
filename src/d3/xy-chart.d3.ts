@@ -9,8 +9,8 @@ export interface Datum {
 }
 
 export interface RenderOptions extends BaseRenderOptions {
-  dataObservable: Observable<Datum[]>;
-  activeDatumObservable: Observable<Datum | null>;
+  data$: Observable<Datum[]>;
+  activeDatum$: Observable<Datum | null>;
 }
 
 export abstract class XYChartD3 extends BaseD3<RenderOptions> {
@@ -24,22 +24,20 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
   render() {
     super.render();
 
-    const {
-      dataObservable, activeDatumObservable,
-    } = this.renderOptions;
+    const { data$, activeDatum$ } = this.renderOptions;
 
     this.renderAxis();
     this.renderData();
     this.renderActiveDatum();
 
-    dataObservable
+    data$
       .pipe(this.takeUntilCleared())
       .subscribe(data => {
         this.updateAxis(data);
         this.updateData(data);
       });
 
-    activeDatumObservable
+    activeDatum$
       .pipe(this.takeUntilCleared())
       .subscribe(activeDatum => {
         this.updateActiveDatum(activeDatum);
