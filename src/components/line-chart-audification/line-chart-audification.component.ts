@@ -6,6 +6,7 @@ import { LineChartComponent } from '../line-chart/line-chart.component';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { AudificationPreference } from '../../services/preference/types';
+import { ascendingDate, ascendingNumber } from '../../utils/comparators';
 
 @Component({
   selector: 'app-line-chart-audification',
@@ -61,8 +62,8 @@ export class LineChartAudificationComponent implements AudificationPreference, O
       .pipe(takeUntil(this.destroy$))
       .subscribe(data => {
         const values = data.map(datum => datum.value);
-        this.domain = data.map(d => d.date).sort((a, b) => a.getTime() - b.getTime());
-        this.range = data.map(d => d.value).sort();
+        this.domain = data.map(d => d.date).sort(ascendingDate);
+        this.range = data.map(d => d.value).sort(ascendingNumber);
         this.melody?.dispose();
         this.melody = new Melody(values, [this.lowestPitch, this.highestPitch], this.noteDuration, this.handleSeek);
       });
