@@ -141,8 +141,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
 /* harmony import */ var _app_routing_module__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./app-routing.module */ "./src/app-routing.module.ts");
 /* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./app.component */ "./src/app.component.ts");
-/* harmony import */ var _components_line_chart_line_chart_module__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/line-chart/line-chart.module */ "./src/components/line-chart/line-chart.module.ts");
-
 
 
 
@@ -154,11 +152,9 @@ AppModule.ɵmod = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineNgModule
 AppModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineInjector"]({ factory: function AppModule_Factory(t) { return new (t || AppModule)(); }, imports: [[
             _angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"],
             _app_routing_module__WEBPACK_IMPORTED_MODULE_2__["AppRoutingModule"],
-            _components_line_chart_line_chart_module__WEBPACK_IMPORTED_MODULE_4__["LineChartModule"],
         ]] });
 (function () { (typeof ngJitMode === "undefined" || ngJitMode) && _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵsetNgModuleScope"](AppModule, { declarations: [_app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"]], imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"],
-        _app_routing_module__WEBPACK_IMPORTED_MODULE_2__["AppRoutingModule"],
-        _components_line_chart_line_chart_module__WEBPACK_IMPORTED_MODULE_4__["LineChartModule"]] }); })();
+        _app_routing_module__WEBPACK_IMPORTED_MODULE_2__["AppRoutingModule"]] }); })();
 (function () { _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵsetClassMetadata"](AppModule, [{
         type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"],
         args: [{
@@ -168,7 +164,6 @@ AppModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineInjector
                 imports: [
                     _angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"],
                     _app_routing_module__WEBPACK_IMPORTED_MODULE_2__["AppRoutingModule"],
-                    _components_line_chart_line_chart_module__WEBPACK_IMPORTED_MODULE_4__["LineChartModule"],
                 ],
                 bootstrap: [
                     _app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"],
@@ -313,77 +308,6 @@ function tA11y(key, ...args) {
 
 /***/ }),
 
-/***/ "./src/components/card-fold/card-fold.component.ts":
-/*!*********************************************************!*\
-  !*** ./src/components/card-fold/card-fold.component.ts ***!
-  \*********************************************************/
-/*! exports provided: CardFoldComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CardFoldComponent", function() { return CardFoldComponent; });
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
-
-
-const _c0 = ["*"];
-class CardFoldComponent {
-}
-CardFoldComponent.ɵfac = function CardFoldComponent_Factory(t) { return new (t || CardFoldComponent)(); };
-CardFoldComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: CardFoldComponent, selectors: [["app-card-fold"]], inputs: { title: "title" }, ngContentSelectors: _c0, decls: 1, vars: 0, template: function CardFoldComponent_Template(rf, ctx) { if (rf & 1) {
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵprojectionDef"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵprojection"](0);
-    } }, styles: ["[_nghost-%COMP%] {\n  padding: 1.5rem;\n}\napp-card-fold    + [_nghost-%COMP%] {\n  border-top: 1px solid #dadce0;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL3J1bm5lci93b3JrL2d1aWRlLWRvZ2UvZ3VpZGUtZG9nZS9zcmMvY29tcG9uZW50cy9jYXJkLWZvbGQvY2FyZC1mb2xkLmNvbXBvbmVudC5zY3NzIiwic3JjL2NvbXBvbmVudHMvY2FyZC1mb2xkL2NhcmQtZm9sZC5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFFQTtFQUNFLGVBQUE7QUNERjtBREdFO0VBQ0UsNkJBQUE7QUNESiIsImZpbGUiOiJzcmMvY29tcG9uZW50cy9jYXJkLWZvbGQvY2FyZC1mb2xkLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiQGltcG9ydCBcIi4uLy4uL3V0aWxzL2NvbnN0YW50c1wiO1xuXG46aG9zdCB7XG4gIHBhZGRpbmc6IDEuNXJlbTtcblxuICBhcHAtY2FyZC1mb2xkICsgJiB7XG4gICAgYm9yZGVyLXRvcDogMXB4IHNvbGlkICRjb2xvci1ib3JkZXI7XG4gIH1cbn1cbiIsIjpob3N0IHtcbiAgcGFkZGluZzogMS41cmVtO1xufVxuYXBwLWNhcmQtZm9sZCArIDpob3N0IHtcbiAgYm9yZGVyLXRvcDogMXB4IHNvbGlkICNkYWRjZTA7XG59Il19 */"] });
-(function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](CardFoldComponent, [{
-        type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"],
-        args: [{
-                selector: 'app-card-fold',
-                templateUrl: './card-fold.component.html',
-                styleUrls: ['./card-fold.component.scss'],
-            }]
-    }], null, { title: [{
-            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
-        }] }); })();
-
-
-/***/ }),
-
-/***/ "./src/components/card-fold/card-fold.module.ts":
-/*!******************************************************!*\
-  !*** ./src/components/card-fold/card-fold.module.ts ***!
-  \******************************************************/
-/*! exports provided: CardFoldModule */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CardFoldModule", function() { return CardFoldModule; });
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
-/* harmony import */ var _card_fold_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./card-fold.component */ "./src/components/card-fold/card-fold.component.ts");
-
-
-
-class CardFoldModule {
-}
-CardFoldModule.ɵmod = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineNgModule"]({ type: CardFoldModule });
-CardFoldModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjector"]({ factory: function CardFoldModule_Factory(t) { return new (t || CardFoldModule)(); }, imports: [[]] });
-(function () { (typeof ngJitMode === "undefined" || ngJitMode) && _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsetNgModuleScope"](CardFoldModule, { declarations: [_card_fold_component__WEBPACK_IMPORTED_MODULE_1__["CardFoldComponent"]], exports: [_card_fold_component__WEBPACK_IMPORTED_MODULE_1__["CardFoldComponent"]] }); })();
-(function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](CardFoldModule, [{
-        type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["NgModule"],
-        args: [{
-                declarations: [
-                    _card_fold_component__WEBPACK_IMPORTED_MODULE_1__["CardFoldComponent"],
-                ],
-                imports: [],
-                exports: [
-                    _card_fold_component__WEBPACK_IMPORTED_MODULE_1__["CardFoldComponent"],
-                ],
-            }]
-    }], null, null); })();
-
-
-/***/ }),
-
 /***/ "./src/components/card/card.component.ts":
 /*!***********************************************!*\
   !*** ./src/components/card/card.component.ts ***!
@@ -395,24 +319,83 @@ CardFoldModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInj
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CardComponent", function() { return CardComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
+/* harmony import */ var _assets_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../assets/i18n */ "./src/assets/i18n/index.ts");
+/* harmony import */ var _utils_formatters__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils/formatters */ "./src/utils/formatters.ts");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
+/* harmony import */ var _line_chart_line_chart_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../line-chart/line-chart.component */ "./src/components/line-chart/line-chart.component.ts");
+/* harmony import */ var _directives_audification_audification_directive__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../directives/audification/audification.directive */ "./src/directives/audification/audification.directive.ts");
 
 
-const _c0 = ["*"];
+
+
+
+
+
+function CardComponent_div_3_div_1_Template(rf, ctx) { if (rf & 1) {
+    const _r5 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 7);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function CardComponent_div_3_div_1_Template_div_click_0_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r5); const measureName_r3 = ctx.$implicit; const ctx_r4 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](2); return ctx_r4.setMeasureName(measureName_r3); });
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](1);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+} if (rf & 2) {
+    const measureName_r3 = ctx.$implicit;
+    const ctx_r2 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](2);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵclassProp"]("active", measureName_r3 === ctx_r2.currentMeasureName);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"](" ", ctx_r2.humanizeMeasureName(measureName_r3), " ");
+} }
+function CardComponent_div_3_Template(rf, ctx) { if (rf & 1) {
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 5);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](1, CardComponent_div_3_div_1_Template, 2, 3, "div", 6);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+} if (rf & 2) {
+    const ctx_r0 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx_r0.measureNames);
+} }
+function CardComponent_app_line_chart_5_Template(rf, ctx) { if (rf & 1) {
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](0, "app-line-chart", 8);
+} if (rf & 2) {
+    const ctx_r1 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("measureName", ctx_r1.currentMeasureName);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵattribute"]("aria-label", ctx_r1.VISUALIZATION);
+} }
 class CardComponent {
+    constructor() {
+        this.tabbed = false;
+        this.humanizeMeasureName = _utils_formatters__WEBPACK_IMPORTED_MODULE_2__["humanizeMeasureName"];
+    }
+    get VISUALIZATION() {
+        return Object(_assets_i18n__WEBPACK_IMPORTED_MODULE_1__["t"])(_assets_i18n__WEBPACK_IMPORTED_MODULE_1__["GUIDE_DOGE"].VISUALIZATION);
+    }
+    ngOnInit() {
+        this.setMeasureName(this.measureNames[0]);
+    }
+    setMeasureName(measureName) {
+        this.currentMeasureName = measureName;
+    }
 }
 CardComponent.ɵfac = function CardComponent_Factory(t) { return new (t || CardComponent)(); };
-CardComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: CardComponent, selectors: [["app-card"]], inputs: { title: "title" }, ngContentSelectors: _c0, decls: 4, vars: 1, consts: [[1, "card-title"], [1, "card-content"]], template: function CardComponent_Template(rf, ctx) { if (rf & 1) {
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵprojectionDef"]();
+CardComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: CardComponent, selectors: [["app-card"]], inputs: { title: "title", tabbed: "tabbed", type: "type", measureNames: "measureNames" }, decls: 6, vars: 4, consts: [[1, "card-title"], [1, "card-content"], ["class", "tabs", 4, "ngIf"], [3, "ngSwitch"], ["role", "img", "appAudification", "", 3, "measureName", 4, "ngSwitchCase"], [1, "tabs"], ["class", "tab", "role", "button", 3, "active", "click", 4, "ngFor", "ngForOf"], ["role", "button", 1, "tab", 3, "click"], ["role", "img", "appAudification", "", 3, "measureName"]], template: function CardComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "h2", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](1);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "div", 1);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵprojection"](3);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](3, CardComponent_div_3_Template, 2, 1, "div", 2);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerStart"](4, 3);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](5, CardComponent_app_line_chart_5_Template, 1, 2, "app-line-chart", 4);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     } if (rf & 2) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](ctx.title);
-    } }, styles: ["[_nghost-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  align-items: stretch;\n}\n[_nghost-%COMP%]   .card-title[_ngcontent-%COMP%] {\n  font-size: 24px;\n  margin: 1rem 0;\n}\n[_nghost-%COMP%]   .card-content[_ngcontent-%COMP%] {\n  box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px 0, rgba(0, 0, 0, 0.14) 0 1px 1px 0, rgba(0, 0, 0, 0.12) 0 2px 1px -1px;\n  display: flex;\n  flex-direction: column;\n  align-items: stretch;\n  border-radius: 2px;\n  background-color: white;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL3J1bm5lci93b3JrL2d1aWRlLWRvZ2UvZ3VpZGUtZG9nZS9zcmMvY29tcG9uZW50cy9jYXJkL2NhcmQuY29tcG9uZW50LnNjc3MiLCJzcmMvY29tcG9uZW50cy9jYXJkL2NhcmQuY29tcG9uZW50LnNjc3MiLCIvaG9tZS9ydW5uZXIvd29yay9ndWlkZS1kb2dlL2d1aWRlLWRvZ2Uvc3JjL3V0aWxzL2NvbnN0YW50cy5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUVBO0VBQ0UsYUFBQTtFQUNBLHNCQUFBO0VBQ0Esb0JBQUE7QUNERjtBREdFO0VBQ0UsZUVEYztFRkVkLGNBQUE7QUNESjtBRElFO0VFQUEsK0dBQUE7RUZFRSxhQUFBO0VBQ0Esc0JBQUE7RUFDQSxvQkFBQTtFQUNBLGtCQUFBO0VBQ0EsdUJBQUE7QUNGSiIsImZpbGUiOiJzcmMvY29tcG9uZW50cy9jYXJkL2NhcmQuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyJAaW1wb3J0IFwiLi4vLi4vdXRpbHMvY29uc3RhbnRzXCI7XG5cbjpob3N0IHtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcbiAgYWxpZ24taXRlbXM6IHN0cmV0Y2g7XG5cbiAgLmNhcmQtdGl0bGUge1xuICAgIGZvbnQtc2l6ZTogJGZvbnQtc2l6ZS1sYXJnZTtcbiAgICBtYXJnaW46IDFyZW0gMDtcbiAgfVxuXG4gIC5jYXJkLWNvbnRlbnQge1xuICAgIEBpbmNsdWRlIGNhcmQtc2hhZG93O1xuICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcbiAgICBhbGlnbi1pdGVtczogc3RyZXRjaDtcbiAgICBib3JkZXItcmFkaXVzOiAycHg7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogd2hpdGU7XG4gIH1cbn1cbiIsIjpob3N0IHtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcbiAgYWxpZ24taXRlbXM6IHN0cmV0Y2g7XG59XG46aG9zdCAuY2FyZC10aXRsZSB7XG4gIGZvbnQtc2l6ZTogMjRweDtcbiAgbWFyZ2luOiAxcmVtIDA7XG59XG46aG9zdCAuY2FyZC1jb250ZW50IHtcbiAgYm94LXNoYWRvdzogcmdiYSgwLCAwLCAwLCAwLjIpIDAgMXB4IDNweCAwLCByZ2JhKDAsIDAsIDAsIDAuMTQpIDAgMXB4IDFweCAwLCByZ2JhKDAsIDAsIDAsIDAuMTIpIDAgMnB4IDFweCAtMXB4O1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xuICBhbGlnbi1pdGVtczogc3RyZXRjaDtcbiAgYm9yZGVyLXJhZGl1czogMnB4O1xuICBiYWNrZ3JvdW5kLWNvbG9yOiB3aGl0ZTtcbn0iLCIkY29sb3ItYmFja2dyb3VuZDogcmdiKDI0OCwgMjQ5LCAyNTApO1xuJGNvbG9yLWJvcmRlcjogcmdiKDIxOCwgMjIwLCAyMjQpO1xuJGNvbG9yLWZvbnQ6IHJnYigzNCwgMzQsIDM0KTtcbiRjb2xvci1oaWdobGlnaHQ6IHJnYig2NiwgMTMzLCAyNDQpO1xuJGNvbG9yLXBvc2l0aXZlOiByZ2IoMTUsIDE1NywgODgpO1xuJGNvbG9yLW5lZ2F0aXZlOiByZ2IoMjE5LCA2OCwgNTUpO1xuXG4kZm9udC1zaXplLWxhcmdlOiAyNHB4O1xuJGZvbnQtc2l6ZS1tZWRpdW06IDE2cHg7XG4kZm9udC1zaXplLXNtYWxsOiAxMnB4O1xuXG5AbWl4aW4gY2FyZC1zaGFkb3cge1xuICBib3gtc2hhZG93OiByZ2JhKDAsIDAsIDAsIDAuMikgMCAxcHggM3B4IDAsIHJnYmEoMCwgMCwgMCwgMC4xNCkgMCAxcHggMXB4IDAsIHJnYmEoMCwgMCwgMCwgMC4xMikgMCAycHggMXB4IC0xcHg7XG59XG4iXX0= */"] });
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx.tabbed);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngSwitch", ctx.type);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngSwitchCase", "line");
+    } }, directives: [_angular_common__WEBPACK_IMPORTED_MODULE_3__["NgIf"], _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgSwitch"], _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgSwitchCase"], _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgForOf"], _line_chart_line_chart_component__WEBPACK_IMPORTED_MODULE_4__["LineChartComponent"], _directives_audification_audification_directive__WEBPACK_IMPORTED_MODULE_5__["AudificationDirective"]], styles: ["[_nghost-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  align-items: stretch;\n}\n[_nghost-%COMP%]   .card-title[_ngcontent-%COMP%] {\n  font-size: 24px;\n  margin: 1rem 0;\n}\n[_nghost-%COMP%]   .card-content[_ngcontent-%COMP%] {\n  box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px 0, rgba(0, 0, 0, 0.14) 0 1px 1px 0, rgba(0, 0, 0, 0.12) 0 2px 1px -1px;\n  display: flex;\n  flex-direction: column;\n  align-items: stretch;\n  border-radius: 2px;\n  background-color: white;\n}\n[_nghost-%COMP%]   .card-content[_ngcontent-%COMP%]   .tabs[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: stretch;\n  height: 4rem;\n}\n[_nghost-%COMP%]   .card-content[_ngcontent-%COMP%]   .tabs[_ngcontent-%COMP%]   .tab[_ngcontent-%COMP%] {\n  flex: 1;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n[_nghost-%COMP%]   .card-content[_ngcontent-%COMP%]   .tabs[_ngcontent-%COMP%]   .tab.active[_ngcontent-%COMP%] {\n  border-top: 4px solid #4285f4;\n  font-weight: 500;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL3J1bm5lci93b3JrL2d1aWRlLWRvZ2UvZ3VpZGUtZG9nZS9zcmMvY29tcG9uZW50cy9jYXJkL2NhcmQuY29tcG9uZW50LnNjc3MiLCJzcmMvY29tcG9uZW50cy9jYXJkL2NhcmQuY29tcG9uZW50LnNjc3MiLCIvaG9tZS9ydW5uZXIvd29yay9ndWlkZS1kb2dlL2d1aWRlLWRvZ2Uvc3JjL3V0aWxzL2NvbnN0YW50cy5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUVBO0VBQ0UsYUFBQTtFQUNBLHNCQUFBO0VBQ0Esb0JBQUE7QUNERjtBREdFO0VBQ0UsZUVEYztFRkVkLGNBQUE7QUNESjtBRElFO0VFQUEsK0dBQUE7RUZFRSxhQUFBO0VBQ0Esc0JBQUE7RUFDQSxvQkFBQTtFQUNBLGtCQUFBO0VBQ0EsdUJBQUE7QUNGSjtBRElJO0VBQ0UsYUFBQTtFQUNBLG9CQUFBO0VBQ0EsWUFBQTtBQ0ZOO0FESU07RUFDRSxPQUFBO0VBQ0EsYUFBQTtFQUNBLG1CQUFBO0VBQ0EsdUJBQUE7RUFDQSxlQUFBO0FDRlI7QURJUTtFQUNFLDZCQUFBO0VBQ0EsZ0JBQUE7QUNGViIsImZpbGUiOiJzcmMvY29tcG9uZW50cy9jYXJkL2NhcmQuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyJAaW1wb3J0IFwiLi4vLi4vdXRpbHMvY29uc3RhbnRzXCI7XG5cbjpob3N0IHtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcbiAgYWxpZ24taXRlbXM6IHN0cmV0Y2g7XG5cbiAgLmNhcmQtdGl0bGUge1xuICAgIGZvbnQtc2l6ZTogJGZvbnQtc2l6ZS1sYXJnZTtcbiAgICBtYXJnaW46IDFyZW0gMDtcbiAgfVxuXG4gIC5jYXJkLWNvbnRlbnQge1xuICAgIEBpbmNsdWRlIGNhcmQtc2hhZG93O1xuICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcbiAgICBhbGlnbi1pdGVtczogc3RyZXRjaDtcbiAgICBib3JkZXItcmFkaXVzOiAycHg7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogd2hpdGU7XG5cbiAgICAudGFicyB7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgYWxpZ24taXRlbXM6IHN0cmV0Y2g7XG4gICAgICBoZWlnaHQ6IDRyZW07XG5cbiAgICAgIC50YWIge1xuICAgICAgICBmbGV4OiAxO1xuICAgICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgICBhbGlnbi1pdGVtczogY2VudGVyO1xuICAgICAgICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgICAgICAgY3Vyc29yOiBwb2ludGVyO1xuXG4gICAgICAgICYuYWN0aXZlIHtcbiAgICAgICAgICBib3JkZXItdG9wOiA0cHggc29saWQgJGNvbG9yLWhpZ2hsaWdodDtcbiAgICAgICAgICBmb250LXdlaWdodDogNTAwO1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iLCI6aG9zdCB7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG4gIGFsaWduLWl0ZW1zOiBzdHJldGNoO1xufVxuOmhvc3QgLmNhcmQtdGl0bGUge1xuICBmb250LXNpemU6IDI0cHg7XG4gIG1hcmdpbjogMXJlbSAwO1xufVxuOmhvc3QgLmNhcmQtY29udGVudCB7XG4gIGJveC1zaGFkb3c6IHJnYmEoMCwgMCwgMCwgMC4yKSAwIDFweCAzcHggMCwgcmdiYSgwLCAwLCAwLCAwLjE0KSAwIDFweCAxcHggMCwgcmdiYSgwLCAwLCAwLCAwLjEyKSAwIDJweCAxcHggLTFweDtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcbiAgYWxpZ24taXRlbXM6IHN0cmV0Y2g7XG4gIGJvcmRlci1yYWRpdXM6IDJweDtcbiAgYmFja2dyb3VuZC1jb2xvcjogd2hpdGU7XG59XG46aG9zdCAuY2FyZC1jb250ZW50IC50YWJzIHtcbiAgZGlzcGxheTogZmxleDtcbiAgYWxpZ24taXRlbXM6IHN0cmV0Y2g7XG4gIGhlaWdodDogNHJlbTtcbn1cbjpob3N0IC5jYXJkLWNvbnRlbnQgLnRhYnMgLnRhYiB7XG4gIGZsZXg6IDE7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICBjdXJzb3I6IHBvaW50ZXI7XG59XG46aG9zdCAuY2FyZC1jb250ZW50IC50YWJzIC50YWIuYWN0aXZlIHtcbiAgYm9yZGVyLXRvcDogNHB4IHNvbGlkICM0Mjg1ZjQ7XG4gIGZvbnQtd2VpZ2h0OiA1MDA7XG59IiwiJGNvbG9yLWJhY2tncm91bmQ6IHJnYigyNDgsIDI0OSwgMjUwKTtcbiRjb2xvci1ib3JkZXI6IHJnYigyMTgsIDIyMCwgMjI0KTtcbiRjb2xvci1mb250OiByZ2IoMzQsIDM0LCAzNCk7XG4kY29sb3ItaGlnaGxpZ2h0OiByZ2IoNjYsIDEzMywgMjQ0KTtcbiRjb2xvci1wb3NpdGl2ZTogcmdiKDE1LCAxNTcsIDg4KTtcbiRjb2xvci1uZWdhdGl2ZTogcmdiKDIxOSwgNjgsIDU1KTtcblxuJGZvbnQtc2l6ZS1sYXJnZTogMjRweDtcbiRmb250LXNpemUtbWVkaXVtOiAxNnB4O1xuJGZvbnQtc2l6ZS1zbWFsbDogMTJweDtcblxuQG1peGluIGNhcmQtc2hhZG93IHtcbiAgYm94LXNoYWRvdzogcmdiYSgwLCAwLCAwLCAwLjIpIDAgMXB4IDNweCAwLCByZ2JhKDAsIDAsIDAsIDAuMTQpIDAgMXB4IDFweCAwLCByZ2JhKDAsIDAsIDAsIDAuMTIpIDAgMnB4IDFweCAtMXB4O1xufVxuIl19 */"] });
 (function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](CardComponent, [{
         type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"],
         args: [{
@@ -421,6 +404,12 @@ CardComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComp
                 styleUrls: ['./card.component.scss'],
             }]
     }], null, { title: [{
+            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
+        }], tabbed: [{
+            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
+        }], type: [{
+            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
+        }], measureNames: [{
             type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
         }] }); })();
 
@@ -439,21 +428,37 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CardModule", function() { return CardModule; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
 /* harmony import */ var _card_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./card.component */ "./src/components/card/card.component.ts");
+/* harmony import */ var _line_chart_line_chart_module__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../line-chart/line-chart.module */ "./src/components/line-chart/line-chart.module.ts");
+/* harmony import */ var _directives_audification_audification_module__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../directives/audification/audification.module */ "./src/directives/audification/audification.module.ts");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
+
+
+
 
 
 
 class CardModule {
 }
 CardModule.ɵmod = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineNgModule"]({ type: CardModule });
-CardModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjector"]({ factory: function CardModule_Factory(t) { return new (t || CardModule)(); }, imports: [[]] });
-(function () { (typeof ngJitMode === "undefined" || ngJitMode) && _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsetNgModuleScope"](CardModule, { declarations: [_card_component__WEBPACK_IMPORTED_MODULE_1__["CardComponent"]], exports: [_card_component__WEBPACK_IMPORTED_MODULE_1__["CardComponent"]] }); })();
+CardModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjector"]({ factory: function CardModule_Factory(t) { return new (t || CardModule)(); }, imports: [[
+            _line_chart_line_chart_module__WEBPACK_IMPORTED_MODULE_2__["LineChartModule"],
+            _directives_audification_audification_module__WEBPACK_IMPORTED_MODULE_3__["AudificationModule"],
+            _angular_common__WEBPACK_IMPORTED_MODULE_4__["CommonModule"],
+        ]] });
+(function () { (typeof ngJitMode === "undefined" || ngJitMode) && _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsetNgModuleScope"](CardModule, { declarations: [_card_component__WEBPACK_IMPORTED_MODULE_1__["CardComponent"]], imports: [_line_chart_line_chart_module__WEBPACK_IMPORTED_MODULE_2__["LineChartModule"],
+        _directives_audification_audification_module__WEBPACK_IMPORTED_MODULE_3__["AudificationModule"],
+        _angular_common__WEBPACK_IMPORTED_MODULE_4__["CommonModule"]], exports: [_card_component__WEBPACK_IMPORTED_MODULE_1__["CardComponent"]] }); })();
 (function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](CardModule, [{
         type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["NgModule"],
         args: [{
                 declarations: [
                     _card_component__WEBPACK_IMPORTED_MODULE_1__["CardComponent"],
                 ],
-                imports: [],
+                imports: [
+                    _line_chart_line_chart_module__WEBPACK_IMPORTED_MODULE_2__["LineChartModule"],
+                    _directives_audification_audification_module__WEBPACK_IMPORTED_MODULE_3__["AudificationModule"],
+                    _angular_common__WEBPACK_IMPORTED_MODULE_4__["CommonModule"],
+                ],
                 exports: [
                     _card_component__WEBPACK_IMPORTED_MODULE_1__["CardComponent"],
                 ],
@@ -476,12 +481,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
 /* harmony import */ var _preference_preference_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../preference/preference.component */ "./src/components/preference/preference.component.ts");
 /* harmony import */ var _switch_switch_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../switch/switch.component */ "./src/components/switch/switch.component.ts");
-/* harmony import */ var _line_chart_line_chart_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../line-chart/line-chart.component */ "./src/components/line-chart/line-chart.component.ts");
+/* harmony import */ var _card_card_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../card/card.component */ "./src/components/card/card.component.ts");
 
 
 
 
 
+const _c0 = function () { return ["activeUsers", "revenue", "eventCount"]; };
 class DashboardComponent {
     constructor() {
         this.audificationEnabled = true;
@@ -490,7 +496,7 @@ class DashboardComponent {
     }
 }
 DashboardComponent.ɵfac = function DashboardComponent_Factory(t) { return new (t || DashboardComponent)(); };
-DashboardComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: DashboardComponent, selectors: [["app-dashboard"]], decls: 30, vars: 6, consts: [[1, "sidebar"], [1, "sidebar-title"], ["title", "Audification", 3, "enabled", "enabledChange"], ["type", "number", 3, "defaultValue"], ["title", "Data Table", 3, "enabled", "enabledChange"], ["title", "Text Summary", 3, "enabled", "enabledChange"], [1, "card-container"], [1, "row"]], template: function DashboardComponent_Template(rf, ctx) { if (rf & 1) {
+DashboardComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: DashboardComponent, selectors: [["app-dashboard"]], decls: 29, vars: 12, consts: [[1, "sidebar"], [1, "sidebar-title"], ["title", "Audification", 3, "enabled", "enabledChange"], ["type", "number", 3, "defaultValue"], ["title", "Data Table", 3, "enabled", "enabledChange"], ["title", "Text Summary", 3, "enabled", "enabledChange"], [1, "card-container"], ["title", "Tabbed Line Chart", "type", "line", 3, "tabbed", "measureNames"], ["title", "Line Chart", "type", "line", 3, "tabbed", "measureNames"]], template: function DashboardComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "aside", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "h2", 1);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](2, "Customization");
@@ -536,10 +542,8 @@ DashboardComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefin
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](26, "div", 6);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](27, "div", 7);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](28, "app-line-chart");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](29, "app-line-chart");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](27, "app-card", 7);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](28, "app-card", 8);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     } if (rf & 2) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](3);
@@ -554,7 +558,11 @@ DashboardComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefin
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("enabled", ctx.dataTableEnabled);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("enabled", ctx.textSummaryEnabled);
-    } }, directives: [_preference_preference_component__WEBPACK_IMPORTED_MODULE_1__["PreferenceComponent"], _switch_switch_component__WEBPACK_IMPORTED_MODULE_2__["SwitchComponent"], _line_chart_line_chart_component__WEBPACK_IMPORTED_MODULE_3__["LineChartComponent"]], styles: ["[_nghost-%COMP%] {\n  flex: 1;\n  display: flex;\n  overflow: hidden;\n}\n[_nghost-%COMP%]   .sidebar[_ngcontent-%COMP%] {\n  padding: 1rem;\n  width: 20rem;\n  border-right: 1px solid #dadce0;\n  overflow-x: hidden;\n  overflow-y: auto;\n}\n[_nghost-%COMP%]   .sidebar[_ngcontent-%COMP%]   .sidebar-title[_ngcontent-%COMP%] {\n  font-size: 24px;\n  margin: 1rem 0;\n}\n[_nghost-%COMP%]   .sidebar[_ngcontent-%COMP%]   app-preference[_ngcontent-%COMP%] {\n  margin: 0 -1rem;\n  margin-bottom: 0.5rem;\n}\n[_nghost-%COMP%]   .sidebar[_ngcontent-%COMP%]   app-preference[_ngcontent-%COMP%]   label[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: stretch;\n  justify-content: space-between;\n  padding: 0 1rem;\n  cursor: pointer;\n}\n[_nghost-%COMP%]   .sidebar[_ngcontent-%COMP%]   app-preference[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  margin: 1rem 1rem 1rem 0;\n}\n[_nghost-%COMP%]   .sidebar[_ngcontent-%COMP%]   app-preference[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  flex: 1;\n  text-align: right;\n}\n[_nghost-%COMP%]   .sidebar[_ngcontent-%COMP%]   app-preference[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   app-switch[_ngcontent-%COMP%] {\n  align-self: center;\n}\n[_nghost-%COMP%]   .card-container[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  align-items: stretch;\n  flex: 1;\n  padding-top: 1rem;\n  padding-left: 1rem;\n  overflow-y: auto;\n}\n[_nghost-%COMP%]   .card-container[_ngcontent-%COMP%]   .row[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: center;\n  flex-wrap: wrap;\n}\n[_nghost-%COMP%]   .card-container[_ngcontent-%COMP%]   .row[_ngcontent-%COMP%]    > *[_ngcontent-%COMP%] {\n  margin-bottom: 1rem;\n  margin-right: 1rem;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL3J1bm5lci93b3JrL2d1aWRlLWRvZ2UvZ3VpZGUtZG9nZS9zcmMvY29tcG9uZW50cy9kYXNoYm9hcmQvZGFzaGJvYXJkLmNvbXBvbmVudC5zY3NzIiwic3JjL2NvbXBvbmVudHMvZGFzaGJvYXJkL2Rhc2hib2FyZC5jb21wb25lbnQuc2NzcyIsIi9ob21lL3J1bm5lci93b3JrL2d1aWRlLWRvZ2UvZ3VpZGUtZG9nZS9zcmMvdXRpbHMvY29uc3RhbnRzLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBRUE7RUFDRSxPQUFBO0VBQ0EsYUFBQTtFQUNBLGdCQUFBO0FDREY7QURHRTtFQUNFLGFBQUE7RUFDQSxZQUFBO0VBQ0EsK0JBQUE7RUFDQSxrQkFBQTtFQUNBLGdCQUFBO0FDREo7QURHSTtFQUNFLGVFUlk7RUZTWixjQUFBO0FDRE47QURJSTtFQUNFLGVBQUE7RUFDQSxxQkFBQTtBQ0ZOO0FESU07RUFDRSxhQUFBO0VBQ0Esb0JBQUE7RUFDQSw4QkFBQTtFQUNBLGVBQUE7RUFDQSxlQUFBO0FDRlI7QURJUTtFQUNFLHdCQUFBO0FDRlY7QURLUTtFQUNFLE9BQUE7RUFDQSxpQkFBQTtBQ0hWO0FETVE7RUFDRSxrQkFBQTtBQ0pWO0FEVUU7RUFDRSxhQUFBO0VBQ0Esc0JBQUE7RUFDQSxvQkFBQTtFQUNBLE9BQUE7RUFDQSxpQkFBQTtFQUNBLGtCQUFBO0VBQ0EsZ0JBQUE7QUNSSjtBRFVJO0VBQ0UsYUFBQTtFQUNBLHVCQUFBO0VBQ0EsZUFBQTtBQ1JOO0FEVU07RUFDRSxtQkFBQTtFQUNBLGtCQUFBO0FDUlIiLCJmaWxlIjoic3JjL2NvbXBvbmVudHMvZGFzaGJvYXJkL2Rhc2hib2FyZC5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIkBpbXBvcnQgXCIuLi8uLi91dGlscy9jb25zdGFudHNcIjtcblxuOmhvc3Qge1xuICBmbGV4OiAxO1xuICBkaXNwbGF5OiBmbGV4O1xuICBvdmVyZmxvdzogaGlkZGVuO1xuXG4gIC5zaWRlYmFyIHtcbiAgICBwYWRkaW5nOiAxcmVtO1xuICAgIHdpZHRoOiAyMHJlbTtcbiAgICBib3JkZXItcmlnaHQ6IDFweCBzb2xpZCAkY29sb3ItYm9yZGVyO1xuICAgIG92ZXJmbG93LXg6IGhpZGRlbjtcbiAgICBvdmVyZmxvdy15OiBhdXRvO1xuXG4gICAgLnNpZGViYXItdGl0bGUge1xuICAgICAgZm9udC1zaXplOiAkZm9udC1zaXplLWxhcmdlO1xuICAgICAgbWFyZ2luOiAxcmVtIDA7XG4gICAgfVxuXG4gICAgYXBwLXByZWZlcmVuY2Uge1xuICAgICAgbWFyZ2luOiAwIC0xcmVtO1xuICAgICAgbWFyZ2luLWJvdHRvbTogLjVyZW07XG5cbiAgICAgIGxhYmVsIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IHN0cmV0Y2g7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2VlbjtcbiAgICAgICAgcGFkZGluZzogMCAxcmVtO1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG5cbiAgICAgICAgc3BhbiB7XG4gICAgICAgICAgbWFyZ2luOiAxcmVtIDFyZW0gMXJlbSAwO1xuICAgICAgICB9XG5cbiAgICAgICAgaW5wdXQge1xuICAgICAgICAgIGZsZXg6IDE7XG4gICAgICAgICAgdGV4dC1hbGlnbjogcmlnaHQ7XG4gICAgICAgIH1cblxuICAgICAgICBhcHAtc3dpdGNoIHtcbiAgICAgICAgICBhbGlnbi1zZWxmOiBjZW50ZXI7XG4gICAgICAgIH1cbiAgICAgIH1cbiAgICB9XG4gIH1cblxuICAuY2FyZC1jb250YWluZXIge1xuICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcbiAgICBhbGlnbi1pdGVtczogc3RyZXRjaDtcbiAgICBmbGV4OiAxO1xuICAgIHBhZGRpbmctdG9wOiAxcmVtO1xuICAgIHBhZGRpbmctbGVmdDogMXJlbTtcbiAgICBvdmVyZmxvdy15OiBhdXRvO1xuXG4gICAgLnJvdyB7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICBmbGV4LXdyYXA6IHdyYXA7XG5cbiAgICAgID4gKiB7XG4gICAgICAgIG1hcmdpbi1ib3R0b206IDFyZW07XG4gICAgICAgIG1hcmdpbi1yaWdodDogMXJlbTtcbiAgICAgIH1cbiAgICB9XG4gIH1cbn1cbiIsIjpob3N0IHtcbiAgZmxleDogMTtcbiAgZGlzcGxheTogZmxleDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbn1cbjpob3N0IC5zaWRlYmFyIHtcbiAgcGFkZGluZzogMXJlbTtcbiAgd2lkdGg6IDIwcmVtO1xuICBib3JkZXItcmlnaHQ6IDFweCBzb2xpZCAjZGFkY2UwO1xuICBvdmVyZmxvdy14OiBoaWRkZW47XG4gIG92ZXJmbG93LXk6IGF1dG87XG59XG46aG9zdCAuc2lkZWJhciAuc2lkZWJhci10aXRsZSB7XG4gIGZvbnQtc2l6ZTogMjRweDtcbiAgbWFyZ2luOiAxcmVtIDA7XG59XG46aG9zdCAuc2lkZWJhciBhcHAtcHJlZmVyZW5jZSB7XG4gIG1hcmdpbjogMCAtMXJlbTtcbiAgbWFyZ2luLWJvdHRvbTogMC41cmVtO1xufVxuOmhvc3QgLnNpZGViYXIgYXBwLXByZWZlcmVuY2UgbGFiZWwge1xuICBkaXNwbGF5OiBmbGV4O1xuICBhbGlnbi1pdGVtczogc3RyZXRjaDtcbiAganVzdGlmeS1jb250ZW50OiBzcGFjZS1iZXR3ZWVuO1xuICBwYWRkaW5nOiAwIDFyZW07XG4gIGN1cnNvcjogcG9pbnRlcjtcbn1cbjpob3N0IC5zaWRlYmFyIGFwcC1wcmVmZXJlbmNlIGxhYmVsIHNwYW4ge1xuICBtYXJnaW46IDFyZW0gMXJlbSAxcmVtIDA7XG59XG46aG9zdCAuc2lkZWJhciBhcHAtcHJlZmVyZW5jZSBsYWJlbCBpbnB1dCB7XG4gIGZsZXg6IDE7XG4gIHRleHQtYWxpZ246IHJpZ2h0O1xufVxuOmhvc3QgLnNpZGViYXIgYXBwLXByZWZlcmVuY2UgbGFiZWwgYXBwLXN3aXRjaCB7XG4gIGFsaWduLXNlbGY6IGNlbnRlcjtcbn1cbjpob3N0IC5jYXJkLWNvbnRhaW5lciB7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG4gIGFsaWduLWl0ZW1zOiBzdHJldGNoO1xuICBmbGV4OiAxO1xuICBwYWRkaW5nLXRvcDogMXJlbTtcbiAgcGFkZGluZy1sZWZ0OiAxcmVtO1xuICBvdmVyZmxvdy15OiBhdXRvO1xufVxuOmhvc3QgLmNhcmQtY29udGFpbmVyIC5yb3cge1xuICBkaXNwbGF5OiBmbGV4O1xuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgZmxleC13cmFwOiB3cmFwO1xufVxuOmhvc3QgLmNhcmQtY29udGFpbmVyIC5yb3cgPiAqIHtcbiAgbWFyZ2luLWJvdHRvbTogMXJlbTtcbiAgbWFyZ2luLXJpZ2h0OiAxcmVtO1xufSIsIiRjb2xvci1iYWNrZ3JvdW5kOiByZ2IoMjQ4LCAyNDksIDI1MCk7XG4kY29sb3ItYm9yZGVyOiByZ2IoMjE4LCAyMjAsIDIyNCk7XG4kY29sb3ItZm9udDogcmdiKDM0LCAzNCwgMzQpO1xuJGNvbG9yLWhpZ2hsaWdodDogcmdiKDY2LCAxMzMsIDI0NCk7XG4kY29sb3ItcG9zaXRpdmU6IHJnYigxNSwgMTU3LCA4OCk7XG4kY29sb3ItbmVnYXRpdmU6IHJnYigyMTksIDY4LCA1NSk7XG5cbiRmb250LXNpemUtbGFyZ2U6IDI0cHg7XG4kZm9udC1zaXplLW1lZGl1bTogMTZweDtcbiRmb250LXNpemUtc21hbGw6IDEycHg7XG5cbkBtaXhpbiBjYXJkLXNoYWRvdyB7XG4gIGJveC1zaGFkb3c6IHJnYmEoMCwgMCwgMCwgMC4yKSAwIDFweCAzcHggMCwgcmdiYSgwLCAwLCAwLCAwLjE0KSAwIDFweCAxcHggMCwgcmdiYSgwLCAwLCAwLCAwLjEyKSAwIDJweCAxcHggLTFweDtcbn1cbiJdfQ== */"] });
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("tabbed", true)("measureNames", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction0"](10, _c0));
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("tabbed", false)("measureNames", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction0"](11, _c0));
+    } }, directives: [_preference_preference_component__WEBPACK_IMPORTED_MODULE_1__["PreferenceComponent"], _switch_switch_component__WEBPACK_IMPORTED_MODULE_2__["SwitchComponent"], _card_card_component__WEBPACK_IMPORTED_MODULE_3__["CardComponent"]], styles: ["[_nghost-%COMP%] {\n  flex: 1;\n  display: flex;\n  overflow: hidden;\n}\n[_nghost-%COMP%]   .sidebar[_ngcontent-%COMP%] {\n  padding: 1rem;\n  width: 20rem;\n  border-right: 1px solid #dadce0;\n  overflow-x: hidden;\n  overflow-y: auto;\n}\n[_nghost-%COMP%]   .sidebar[_ngcontent-%COMP%]   .sidebar-title[_ngcontent-%COMP%] {\n  font-size: 24px;\n  margin: 1rem 0;\n}\n[_nghost-%COMP%]   .sidebar[_ngcontent-%COMP%]   app-preference[_ngcontent-%COMP%] {\n  margin: 0 -1rem;\n  margin-bottom: 0.5rem;\n}\n[_nghost-%COMP%]   .sidebar[_ngcontent-%COMP%]   app-preference[_ngcontent-%COMP%]   label[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: stretch;\n  justify-content: space-between;\n  padding: 0 1rem;\n  cursor: pointer;\n}\n[_nghost-%COMP%]   .sidebar[_ngcontent-%COMP%]   app-preference[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  margin: 1rem 1rem 1rem 0;\n}\n[_nghost-%COMP%]   .sidebar[_ngcontent-%COMP%]   app-preference[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  flex: 1;\n  text-align: right;\n}\n[_nghost-%COMP%]   .sidebar[_ngcontent-%COMP%]   app-preference[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]   app-switch[_ngcontent-%COMP%] {\n  align-self: center;\n}\n[_nghost-%COMP%]   .card-container[_ngcontent-%COMP%] {\n  display: flex;\n  flex: 1 0;\n  align-items: flex-start;\n  justify-content: center;\n  flex-wrap: wrap;\n  padding-top: 1rem;\n  padding-left: 1rem;\n  overflow-y: auto;\n}\n[_nghost-%COMP%]   .card-container[_ngcontent-%COMP%]    > *[_ngcontent-%COMP%] {\n  margin-bottom: 1rem;\n  margin-right: 1rem;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL3J1bm5lci93b3JrL2d1aWRlLWRvZ2UvZ3VpZGUtZG9nZS9zcmMvY29tcG9uZW50cy9kYXNoYm9hcmQvZGFzaGJvYXJkLmNvbXBvbmVudC5zY3NzIiwic3JjL2NvbXBvbmVudHMvZGFzaGJvYXJkL2Rhc2hib2FyZC5jb21wb25lbnQuc2NzcyIsIi9ob21lL3J1bm5lci93b3JrL2d1aWRlLWRvZ2UvZ3VpZGUtZG9nZS9zcmMvdXRpbHMvY29uc3RhbnRzLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBRUE7RUFDRSxPQUFBO0VBQ0EsYUFBQTtFQUNBLGdCQUFBO0FDREY7QURHRTtFQUNFLGFBQUE7RUFDQSxZQUFBO0VBQ0EsK0JBQUE7RUFDQSxrQkFBQTtFQUNBLGdCQUFBO0FDREo7QURHSTtFQUNFLGVFUlk7RUZTWixjQUFBO0FDRE47QURJSTtFQUNFLGVBQUE7RUFDQSxxQkFBQTtBQ0ZOO0FESU07RUFDRSxhQUFBO0VBQ0Esb0JBQUE7RUFDQSw4QkFBQTtFQUNBLGVBQUE7RUFDQSxlQUFBO0FDRlI7QURJUTtFQUNFLHdCQUFBO0FDRlY7QURLUTtFQUNFLE9BQUE7RUFDQSxpQkFBQTtBQ0hWO0FETVE7RUFDRSxrQkFBQTtBQ0pWO0FEVUU7RUFDRSxhQUFBO0VBQ0EsU0FBQTtFQUNBLHVCQUFBO0VBQ0EsdUJBQUE7RUFDQSxlQUFBO0VBQ0EsaUJBQUE7RUFDQSxrQkFBQTtFQUNBLGdCQUFBO0FDUko7QURVSTtFQUNFLG1CQUFBO0VBQ0Esa0JBQUE7QUNSTiIsImZpbGUiOiJzcmMvY29tcG9uZW50cy9kYXNoYm9hcmQvZGFzaGJvYXJkLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiQGltcG9ydCBcIi4uLy4uL3V0aWxzL2NvbnN0YW50c1wiO1xuXG46aG9zdCB7XG4gIGZsZXg6IDE7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgLnNpZGViYXIge1xuICAgIHBhZGRpbmc6IDFyZW07XG4gICAgd2lkdGg6IDIwcmVtO1xuICAgIGJvcmRlci1yaWdodDogMXB4IHNvbGlkICRjb2xvci1ib3JkZXI7XG4gICAgb3ZlcmZsb3cteDogaGlkZGVuO1xuICAgIG92ZXJmbG93LXk6IGF1dG87XG5cbiAgICAuc2lkZWJhci10aXRsZSB7XG4gICAgICBmb250LXNpemU6ICRmb250LXNpemUtbGFyZ2U7XG4gICAgICBtYXJnaW46IDFyZW0gMDtcbiAgICB9XG5cbiAgICBhcHAtcHJlZmVyZW5jZSB7XG4gICAgICBtYXJnaW46IDAgLTFyZW07XG4gICAgICBtYXJnaW4tYm90dG9tOiAuNXJlbTtcblxuICAgICAgbGFiZWwge1xuICAgICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgICBhbGlnbi1pdGVtczogc3RyZXRjaDtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBzcGFjZS1iZXR3ZWVuO1xuICAgICAgICBwYWRkaW5nOiAwIDFyZW07XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcblxuICAgICAgICBzcGFuIHtcbiAgICAgICAgICBtYXJnaW46IDFyZW0gMXJlbSAxcmVtIDA7XG4gICAgICAgIH1cblxuICAgICAgICBpbnB1dCB7XG4gICAgICAgICAgZmxleDogMTtcbiAgICAgICAgICB0ZXh0LWFsaWduOiByaWdodDtcbiAgICAgICAgfVxuXG4gICAgICAgIGFwcC1zd2l0Y2gge1xuICAgICAgICAgIGFsaWduLXNlbGY6IGNlbnRlcjtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxuXG4gIC5jYXJkLWNvbnRhaW5lciB7XG4gICAgZGlzcGxheTogZmxleDtcbiAgICBmbGV4OiAxIDA7XG4gICAgYWxpZ24taXRlbXM6IGZsZXgtc3RhcnQ7XG4gICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgZmxleC13cmFwOiB3cmFwO1xuICAgIHBhZGRpbmctdG9wOiAxcmVtO1xuICAgIHBhZGRpbmctbGVmdDogMXJlbTtcbiAgICBvdmVyZmxvdy15OiBhdXRvO1xuXG4gICAgPiAqIHtcbiAgICAgIG1hcmdpbi1ib3R0b206IDFyZW07XG4gICAgICBtYXJnaW4tcmlnaHQ6IDFyZW07XG4gICAgfVxuICB9XG59XG4iLCI6aG9zdCB7XG4gIGZsZXg6IDE7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG59XG46aG9zdCAuc2lkZWJhciB7XG4gIHBhZGRpbmc6IDFyZW07XG4gIHdpZHRoOiAyMHJlbTtcbiAgYm9yZGVyLXJpZ2h0OiAxcHggc29saWQgI2RhZGNlMDtcbiAgb3ZlcmZsb3cteDogaGlkZGVuO1xuICBvdmVyZmxvdy15OiBhdXRvO1xufVxuOmhvc3QgLnNpZGViYXIgLnNpZGViYXItdGl0bGUge1xuICBmb250LXNpemU6IDI0cHg7XG4gIG1hcmdpbjogMXJlbSAwO1xufVxuOmhvc3QgLnNpZGViYXIgYXBwLXByZWZlcmVuY2Uge1xuICBtYXJnaW46IDAgLTFyZW07XG4gIG1hcmdpbi1ib3R0b206IDAuNXJlbTtcbn1cbjpob3N0IC5zaWRlYmFyIGFwcC1wcmVmZXJlbmNlIGxhYmVsIHtcbiAgZGlzcGxheTogZmxleDtcbiAgYWxpZ24taXRlbXM6IHN0cmV0Y2g7XG4gIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2VlbjtcbiAgcGFkZGluZzogMCAxcmVtO1xuICBjdXJzb3I6IHBvaW50ZXI7XG59XG46aG9zdCAuc2lkZWJhciBhcHAtcHJlZmVyZW5jZSBsYWJlbCBzcGFuIHtcbiAgbWFyZ2luOiAxcmVtIDFyZW0gMXJlbSAwO1xufVxuOmhvc3QgLnNpZGViYXIgYXBwLXByZWZlcmVuY2UgbGFiZWwgaW5wdXQge1xuICBmbGV4OiAxO1xuICB0ZXh0LWFsaWduOiByaWdodDtcbn1cbjpob3N0IC5zaWRlYmFyIGFwcC1wcmVmZXJlbmNlIGxhYmVsIGFwcC1zd2l0Y2gge1xuICBhbGlnbi1zZWxmOiBjZW50ZXI7XG59XG46aG9zdCAuY2FyZC1jb250YWluZXIge1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbGV4OiAxIDA7XG4gIGFsaWduLWl0ZW1zOiBmbGV4LXN0YXJ0O1xuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgZmxleC13cmFwOiB3cmFwO1xuICBwYWRkaW5nLXRvcDogMXJlbTtcbiAgcGFkZGluZy1sZWZ0OiAxcmVtO1xuICBvdmVyZmxvdy15OiBhdXRvO1xufVxuOmhvc3QgLmNhcmQtY29udGFpbmVyID4gKiB7XG4gIG1hcmdpbi1ib3R0b206IDFyZW07XG4gIG1hcmdpbi1yaWdodDogMXJlbTtcbn0iLCIkY29sb3ItYmFja2dyb3VuZDogcmdiKDI0OCwgMjQ5LCAyNTApO1xuJGNvbG9yLWJvcmRlcjogcmdiKDIxOCwgMjIwLCAyMjQpO1xuJGNvbG9yLWZvbnQ6IHJnYigzNCwgMzQsIDM0KTtcbiRjb2xvci1oaWdobGlnaHQ6IHJnYig2NiwgMTMzLCAyNDQpO1xuJGNvbG9yLXBvc2l0aXZlOiByZ2IoMTUsIDE1NywgODgpO1xuJGNvbG9yLW5lZ2F0aXZlOiByZ2IoMjE5LCA2OCwgNTUpO1xuXG4kZm9udC1zaXplLWxhcmdlOiAyNHB4O1xuJGZvbnQtc2l6ZS1tZWRpdW06IDE2cHg7XG4kZm9udC1zaXplLXNtYWxsOiAxMnB4O1xuXG5AbWl4aW4gY2FyZC1zaGFkb3cge1xuICBib3gtc2hhZG93OiByZ2JhKDAsIDAsIDAsIDAuMikgMCAxcHggM3B4IDAsIHJnYmEoMCwgMCwgMCwgMC4xNCkgMCAxcHggMXB4IDAsIHJnYmEoMCwgMCwgMCwgMC4xMikgMCAycHggMXB4IC0xcHg7XG59XG4iXX0= */"] });
 (function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](DashboardComponent, [{
         type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"],
         args: [{
@@ -579,10 +587,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DashboardModule", function() { return DashboardModule; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
 /* harmony import */ var _dashboard_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dashboard.component */ "./src/components/dashboard/dashboard.component.ts");
-/* harmony import */ var _line_chart_line_chart_module__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../line-chart/line-chart.module */ "./src/components/line-chart/line-chart.module.ts");
-/* harmony import */ var _preference_preference_module__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../preference/preference.module */ "./src/components/preference/preference.module.ts");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/__ivy_ngcc__/fesm2015/forms.js");
-/* harmony import */ var _switch_switch_module__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../switch/switch.module */ "./src/components/switch/switch.module.ts");
+/* harmony import */ var _preference_preference_module__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../preference/preference.module */ "./src/components/preference/preference.module.ts");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/__ivy_ngcc__/fesm2015/forms.js");
+/* harmony import */ var _switch_switch_module__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../switch/switch.module */ "./src/components/switch/switch.module.ts");
+/* harmony import */ var _card_card_module__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../card/card.module */ "./src/components/card/card.module.ts");
 
 
 
@@ -594,15 +602,15 @@ class DashboardModule {
 }
 DashboardModule.ɵmod = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineNgModule"]({ type: DashboardModule });
 DashboardModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjector"]({ factory: function DashboardModule_Factory(t) { return new (t || DashboardModule)(); }, imports: [[
-            _line_chart_line_chart_module__WEBPACK_IMPORTED_MODULE_2__["LineChartModule"],
-            _preference_preference_module__WEBPACK_IMPORTED_MODULE_3__["PreferenceModule"],
-            _angular_forms__WEBPACK_IMPORTED_MODULE_4__["FormsModule"],
-            _switch_switch_module__WEBPACK_IMPORTED_MODULE_5__["SwitchModule"],
+            _preference_preference_module__WEBPACK_IMPORTED_MODULE_2__["PreferenceModule"],
+            _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormsModule"],
+            _switch_switch_module__WEBPACK_IMPORTED_MODULE_4__["SwitchModule"],
+            _card_card_module__WEBPACK_IMPORTED_MODULE_5__["CardModule"],
         ]] });
-(function () { (typeof ngJitMode === "undefined" || ngJitMode) && _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsetNgModuleScope"](DashboardModule, { declarations: [_dashboard_component__WEBPACK_IMPORTED_MODULE_1__["DashboardComponent"]], imports: [_line_chart_line_chart_module__WEBPACK_IMPORTED_MODULE_2__["LineChartModule"],
-        _preference_preference_module__WEBPACK_IMPORTED_MODULE_3__["PreferenceModule"],
-        _angular_forms__WEBPACK_IMPORTED_MODULE_4__["FormsModule"],
-        _switch_switch_module__WEBPACK_IMPORTED_MODULE_5__["SwitchModule"]], exports: [_dashboard_component__WEBPACK_IMPORTED_MODULE_1__["DashboardComponent"]] }); })();
+(function () { (typeof ngJitMode === "undefined" || ngJitMode) && _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsetNgModuleScope"](DashboardModule, { declarations: [_dashboard_component__WEBPACK_IMPORTED_MODULE_1__["DashboardComponent"]], imports: [_preference_preference_module__WEBPACK_IMPORTED_MODULE_2__["PreferenceModule"],
+        _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormsModule"],
+        _switch_switch_module__WEBPACK_IMPORTED_MODULE_4__["SwitchModule"],
+        _card_card_module__WEBPACK_IMPORTED_MODULE_5__["CardModule"]], exports: [_dashboard_component__WEBPACK_IMPORTED_MODULE_1__["DashboardComponent"]] }); })();
 (function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](DashboardModule, [{
         type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["NgModule"],
         args: [{
@@ -610,10 +618,10 @@ DashboardModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineIn
                     _dashboard_component__WEBPACK_IMPORTED_MODULE_1__["DashboardComponent"],
                 ],
                 imports: [
-                    _line_chart_line_chart_module__WEBPACK_IMPORTED_MODULE_2__["LineChartModule"],
-                    _preference_preference_module__WEBPACK_IMPORTED_MODULE_3__["PreferenceModule"],
-                    _angular_forms__WEBPACK_IMPORTED_MODULE_4__["FormsModule"],
-                    _switch_switch_module__WEBPACK_IMPORTED_MODULE_5__["SwitchModule"],
+                    _preference_preference_module__WEBPACK_IMPORTED_MODULE_2__["PreferenceModule"],
+                    _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormsModule"],
+                    _switch_switch_module__WEBPACK_IMPORTED_MODULE_4__["SwitchModule"],
+                    _card_card_module__WEBPACK_IMPORTED_MODULE_5__["CardModule"],
                 ],
                 exports: [
                     _dashboard_component__WEBPACK_IMPORTED_MODULE_1__["DashboardComponent"],
@@ -639,6 +647,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _models_melody_melody_model__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../models/melody/melody.model */ "./src/models/melody/melody.model.ts");
 /* harmony import */ var _assets_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../assets/i18n */ "./src/assets/i18n/index.ts");
 /* harmony import */ var _utils_formatters__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../utils/formatters */ "./src/utils/formatters.ts");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm2015/operators/index.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm2015/index.js");
+/* harmony import */ var _utils_comparators__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../utils/comparators */ "./src/utils/comparators.ts");
+/* harmony import */ var _line_chart_line_chart_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../line-chart/line-chart.component */ "./src/components/line-chart/line-chart.component.ts");
+
+
+
+
 
 
 
@@ -646,12 +662,14 @@ __webpack_require__.r(__webpack_exports__);
 
 
 class LineChartAudificationComponent {
-    constructor(zone) {
+    constructor(host, zone) {
+        this.host = host;
         this.zone = zone;
-        this.activeDatumChange = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
         this.frequencyRange = [256, 2048];
         this.duration = 5;
         this.liveText = null;
+        this.destroy$ = new rxjs__WEBPACK_IMPORTED_MODULE_6__["Subject"]();
+        this.tabindex = 0;
         this.handleSeek = this.handleSeek.bind(this);
     }
     get INSTRUCTIONS() {
@@ -660,25 +678,38 @@ class LineChartAudificationComponent {
     get INSTRUCTIONS_A11Y() {
         return Object(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["tA11y"])(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].INSTRUCTIONS);
     }
-    ngOnDestroy() {
-        var _a;
-        (_a = this.melody) === null || _a === void 0 ? void 0 : _a.dispose();
+    get data() {
+        return this.host.data;
     }
-    ngOnChanges(changes) {
-        var _a;
-        if ('data' in changes) {
-            const values = this.data.map(datum => datum.value);
-            this.domain = this.data.map(d => d.date).sort((a, b) => a.getTime() - b.getTime());
-            this.range = this.data.map(d => d.value).sort();
+    get measureName() {
+        return this.host.measureName;
+    }
+    set activeDatum(activeDatum) {
+        this.host.activeDatum = activeDatum;
+    }
+    ngOnInit() {
+        this.host.data$
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["takeUntil"])(this.destroy$))
+            .subscribe(data => {
+            var _a;
+            const values = data.map(datum => datum.value);
+            this.domain = data.map(d => d.date).sort(_utils_comparators__WEBPACK_IMPORTED_MODULE_7__["ascendingDate"]);
+            this.range = data.map(d => d.value).sort(_utils_comparators__WEBPACK_IMPORTED_MODULE_7__["ascendingNumber"]);
             (_a = this.melody) === null || _a === void 0 ? void 0 : _a.dispose();
             this.melody = new _models_melody_melody_model__WEBPACK_IMPORTED_MODULE_2__["Melody"](values, this.frequencyRange, this.duration, this.handleSeek);
-        }
+        });
+    }
+    ngOnDestroy() {
+        var _a;
+        this.destroy$.next();
+        this.destroy$.complete();
+        (_a = this.melody) === null || _a === void 0 ? void 0 : _a.dispose();
     }
     handleSeek(index, playing) {
         const datum = this.data[index];
         const { date, value } = datum;
         this.zone.run((() => {
-            this.activeDatumChange.emit(datum);
+            this.activeDatum = datum;
             if (!playing) {
                 this.readOut(Object(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].ACTIVE_DATUM, {
                     x: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatX"])(date),
@@ -744,10 +775,12 @@ class LineChartAudificationComponent {
         }
     }
 }
-LineChartAudificationComponent.ɵfac = function LineChartAudificationComponent_Factory(t) { return new (t || LineChartAudificationComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgZone"])); };
-LineChartAudificationComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComponent"]({ type: LineChartAudificationComponent, selectors: [["app-line-chart-audification"]], hostBindings: function LineChartAudificationComponent_HostBindings(rf, ctx) { if (rf & 1) {
+LineChartAudificationComponent.ɵfac = function LineChartAudificationComponent_Factory(t) { return new (t || LineChartAudificationComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"]('host'), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgZone"])); };
+LineChartAudificationComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComponent"]({ type: LineChartAudificationComponent, selectors: [["app-line-chart-audification"]], hostVars: 1, hostBindings: function LineChartAudificationComponent_HostBindings(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("keydown", function LineChartAudificationComponent_keydown_HostBindingHandler($event) { return ctx.handleKeyDown($event); })("keyup", function LineChartAudificationComponent_keyup_HostBindingHandler($event) { return ctx.handleKeyUp($event); })("blur", function LineChartAudificationComponent_blur_HostBindingHandler($event) { return ctx.handleBlur($event); });
-    } }, inputs: { data: "data", measureName: "measureName", activeDatum: "activeDatum", frequencyRange: "frequencyRange", duration: "duration" }, outputs: { activeDatumChange: "activeDatumChange" }, features: [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵNgOnChangesFeature"]], decls: 2, vars: 3, consts: [["role", "img", 1, "instructions", 3, "innerHTML"], ["aria-live", "assertive", 1, "live-text", 3, "innerText"]], template: function LineChartAudificationComponent_Template(rf, ctx) { if (rf & 1) {
+    } if (rf & 2) {
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵattribute"]("tabindex", ctx.tabindex);
+    } }, inputs: { frequencyRange: "frequencyRange", duration: "duration" }, decls: 2, vars: 3, consts: [["role", "img", 1, "instructions", 3, "innerHTML"], ["aria-live", "assertive", 1, "live-text", 3, "innerText"]], template: function LineChartAudificationComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelement"](0, "div", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelement"](1, "div", 1);
     } if (rf & 2) {
@@ -755,7 +788,7 @@ LineChartAudificationComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1_
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵattribute"]("aria-label", ctx.INSTRUCTIONS_A11Y);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("innerText", ctx.liveText);
-    } }, styles: ["@charset \"UTF-8\";\n[_nghost-%COMP%]   .instructions[_ngcontent-%COMP%] {\n  font-size: 12px;\n  line-height: 2em;\n  margin-bottom: 0.5rem;\n}\n[_nghost-%COMP%]   .live-text[_ngcontent-%COMP%] {\n  color: #4285f4;\n  font-weight: 500;\n}\n[_nghost-%COMP%]   .live-text[_ngcontent-%COMP%]:before {\n  content: \"\uD83D\uDD0A \";\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9jb21wb25lbnRzL2xpbmUtY2hhcnQtYXVkaWZpY2F0aW9uL2xpbmUtY2hhcnQtYXVkaWZpY2F0aW9uLmNvbXBvbmVudC5zY3NzIiwiL2hvbWUvcnVubmVyL3dvcmsvZ3VpZGUtZG9nZS9ndWlkZS1kb2dlL3NyYy9jb21wb25lbnRzL2xpbmUtY2hhcnQtYXVkaWZpY2F0aW9uL2xpbmUtY2hhcnQtYXVkaWZpY2F0aW9uLmNvbXBvbmVudC5zY3NzIiwiL2hvbWUvcnVubmVyL3dvcmsvZ3VpZGUtZG9nZS9ndWlkZS1kb2dlL3NyYy91dGlscy9jb25zdGFudHMuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxnQkFBZ0I7QUNHZDtFQUNFLGVDS2M7RURKZCxnQkFBQTtFQUNBLHFCQUFBO0FEREo7QUNJRTtFQUNFLGNDUGM7RURRZCxnQkFBQTtBREZKO0FDSUk7RUFDRSxjQUFBO0FERk4iLCJmaWxlIjoic3JjL2NvbXBvbmVudHMvbGluZS1jaGFydC1hdWRpZmljYXRpb24vbGluZS1jaGFydC1hdWRpZmljYXRpb24uY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyJAY2hhcnNldCBcIlVURi04XCI7XG46aG9zdCAuaW5zdHJ1Y3Rpb25zIHtcbiAgZm9udC1zaXplOiAxMnB4O1xuICBsaW5lLWhlaWdodDogMmVtO1xuICBtYXJnaW4tYm90dG9tOiAwLjVyZW07XG59XG46aG9zdCAubGl2ZS10ZXh0IHtcbiAgY29sb3I6ICM0Mjg1ZjQ7XG4gIGZvbnQtd2VpZ2h0OiA1MDA7XG59XG46aG9zdCAubGl2ZS10ZXh0OmJlZm9yZSB7XG4gIGNvbnRlbnQ6IFwi8J+UiiBcIjtcbn0iLCJAaW1wb3J0IFwiLi4vLi4vdXRpbHMvY29uc3RhbnRzXCI7XG5cbjpob3N0IHtcbiAgLmluc3RydWN0aW9ucyB7XG4gICAgZm9udC1zaXplOiAkZm9udC1zaXplLXNtYWxsO1xuICAgIGxpbmUtaGVpZ2h0OiAyZW07XG4gICAgbWFyZ2luLWJvdHRvbTogLjVyZW07XG4gIH1cblxuICAubGl2ZS10ZXh0IHtcbiAgICBjb2xvcjogJGNvbG9yLWhpZ2hsaWdodDtcbiAgICBmb250LXdlaWdodDogNTAwO1xuXG4gICAgJjpiZWZvcmUge1xuICAgICAgY29udGVudDogJ/CflIogJztcbiAgICB9XG4gIH1cbn1cbiIsIiRjb2xvci1iYWNrZ3JvdW5kOiByZ2IoMjQ4LCAyNDksIDI1MCk7XG4kY29sb3ItYm9yZGVyOiByZ2IoMjE4LCAyMjAsIDIyNCk7XG4kY29sb3ItZm9udDogcmdiKDM0LCAzNCwgMzQpO1xuJGNvbG9yLWhpZ2hsaWdodDogcmdiKDY2LCAxMzMsIDI0NCk7XG4kY29sb3ItcG9zaXRpdmU6IHJnYigxNSwgMTU3LCA4OCk7XG4kY29sb3ItbmVnYXRpdmU6IHJnYigyMTksIDY4LCA1NSk7XG5cbiRmb250LXNpemUtbGFyZ2U6IDI0cHg7XG4kZm9udC1zaXplLW1lZGl1bTogMTZweDtcbiRmb250LXNpemUtc21hbGw6IDEycHg7XG5cbkBtaXhpbiBjYXJkLXNoYWRvdyB7XG4gIGJveC1zaGFkb3c6IHJnYmEoMCwgMCwgMCwgMC4yKSAwIDFweCAzcHggMCwgcmdiYSgwLCAwLCAwLCAwLjE0KSAwIDFweCAxcHggMCwgcmdiYSgwLCAwLCAwLCAwLjEyKSAwIDJweCAxcHggLTFweDtcbn1cbiJdfQ== */"] });
+    } }, styles: ["@charset \"UTF-8\";\n[_nghost-%COMP%] {\n  display: block;\n  padding: 1.5rem;\n  border-top: 1px solid #dadce0;\n}\n[_nghost-%COMP%]   .instructions[_ngcontent-%COMP%] {\n  font-size: 12px;\n  line-height: 2em;\n  margin-bottom: 0.5rem;\n}\n[_nghost-%COMP%]   .live-text[_ngcontent-%COMP%] {\n  color: #4285f4;\n  font-weight: 500;\n}\n[_nghost-%COMP%]   .live-text[_ngcontent-%COMP%]:before {\n  content: \"\uD83D\uDD0A \";\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9jb21wb25lbnRzL2xpbmUtY2hhcnQtYXVkaWZpY2F0aW9uL2xpbmUtY2hhcnQtYXVkaWZpY2F0aW9uLmNvbXBvbmVudC5zY3NzIiwiL2hvbWUvcnVubmVyL3dvcmsvZ3VpZGUtZG9nZS9ndWlkZS1kb2dlL3NyYy9jb21wb25lbnRzL2xpbmUtY2hhcnQtYXVkaWZpY2F0aW9uL2xpbmUtY2hhcnQtYXVkaWZpY2F0aW9uLmNvbXBvbmVudC5zY3NzIiwiL2hvbWUvcnVubmVyL3dvcmsvZ3VpZGUtZG9nZS9ndWlkZS1kb2dlL3NyYy91dGlscy9jb25zdGFudHMuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxnQkFBZ0I7QUNFaEI7RUFDRSxjQUFBO0VBQ0EsZUFBQTtFQUNBLDZCQUFBO0FEQUY7QUNFRTtFQUNFLGVDQ2M7RURBZCxnQkFBQTtFQUNBLHFCQUFBO0FEQUo7QUNHRTtFQUNFLGNDWGM7RURZZCxnQkFBQTtBRERKO0FDR0k7RUFDRSxjQUFBO0FERE4iLCJmaWxlIjoic3JjL2NvbXBvbmVudHMvbGluZS1jaGFydC1hdWRpZmljYXRpb24vbGluZS1jaGFydC1hdWRpZmljYXRpb24uY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyJAY2hhcnNldCBcIlVURi04XCI7XG46aG9zdCB7XG4gIGRpc3BsYXk6IGJsb2NrO1xuICBwYWRkaW5nOiAxLjVyZW07XG4gIGJvcmRlci10b3A6IDFweCBzb2xpZCAjZGFkY2UwO1xufVxuOmhvc3QgLmluc3RydWN0aW9ucyB7XG4gIGZvbnQtc2l6ZTogMTJweDtcbiAgbGluZS1oZWlnaHQ6IDJlbTtcbiAgbWFyZ2luLWJvdHRvbTogMC41cmVtO1xufVxuOmhvc3QgLmxpdmUtdGV4dCB7XG4gIGNvbG9yOiAjNDI4NWY0O1xuICBmb250LXdlaWdodDogNTAwO1xufVxuOmhvc3QgLmxpdmUtdGV4dDpiZWZvcmUge1xuICBjb250ZW50OiBcIvCflIogXCI7XG59IiwiQGltcG9ydCBcIi4uLy4uL3V0aWxzL2NvbnN0YW50c1wiO1xuXG46aG9zdCB7XG4gIGRpc3BsYXk6IGJsb2NrO1xuICBwYWRkaW5nOiAxLjVyZW07XG4gIGJvcmRlci10b3A6IDFweCBzb2xpZCAkY29sb3ItYm9yZGVyO1xuXG4gIC5pbnN0cnVjdGlvbnMge1xuICAgIGZvbnQtc2l6ZTogJGZvbnQtc2l6ZS1zbWFsbDtcbiAgICBsaW5lLWhlaWdodDogMmVtO1xuICAgIG1hcmdpbi1ib3R0b206IC41cmVtO1xuICB9XG5cbiAgLmxpdmUtdGV4dCB7XG4gICAgY29sb3I6ICRjb2xvci1oaWdobGlnaHQ7XG4gICAgZm9udC13ZWlnaHQ6IDUwMDtcblxuICAgICY6YmVmb3JlIHtcbiAgICAgIGNvbnRlbnQ6ICfwn5SKICc7XG4gICAgfVxuICB9XG59XG4iLCIkY29sb3ItYmFja2dyb3VuZDogcmdiKDI0OCwgMjQ5LCAyNTApO1xuJGNvbG9yLWJvcmRlcjogcmdiKDIxOCwgMjIwLCAyMjQpO1xuJGNvbG9yLWZvbnQ6IHJnYigzNCwgMzQsIDM0KTtcbiRjb2xvci1oaWdobGlnaHQ6IHJnYig2NiwgMTMzLCAyNDQpO1xuJGNvbG9yLXBvc2l0aXZlOiByZ2IoMTUsIDE1NywgODgpO1xuJGNvbG9yLW5lZ2F0aXZlOiByZ2IoMjE5LCA2OCwgNTUpO1xuXG4kZm9udC1zaXplLWxhcmdlOiAyNHB4O1xuJGZvbnQtc2l6ZS1tZWRpdW06IDE2cHg7XG4kZm9udC1zaXplLXNtYWxsOiAxMnB4O1xuXG5AbWl4aW4gY2FyZC1zaGFkb3cge1xuICBib3gtc2hhZG93OiByZ2JhKDAsIDAsIDAsIDAuMikgMCAxcHggM3B4IDAsIHJnYmEoMCwgMCwgMCwgMC4xNCkgMCAxcHggMXB4IDAsIHJnYmEoMCwgMCwgMCwgMC4xMikgMCAycHggMXB4IC0xcHg7XG59XG4iXX0= */"] });
 (function () { _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵsetClassMetadata"](LineChartAudificationComponent, [{
         type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"],
         args: [{
@@ -763,18 +796,16 @@ LineChartAudificationComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1_
                 templateUrl: './line-chart-audification.component.html',
                 styleUrls: ['./line-chart-audification.component.scss'],
             }]
-    }], function () { return [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["NgZone"] }]; }, { data: [{
-            type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"]
-        }], measureName: [{
-            type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"]
-        }], activeDatum: [{
-            type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"]
-        }], activeDatumChange: [{
-            type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"]
-        }], frequencyRange: [{
+    }], function () { return [{ type: _line_chart_line_chart_component__WEBPACK_IMPORTED_MODULE_8__["LineChartComponent"], decorators: [{
+                type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Inject"],
+                args: ['host']
+            }] }, { type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["NgZone"] }]; }, { frequencyRange: [{
             type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"]
         }], duration: [{
             type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"]
+        }], tabindex: [{
+            type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["HostBinding"],
+            args: ['attr.tabindex']
         }], handleKeyDown: [{
             type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["HostListener"],
             args: ['keydown', ['$event']]
@@ -785,198 +816,6 @@ LineChartAudificationComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1_
             type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["HostListener"],
             args: ['blur', ['$event']]
         }] }); })();
-
-
-/***/ }),
-
-/***/ "./src/components/line-chart-audification/line-chart-audification.module.ts":
-/*!**********************************************************************************!*\
-  !*** ./src/components/line-chart-audification/line-chart-audification.module.ts ***!
-  \**********************************************************************************/
-/*! exports provided: LineChartAudificationModule */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LineChartAudificationModule", function() { return LineChartAudificationModule; });
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
-/* harmony import */ var _line_chart_audification_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./line-chart-audification.component */ "./src/components/line-chart-audification/line-chart-audification.component.ts");
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
-
-
-
-
-class LineChartAudificationModule {
-}
-LineChartAudificationModule.ɵmod = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineNgModule"]({ type: LineChartAudificationModule });
-LineChartAudificationModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjector"]({ factory: function LineChartAudificationModule_Factory(t) { return new (t || LineChartAudificationModule)(); }, imports: [[
-            _angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"],
-        ]] });
-(function () { (typeof ngJitMode === "undefined" || ngJitMode) && _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsetNgModuleScope"](LineChartAudificationModule, { declarations: [_line_chart_audification_component__WEBPACK_IMPORTED_MODULE_1__["LineChartAudificationComponent"]], imports: [_angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"]], exports: [_line_chart_audification_component__WEBPACK_IMPORTED_MODULE_1__["LineChartAudificationComponent"]] }); })();
-(function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](LineChartAudificationModule, [{
-        type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["NgModule"],
-        args: [{
-                declarations: [
-                    _line_chart_audification_component__WEBPACK_IMPORTED_MODULE_1__["LineChartAudificationComponent"],
-                ],
-                imports: [
-                    _angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"],
-                ],
-                exports: [
-                    _line_chart_audification_component__WEBPACK_IMPORTED_MODULE_1__["LineChartAudificationComponent"],
-                ],
-            }]
-    }], null, null); })();
-
-
-/***/ }),
-
-/***/ "./src/components/line-chart-visualization/line-chart-visualization.component.ts":
-/*!***************************************************************************************!*\
-  !*** ./src/components/line-chart-visualization/line-chart-visualization.component.ts ***!
-  \***************************************************************************************/
-/*! exports provided: LineChartVisualizationComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LineChartVisualizationComponent", function() { return LineChartVisualizationComponent; });
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
-/* harmony import */ var _d3_line_chart_d3__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../d3/line-chart.d3 */ "./src/d3/line-chart.d3.ts");
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm2015/index.js");
-/* harmony import */ var _assets_i18n_utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../assets/i18n/utils */ "./src/assets/i18n/utils.ts");
-/* harmony import */ var _utils_formatters__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../utils/formatters */ "./src/utils/formatters.ts");
-/* harmony import */ var _assets_i18n__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../assets/i18n */ "./src/assets/i18n/index.ts");
-
-
-
-
-
-
-
-class LineChartVisualizationComponent {
-    constructor(elementRef) {
-        this.elementRef = elementRef;
-        this.height = 500;
-        this.width = 800;
-        this.marginTop = 20;
-        this.marginRight = 30;
-        this.marginBottom = 30;
-        this.marginLeft = 40;
-        this.activeDatumChange = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
-        this.dataSubject = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"]([]);
-        this.dataObservable = this.dataSubject.asObservable();
-        this.activeDatumSubject = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
-        this.activeDatumObservable = this.activeDatumSubject.asObservable();
-        this.lineChartD3 = new _d3_line_chart_d3__WEBPACK_IMPORTED_MODULE_1__["LineChartD3"](this);
-    }
-    get formattedActiveDatum() {
-        if (!this.activeDatum) {
-            return null;
-        }
-        const { date, value } = this.activeDatum;
-        return Object(_assets_i18n_utils__WEBPACK_IMPORTED_MODULE_3__["t"])(_assets_i18n__WEBPACK_IMPORTED_MODULE_5__["AUDIFICATION"].ACTIVE_DATUM, {
-            x: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatX"])(date),
-            y: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatY"])(value),
-        });
-    }
-    ngOnInit() {
-        this.lineChartD3.render();
-    }
-    ngOnDestroy() {
-        this.lineChartD3.clear();
-    }
-    ngOnChanges(changes) {
-        if ('data' in changes) {
-            this.dataSubject.next(this.data);
-        }
-        if ('activeDatum' in changes) {
-            this.activeDatumSubject.next(this.activeDatum);
-        }
-    }
-}
-LineChartVisualizationComponent.ɵfac = function LineChartVisualizationComponent_Factory(t) { return new (t || LineChartVisualizationComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["ElementRef"])); };
-LineChartVisualizationComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: LineChartVisualizationComponent, selectors: [["app-line-chart-visualization"]], inputs: { height: "height", width: "width", marginTop: "marginTop", marginRight: "marginRight", marginBottom: "marginBottom", marginLeft: "marginLeft", data: "data", activeDatum: "activeDatum" }, outputs: { activeDatumChange: "activeDatumChange" }, features: [_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵNgOnChangesFeature"]], decls: 2, vars: 1, consts: [[1, "active-indicator"]], template: function LineChartVisualizationComponent_Template(rf, ctx) { if (rf & 1) {
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 0);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](1);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-    } if (rf & 2) {
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"](" ", ctx.formattedActiveDatum, "\n");
-    } }, styles: ["[_nghost-%COMP%] {\n  position: relative;\n  display: block;\n}\n[_nghost-%COMP%]   .active-indicator[_ngcontent-%COMP%] {\n  box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px 0, rgba(0, 0, 0, 0.14) 0 1px 1px 0, rgba(0, 0, 0, 0.12) 0 2px 1px -1px;\n  position: absolute;\n  font-weight: 500;\n  padding: 1rem;\n  background-color: white;\n  white-space: nowrap;\n  color: #4285f4;\n  opacity: 0;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL3J1bm5lci93b3JrL2d1aWRlLWRvZ2UvZ3VpZGUtZG9nZS9zcmMvY29tcG9uZW50cy9saW5lLWNoYXJ0LXZpc3VhbGl6YXRpb24vbGluZS1jaGFydC12aXN1YWxpemF0aW9uLmNvbXBvbmVudC5zY3NzIiwic3JjL2NvbXBvbmVudHMvbGluZS1jaGFydC12aXN1YWxpemF0aW9uL2xpbmUtY2hhcnQtdmlzdWFsaXphdGlvbi5jb21wb25lbnQuc2NzcyIsIi9ob21lL3J1bm5lci93b3JrL2d1aWRlLWRvZ2UvZ3VpZGUtZG9nZS9zcmMvdXRpbHMvY29uc3RhbnRzLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBRUE7RUFDRSxrQkFBQTtFQUNBLGNBQUE7QUNERjtBREdFO0VFTUEsK0dBQUE7RUZKRSxrQkFBQTtFQUNBLGdCQUFBO0VBQ0EsYUFBQTtFQUNBLHVCQUFBO0VBQ0EsbUJBQUE7RUFDQSxjRVZjO0VGV2QsVUFBQTtBQ0RKIiwiZmlsZSI6InNyYy9jb21wb25lbnRzL2xpbmUtY2hhcnQtdmlzdWFsaXphdGlvbi9saW5lLWNoYXJ0LXZpc3VhbGl6YXRpb24uY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyJAaW1wb3J0IFwiLi4vLi4vdXRpbHMvY29uc3RhbnRzXCI7XG5cbjpob3N0IHtcbiAgcG9zaXRpb246IHJlbGF0aXZlO1xuICBkaXNwbGF5OiBibG9jaztcblxuICAuYWN0aXZlLWluZGljYXRvciB7XG4gICAgQGluY2x1ZGUgY2FyZC1zaGFkb3c7XG4gICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgIGZvbnQtd2VpZ2h0OiA1MDA7XG4gICAgcGFkZGluZzogMXJlbTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB3aGl0ZTtcbiAgICB3aGl0ZS1zcGFjZTogbm93cmFwO1xuICAgIGNvbG9yOiAkY29sb3ItaGlnaGxpZ2h0O1xuICAgIG9wYWNpdHk6IDA7XG4gIH1cbn1cbiIsIjpob3N0IHtcbiAgcG9zaXRpb246IHJlbGF0aXZlO1xuICBkaXNwbGF5OiBibG9jaztcbn1cbjpob3N0IC5hY3RpdmUtaW5kaWNhdG9yIHtcbiAgYm94LXNoYWRvdzogcmdiYSgwLCAwLCAwLCAwLjIpIDAgMXB4IDNweCAwLCByZ2JhKDAsIDAsIDAsIDAuMTQpIDAgMXB4IDFweCAwLCByZ2JhKDAsIDAsIDAsIDAuMTIpIDAgMnB4IDFweCAtMXB4O1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGZvbnQtd2VpZ2h0OiA1MDA7XG4gIHBhZGRpbmc6IDFyZW07XG4gIGJhY2tncm91bmQtY29sb3I6IHdoaXRlO1xuICB3aGl0ZS1zcGFjZTogbm93cmFwO1xuICBjb2xvcjogIzQyODVmNDtcbiAgb3BhY2l0eTogMDtcbn0iLCIkY29sb3ItYmFja2dyb3VuZDogcmdiKDI0OCwgMjQ5LCAyNTApO1xuJGNvbG9yLWJvcmRlcjogcmdiKDIxOCwgMjIwLCAyMjQpO1xuJGNvbG9yLWZvbnQ6IHJnYigzNCwgMzQsIDM0KTtcbiRjb2xvci1oaWdobGlnaHQ6IHJnYig2NiwgMTMzLCAyNDQpO1xuJGNvbG9yLXBvc2l0aXZlOiByZ2IoMTUsIDE1NywgODgpO1xuJGNvbG9yLW5lZ2F0aXZlOiByZ2IoMjE5LCA2OCwgNTUpO1xuXG4kZm9udC1zaXplLWxhcmdlOiAyNHB4O1xuJGZvbnQtc2l6ZS1tZWRpdW06IDE2cHg7XG4kZm9udC1zaXplLXNtYWxsOiAxMnB4O1xuXG5AbWl4aW4gY2FyZC1zaGFkb3cge1xuICBib3gtc2hhZG93OiByZ2JhKDAsIDAsIDAsIDAuMikgMCAxcHggM3B4IDAsIHJnYmEoMCwgMCwgMCwgMC4xNCkgMCAxcHggMXB4IDAsIHJnYmEoMCwgMCwgMCwgMC4xMikgMCAycHggMXB4IC0xcHg7XG59XG4iXX0= */"] });
-(function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](LineChartVisualizationComponent, [{
-        type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"],
-        args: [{
-                selector: 'app-line-chart-visualization',
-                templateUrl: './line-chart-visualization.component.html',
-                styleUrls: ['./line-chart-visualization.component.scss'],
-            }]
-    }], function () { return [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ElementRef"] }]; }, { height: [{
-            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
-        }], width: [{
-            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
-        }], marginTop: [{
-            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
-        }], marginRight: [{
-            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
-        }], marginBottom: [{
-            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
-        }], marginLeft: [{
-            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
-        }], data: [{
-            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
-        }], activeDatum: [{
-            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
-        }], activeDatumChange: [{
-            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"]
-        }] }); })();
-
-
-/***/ }),
-
-/***/ "./src/components/line-chart-visualization/line-chart-visualization.module.ts":
-/*!************************************************************************************!*\
-  !*** ./src/components/line-chart-visualization/line-chart-visualization.module.ts ***!
-  \************************************************************************************/
-/*! exports provided: LineChartVisualizationModule */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LineChartVisualizationModule", function() { return LineChartVisualizationModule; });
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
-/* harmony import */ var _line_chart_visualization_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./line-chart-visualization.component */ "./src/components/line-chart-visualization/line-chart-visualization.component.ts");
-/* harmony import */ var _services_data_data_module__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/data/data.module */ "./src/services/data/data.module.ts");
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
-
-
-
-
-
-class LineChartVisualizationModule {
-}
-LineChartVisualizationModule.ɵmod = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineNgModule"]({ type: LineChartVisualizationModule });
-LineChartVisualizationModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjector"]({ factory: function LineChartVisualizationModule_Factory(t) { return new (t || LineChartVisualizationModule)(); }, imports: [[
-            _services_data_data_module__WEBPACK_IMPORTED_MODULE_2__["DataModule"],
-            _angular_common__WEBPACK_IMPORTED_MODULE_3__["CommonModule"],
-        ]] });
-(function () { (typeof ngJitMode === "undefined" || ngJitMode) && _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsetNgModuleScope"](LineChartVisualizationModule, { declarations: [_line_chart_visualization_component__WEBPACK_IMPORTED_MODULE_1__["LineChartVisualizationComponent"]], imports: [_services_data_data_module__WEBPACK_IMPORTED_MODULE_2__["DataModule"],
-        _angular_common__WEBPACK_IMPORTED_MODULE_3__["CommonModule"]], exports: [_line_chart_visualization_component__WEBPACK_IMPORTED_MODULE_1__["LineChartVisualizationComponent"]] }); })();
-(function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](LineChartVisualizationModule, [{
-        type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["NgModule"],
-        args: [{
-                declarations: [
-                    _line_chart_visualization_component__WEBPACK_IMPORTED_MODULE_1__["LineChartVisualizationComponent"],
-                ],
-                imports: [
-                    _services_data_data_module__WEBPACK_IMPORTED_MODULE_2__["DataModule"],
-                    _angular_common__WEBPACK_IMPORTED_MODULE_3__["CommonModule"],
-                ],
-                exports: [
-                    _line_chart_visualization_component__WEBPACK_IMPORTED_MODULE_1__["LineChartVisualizationComponent"],
-                ],
-            }]
-    }], null, null); })();
 
 
 /***/ }),
@@ -992,15 +831,12 @@ LineChartVisualizationModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_0__[
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LineChartComponent", function() { return LineChartComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
-/* harmony import */ var _models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../models/data-cube/presets */ "./src/models/data-cube/presets.ts");
-/* harmony import */ var _assets_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../assets/i18n */ "./src/assets/i18n/index.ts");
-/* harmony import */ var src_utils_formatters__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/utils/formatters */ "./src/utils/formatters.ts");
-/* harmony import */ var _services_data_data_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../services/data/data.service */ "./src/services/data/data.service.ts");
-/* harmony import */ var _card_card_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../card/card.component */ "./src/components/card/card.component.ts");
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
-/* harmony import */ var _card_fold_card_fold_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../card-fold/card-fold.component */ "./src/components/card-fold/card-fold.component.ts");
-/* harmony import */ var _line_chart_visualization_line_chart_visualization_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../line-chart-visualization/line-chart-visualization.component */ "./src/components/line-chart-visualization/line-chart-visualization.component.ts");
-/* harmony import */ var _line_chart_audification_line_chart_audification_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../line-chart-audification/line-chart-audification.component */ "./src/components/line-chart-audification/line-chart-audification.component.ts");
+/* harmony import */ var _d3_line_chart_d3__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../d3/line-chart.d3 */ "./src/d3/line-chart.d3.ts");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm2015/index.js");
+/* harmony import */ var _assets_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../assets/i18n */ "./src/assets/i18n/index.ts");
+/* harmony import */ var _utils_formatters__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../utils/formatters */ "./src/utils/formatters.ts");
+/* harmony import */ var _directives_a11y_placeholder_a11y_placeholder_directive__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../directives/a11y-placeholder/a11y-placeholder.directive */ "./src/directives/a11y-placeholder/a11y-placeholder.directive.ts");
+/* harmony import */ var _services_data_data_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../services/data/data.service */ "./src/services/data/data.service.ts");
 
 
 
@@ -1010,63 +846,76 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-
-function LineChartComponent_div_2_Template(rf, ctx) { if (rf & 1) {
-    const _r3 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 5);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function LineChartComponent_div_2_Template_div_click_0_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r3); const measureName_r1 = ctx.$implicit; const ctx_r2 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r2.setMeasureName(measureName_r1); });
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-} if (rf & 2) {
-    const measureName_r1 = ctx.$implicit;
-    const ctx_r0 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵclassProp"]("active", measureName_r1 === ctx_r0.currentMeasureName);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"](" ", ctx_r0.humanizeMeasureName(measureName_r1), " ");
-} }
+function LineChartComponent_ng_template_4_Template(rf, ctx) { }
 class LineChartComponent {
-    constructor(dataService) {
+    constructor(dataService, elementRef) {
         this.dataService = dataService;
-        this.humanizeMeasureName = src_utils_formatters__WEBPACK_IMPORTED_MODULE_3__["humanizeMeasureName"];
-        this.measureNames = [_models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__["activeUserMeasure"], _models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__["revenueMeasure"], _models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__["eventCountMeasure"]].map(measure => measure.name);
-        this.setMeasureName(this.measureNames[0]);
+        this.elementRef = elementRef;
+        this.height = 500;
+        this.width = 800;
+        this.marginTop = 20;
+        this.marginRight = 30;
+        this.marginBottom = 30;
+        this.marginLeft = 40;
+        this.data$ = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"]([]);
+        this.activeDatum$ = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
+        this.lineChartD3 = new _d3_line_chart_d3__WEBPACK_IMPORTED_MODULE_1__["LineChartD3"](this);
     }
-    get VISUALIZATION() {
-        return Object(_assets_i18n__WEBPACK_IMPORTED_MODULE_2__["t"])(_assets_i18n__WEBPACK_IMPORTED_MODULE_2__["GUIDE_DOGE"].VISUALIZATION);
+    get data() {
+        return this.data$.value;
     }
-    setMeasureName(measureName) {
-        this.currentMeasureName = measureName;
-        this.data = this.dataService.getMeasureOverDays(this.currentMeasureName);
-        this.activeDatum = null;
+    set data(data) {
+        this.data$.next(data);
+    }
+    get activeDatum() {
+        return this.activeDatum$.value;
+    }
+    set activeDatum(activeDatum) {
+        this.activeDatum$.next(activeDatum);
+    }
+    get formattedActiveDatum() {
+        if (!this.activeDatum) {
+            return null;
+        }
+        const { date, value } = this.activeDatum;
+        return Object(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].ACTIVE_DATUM, {
+            x: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatX"])(date),
+            y: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatY"])(value),
+        });
+    }
+    ngOnInit() {
+        this.lineChartD3.render();
+    }
+    ngOnDestroy() {
+        this.lineChartD3.clear();
+    }
+    ngOnChanges(changes) {
+        if ('measureName' in changes) {
+            this.data = this.dataService.getMeasureOverDays(this.measureName);
+            this.activeDatum = null;
+        }
     }
 }
-LineChartComponent.ɵfac = function LineChartComponent_Factory(t) { return new (t || LineChartComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_data_data_service__WEBPACK_IMPORTED_MODULE_4__["DataService"])); };
-LineChartComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: LineChartComponent, selectors: [["app-line-chart"]], decls: 7, vars: 7, consts: [["title", "Line Chart", 1, "card"], [1, "measures"], ["class", "measure", "role", "button", 3, "active", "click", 4, "ngFor", "ngForOf"], ["role", "img", 3, "data", "activeDatum", "activeDatumChange"], ["tabindex", "0", 3, "data", "measureName", "activeDatum", "activeDatumChange"], ["role", "button", 1, "measure", 3, "click"]], template: function LineChartComponent_Template(rf, ctx) { if (rf & 1) {
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "app-card", 0);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "div", 1);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](2, LineChartComponent_div_2_Template, 2, 3, "div", 2);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](3, "app-card-fold");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](4, "app-line-chart-visualization", 3);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("activeDatumChange", function LineChartComponent_Template_app_line_chart_visualization_activeDatumChange_4_listener($event) { return ctx.activeDatum = $event; });
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](5, "app-card-fold");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](6, "app-line-chart-audification", 4);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("activeDatumChange", function LineChartComponent_Template_app_line_chart_audification_activeDatumChange_6_listener($event) { return ctx.activeDatum = $event; });
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+LineChartComponent.ɵfac = function LineChartComponent_Factory(t) { return new (t || LineChartComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_data_data_service__WEBPACK_IMPORTED_MODULE_6__["DataService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["ElementRef"])); };
+LineChartComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: LineChartComponent, selectors: [["app-line-chart"]], viewQuery: function LineChartComponent_Query(rf, ctx) { if (rf & 1) {
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵstaticViewQuery"](_directives_a11y_placeholder_a11y_placeholder_directive__WEBPACK_IMPORTED_MODULE_5__["A11yPlaceholderDirective"], true);
     } if (rf & 2) {
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx.measureNames);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("data", ctx.data)("activeDatum", ctx.activeDatum);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵattribute"]("aria-label", ctx.VISUALIZATION);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("data", ctx.data)("measureName", ctx.currentMeasureName)("activeDatum", ctx.activeDatum);
-    } }, directives: [_card_card_component__WEBPACK_IMPORTED_MODULE_5__["CardComponent"], _angular_common__WEBPACK_IMPORTED_MODULE_6__["NgForOf"], _card_fold_card_fold_component__WEBPACK_IMPORTED_MODULE_7__["CardFoldComponent"], _line_chart_visualization_line_chart_visualization_component__WEBPACK_IMPORTED_MODULE_8__["LineChartVisualizationComponent"], _line_chart_audification_line_chart_audification_component__WEBPACK_IMPORTED_MODULE_9__["LineChartAudificationComponent"]], styles: ["[_nghost-%COMP%]   .card[_ngcontent-%COMP%]   .measures[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: stretch;\n  height: 4rem;\n}\n[_nghost-%COMP%]   .card[_ngcontent-%COMP%]   .measures[_ngcontent-%COMP%]   .measure[_ngcontent-%COMP%] {\n  flex: 1;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n[_nghost-%COMP%]   .card[_ngcontent-%COMP%]   .measures[_ngcontent-%COMP%]   .measure.active[_ngcontent-%COMP%] {\n  border-top: 4px solid #4285f4;\n  font-weight: 500;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL3J1bm5lci93b3JrL2d1aWRlLWRvZ2UvZ3VpZGUtZG9nZS9zcmMvY29tcG9uZW50cy9saW5lLWNoYXJ0L2xpbmUtY2hhcnQuY29tcG9uZW50LnNjc3MiLCJzcmMvY29tcG9uZW50cy9saW5lLWNoYXJ0L2xpbmUtY2hhcnQuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBSUk7RUFDRSxhQUFBO0VBQ0Esb0JBQUE7RUFDQSxZQUFBO0FDSE47QURLTTtFQUNFLE9BQUE7RUFDQSxhQUFBO0VBQ0EsbUJBQUE7RUFDQSx1QkFBQTtFQUNBLGVBQUE7QUNIUjtBREtRO0VBQ0UsNkJBQUE7RUFDQSxnQkFBQTtBQ0hWIiwiZmlsZSI6InNyYy9jb21wb25lbnRzL2xpbmUtY2hhcnQvbGluZS1jaGFydC5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIkBpbXBvcnQgXCIuLi8uLi91dGlscy9jb25zdGFudHNcIjtcblxuOmhvc3Qge1xuICAuY2FyZCB7XG4gICAgLm1lYXN1cmVzIHtcbiAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICBhbGlnbi1pdGVtczogc3RyZXRjaDtcbiAgICAgIGhlaWdodDogNHJlbTtcblxuICAgICAgLm1lYXN1cmUge1xuICAgICAgICBmbGV4OiAxO1xuICAgICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgICBhbGlnbi1pdGVtczogY2VudGVyO1xuICAgICAgICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgICAgICAgY3Vyc29yOiBwb2ludGVyO1xuXG4gICAgICAgICYuYWN0aXZlIHtcbiAgICAgICAgICBib3JkZXItdG9wOiA0cHggc29saWQgJGNvbG9yLWhpZ2hsaWdodDtcbiAgICAgICAgICBmb250LXdlaWdodDogNTAwO1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iLCI6aG9zdCAuY2FyZCAubWVhc3VyZXMge1xuICBkaXNwbGF5OiBmbGV4O1xuICBhbGlnbi1pdGVtczogc3RyZXRjaDtcbiAgaGVpZ2h0OiA0cmVtO1xufVxuOmhvc3QgLmNhcmQgLm1lYXN1cmVzIC5tZWFzdXJlIHtcbiAgZmxleDogMTtcbiAgZGlzcGxheTogZmxleDtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gIGN1cnNvcjogcG9pbnRlcjtcbn1cbjpob3N0IC5jYXJkIC5tZWFzdXJlcyAubWVhc3VyZS5hY3RpdmUge1xuICBib3JkZXItdG9wOiA0cHggc29saWQgIzQyODVmNDtcbiAgZm9udC13ZWlnaHQ6IDUwMDtcbn0iXX0= */"] });
+        var _t;
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵqueryRefresh"](_t = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵloadQuery"]()) && (ctx.a11yPlaceholder = _t.first);
+    } }, inputs: { measureName: "measureName", height: "height", width: "width", marginTop: "marginTop", marginRight: "marginRight", marginBottom: "marginBottom", marginLeft: "marginLeft" }, features: [_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵNgOnChangesFeature"]], decls: 5, vars: 1, consts: [[1, "svg-wrapper"], [1, "active-indicator"], ["appA11yPlaceholder", ""]], template: function LineChartComponent_Template(rf, ctx) { if (rf & 1) {
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 0);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnamespaceSVG"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](1, "svg");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnamespaceHTML"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "div", 1);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](3);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](4, LineChartComponent_ng_template_4_Template, 0, 0, "ng-template", 2);
+    } if (rf & 2) {
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](3);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"](" ", ctx.formattedActiveDatum, " ");
+    } }, directives: [_directives_a11y_placeholder_a11y_placeholder_directive__WEBPACK_IMPORTED_MODULE_5__["A11yPlaceholderDirective"]], styles: ["[_nghost-%COMP%] {\n  display: flex;\n  flex-direction: column;\n}\n[_nghost-%COMP%]   .svg-wrapper[_ngcontent-%COMP%] {\n  box-sizing: content-box;\n  position: relative;\n  margin: 1.5rem;\n}\n[_nghost-%COMP%]   .svg-wrapper[_ngcontent-%COMP%]   .active-indicator[_ngcontent-%COMP%] {\n  box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px 0, rgba(0, 0, 0, 0.14) 0 1px 1px 0, rgba(0, 0, 0, 0.12) 0 2px 1px -1px;\n  position: absolute;\n  font-weight: 500;\n  padding: 1rem;\n  background-color: white;\n  white-space: nowrap;\n  color: #4285f4;\n  opacity: 0;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL3J1bm5lci93b3JrL2d1aWRlLWRvZ2UvZ3VpZGUtZG9nZS9zcmMvY29tcG9uZW50cy9saW5lLWNoYXJ0L2xpbmUtY2hhcnQuY29tcG9uZW50LnNjc3MiLCJzcmMvY29tcG9uZW50cy9saW5lLWNoYXJ0L2xpbmUtY2hhcnQuY29tcG9uZW50LnNjc3MiLCIvaG9tZS9ydW5uZXIvd29yay9ndWlkZS1kb2dlL2d1aWRlLWRvZ2Uvc3JjL3V0aWxzL2NvbnN0YW50cy5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUVBO0VBQ0UsYUFBQTtFQUNBLHNCQUFBO0FDREY7QURHRTtFQUNFLHVCQUFBO0VBQ0Esa0JBQUE7RUFDQSxjQUFBO0FDREo7QURHSTtFRUNGLCtHQUFBO0VGQ0ksa0JBQUE7RUFDQSxnQkFBQTtFQUNBLGFBQUE7RUFDQSx1QkFBQTtFQUNBLG1CQUFBO0VBQ0EsY0VmWTtFRmdCWixVQUFBO0FDRE4iLCJmaWxlIjoic3JjL2NvbXBvbmVudHMvbGluZS1jaGFydC9saW5lLWNoYXJ0LmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiQGltcG9ydCBcIi4uLy4uL3V0aWxzL2NvbnN0YW50c1wiO1xuXG46aG9zdCB7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG5cbiAgLnN2Zy13cmFwcGVyIHtcbiAgICBib3gtc2l6aW5nOiBjb250ZW50LWJveDtcbiAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgbWFyZ2luOiAxLjVyZW07XG5cbiAgICAuYWN0aXZlLWluZGljYXRvciB7XG4gICAgICBAaW5jbHVkZSBjYXJkLXNoYWRvdztcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGZvbnQtd2VpZ2h0OiA1MDA7XG4gICAgICBwYWRkaW5nOiAxcmVtO1xuICAgICAgYmFja2dyb3VuZC1jb2xvcjogd2hpdGU7XG4gICAgICB3aGl0ZS1zcGFjZTogbm93cmFwO1xuICAgICAgY29sb3I6ICRjb2xvci1oaWdobGlnaHQ7XG4gICAgICBvcGFjaXR5OiAwO1xuICAgIH1cbiAgfVxufVxuIiwiOmhvc3Qge1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xufVxuOmhvc3QgLnN2Zy13cmFwcGVyIHtcbiAgYm94LXNpemluZzogY29udGVudC1ib3g7XG4gIHBvc2l0aW9uOiByZWxhdGl2ZTtcbiAgbWFyZ2luOiAxLjVyZW07XG59XG46aG9zdCAuc3ZnLXdyYXBwZXIgLmFjdGl2ZS1pbmRpY2F0b3Ige1xuICBib3gtc2hhZG93OiByZ2JhKDAsIDAsIDAsIDAuMikgMCAxcHggM3B4IDAsIHJnYmEoMCwgMCwgMCwgMC4xNCkgMCAxcHggMXB4IDAsIHJnYmEoMCwgMCwgMCwgMC4xMikgMCAycHggMXB4IC0xcHg7XG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgZm9udC13ZWlnaHQ6IDUwMDtcbiAgcGFkZGluZzogMXJlbTtcbiAgYmFja2dyb3VuZC1jb2xvcjogd2hpdGU7XG4gIHdoaXRlLXNwYWNlOiBub3dyYXA7XG4gIGNvbG9yOiAjNDI4NWY0O1xuICBvcGFjaXR5OiAwO1xufSIsIiRjb2xvci1iYWNrZ3JvdW5kOiByZ2IoMjQ4LCAyNDksIDI1MCk7XG4kY29sb3ItYm9yZGVyOiByZ2IoMjE4LCAyMjAsIDIyNCk7XG4kY29sb3ItZm9udDogcmdiKDM0LCAzNCwgMzQpO1xuJGNvbG9yLWhpZ2hsaWdodDogcmdiKDY2LCAxMzMsIDI0NCk7XG4kY29sb3ItcG9zaXRpdmU6IHJnYigxNSwgMTU3LCA4OCk7XG4kY29sb3ItbmVnYXRpdmU6IHJnYigyMTksIDY4LCA1NSk7XG5cbiRmb250LXNpemUtbGFyZ2U6IDI0cHg7XG4kZm9udC1zaXplLW1lZGl1bTogMTZweDtcbiRmb250LXNpemUtc21hbGw6IDEycHg7XG5cbkBtaXhpbiBjYXJkLXNoYWRvdyB7XG4gIGJveC1zaGFkb3c6IHJnYmEoMCwgMCwgMCwgMC4yKSAwIDFweCAzcHggMCwgcmdiYSgwLCAwLCAwLCAwLjE0KSAwIDFweCAxcHggMCwgcmdiYSgwLCAwLCAwLCAwLjEyKSAwIDJweCAxcHggLTFweDtcbn1cbiJdfQ== */"] });
 (function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](LineChartComponent, [{
         type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"],
         args: [{
@@ -1074,7 +923,24 @@ LineChartComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefin
                 templateUrl: './line-chart.component.html',
                 styleUrls: ['./line-chart.component.scss'],
             }]
-    }], function () { return [{ type: _services_data_data_service__WEBPACK_IMPORTED_MODULE_4__["DataService"] }]; }, null); })();
+    }], function () { return [{ type: _services_data_data_service__WEBPACK_IMPORTED_MODULE_6__["DataService"] }, { type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ElementRef"] }]; }, { a11yPlaceholder: [{
+            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"],
+            args: [_directives_a11y_placeholder_a11y_placeholder_directive__WEBPACK_IMPORTED_MODULE_5__["A11yPlaceholderDirective"], { static: true }]
+        }], measureName: [{
+            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
+        }], height: [{
+            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
+        }], width: [{
+            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
+        }], marginTop: [{
+            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
+        }], marginRight: [{
+            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
+        }], marginBottom: [{
+            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
+        }], marginLeft: [{
+            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
+        }] }); })();
 
 
 /***/ }),
@@ -1091,13 +957,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LineChartModule", function() { return LineChartModule; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
 /* harmony import */ var _line_chart_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./line-chart.component */ "./src/components/line-chart/line-chart.component.ts");
-/* harmony import */ var _line_chart_visualization_line_chart_visualization_module__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../line-chart-visualization/line-chart-visualization.module */ "./src/components/line-chart-visualization/line-chart-visualization.module.ts");
-/* harmony import */ var _line_chart_audification_line_chart_audification_module__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../line-chart-audification/line-chart-audification.module */ "./src/components/line-chart-audification/line-chart-audification.module.ts");
-/* harmony import */ var _card_card_module__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../card/card.module */ "./src/components/card/card.module.ts");
-/* harmony import */ var _card_fold_card_fold_module__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../card-fold/card-fold.module */ "./src/components/card-fold/card-fold.module.ts");
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
-
-
+/* harmony import */ var _services_data_data_module__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/data/data.module */ "./src/services/data/data.module.ts");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
+/* harmony import */ var _directives_a11y_placeholder_a11y_placeholder_module__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../directives/a11y-placeholder/a11y-placeholder.module */ "./src/directives/a11y-placeholder/a11y-placeholder.module.ts");
 
 
 
@@ -1108,17 +970,13 @@ class LineChartModule {
 }
 LineChartModule.ɵmod = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineNgModule"]({ type: LineChartModule });
 LineChartModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjector"]({ factory: function LineChartModule_Factory(t) { return new (t || LineChartModule)(); }, imports: [[
-            _card_card_module__WEBPACK_IMPORTED_MODULE_4__["CardModule"],
-            _line_chart_visualization_line_chart_visualization_module__WEBPACK_IMPORTED_MODULE_2__["LineChartVisualizationModule"],
-            _line_chart_audification_line_chart_audification_module__WEBPACK_IMPORTED_MODULE_3__["LineChartAudificationModule"],
-            _card_fold_card_fold_module__WEBPACK_IMPORTED_MODULE_5__["CardFoldModule"],
-            _angular_common__WEBPACK_IMPORTED_MODULE_6__["CommonModule"],
+            _services_data_data_module__WEBPACK_IMPORTED_MODULE_2__["DataModule"],
+            _angular_common__WEBPACK_IMPORTED_MODULE_3__["CommonModule"],
+            _directives_a11y_placeholder_a11y_placeholder_module__WEBPACK_IMPORTED_MODULE_4__["A11yPlaceholderModule"],
         ]] });
-(function () { (typeof ngJitMode === "undefined" || ngJitMode) && _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsetNgModuleScope"](LineChartModule, { declarations: [_line_chart_component__WEBPACK_IMPORTED_MODULE_1__["LineChartComponent"]], imports: [_card_card_module__WEBPACK_IMPORTED_MODULE_4__["CardModule"],
-        _line_chart_visualization_line_chart_visualization_module__WEBPACK_IMPORTED_MODULE_2__["LineChartVisualizationModule"],
-        _line_chart_audification_line_chart_audification_module__WEBPACK_IMPORTED_MODULE_3__["LineChartAudificationModule"],
-        _card_fold_card_fold_module__WEBPACK_IMPORTED_MODULE_5__["CardFoldModule"],
-        _angular_common__WEBPACK_IMPORTED_MODULE_6__["CommonModule"]], exports: [_line_chart_component__WEBPACK_IMPORTED_MODULE_1__["LineChartComponent"]] }); })();
+(function () { (typeof ngJitMode === "undefined" || ngJitMode) && _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsetNgModuleScope"](LineChartModule, { declarations: [_line_chart_component__WEBPACK_IMPORTED_MODULE_1__["LineChartComponent"]], imports: [_services_data_data_module__WEBPACK_IMPORTED_MODULE_2__["DataModule"],
+        _angular_common__WEBPACK_IMPORTED_MODULE_3__["CommonModule"],
+        _directives_a11y_placeholder_a11y_placeholder_module__WEBPACK_IMPORTED_MODULE_4__["A11yPlaceholderModule"]], exports: [_line_chart_component__WEBPACK_IMPORTED_MODULE_1__["LineChartComponent"]] }); })();
 (function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](LineChartModule, [{
         type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["NgModule"],
         args: [{
@@ -1126,11 +984,9 @@ LineChartModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineIn
                     _line_chart_component__WEBPACK_IMPORTED_MODULE_1__["LineChartComponent"],
                 ],
                 imports: [
-                    _card_card_module__WEBPACK_IMPORTED_MODULE_4__["CardModule"],
-                    _line_chart_visualization_line_chart_visualization_module__WEBPACK_IMPORTED_MODULE_2__["LineChartVisualizationModule"],
-                    _line_chart_audification_line_chart_audification_module__WEBPACK_IMPORTED_MODULE_3__["LineChartAudificationModule"],
-                    _card_fold_card_fold_module__WEBPACK_IMPORTED_MODULE_5__["CardFoldModule"],
-                    _angular_common__WEBPACK_IMPORTED_MODULE_6__["CommonModule"],
+                    _services_data_data_module__WEBPACK_IMPORTED_MODULE_2__["DataModule"],
+                    _angular_common__WEBPACK_IMPORTED_MODULE_3__["CommonModule"],
+                    _directives_a11y_placeholder_a11y_placeholder_module__WEBPACK_IMPORTED_MODULE_4__["A11yPlaceholderModule"],
                 ],
                 exports: [
                     _line_chart_component__WEBPACK_IMPORTED_MODULE_1__["LineChartComponent"],
@@ -1385,6 +1241,9 @@ class BaseD3 {
     get container() {
         return d3__WEBPACK_IMPORTED_MODULE_0__["select"](this.renderOptions.elementRef.nativeElement);
     }
+    get svg() {
+        return this.container.select('svg');
+    }
     config(renderOptions) {
         this.renderOptions = renderOptions;
         return this;
@@ -1393,8 +1252,7 @@ class BaseD3 {
         const { width, height } = this.renderOptions;
         this.clear();
         this.clear$ = new rxjs__WEBPACK_IMPORTED_MODULE_1__["Subject"]();
-        this.svg = this.container
-            .append('svg')
+        this.svg
             .style('width', width)
             .style('height', height)
             .attr('viewBox', [0, 0, width, height].join(' '));
@@ -1406,7 +1264,7 @@ class BaseD3 {
         this.clear$.next();
         this.clear$.complete();
         this.clear$ = undefined;
-        this.svg.remove();
+        this.svg.html('');
     }
     takeUntilCleared() {
         if (!this.clear$) {
@@ -1506,17 +1364,17 @@ __webpack_require__.r(__webpack_exports__);
 class XYChartD3 extends _base_d3__WEBPACK_IMPORTED_MODULE_1__["BaseD3"] {
     render() {
         super.render();
-        const { dataObservable, activeDatumObservable, } = this.renderOptions;
+        const { data$, activeDatum$ } = this.renderOptions;
         this.renderAxis();
         this.renderData();
         this.renderActiveDatum();
-        dataObservable
+        data$
             .pipe(this.takeUntilCleared())
             .subscribe(data => {
             this.updateAxis(data);
             this.updateData(data);
         });
-        activeDatumObservable
+        activeDatum$
             .pipe(this.takeUntilCleared())
             .subscribe(activeDatum => {
             this.updateActiveDatum(activeDatum);
@@ -1553,6 +1411,189 @@ class XYChartD3 extends _base_d3__WEBPACK_IMPORTED_MODULE_1__["BaseD3"] {
             .attr('font-size', 12);
     }
 }
+
+
+/***/ }),
+
+/***/ "./src/directives/a11y-placeholder/a11y-placeholder.directive.ts":
+/*!***********************************************************************!*\
+  !*** ./src/directives/a11y-placeholder/a11y-placeholder.directive.ts ***!
+  \***********************************************************************/
+/*! exports provided: A11yPlaceholderDirective */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "A11yPlaceholderDirective", function() { return A11yPlaceholderDirective; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
+
+
+class A11yPlaceholderDirective {
+    constructor(componentFactoryResolver, viewContainerRef) {
+        this.componentFactoryResolver = componentFactoryResolver;
+        this.viewContainerRef = viewContainerRef;
+    }
+    addComponent(A11yComponent, host) {
+        this.viewContainerRef.clear();
+        const componentFactory = this.componentFactoryResolver.resolveComponentFactory(A11yComponent);
+        const injector = _angular_core__WEBPACK_IMPORTED_MODULE_0__["Injector"].create({
+            providers: [{
+                    provide: 'host',
+                    useValue: host,
+                }],
+        });
+        return this.viewContainerRef.createComponent(componentFactory, 0, injector);
+    }
+    removeComponent(componentRef) {
+        const index = this.viewContainerRef.indexOf(componentRef.hostView);
+        if (index >= 0) {
+            this.viewContainerRef.remove(index);
+        }
+        componentRef.destroy();
+    }
+}
+A11yPlaceholderDirective.ɵfac = function A11yPlaceholderDirective_Factory(t) { return new (t || A11yPlaceholderDirective)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["ComponentFactoryResolver"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewContainerRef"])); };
+A11yPlaceholderDirective.ɵdir = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineDirective"]({ type: A11yPlaceholderDirective, selectors: [["", "appA11yPlaceholder", ""]] });
+(function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](A11yPlaceholderDirective, [{
+        type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Directive"],
+        args: [{
+                selector: '[appA11yPlaceholder]',
+            }]
+    }], function () { return [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ComponentFactoryResolver"] }, { type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewContainerRef"] }]; }, null); })();
+
+
+/***/ }),
+
+/***/ "./src/directives/a11y-placeholder/a11y-placeholder.module.ts":
+/*!********************************************************************!*\
+  !*** ./src/directives/a11y-placeholder/a11y-placeholder.module.ts ***!
+  \********************************************************************/
+/*! exports provided: A11yPlaceholderModule */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "A11yPlaceholderModule", function() { return A11yPlaceholderModule; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
+/* harmony import */ var _a11y_placeholder_directive__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./a11y-placeholder.directive */ "./src/directives/a11y-placeholder/a11y-placeholder.directive.ts");
+
+
+
+class A11yPlaceholderModule {
+}
+A11yPlaceholderModule.ɵmod = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineNgModule"]({ type: A11yPlaceholderModule });
+A11yPlaceholderModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjector"]({ factory: function A11yPlaceholderModule_Factory(t) { return new (t || A11yPlaceholderModule)(); } });
+(function () { (typeof ngJitMode === "undefined" || ngJitMode) && _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsetNgModuleScope"](A11yPlaceholderModule, { declarations: [_a11y_placeholder_directive__WEBPACK_IMPORTED_MODULE_1__["A11yPlaceholderDirective"]], exports: [_a11y_placeholder_directive__WEBPACK_IMPORTED_MODULE_1__["A11yPlaceholderDirective"]] }); })();
+(function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](A11yPlaceholderModule, [{
+        type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["NgModule"],
+        args: [{
+                declarations: [
+                    _a11y_placeholder_directive__WEBPACK_IMPORTED_MODULE_1__["A11yPlaceholderDirective"],
+                ],
+                exports: [
+                    _a11y_placeholder_directive__WEBPACK_IMPORTED_MODULE_1__["A11yPlaceholderDirective"],
+                ],
+            }]
+    }], null, null); })();
+
+
+/***/ }),
+
+/***/ "./src/directives/audification/audification.directive.ts":
+/*!***************************************************************!*\
+  !*** ./src/directives/audification/audification.directive.ts ***!
+  \***************************************************************/
+/*! exports provided: AudificationDirective */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AudificationDirective", function() { return AudificationDirective; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
+/* harmony import */ var _components_line_chart_audification_line_chart_audification_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../components/line-chart-audification/line-chart-audification.component */ "./src/components/line-chart-audification/line-chart-audification.component.ts");
+/* harmony import */ var _components_line_chart_line_chart_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/line-chart/line-chart.component */ "./src/components/line-chart/line-chart.component.ts");
+
+
+
+
+class AudificationDirective {
+    constructor(lineChartComponent) {
+        this.lineChartComponent = lineChartComponent;
+    }
+    get host() {
+        const component = this.lineChartComponent;
+        if (!component) {
+            throw new Error('The component does not support audification.');
+        }
+        return component;
+    }
+    ngOnInit() {
+        this.attach();
+    }
+    ngOnDestroy() {
+        this.detach();
+    }
+    attach() {
+        this.detach();
+        const { host } = this;
+        this.audificationComponentRef = host.a11yPlaceholder.addComponent(_components_line_chart_audification_line_chart_audification_component__WEBPACK_IMPORTED_MODULE_1__["LineChartAudificationComponent"], host);
+    }
+    detach() {
+        if (this.audificationComponentRef) {
+            this.host.a11yPlaceholder.removeComponent(this.audificationComponentRef);
+            this.audificationComponentRef = null;
+        }
+    }
+}
+AudificationDirective.ɵfac = function AudificationDirective_Factory(t) { return new (t || AudificationDirective)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_components_line_chart_line_chart_component__WEBPACK_IMPORTED_MODULE_2__["LineChartComponent"], 11)); };
+AudificationDirective.ɵdir = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineDirective"]({ type: AudificationDirective, selectors: [["", "appAudification", ""]] });
+(function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](AudificationDirective, [{
+        type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Directive"],
+        args: [{
+                selector: '[appAudification]',
+            }]
+    }], function () { return [{ type: _components_line_chart_line_chart_component__WEBPACK_IMPORTED_MODULE_2__["LineChartComponent"], decorators: [{
+                type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Host"]
+            }, {
+                type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Self"]
+            }, {
+                type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Optional"]
+            }] }]; }, null); })();
+
+
+/***/ }),
+
+/***/ "./src/directives/audification/audification.module.ts":
+/*!************************************************************!*\
+  !*** ./src/directives/audification/audification.module.ts ***!
+  \************************************************************/
+/*! exports provided: AudificationModule */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AudificationModule", function() { return AudificationModule; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
+/* harmony import */ var _audification_directive__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./audification.directive */ "./src/directives/audification/audification.directive.ts");
+
+
+
+class AudificationModule {
+}
+AudificationModule.ɵmod = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineNgModule"]({ type: AudificationModule });
+AudificationModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjector"]({ factory: function AudificationModule_Factory(t) { return new (t || AudificationModule)(); } });
+(function () { (typeof ngJitMode === "undefined" || ngJitMode) && _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsetNgModuleScope"](AudificationModule, { declarations: [_audification_directive__WEBPACK_IMPORTED_MODULE_1__["AudificationDirective"]], exports: [_audification_directive__WEBPACK_IMPORTED_MODULE_1__["AudificationDirective"]] }); })();
+(function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](AudificationModule, [{
+        type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["NgModule"],
+        args: [{
+                declarations: [
+                    _audification_directive__WEBPACK_IMPORTED_MODULE_1__["AudificationDirective"],
+                ],
+                exports: [
+                    _audification_directive__WEBPACK_IMPORTED_MODULE_1__["AudificationDirective"],
+                ],
+            }]
+    }], null, null); })();
 
 
 /***/ }),
@@ -2213,6 +2254,35 @@ class DataService {
             value: row.values.get(measureName),
         }));
     }
+}
+
+
+/***/ }),
+
+/***/ "./src/utils/comparators.ts":
+/*!**********************************!*\
+  !*** ./src/utils/comparators.ts ***!
+  \**********************************/
+/*! exports provided: ascendingNumber, descendingNumber, ascendingDate, descendingDate */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ascendingNumber", function() { return ascendingNumber; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "descendingNumber", function() { return descendingNumber; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ascendingDate", function() { return ascendingDate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "descendingDate", function() { return descendingDate; });
+function ascendingNumber(a, b) {
+    return a - b;
+}
+function descendingNumber(a, b) {
+    return -ascendingNumber(a, b);
+}
+function ascendingDate(a, b) {
+    return ascendingNumber(a.getTime(), b.getTime());
+}
+function descendingDate(a, b) {
+    return -ascendingDate(a, b);
 }
 
 
