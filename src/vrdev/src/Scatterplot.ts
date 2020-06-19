@@ -26,7 +26,6 @@ export class Scatterplot{
   }
 
   private generatePts() {
-    
     // create a scale so that there is correspondence between data set and screen render
     const hscale = d3.scaleLinear();
     hscale.domain([0, d3.max(this.data) as number])       //max of dataset
@@ -36,6 +35,7 @@ export class Scatterplot{
     d3.select(this.container).selectAll(this.shape).data(this.data).enter().append(this.shape);
     let posArray: string[] = ['entry'];
     posArray.pop();
+    
     //d is data at index, i within 
     //select all shapes within given container
     d3.select(this.container).selectAll(this.shape).attr('position', (d, i) => {
