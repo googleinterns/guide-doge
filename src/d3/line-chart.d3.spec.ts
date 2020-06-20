@@ -19,7 +19,7 @@ describe('LineChartD3', () => {
     activeDatum$: new Subject<Datum | null>(),
   };
   let lineChartD3: LineChartD3;
-  const transitionDelay = 500;
+  const transitionDelay = 350;
   const mockDatum = { date: new Date(), value: 0 };
 
   beforeEach(() => {
@@ -47,7 +47,7 @@ describe('LineChartD3', () => {
     renderOptions.data$.next([mockDatum]);
     await new Promise(resolve => setTimeout(resolve, transitionDelay));
     const newDAttribute = pathElement.getAttribute('d');
-    expect(newDAttribute !== dAttribute).toBeTrue();
+    expect(newDAttribute).not.toBe(dAttribute);
   });
 
   it('should render a circle element for the active datum.', async () => {
@@ -63,7 +63,7 @@ describe('LineChartD3', () => {
     renderOptions.activeDatum$.next(mockDatum);
     await new Promise(resolve => setTimeout(resolve, transitionDelay));
     const newTransformAttribute = circleElement.getAttribute('transform');
-    expect(newTransformAttribute !== transformAttribute).toBeTrue();
+    expect(newTransformAttribute).not.toBe(transformAttribute);
   });
 
   it('should only show the circle element when the active datum is non-null.', async () => {

@@ -24,14 +24,14 @@ export class LineChartAudificationComponent implements AudificationPreference, O
 
   liveText: string | null = null;
   private destroy$ = new Subject();
-  private melody?: Melody;
+  melody?: Melody;
   private domain: Date[];
   private range: number[];
   @HostBinding('attr.tabindex') private readonly tabindex = 0;
   private readOutTimeoutId: number | null = null;
 
   constructor(
-    @Inject('host') private host: LineChartComponent,
+    @Inject('host') public host: LineChartComponent,
     private zone: NgZone,
   ) {
     this.handleSeek = this.handleSeek.bind(this);
@@ -130,7 +130,7 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     this.melody?.pause();
   }
 
-  private readOut(text: string) {
+  readOut(text: string) {
     if (this.readOutTimeoutId !== null) {
       window.clearTimeout(this.readOutTimeoutId);
       this.readOutTimeoutId = null;
