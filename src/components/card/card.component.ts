@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { GUIDE_DOGE, t } from '../../assets/i18n';
+import { GUIDE_DOGE, t } from '../../i18n';
 import { humanizeMeasureName } from '../../utils/formatters';
 
 export type CardType = 'line' | 'bar';

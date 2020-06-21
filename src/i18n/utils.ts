@@ -1,11 +1,9 @@
-import { I18n } from './types';
 import { sprintf } from 'sprintf-js';
-import en from './en';
 import * as striptags from 'striptags';
+import * as dictionary from './languages';
+import { I18n } from './types';
 
 type Language = keyof typeof dictionary;
-
-const dictionary = { en };
 
 let language: Language = 'en';
 
