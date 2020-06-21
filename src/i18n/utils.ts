@@ -3,7 +3,7 @@ import * as striptags from 'striptags';
 import * as dictionary from './languages';
 import { I18n } from './types';
 
-type Language = keyof typeof dictionary;
+export type Language = keyof typeof dictionary;
 
 let language: Language = 'en';
 
