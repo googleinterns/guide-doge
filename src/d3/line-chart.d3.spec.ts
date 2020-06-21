@@ -2,6 +2,7 @@ import { ElementRef } from '@angular/core';
 import { Datum } from './xy-chart.d3';
 import { Subject } from 'rxjs';
 import { LineChartD3 } from './line-chart.d3';
+import { mockDatum } from '../utils/mocks.spec';
 
 describe('LineChartD3', () => {
   const svgElement = document.createElement('svg');
@@ -20,7 +21,6 @@ describe('LineChartD3', () => {
   };
   let lineChartD3: LineChartD3;
   const transitionDelay = 350;
-  const mockDatum = { date: new Date(), value: 0 };
 
   beforeEach(() => {
     lineChartD3 = new LineChartD3(renderOptions);

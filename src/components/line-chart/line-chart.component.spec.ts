@@ -2,11 +2,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LineChartComponent } from './line-chart.component';
 import { DataModule } from '../../services/data/data.module';
 import { SimpleChange } from '@angular/core';
+import { mockDatum } from '../../utils/mocks.spec';
 
 describe('LineChartComponent', () => {
   let fixture: ComponentFixture<LineChartComponent>;
   let component: LineChartComponent;
-  const mockDatum = { date: new Date(), value: 0 };
 
   beforeEach(() => {
     TestBed.configureTestingModule({

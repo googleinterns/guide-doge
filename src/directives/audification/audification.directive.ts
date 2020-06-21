@@ -14,7 +14,7 @@ export class AudificationDirective implements OnInit, OnDestroy {
   private destroy$ = new Subject();
 
   constructor(
-    private preferenceService: PreferenceService,
+    public preferenceService: PreferenceService,
     // candidate host components
     @Host() @Self() @Optional() private lineChartComponent: LineChartComponent | null,
     // @Host() @Self() @Optional() private barChartComponent: BarChartComponent | null,
