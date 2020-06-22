@@ -7,7 +7,6 @@
 > #### Table of Contents
 > - [Overview](#overview)
 > - [Experiments](#experiments)
-> - [References](#references)
 > - [Contributing](#contributing)
 
 ## Overview
