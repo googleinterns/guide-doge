@@ -1,4 +1,5 @@
 import { ComponentFactoryResolver, ComponentRef, Directive, Injector, Type, ViewContainerRef } from '@angular/core';
+import { Preference } from '../../services/preference/types';
 
 @Directive({
   selector: '[appA11yPlaceholder]',
@@ -10,7 +11,7 @@ export class A11yPlaceholderDirective<Host> {
   ) {
   }
 
-  addComponent<T>(A11yComponent: Type<T>, host: Host) {
+  addComponent<T>(A11yComponent: Type<T>, host: Host, preference: Preference) {
     this.viewContainerRef.clear();
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(A11yComponent);
     const injector = Injector.create({
@@ -19,7 +20,9 @@ export class A11yPlaceholderDirective<Host> {
         useValue: host,
       }],
     });
-    return this.viewContainerRef.createComponent(componentFactory, 0, injector);
+    const componentRef = this.viewContainerRef.createComponent(componentFactory, 0, injector);
+    Object.assign(componentRef.instance, preference);
+    return componentRef;
   }
 
   removeComponent<T>(componentRef: ComponentRef<T>) {

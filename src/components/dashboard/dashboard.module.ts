@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { DashboardComponent } from './dashboard.component';
-import { PreferenceModule } from '../preference/preference.module';
+import { PreferenceGroupModule } from '../preference-group/preference-group.module';
 import { FormsModule } from '@angular/forms';
-import { SwitchModule } from '../switch/switch.module';
 import { CardModule } from '../card/card.module';
+import { PreferenceItemModule } from '../preference-item/preference-item.module';
+import { PreferenceModule } from '../../services/preference/preference.module';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -11,9 +13,11 @@ import { CardModule } from '../card/card.module';
   ],
   imports: [
     PreferenceModule,
+    PreferenceGroupModule,
+    PreferenceItemModule,
     FormsModule,
-    SwitchModule,
     CardModule,
+    CommonModule,
   ],
   exports: [
     DashboardComponent,

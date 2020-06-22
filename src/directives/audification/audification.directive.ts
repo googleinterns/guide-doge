@@ -1,14 +1,20 @@
 import { ComponentRef, Directive, Host, OnDestroy, OnInit, Optional, Self } from '@angular/core';
 import { LineChartAudificationComponent } from '../../components/line-chart-audification/line-chart-audification.component';
 import { LineChartComponent } from '../../components/line-chart/line-chart.component';
+import { PreferenceService } from '../../services/preference/preference.service';
+import { AudificationPreference } from '../../services/preference/types';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Directive({
   selector: '[appAudification]',
 })
 export class AudificationDirective implements OnInit, OnDestroy {
-  audificationComponentRef: ComponentRef<unknown> | null;
+  private audificationComponentRef: ComponentRef<unknown> | null;
+  private destroy$ = new Subject();
 
   constructor(
+    private preferenceService: PreferenceService,
     // candidate host components
     @Host() @Self() @Optional() private lineChartComponent: LineChartComponent | null,
     // @Host() @Self() @Optional() private barChartComponent: BarChartComponent | null,
@@ -25,18 +31,28 @@ export class AudificationDirective implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.attach();
+    this.preferenceService.audification$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(preference => {
+        if (preference.enabled) {
+          this.attach(preference);
+        } else {
+          this.detach();
+        }
+      });
   }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.detach();
   }
 
-  attach() {
+  attach(preference: AudificationPreference) {
     this.detach();
 
     const { host } = this;
-    this.audificationComponentRef = host.a11yPlaceholder.addComponent(LineChartAudificationComponent, host);
+    this.audificationComponentRef = host.a11yPlaceholder.addComponent(LineChartAudificationComponent, host, preference);
   }
 
   detach() {

@@ -1,19 +1,21 @@
 import { NgModule } from '@angular/core';
-import { PreferenceComponent } from './preference.component';
+import { PreferenceItemComponent } from './preference-item.component';
 import { CommonModule } from '@angular/common';
 import { SwitchModule } from '../switch/switch.module';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
-    PreferenceComponent,
+    PreferenceItemComponent,
   ],
   imports: [
     CommonModule,
     SwitchModule,
+    FormsModule,
   ],
   exports: [
-    PreferenceComponent,
+    PreferenceItemComponent,
   ],
 })
-export class PreferenceModule {
+export class PreferenceItemModule {
 }

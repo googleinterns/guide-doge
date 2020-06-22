@@ -17,30 +17,9 @@
       margin: 1rem 0;
     }
 
-    app-preference {
+    app-preference-group {
       margin: 0 -1rem;
       margin-bottom: .5rem;
-
-      label {
-        display: flex;
-        align-items: stretch;
-        justify-content: space-between;
-        padding: 0 1rem;
-        cursor: pointer;
-
-        span {
-          margin: 1rem 1rem 1rem 0;
-        }
-
-        input {
-          flex: 1;
-          text-align: right;
-        }
-
-        app-switch {
-          align-self: center;
-        }
-      }
     }
   }
 

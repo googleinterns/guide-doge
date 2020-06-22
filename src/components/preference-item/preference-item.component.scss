@@ -1,0 +1,24 @@
+@import "../../utils/constants";
+
+:host {
+  .item {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    padding: 0 1rem;
+    cursor: pointer;
+
+    .title {
+      margin: 1rem 1rem 1rem 0;
+    }
+
+    input {
+      flex: 1;
+      text-align: right;
+    }
+
+    app-switch {
+      align-self: center;
+    }
+  }
+}
