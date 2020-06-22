@@ -1011,7 +1011,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       selectors: [["app-dashboard"]],
       decls: 14,
       vars: 14,
-      consts: [[1, "sidebar"], [1, "sidebar-title"], ["title", "Audification", 3, "subject"], ["name", "Lowest note (Hz)", 3, "subject"], ["name", "Highest note (Hz)", 3, "subject"], ["name", "Note duration (sec)", 3, "subject"], ["name", "Read out before playing", 3, "subject"], ["name", "Read out after playing", 3, "subject"], ["title", "Data Table", 3, "subject"], ["title", "Text Summary", 3, "subject"], [1, "card-container"], ["title", "Tabbed Line Chart", "type", "line", 3, "tabbed", "measureNames"], ["title", "Line Chart", "type", "line", 3, "tabbed", "measureNames"]],
+      consts: [[1, "sidebar"], [1, "sidebar-title"], ["title", "Audification", 3, "subject"], ["name", "Lowest note (Hz)", 3, "subject"], ["name", "Highest note (Hz)", 3, "subject"], ["name", "Note duration (ms)", 3, "subject"], ["name", "Read out before playing", 3, "subject"], ["name", "Read out after playing", 3, "subject"], ["title", "Data Table", 3, "subject"], ["title", "Text Summary", 3, "subject"], [1, "card-container"], ["title", "Tabbed Line Chart", "type", "line", 3, "tabbed", "measureNames"], ["title", "Line Chart", "type", "line", 3, "tabbed", "measureNames"]],
       template: function DashboardComponent_Template(rf, ctx) {
         if (rf & 1) {
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "aside", 0);
@@ -1302,6 +1302,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         this.liveText = null;
         this.destroy$ = new rxjs__WEBPACK_IMPORTED_MODULE_6__["Subject"]();
         this.tabindex = 0;
+        this.readOutTimeoutId = null;
         this.handleSeek = this.handleSeek.bind(this);
       }
 
@@ -1337,30 +1338,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
       }, {
         key: "handleSeek",
-        value: function handleSeek(index, playing) {
+        value: function handleSeek(index) {
           var _this2 = this;
 
-          var datum = this.data[index];
-          var date = datum.date,
-              value = datum.value;
           this.zone.run(function () {
-            _this2.activeDatum = datum;
-
-            if (!playing) {
-              _this2.readOut(Object(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].ACTIVE_DATUM, {
-                x: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatX"])(date),
-                y: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatY"])(value)
-              }));
-            }
+            _this2.activeDatum = _this2.data[index];
           });
         }
       }, {
         key: "handleKeyDown",
         value: function handleKeyDown($event) {
-          var _a, _b;
-
           return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-            var key, shiftKey, repeat;
+            var key, shiftKey, repeat, datumIndex;
             return regeneratorRuntime.wrap(function _callee$(_context) {
               while (1) {
                 switch (_context.prev = _context.next) {
@@ -1369,7 +1358,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     $event.stopPropagation();
                     key = $event.key, shiftKey = $event.shiftKey, repeat = $event.repeat;
 
-                    if (!repeat) {
+                    if (!(!this.melody || repeat)) {
                       _context.next = 5;
                       break;
                     }
@@ -1383,7 +1372,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     }
 
                     _context.next = 8;
-                    return (_a = this.melody) === null || _a === void 0 ? void 0 : _a.resume(shiftKey);
+                    return this.melody.resume(shiftKey);
 
                   case 8:
                     _context.next = 11;
@@ -1403,7 +1392,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     } else if (key === 'l') {
                       this.readOut(Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["humanizeMeasureName"])(this.measureName));
                     } else if ('0' <= key && key <= '9') {
-                      (_b = this.melody) === null || _b === void 0 ? void 0 : _b.seekTo(this.melody.duration * (+key / 10), true);
+                      datumIndex = Math.floor(+key / 10 * this.data.length);
+                      this.melody.seekTo(datumIndex, true);
+                      this.readOutCurrentDatum();
                     }
 
                   case 11:
@@ -1417,14 +1408,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "handleKeyUp",
         value: function handleKeyUp($event) {
-          var _a;
+          if (!this.melody) {
+            return;
+          }
 
           $event.preventDefault();
           $event.stopPropagation();
           var key = $event.key;
 
           if (key === ' ') {
-            (_a = this.melody) === null || _a === void 0 ? void 0 : _a.pause();
+            this.melody.pause();
+            this.readOutCurrentDatum();
           }
         }
       }, {
@@ -1439,14 +1433,36 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         value: function readOut(text) {
           var _this3 = this;
 
+          if (this.readOutTimeoutId !== null) {
+            window.clearTimeout(this.readOutTimeoutId);
+            this.readOutTimeoutId = null;
+          }
+
           if (this.liveText === text) {
             this.liveText = null;
-            window.setTimeout(function () {
+            this.readOutTimeoutId = window.setTimeout(function () {
+              _this3.readOutTimeoutId = null;
+
               _this3.readOut(text);
             }, 500);
           } else {
             this.liveText = text;
           }
+        }
+      }, {
+        key: "readOutCurrentDatum",
+        value: function readOutCurrentDatum() {
+          if (!this.melody) {
+            return;
+          }
+
+          var _this$data$this$melod = this.data[this.melody.currentDatumIndex],
+              date = _this$data$this$melod.date,
+              value = _this$data$this$melod.value;
+          this.readOut(Object(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].ACTIVE_DATUM, {
+            x: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatX"])(date),
+            y: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatY"])(value)
+          }));
         }
       }, {
         key: "INSTRUCTIONS",
@@ -4121,22 +4137,30 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         this.frequencyRange = frequencyRange;
         this.noteDuration = noteDuration;
         this.onSeek = onSeek;
-        this.synth = new tone__WEBPACK_IMPORTED_MODULE_1__["Synth"]().toDestination();
         this.currentDatumIndex = 0;
+        this.synth = new tone__WEBPACK_IMPORTED_MODULE_1__["Synth"]().toDestination();
         this.inclusive = true;
         this.reversed = false;
+        this.timeoutId = null;
+        var minValue = Math.min.apply(Math, _toConsumableArray(values));
+        var maxValue = Math.max.apply(Math, _toConsumableArray(values));
 
-        var reversedValues = _toConsumableArray(values).reverse();
+        var _this$frequencyRange = _slicedToArray(this.frequencyRange, 2),
+            minFrequency = _this$frequencyRange[0],
+            maxFrequency = _this$frequencyRange[1];
 
-        this.forwardSequence = this.createSequence(values);
-        this.backwardSequence = this.createSequence(reversedValues);
+        var minKeyNumber = Melody.getKeyNumber(minFrequency);
+        var maxKeyNumber = Melody.getKeyNumber(maxFrequency);
+        this.frequencies = values.map(function (value) {
+          var keyNumber = (value - minValue) / (maxValue - minValue) * (maxKeyNumber - minKeyNumber) + minKeyNumber;
+          return Melody.getFrequency(keyNumber);
+        });
       }
 
       _createClass(Melody, [{
         key: "resume",
         value: function resume(reversed) {
           return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-            var nextSeconds;
             return regeneratorRuntime.wrap(function _callee2$(_context2) {
               while (1) {
                 switch (_context2.prev = _context2.next) {
@@ -4152,20 +4176,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                   case 3:
                     if (!this.isPlaying) {
                       this.reversed = reversed;
-                      this.currentDatumIndex = this.nextIndex;
-                      nextSeconds = this.getSeconds(this.currentDatumIndex);
-
-                      if (this.reversed) {
-                        this.backwardSequence.start(0);
-                        this.forwardSequence.stop(0);
-                        nextSeconds += this.noteDuration / 2;
-                        tone__WEBPACK_IMPORTED_MODULE_1__["Transport"].start(undefined, this.duration - nextSeconds);
-                      } else {
-                        this.backwardSequence.stop(0);
-                        this.forwardSequence.start(0);
-                        nextSeconds -= this.noteDuration / 2;
-                        tone__WEBPACK_IMPORTED_MODULE_1__["Transport"].start(undefined, nextSeconds);
-                      }
+                      this.playNextNote();
                     }
 
                   case 4:
@@ -4179,71 +4190,49 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "pause",
         value: function pause() {
-          if (this.isPlaying) {
-            tone__WEBPACK_IMPORTED_MODULE_1__["Transport"].pause();
-            this.backwardSequence.stop(0);
-            this.forwardSequence.stop(0);
-            this.seekTo(this.currentSeconds);
+          if (this.timeoutId !== null) {
+            window.clearInterval(this.timeoutId);
+            this.timeoutId = null;
           }
         }
       }, {
-        key: "getCurrentDatumIndex",
-        value: function getCurrentDatumIndex() {
-          return this.currentDatumIndex;
-        }
-      }, {
         key: "seekTo",
-        value: function seekTo(seconds) {
+        value: function seekTo(datumIndex) {
           var inclusive = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
           var _a;
 
-          this.currentDatumIndex = this.getDatumIndex(seconds);
+          this.currentDatumIndex = datumIndex;
           this.inclusive = this.isEnded || inclusive;
-          (_a = this.onSeek) === null || _a === void 0 ? void 0 : _a.call(this, this.currentDatumIndex, this.isPlaying);
+          (_a = this.onSeek) === null || _a === void 0 ? void 0 : _a.call(this, this.currentDatumIndex);
         }
       }, {
         key: "dispose",
         value: function dispose() {
-          this.forwardSequence.dispose();
-          this.backwardSequence.dispose();
+          this.pause();
           this.synth.dispose();
         }
       }, {
-        key: "createSequence",
-        value: function createSequence(values) {
+        key: "playNextNote",
+        value: function playNextNote() {
           var _this8 = this;
 
-          var minValue = Math.min.apply(Math, _toConsumableArray(values));
-          var maxValue = Math.max.apply(Math, _toConsumableArray(values));
+          this.seekTo(this.nextDatumIndex);
+          var frequency = this.frequencies[this.currentDatumIndex];
+          this.synth.triggerAttackRelease(frequency, this.noteDuration / 1000);
 
-          var _this$frequencyRange = _slicedToArray(this.frequencyRange, 2),
-              minFrequency = _this$frequencyRange[0],
-              maxFrequency = _this$frequencyRange[1];
+          if (!this.isEnded) {
+            this.timeoutId = window.setTimeout(function () {
+              _this8.timeoutId = null;
 
-          var minKeyNumber = Melody.getKeyNumber(minFrequency);
-          var maxKeyNumber = Melody.getKeyNumber(maxFrequency);
-          var sequence = new tone__WEBPACK_IMPORTED_MODULE_1__["Sequence"](function (time, value) {
-            _this8.seekTo(_this8.currentSeconds);
-
-            var keyNumber = (value - minValue) / (maxValue - minValue) * (maxKeyNumber - minKeyNumber) + minKeyNumber;
-            var frequency = Melody.getFrequency(keyNumber);
-
-            _this8.synth.triggerAttackRelease(frequency, _this8.noteDuration, time);
-          }, values, this.noteDuration);
-          sequence.loop = 1;
-          return sequence;
+              _this8.playNextNote();
+            }, this.noteDuration);
+          }
         }
       }, {
-        key: "getSeconds",
-        value: function getSeconds(index) {
-          return (index + .5) * this.noteDuration;
-        }
-      }, {
-        key: "getDatumIndex",
-        value: function getDatumIndex(seconds) {
-          var index = Math.round(seconds / this.noteDuration - .5);
-          return Math.min(Math.max(index, 0), this.values.length - 1);
+        key: "reverseDatumIndex",
+        value: function reverseDatumIndex(index) {
+          return this.values.length - 1 - index;
         }
       }, {
         key: "duration",
@@ -4251,14 +4240,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           return this.noteDuration * this.values.length;
         }
       }, {
-        key: "currentSeconds",
-        get: function get() {
-          return this.reversed ? this.duration - tone__WEBPACK_IMPORTED_MODULE_1__["Transport"].seconds : tone__WEBPACK_IMPORTED_MODULE_1__["Transport"].seconds;
-        }
-      }, {
         key: "isPlaying",
         get: function get() {
-          return tone__WEBPACK_IMPORTED_MODULE_1__["Transport"].state === 'started';
+          return this.timeoutId !== null;
         }
       }, {
         key: "isEnded",
@@ -4266,10 +4250,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           return this.reversed && this.currentDatumIndex === 0 || !this.reversed && this.currentDatumIndex === this.values.length - 1;
         }
       }, {
-        key: "nextIndex",
+        key: "nextDatumIndex",
         get: function get() {
           if (this.isEnded) {
-            return this.values.length - 1 - this.currentDatumIndex;
+            return this.reverseDatumIndex(this.currentDatumIndex);
           }
 
           var offset = this.inclusive ? 0 : this.reversed ? -1 : +1;
@@ -4537,7 +4521,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           enabled: new rxjs__WEBPACK_IMPORTED_MODULE_0__["BehaviorSubject"](true),
           lowestPitch: new rxjs__WEBPACK_IMPORTED_MODULE_0__["BehaviorSubject"](256),
           highestPitch: new rxjs__WEBPACK_IMPORTED_MODULE_0__["BehaviorSubject"](1024),
-          noteDuration: new rxjs__WEBPACK_IMPORTED_MODULE_0__["BehaviorSubject"](.167),
+          noteDuration: new rxjs__WEBPACK_IMPORTED_MODULE_0__["BehaviorSubject"](167),
           readBefore: new rxjs__WEBPACK_IMPORTED_MODULE_0__["BehaviorSubject"](false),
           readAfter: new rxjs__WEBPACK_IMPORTED_MODULE_0__["BehaviorSubject"](true)
         };

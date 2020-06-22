@@ -499,7 +499,7 @@ class DashboardComponent {
     }
 }
 DashboardComponent.ɵfac = function DashboardComponent_Factory(t) { return new (t || DashboardComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_preference_preference_service__WEBPACK_IMPORTED_MODULE_1__["PreferenceService"])); };
-DashboardComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: DashboardComponent, selectors: [["app-dashboard"]], decls: 14, vars: 14, consts: [[1, "sidebar"], [1, "sidebar-title"], ["title", "Audification", 3, "subject"], ["name", "Lowest note (Hz)", 3, "subject"], ["name", "Highest note (Hz)", 3, "subject"], ["name", "Note duration (sec)", 3, "subject"], ["name", "Read out before playing", 3, "subject"], ["name", "Read out after playing", 3, "subject"], ["title", "Data Table", 3, "subject"], ["title", "Text Summary", 3, "subject"], [1, "card-container"], ["title", "Tabbed Line Chart", "type", "line", 3, "tabbed", "measureNames"], ["title", "Line Chart", "type", "line", 3, "tabbed", "measureNames"]], template: function DashboardComponent_Template(rf, ctx) { if (rf & 1) {
+DashboardComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: DashboardComponent, selectors: [["app-dashboard"]], decls: 14, vars: 14, consts: [[1, "sidebar"], [1, "sidebar-title"], ["title", "Audification", 3, "subject"], ["name", "Lowest note (Hz)", 3, "subject"], ["name", "Highest note (Hz)", 3, "subject"], ["name", "Note duration (ms)", 3, "subject"], ["name", "Read out before playing", 3, "subject"], ["name", "Read out after playing", 3, "subject"], ["title", "Data Table", 3, "subject"], ["title", "Text Summary", 3, "subject"], [1, "card-container"], ["title", "Tabbed Line Chart", "type", "line", 3, "tabbed", "measureNames"], ["title", "Line Chart", "type", "line", 3, "tabbed", "measureNames"]], template: function DashboardComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "aside", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "h2", 1);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](2, "Customization");
@@ -655,6 +655,7 @@ class LineChartAudificationComponent {
         this.liveText = null;
         this.destroy$ = new rxjs__WEBPACK_IMPORTED_MODULE_6__["Subject"]();
         this.tabindex = 0;
+        this.readOutTimeoutId = null;
         this.handleSeek = this.handleSeek.bind(this);
     }
     get INSTRUCTIONS() {
@@ -690,30 +691,21 @@ class LineChartAudificationComponent {
         this.destroy$.complete();
         (_a = this.melody) === null || _a === void 0 ? void 0 : _a.dispose();
     }
-    handleSeek(index, playing) {
-        const datum = this.data[index];
-        const { date, value } = datum;
+    handleSeek(index) {
         this.zone.run((() => {
-            this.activeDatum = datum;
-            if (!playing) {
-                this.readOut(Object(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].ACTIVE_DATUM, {
-                    x: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatX"])(date),
-                    y: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatY"])(value),
-                }));
-            }
+            this.activeDatum = this.data[index];
         }));
     }
     handleKeyDown($event) {
-        var _a, _b;
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
             $event.preventDefault();
             $event.stopPropagation();
             const { key, shiftKey, repeat } = $event;
-            if (repeat) {
+            if (!this.melody || repeat) {
                 return;
             }
             if (key === ' ') {
-                yield ((_a = this.melody) === null || _a === void 0 ? void 0 : _a.resume(shiftKey));
+                yield this.melody.resume(shiftKey);
             }
             else if (key === 'x') {
                 this.readOut(Object(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].DOMAIN, {
@@ -731,17 +723,22 @@ class LineChartAudificationComponent {
                 this.readOut(Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["humanizeMeasureName"])(this.measureName));
             }
             else if ('0' <= key && key <= '9') {
-                (_b = this.melody) === null || _b === void 0 ? void 0 : _b.seekTo(this.melody.duration * (+key / 10), true);
+                const datumIndex = Math.floor(+key / 10 * this.data.length);
+                this.melody.seekTo(datumIndex, true);
+                this.readOutCurrentDatum();
             }
         });
     }
     handleKeyUp($event) {
-        var _a;
+        if (!this.melody) {
+            return;
+        }
         $event.preventDefault();
         $event.stopPropagation();
         const { key } = $event;
         if (key === ' ') {
-            (_a = this.melody) === null || _a === void 0 ? void 0 : _a.pause();
+            this.melody.pause();
+            this.readOutCurrentDatum();
         }
     }
     handleBlur() {
@@ -749,15 +746,30 @@ class LineChartAudificationComponent {
         (_a = this.melody) === null || _a === void 0 ? void 0 : _a.pause();
     }
     readOut(text) {
+        if (this.readOutTimeoutId !== null) {
+            window.clearTimeout(this.readOutTimeoutId);
+            this.readOutTimeoutId = null;
+        }
         if (this.liveText === text) {
             this.liveText = null;
-            window.setTimeout(() => {
+            this.readOutTimeoutId = window.setTimeout(() => {
+                this.readOutTimeoutId = null;
                 this.readOut(text);
             }, 500);
         }
         else {
             this.liveText = text;
         }
+    }
+    readOutCurrentDatum() {
+        if (!this.melody) {
+            return;
+        }
+        const { date, value } = this.data[this.melody.currentDatumIndex];
+        this.readOut(Object(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].ACTIVE_DATUM, {
+            x: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatX"])(date),
+            y: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatY"])(value),
+        }));
     }
 }
 LineChartAudificationComponent.ɵfac = function LineChartAudificationComponent_Factory(t) { return new (t || LineChartAudificationComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"]('host'), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgZone"])); };
@@ -2225,32 +2237,34 @@ class Melody {
         this.frequencyRange = frequencyRange;
         this.noteDuration = noteDuration;
         this.onSeek = onSeek;
-        this.synth = new tone__WEBPACK_IMPORTED_MODULE_1__["Synth"]().toDestination();
         this.currentDatumIndex = 0;
+        this.synth = new tone__WEBPACK_IMPORTED_MODULE_1__["Synth"]().toDestination();
         this.inclusive = true;
         this.reversed = false;
-        const reversedValues = [...values].reverse();
-        this.forwardSequence = this.createSequence(values);
-        this.backwardSequence = this.createSequence(reversedValues);
+        this.timeoutId = null;
+        const minValue = Math.min(...values);
+        const maxValue = Math.max(...values);
+        const [minFrequency, maxFrequency] = this.frequencyRange;
+        const minKeyNumber = Melody.getKeyNumber(minFrequency);
+        const maxKeyNumber = Melody.getKeyNumber(maxFrequency);
+        this.frequencies = values.map(value => {
+            const keyNumber = (value - minValue) / (maxValue - minValue) * (maxKeyNumber - minKeyNumber) + minKeyNumber;
+            return Melody.getFrequency(keyNumber);
+        });
     }
     get duration() {
         return this.noteDuration * this.values.length;
     }
-    get currentSeconds() {
-        return this.reversed
-            ? this.duration - tone__WEBPACK_IMPORTED_MODULE_1__["Transport"].seconds
-            : tone__WEBPACK_IMPORTED_MODULE_1__["Transport"].seconds;
-    }
     get isPlaying() {
-        return tone__WEBPACK_IMPORTED_MODULE_1__["Transport"].state === 'started';
+        return this.timeoutId !== null;
     }
     get isEnded() {
         return (this.reversed && this.currentDatumIndex === 0 ||
             !this.reversed && this.currentDatumIndex === this.values.length - 1);
     }
-    get nextIndex() {
+    get nextDatumIndex() {
         if (this.isEnded) {
-            return (this.values.length - 1) - this.currentDatumIndex;
+            return this.reverseDatumIndex(this.currentDatumIndex);
         }
         const offset = this.inclusive ? 0 : (this.reversed ? -1 : +1);
         return this.currentDatumIndex + offset;
@@ -2268,66 +2282,39 @@ class Melody {
             }
             if (!this.isPlaying) {
                 this.reversed = reversed;
-                this.currentDatumIndex = this.nextIndex;
-                let nextSeconds = this.getSeconds(this.currentDatumIndex);
-                if (this.reversed) {
-                    this.backwardSequence.start(0);
-                    this.forwardSequence.stop(0);
-                    nextSeconds += this.noteDuration / 2;
-                    tone__WEBPACK_IMPORTED_MODULE_1__["Transport"].start(undefined, this.duration - nextSeconds);
-                }
-                else {
-                    this.backwardSequence.stop(0);
-                    this.forwardSequence.start(0);
-                    nextSeconds -= this.noteDuration / 2;
-                    tone__WEBPACK_IMPORTED_MODULE_1__["Transport"].start(undefined, nextSeconds);
-                }
+                this.playNextNote();
             }
         });
     }
     pause() {
-        if (this.isPlaying) {
-            tone__WEBPACK_IMPORTED_MODULE_1__["Transport"].pause();
-            this.backwardSequence.stop(0);
-            this.forwardSequence.stop(0);
-            this.seekTo(this.currentSeconds);
+        if (this.timeoutId !== null) {
+            window.clearInterval(this.timeoutId);
+            this.timeoutId = null;
         }
     }
-    getCurrentDatumIndex() {
-        return this.currentDatumIndex;
-    }
-    seekTo(seconds, inclusive = false) {
+    seekTo(datumIndex, inclusive = false) {
         var _a;
-        this.currentDatumIndex = this.getDatumIndex(seconds);
+        this.currentDatumIndex = datumIndex;
         this.inclusive = this.isEnded || inclusive;
-        (_a = this.onSeek) === null || _a === void 0 ? void 0 : _a.call(this, this.currentDatumIndex, this.isPlaying);
+        (_a = this.onSeek) === null || _a === void 0 ? void 0 : _a.call(this, this.currentDatumIndex);
     }
     dispose() {
-        this.forwardSequence.dispose();
-        this.backwardSequence.dispose();
+        this.pause();
         this.synth.dispose();
     }
-    createSequence(values) {
-        const minValue = Math.min(...values);
-        const maxValue = Math.max(...values);
-        const [minFrequency, maxFrequency] = this.frequencyRange;
-        const minKeyNumber = Melody.getKeyNumber(minFrequency);
-        const maxKeyNumber = Melody.getKeyNumber(maxFrequency);
-        const sequence = new tone__WEBPACK_IMPORTED_MODULE_1__["Sequence"]((time, value) => {
-            this.seekTo(this.currentSeconds);
-            const keyNumber = (value - minValue) / (maxValue - minValue) * (maxKeyNumber - minKeyNumber) + minKeyNumber;
-            const frequency = Melody.getFrequency(keyNumber);
-            this.synth.triggerAttackRelease(frequency, this.noteDuration, time);
-        }, values, this.noteDuration);
-        sequence.loop = 1;
-        return sequence;
+    playNextNote() {
+        this.seekTo(this.nextDatumIndex);
+        const frequency = this.frequencies[this.currentDatumIndex];
+        this.synth.triggerAttackRelease(frequency, this.noteDuration / 1000);
+        if (!this.isEnded) {
+            this.timeoutId = window.setTimeout(() => {
+                this.timeoutId = null;
+                this.playNextNote();
+            }, this.noteDuration);
+        }
     }
-    getSeconds(index) {
-        return (index + .5) * this.noteDuration;
-    }
-    getDatumIndex(seconds) {
-        const index = Math.round(seconds / this.noteDuration - .5);
-        return Math.min(Math.max(index, 0), this.values.length - 1);
+    reverseDatumIndex(index) {
+        return (this.values.length - 1) - index;
     }
 }
 
@@ -2468,7 +2455,7 @@ class PreferenceService {
             enabled: new rxjs__WEBPACK_IMPORTED_MODULE_0__["BehaviorSubject"](true),
             lowestPitch: new rxjs__WEBPACK_IMPORTED_MODULE_0__["BehaviorSubject"](256),
             highestPitch: new rxjs__WEBPACK_IMPORTED_MODULE_0__["BehaviorSubject"](1024),
-            noteDuration: new rxjs__WEBPACK_IMPORTED_MODULE_0__["BehaviorSubject"](.167),
+            noteDuration: new rxjs__WEBPACK_IMPORTED_MODULE_0__["BehaviorSubject"](167),
             readBefore: new rxjs__WEBPACK_IMPORTED_MODULE_0__["BehaviorSubject"](false),
             readAfter: new rxjs__WEBPACK_IMPORTED_MODULE_0__["BehaviorSubject"](true),
         };
