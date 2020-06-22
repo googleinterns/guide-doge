@@ -1,48 +1,20 @@
 # Project Guide-Doge
 
 > #### Table of Contents
-> - [Problem](#problem)
+> - [Overview](#overview)
 > - [Experiments](#experiments)
->   - [Audification](#audification)
->   - Data Table
->   - Text Summary of Key Points
 > - [References](#references)
 > - [Contributing](#contributing)
 
-## Problem
-WHO (World Health Organization) estimates that at least 2.2 billion people have a visual impairment or blindness. While HTML5 comes with various features to improve screen-reader accessibility including accessible data tables, text alternatives, skip links, etc., most of the data visualization are still inaccessible by visually impaired or blind people.
+## Overview
+WHO (World Health Organization) estimates that at least 2.2 billion people have a visual impairment or blindness. While HTML5 comes with various features to improve screen-reader accessibility, most of the data visualization still doesn't provide much insight into data to visually impaired or blind users.
+
+In an attempt to improve accessibility to data visualization, a number of experiments will be done in this project to explore improvements to data consumption for visually impaired or blind users.
 
 ## Experiments
-In an attempt to improve accessibility to data visualization, a number of experiments will be done in this repo to explore improvements to data consumption for visually impaired or blind users.
-
-### Audification
-Like visualization is a way of expressing data as visual imagery for sighted user to have better understanding of the data at a glance, audification can be used to express data as auditory imagery for visually impaired or blind user.
-
-Audification would require "dimensions" for data to be projected onto, just like visualization projects data onto 2D, 3D, or 4D (with the dimension of time) space. Some psychological properties of sound that can be used as dimensions are as follows:
-- Pitch
-- Loudness
-- Timbre (type of instruments)
-- Sound Location (left, right, or combination of those)
-- Envelope (legato, pizzicato, staccato, sforzando, etc.)
-- Time (speed, delay, etc.)
-
-Pitch, loudness, and time can express numerical data; and the others can express categorical data. While it is theoretically possible to express in 6+D, this experiment will focus on the more practical dimensions of pitch, loudness, and time.
-
-| Data Dimensions | Visualization | Audification |
-| --- | --- | --- |
-| 2 Numerical<br/>(e.g., Δ in population over time) | Line Chart / Bar Chart / Scatter Plot | [Time + Pitch](#) |
-| | | [Time + Loudness](#) |
-| 1 Categorical + 1 Numerical<br/>(e.g., # of users per browser) | Pie Chart / Radar Chart / Bar Chart / Geographic Map | [Time + Pitch](#) |
-| | | [Time + Loudness](#) |
-| 1 Categorical + 2 Numerical<br/>(e.g., # of users per age and gender) | Stacked Bar Chart | [Time + Pitch + Loudness](#) |
-
-### Data Table
-
-### Text Summary of Key Points
-
-## References
-- https://www.who.int/news-room/fact-sheets/detail/blindness-and-visual-impairment
-- http://qcpages.qc.cuny.edu/hhowe/music733.1/Properties.html
+- [Audification](http://go/guide-doge-planning-doc#heading=h.o15ayh3e9n26)
+- [Data Table](http://go/guide-doge-planning-doc#heading=h.bf3mxk2orms0)
+- [Text Summary](http://go/guide-doge-planning-doc#heading=h.7pel9lpwn6gb)
 
 ## Contributing
 
@@ -50,15 +22,38 @@ Pitch, loudness, and time can express numerical data; and the others can express
 
  - Node.js (Suggest using [nvm](https://github.com/nvm-sh/nvm/blob/master/README.md#installing-and-updating))
 
-```shell script
+```sh
 $ cd guide-doge
 $ npm install
 ```
 
-### Developing
+### Running Locally
 
-```shell script
+```sh
 $ npm start
 
 Server running at http://localhost:4200
 ```
+
+### Testing
+
+```sh
+$ npm test
+```
+
+It will run all the tests in `*.spec.ts` files and create a test coverage report under `coverage/guide-doge`.
+
+### Other Notes
+- We use [GitHub Projects](https://github.com/googleinterns/guide-doge/projects/1) to manage tasks.
+- We set up CI/CD using [GitHub Actions](https://github.com/googleinterns/guide-doge/actions). We currently have the following pipelines:
+  - Upon a pull request:
+    - Building the project.
+    - Running the lint check.
+    - Running tests.
+    - Checking the test coverage %. (Thresholds defined in [`karma.conf.js`](https://github.com/googleinterns/guide-doge/blob/master/karma.conf.js#L22).)
+  - Upon a push to the `master` branch:
+    - Deploying to [GitHub Pages](https://googleinterns.github.io/guide-doge/).
+- Core logics should be non-Angular dependent.
+  - E.g., files under [`src/d3`](src/d3) or [`src/models`](src/models) do not import any `@angular/*`.
+- Wrapper components should be lightweight.
+  - E.g., [`line-chart.component.ts`](src/components/line-chart/line-chart.component.ts) is a wrapper component for [`line-chart.d3.ts`](src/d3/line-chart.d3.ts), and all it does is to call D3 instance methods along the component lifecycle and to provide simple getters/setters for its template.
