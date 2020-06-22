@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { LineChartAudificationComponent } from './line-chart-audification.component';
-import { AudificationModule } from '../../services/audification/audification.module';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
     LineChartAudificationComponent,
   ],
   imports: [
-    AudificationModule,
+    CommonModule,
   ],
   exports: [
     LineChartAudificationComponent,

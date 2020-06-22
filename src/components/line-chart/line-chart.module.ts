@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { LineChartComponent } from './line-chart.component';
 import { DataModule } from '../../services/data/data.module';
-import { LineChartAudificationModule } from '../line-chart-audification/line-chart-audification.module';
+import { CommonModule } from '@angular/common';
+import { A11yPlaceholderModule } from '../../directives/a11y-placeholder/a11y-placeholder.module';
 
 @NgModule({
   declarations: [
@@ -9,11 +10,12 @@ import { LineChartAudificationModule } from '../line-chart-audification/line-cha
   ],
   imports: [
     DataModule,
-    LineChartAudificationModule,
+    CommonModule,
+    A11yPlaceholderModule,
   ],
   exports: [
     LineChartComponent,
-  ]
+  ],
 })
 export class LineChartModule {
 }

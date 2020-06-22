@@ -1,0 +1,23 @@
+@import "../../utils/constants";
+
+:host {
+  display: flex;
+  flex-direction: column;
+
+  .svg-wrapper {
+    box-sizing: content-box;
+    position: relative;
+    margin: 1.5rem;
+
+    .active-indicator {
+      @include card-shadow;
+      position: absolute;
+      font-weight: 500;
+      padding: 1rem;
+      background-color: white;
+      white-space: nowrap;
+      color: $color-highlight;
+      opacity: 0;
+    }
+  }
+}
