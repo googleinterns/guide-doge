@@ -1,0 +1,41 @@
+@import "../../utils/constants";
+
+:host {
+  input {
+    display: none;
+
+    &:checked + .switch {
+      background-color: $color-highlight;
+
+      &:after {
+        margin-left: 1.3rem;
+        border-color: $color-highlight;
+      }
+    }
+  }
+
+  .switch {
+    $size: 1.5rem;
+    display: block;
+    background-color: white;
+    width: 2.8rem;
+    border-radius: $size;
+    border: 1px solid $color-border;
+    cursor: pointer;
+
+    &, &:after {
+      transition: .2s;
+    }
+
+    &:after {
+      @include card-shadow;
+      content: '';
+      display: block;
+      width: $size;
+      height: $size;
+      border-radius: $size;
+      border: 1px solid $color-border;
+      background-color: white;
+    }
+  }
+}

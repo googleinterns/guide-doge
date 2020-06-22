@@ -1,0 +1,57 @@
+@import "../../utils/constants";
+
+:host {
+  @include card-shadow;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  background-color: white;
+
+  .header {
+    cursor: pointer;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .switch {
+      $size: 1.5rem;
+      background-color: white;
+      width: 2.8rem;
+      height: $size;
+      border-radius: $size;
+      border: 1px solid $color-border;
+      box-sizing: content-box;
+
+      &, & .handle {
+        transition: .2s;
+      }
+
+      .handle {
+        @include card-shadow;
+        width: $size;
+        height: $size;
+        border-radius: $size;
+        border: 1px solid $color-border;
+        background-color: white;
+      }
+
+      &.active {
+        background-color: $color-highlight;
+
+        .handle {
+          margin-left: 1.3rem;
+          border-color: $color-highlight;
+        }
+      }
+    }
+
+    &.enabled {
+      border-bottom: 1px solid $color-border;
+
+      .title {
+        font-weight: 500;
+      }
+    }
+  }
+}
