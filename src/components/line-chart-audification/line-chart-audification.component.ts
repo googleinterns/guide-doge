@@ -28,6 +28,7 @@ export class LineChartAudificationComponent implements AudificationPreference, O
   private domain: Date[];
   private range: number[];
   @HostBinding('attr.tabindex') private readonly tabindex = 0;
+  private readOutTimeoutId: number | null = null;
 
   constructor(
     @Inject('host') private host: LineChartComponent,
@@ -74,19 +75,10 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     this.melody?.dispose();
   }
 
-  handleSeek(index, playing) {
-    const datum = this.data[index];
-    const { date, value } = datum;
-
+  handleSeek(index) {
     // since Tone.js is running outside of the Angular zone, it needs to reenter the zone to trigger change detection.
     this.zone.run((() => {
-      this.activeDatum = datum;
-      if (!playing) {
-        this.readOut(t(AUDIFICATION.ACTIVE_DATUM, {
-          x: formatX(date),
-          y: formatY(value),
-        }));
-      }
+      this.activeDatum = this.data[index];
     }));
   }
 
@@ -95,11 +87,11 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     $event.preventDefault();
     $event.stopPropagation();
     const { key, shiftKey, repeat } = $event;
-    if (repeat) {
+    if (!this.melody || repeat) {
       return;
     }
     if (key === ' ') {
-      await this.melody?.resume(shiftKey);
+      await this.melody.resume(shiftKey);
     } else if (key === 'x') {
       this.readOut(t(AUDIFICATION.DOMAIN, {
         min: formatX(this.domain[0]),
@@ -113,17 +105,23 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     } else if (key === 'l') {
       this.readOut(humanizeMeasureName(this.measureName));
     } else if ('0' <= key && key <= '9') {
-      this.melody?.seekTo(this.melody.duration * (+key / 10), true);
+      const datumIndex = Math.floor(+key / 10 * this.data.length);
+      this.melody.seekTo(datumIndex, true);
+      this.readOutCurrentDatum();
     }
   }
 
   @HostListener('keyup', ['$event'])
   handleKeyUp($event: KeyboardEvent) {
+    if (!this.melody) {
+      return;
+    }
     $event.preventDefault();
     $event.stopPropagation();
     const { key } = $event;
     if (key === ' ') {
-      this.melody?.pause();
+      this.melody.pause();
+      this.readOutCurrentDatum();
     }
   }
 
@@ -133,13 +131,29 @@ export class LineChartAudificationComponent implements AudificationPreference, O
   }
 
   private readOut(text: string) {
+    if (this.readOutTimeoutId !== null) {
+      window.clearTimeout(this.readOutTimeoutId);
+      this.readOutTimeoutId = null;
+    }
     if (this.liveText === text) {
       this.liveText = null; // empty the text for a short period of time when the same text needs to be read out consequently
-      window.setTimeout(() => {
+      this.readOutTimeoutId = window.setTimeout(() => {
+        this.readOutTimeoutId = null;
         this.readOut(text);
       }, 500);
     } else {
       this.liveText = text;
     }
+  }
+
+  private readOutCurrentDatum() {
+    if (!this.melody) {
+      return;
+    }
+    const { date, value } = this.data[this.melody.currentDatumIndex];
+    this.readOut(t(AUDIFICATION.ACTIVE_DATUM, {
+      x: formatX(date),
+      y: formatY(value),
+    }));
   }
 }
