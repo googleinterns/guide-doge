@@ -1,4 +1,3 @@
-name: Build and Lint
 on: pull_request
 
 jobs:

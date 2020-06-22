@@ -1,5 +1,7 @@
 # Project Guide-Doge
 
+![GitHub Actions Badge for 'build-and-lint'](https://github.com/googleinterns/guide-doge/workflows/build-and-lint/badge.svg) ![GitHub Actions Badge for 'deploy'](https://github.com/googleinterns/guide-doge/workflows/deploy/badge.svg) ![GitHub Actions Badge for 'test'](https://github.com/googleinterns/guide-doge/workflows/test/badge.svg)
+
 > #### Table of Contents
 > - [Overview](#overview)
 > - [Experiments](#experiments)
@@ -15,6 +17,7 @@ In an attempt to improve accessibility to data visualization, a number of experi
 - [Audification](http://go/guide-doge-planning-doc#heading=h.o15ayh3e9n26)
 - [Data Table](http://go/guide-doge-planning-doc#heading=h.bf3mxk2orms0)
 - [Text Summary](http://go/guide-doge-planning-doc#heading=h.7pel9lpwn6gb)
+- [WebVR](http://go/guide-doge-planning-doc#heading=h.nu130go3qpw9)
 
 ## Contributing
 
@@ -44,6 +47,7 @@ $ npm test
 It will run all the tests in `*.spec.ts` files and create a test coverage report under `coverage/guide-doge`.
 
 ### Other Notes
+- Check out the planning document at [go/guide-doge-planning-doc](http://go/guide-doge-planning-doc). (Currently only available to Googlers.)
 - We use [GitHub Projects](https://github.com/googleinterns/guide-doge/projects/1) to manage tasks.
 - We set up CI/CD using [GitHub Actions](https://github.com/googleinterns/guide-doge/actions). We currently have the following pipelines:
   - Upon a pull request:
