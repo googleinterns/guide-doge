@@ -1,8 +1,8 @@
 # Project Guide-Doge
 
-[![GitHub Actions Badge for 'build-and-lint'](https://github.com/googleinterns/guide-doge/workflows/build-and-lint/badge.svg)](https://github.com/googleinterns/guide-doge/actions?query=workflow%3A%22build-and-lint%22)
-[![GitHub Actions Badge for 'deploy'](https://github.com/googleinterns/guide-doge/workflows/deploy/badge.svg)](https://github.com/googleinterns/guide-doge/actions?query=workflow%3A%22deploy%22)
-[![GitHub Actions Badge for 'test'](https://github.com/googleinterns/guide-doge/workflows/test/badge.svg)](https://github.com/googleinterns/guide-doge/actions?query=workflow%3A%22test%22)
+[![GitHub Actions Badge for 'build-and-lint'](https://github.com/googleinterns/guide-doge/workflows/Build%20and%20Lint/badge.svg)](https://github.com/googleinterns/guide-doge/actions?query=workflow%3A%22Build+and+Lint%22)
+[![GitHub Actions Badge for 'deploy'](https://github.com/googleinterns/guide-doge/workflows/Deploy/badge.svg)](https://github.com/googleinterns/guide-doge/actions?query=workflow%3A%22Deploy%22)
+[![GitHub Actions Badge for 'test'](https://github.com/googleinterns/guide-doge/workflows/Test/badge.svg)](https://github.com/googleinterns/guide-doge/actions?query=workflow%3A%22Test%22)
 
 > #### Table of Contents
 > - [Overview](#overview)
