@@ -33,8 +33,6 @@ export class Scatterplot{
 
      //enter identifies any DOM elements to be added when # array elements doesn't match
     d3.select(this.container).selectAll(this.shape).data(this.data).enter().append(this.shape);
-    let posArray: string[] = ['entry'];
-    posArray.pop();
     
     //d is data at index, i within 
     //select all shapes within given container
@@ -47,7 +45,7 @@ export class Scatterplot{
   }
   
   private setColor(color) {
-    d3.selectAll(this.shape).attr('color', () => {
+    d3.select(this.container).selectAll(this.shape).attr('color', () => {
       return color;
     })
   }

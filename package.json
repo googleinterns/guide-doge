@@ -35,13 +35,10 @@
     "luxon": "^1.24.1",
     "random": "^2.2.0",
     "rxjs": "~6.5.4",
-<<<<<<< HEAD
     "source-map-loader": "^1.0.0",
     "three": "^0.117.1",
-=======
     "sprintf-js": "^1.1.2",
     "striptags": "^3.1.1",
->>>>>>> origin/master
     "tone": "^14.7.2",
     "tslib": "^1.10.0",
     "uuid": "^8.1.0",
