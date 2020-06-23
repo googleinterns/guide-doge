@@ -17,10 +17,6 @@ export class CardComponent implements OnInit {
   humanizeMeasureName = humanizeMeasureName;
   currentMeasureName: string;
 
-  get VISUALIZATION() {
-    return t(GUIDE_DOGE.VISUALIZATION);
-  }
-
   ngOnInit() {
     this.setMeasureName(this.measureNames[0]);
   }

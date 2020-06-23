@@ -7,6 +7,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { AudificationPreference } from '../../services/preference/types';
 import { ascendingDate, ascendingNumber } from '../../utils/comparators';
+import { ScreenReaderService } from '../../services/screen-reader/screen-reader.service';
 
 @Component({
   selector: 'app-line-chart-audification',
@@ -22,16 +23,16 @@ export class LineChartAudificationComponent implements AudificationPreference, O
   @Input() readBefore: boolean;
   @Input() readAfter: boolean;
 
-  liveText: string | null = null;
+  lastReadOutText = '';
   private destroy$ = new Subject();
   private melody?: Melody;
   private domain: Date[];
   private range: number[];
   @HostBinding('attr.tabindex') private readonly tabindex = 0;
-  private readOutTimeoutId: number | null = null;
 
   constructor(
     @Inject('host') private host: LineChartComponent,
+    private screenReaderService: ScreenReaderService,
     private zone: NgZone,
   ) {
     this.handleSeek = this.handleSeek.bind(this);
@@ -91,6 +92,10 @@ export class LineChartAudificationComponent implements AudificationPreference, O
       return;
     }
     if (key === ' ') {
+      if (this.readBefore) {
+        const repetitive = this.readOutCurrentDatum();
+        // await new Promise(resolve => window.setTimeout(resolve, 500 + (repetitive ? 500 : 0)));
+      }
       await this.melody.resume(shiftKey);
     } else if (key === 'x') {
       this.readOut(t(AUDIFICATION.DOMAIN, {
@@ -121,7 +126,9 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     const { key } = $event;
     if (key === ' ') {
       this.melody.pause();
-      this.readOutCurrentDatum();
+      if (this.readAfter) {
+        this.readOutCurrentDatum();
+      }
     }
   }
 
@@ -131,19 +138,8 @@ export class LineChartAudificationComponent implements AudificationPreference, O
   }
 
   private readOut(text: string) {
-    if (this.readOutTimeoutId !== null) {
-      window.clearTimeout(this.readOutTimeoutId);
-      this.readOutTimeoutId = null;
-    }
-    if (this.liveText === text) {
-      this.liveText = null; // empty the text for a short period of time when the same text needs to be read out consequently
-      this.readOutTimeoutId = window.setTimeout(() => {
-        this.readOutTimeoutId = null;
-        this.readOut(text);
-      }, 500);
-    } else {
-      this.liveText = text;
-    }
+    this.lastReadOutText = text;
+    this.screenReaderService.readOut(text);
   }
 
   private readOutCurrentDatum() {
