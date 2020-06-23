@@ -8,9 +8,9 @@ import { PreferenceService } from '../../services/preference/preference.service'
 })
 export class DashboardComponent {
   // manual destructuring for easy access in template
-  audification = this.preferenceService.audification;
-  dataTable = this.preferenceService.dataTable;
-  textSummary = this.preferenceService.textSummary;
+  audification$ = this.preferenceService.audification$;
+  dataTable$ = this.preferenceService.dataTable$;
+  textSummary$ = this.preferenceService.textSummary$;
 
   constructor(
     private preferenceService: PreferenceService,
