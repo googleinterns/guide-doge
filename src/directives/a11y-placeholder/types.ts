@@ -1,5 +1,5 @@
-import { ComponentFactory } from '@angular/core';
+import { Type } from '@angular/core';
 
 export interface LazyA11yModule<Component> {
-  resolveComponentFactory(): ComponentFactory<Component>;
+  A11yComponent: Type<Component>;
 }

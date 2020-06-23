@@ -18,15 +18,17 @@ export class A11yPlaceholderDirective<Host> {
     this.viewContainerRef.clear();
     const moduleFactory = await this.compiler.compileModuleAsync(A11yModule);
     const moduleRef = moduleFactory.create(this.injector);
-    const componentFactory = moduleRef.instance.resolveComponentFactory();
+    const module = moduleRef.instance;
     const injector = Injector.create({
       providers: [{
         provide: 'host',
         useValue: host,
       }],
     });
+    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(module.A11yComponent);
     const componentRef = this.viewContainerRef.createComponent(componentFactory, 0, injector);
-    Object.assign(componentRef.instance, preference);
+    const component = componentRef.instance;
+    Object.assign(component, preference);
     return componentRef;
   }
 
