@@ -1,6 +1,7 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { takeUntil, filter } from 'rxjs/operators';
 import { LineChartD3 } from '../../d3/line-chart.d3';
-import { BehaviorSubject } from 'rxjs';
 import { Datum, RenderOptions } from '../../d3/xy-chart.d3';
 import { AUDIFICATION, t } from '../../assets/i18n';
 import { formatX, formatY } from '../../utils/formatters';
@@ -25,6 +26,7 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
 
   data$ = new BehaviorSubject<Datum[]>([]);
   activeDatum$ = new BehaviorSubject<Datum | null>(null);
+  private measureName$ = new Subject();
   private lineChartD3: LineChartD3;
 
   constructor(
@@ -36,10 +38,6 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
 
   get data() {
     return this.data$.value;
-  }
-
-  set data(data) {
-    this.data$.next(data);
   }
 
   get activeDatum() {
@@ -66,12 +64,17 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
   }
 
   ngOnDestroy() {
+    this.measureName$.next(null);
+    this.measureName$.complete();
     this.lineChartD3.clear();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if ('measureName' in changes) {
-      this.data = this.dataService.getMeasureOverDays(this.measureName);
+      const currentMeasureName = changes.measureName.currentValue;
+      this.dataService.getMeasureOverDays(this.measureName).pipe(
+        takeUntil(this.measureName$.pipe(filter(measureName => measureName !== currentMeasureName)))
+      ).subscribe(this.data$);
       this.activeDatum = null;
     }
   }
