@@ -1,21 +1,29 @@
 import { Component, Input } from '@angular/core';
 import { Preference } from '../../services/preference/types';
-import { PreferenceItemComponent } from '../preference-item/preference-item.component';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-preference-group',
   templateUrl: './preference-group.component.html',
   styleUrls: ['./preference-group.component.scss'],
 })
-export class PreferenceGroupComponent<T extends Preference> extends PreferenceItemComponent<T, 'enabled'> {
+export class PreferenceGroupComponent<T extends Preference> {
+  @Input() name: string;
   @Input() alwaysEnabled = false;
-  property: 'enabled' = 'enabled';
+  @Input() preference$: BehaviorSubject<T>;
 
-  constructor() {
-    super();
+  get value() {
+    return this.preference$.value.enabled;
   }
 
-  get enabled(): boolean {
+  set value(value) {
+    this.preference$.next({
+      ...this.preference$.value,
+      enabled: value,
+    });
+  }
+
+  get enabled() {
     return this.value || this.alwaysEnabled;
   }
 }
