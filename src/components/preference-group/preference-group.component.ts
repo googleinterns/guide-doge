@@ -8,14 +8,14 @@ import { PreferenceItemComponent } from '../preference-item/preference-item.comp
   styleUrls: ['./preference-group.component.scss'],
 })
 export class PreferenceGroupComponent<T extends Preference> extends PreferenceItemComponent<T, 'enabled'> {
-  @Input() enabled = false;
+  @Input() alwaysEnabled = false;
   property: 'enabled' = 'enabled';
 
   constructor() {
     super();
   }
 
-  private get _enabled(): boolean {
-    return this.value || this.enabled;
+  get enabled(): boolean {
+    return this.value || this.alwaysEnabled;
   }
 }
