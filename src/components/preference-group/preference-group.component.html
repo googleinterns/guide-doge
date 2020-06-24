@@ -1,7 +1,7 @@
-<label class="header" [class.enabled]="value">
+<label class="header" [class.enabled]="_enabled">
   <span class="title">
     {{name}}
   </span>
-  <app-switch [(value)]="value"></app-switch>
+  <app-switch [(value)]="value" *ngIf="!enabled"></app-switch>
 </label>
-<ng-content *ngIf="value"></ng-content>
+<ng-content *ngIf="_enabled"></ng-content>

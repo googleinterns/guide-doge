@@ -1,5 +1,19 @@
 <aside class="sidebar">
   <h2 class="sidebar-title">Customization</h2>
+  <app-preference-group name="Data Generator" [preference$]="data$" enabled="true">
+    <app-preference-item name="Average Hits" property="avgHits">
+    </app-preference-item>
+    <app-preference-item name="Hit Std" property="hitStdDev">
+    </app-preference-item>
+    <app-preference-item name="Average Users" property="avgUsers">
+    </app-preference-item>
+    <app-preference-item name="User Std" property="userStdDev">
+    </app-preference-item>
+    <app-preference-item name="Average Sessions Per User" property="avgSessionsPerUser">
+    </app-preference-item>
+    <app-preference-item name="Sessions Per User Std" property="sessionsPerUserStdDev">
+    </app-preference-item>
+  </app-preference-group>
   <app-preference-group name="Audification" [preference$]="audification$">
     <app-preference-item name="Lowest note (Hz)" property="lowestPitch">
     </app-preference-item>

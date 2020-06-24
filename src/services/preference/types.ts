@@ -10,6 +10,15 @@ export interface AudificationPreference extends Preference {
   readAfter: boolean;
 }
 
+export interface DataPreference extends Preference {
+  avgHits: number;
+  hitStdDev: number;
+  avgUsers: number;
+  userStdDev: number;
+  avgSessionsPerUser: number;
+  sessionsPerUserStdDev: number;
+}
+
 export interface DataTablePreference extends Preference {
   placeholder: unknown; // to disable no-empty-interface TSLint error
 }

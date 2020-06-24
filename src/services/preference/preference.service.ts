@@ -1,6 +1,6 @@
 import { BehaviorSubject } from 'rxjs';
 import * as Cookies from 'js-cookie';
-import { AudificationPreference, DataTablePreference, Preference, TextSummaryPreference } from './types';
+import { AudificationPreference, DataPreference, DataTablePreference, Preference, TextSummaryPreference } from './types';
 
 export class PreferenceService {
   audification$ = this.createPreference<AudificationPreference>({
@@ -11,6 +11,16 @@ export class PreferenceService {
     readBefore: false,
     readAfter: true,
   }, 'audification');
+
+  data$ = this.createPreference<DataPreference>({
+    enabled: true,
+    avgHits: 10000,
+    hitStdDev: 100,
+    avgUsers: 100,
+    userStdDev: 1,
+    avgSessionsPerUser: 5,
+    sessionsPerUserStdDev: 3,
+  }, 'data');
 
   dataTable$ = this.createPreference<DataTablePreference>({
     enabled: true,
