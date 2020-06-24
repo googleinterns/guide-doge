@@ -1,6 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Host, Optional } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Preference } from '../../services/preference/types';
+import { PreferenceGroupComponent } from '../preference-group/preference-group.component';
 
 @Component({
   selector: 'app-preference-item',
@@ -12,17 +13,29 @@ export class PreferenceItemComponent<T extends Preference, U extends keyof T> {
   @Input() preference$: BehaviorSubject<T>;
   @Input() property: U;
 
+  constructor(
+    @Optional() @Host() private host?: PreferenceGroupComponent<T>
+  ) { }
+
+  private get _preference$(): BehaviorSubject<T> {
+    if (!this.preference$ && this.host) {
+      return this.host.preference$;
+    } else {
+      return this.preference$;
+    }
+  }
+
   get type(): string {
     return typeof this.value;
   }
 
   get value(): T[U] {
-    return this.preference$.value[this.property];
+    return this._preference$.value[this.property];
   }
 
   set value(value: T[U]) {
-    this.preference$.next({
-      ...this.preference$.value,
+    this._preference$.next({
+      ...this._preference$.value,
       [this.property]: value,
     });
   }
