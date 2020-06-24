@@ -10,24 +10,44 @@ import {
 import { DataCube } from '../../models/data-cube/data-cube.model';
 import { betweenDates } from '../../models/data-cube/filters';
 import { generateCube } from 'src/models/data-cube/generation';
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, OnInit } from '@angular/core';
+import { map, takeUntil } from 'rxjs/operators';
 import { Subject, BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { PreferenceService } from '../preference/preference.service';
 @Injectable()
 export class DataService implements OnDestroy {
+  private static categories = [countryCategory, browserCategory, sourceCategory];
+  private static measures = [activeUserMeasure, revenueMeasure, eventCountMeasure];
+  private static settings = {
+    avgHits: 10000,
+    hitStdDev: 100,
+    avgUsers: 100,
+    userStdDev: 1,
+    avgSessionsPerUser: 5,
+    sessionsPerUserStdDev: 3
+  };
+
   private dataCube$ = new BehaviorSubject<DataCube>(generateCube(
-    [countryCategory, browserCategory, sourceCategory],
-    [activeUserMeasure, revenueMeasure, eventCountMeasure],
-    {
-      avgHits: 10000,
-      hitStdDev: 100,
-      avgUsers: 100,
-      userStdDev: 1,
-      avgSessionsPerUser: 5,
-      sessionsPerUserStdDev: 3,
-    },
+    DataService.categories,
+    DataService.measures,
+    DataService.settings,
   ));
   private destroy$ = new Subject();
+
+  constructor(private preferenceService: PreferenceService) {
+    this.preferenceService.data$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(preference => {
+        this.dataCube$.next(generateCube(
+          DataService.categories,
+          DataService.measures,
+          {
+            ...DataService.settings,
+            ...preference,
+          },
+        ));
+      });
+  }
 
   getMeasureOverDays(measureName: string, days = 30) {
     const categoryName = 'nthDay';
