@@ -10,8 +10,8 @@ import {
 import { DataCube } from '../../models/data-cube/data-cube.model';
 import { betweenDates } from '../../models/data-cube/filters';
 import { generateCube } from 'src/models/data-cube/generation';
-import { Injectable, OnDestroy, OnInit } from '@angular/core';
-import { map, takeUntil } from 'rxjs/operators';
+import { Injectable, OnDestroy } from '@angular/core';
+import { map, takeUntil, throttleTime } from 'rxjs/operators';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { PreferenceService } from '../preference/preference.service';
 @Injectable()
@@ -37,6 +37,7 @@ export class DataService implements OnDestroy {
   constructor(private preferenceService: PreferenceService) {
     this.preferenceService.data$
       .pipe(takeUntil(this.destroy$))
+      .pipe(throttleTime(1000))
       .subscribe(preference => {
         this.dataCube$.next(generateCube(
           DataService.categories,
