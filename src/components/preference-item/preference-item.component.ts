@@ -36,7 +36,7 @@ export class PreferenceItemComponent<T extends Preference, U extends keyof T> im
   }
 
   ngOnInit() {
-    if (this.host) {
+    if (this.host && !this.preference$) {
       this.preference$ = this.host.preference$;
     }
   }
