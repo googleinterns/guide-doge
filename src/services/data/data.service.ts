@@ -11,7 +11,7 @@ import { betweenDates } from '../../models/data-cube/filters';
 import { generateCube } from 'src/models/data-cube/generation';
 import { OnDestroy } from '@angular/core';
 import { map, takeUntil, throttleTime } from 'rxjs/operators';
-import { BehaviorSubject, combineLatest, ReplaySubject, Subject } from 'rxjs';
+import { BehaviorSubject, ReplaySubject, Subject, asyncScheduler, combineLatest } from 'rxjs';
 import { PreferenceService } from '../preference/preference.service';
 import { DataQueryOptions, TimeSeriesQueryOptions } from './types';
 
@@ -33,7 +33,7 @@ export class DataService implements OnDestroy {
 
     this.preferenceService.data$
       .pipe(takeUntil(this.destroy$))
-      .pipe(throttleTime(1000))
+      .pipe(throttleTime(500, asyncScheduler, { leading: true, trailing: true }))
       .subscribe(preference => {
         this.dataCube$.next(generateCube(
           categories,
