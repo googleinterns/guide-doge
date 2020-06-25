@@ -53,6 +53,11 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     return this.host.measureNames;
   }
 
+  get currentMeasureName() {
+    // TODO:
+    return this.measureNames[0];
+  }
+
   set activeDatum(activeDatum) {
     this.host.activeDatum = activeDatum;
   }
@@ -61,9 +66,9 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     this.host.data$
       .pipe(takeUntil(this.destroy$))
       .subscribe(data => {
-        const values = data.map(datum => datum.value);
-        this.domain = data.map(d => d.date).sort(ascendingDate);
-        this.range = data.map(d => d.value).sort(ascendingNumber);
+        const values = data.map(datum => datum.values[this.currentMeasureName]);
+        this.domain = data.map(d => d.categories.date).sort(ascendingDate);
+        this.range = [...values].sort(ascendingNumber);
         this.melody?.dispose();
         this.melody = new Melody(values, [this.lowestPitch, this.highestPitch], this.noteDuration, this.handleSeek);
       });
@@ -103,8 +108,7 @@ export class LineChartAudificationComponent implements AudificationPreference, O
         max: formatY(this.range[this.range.length - 1]),
       }));
     } else if (key === 'l') {
-      // TODO: read the entire measureNames
-      this.readOut(humanizeMeasureName(this.measureNames[0]));
+      this.readOut(this.measureNames.map(humanizeMeasureName).join(', '));
     } else if ('0' <= key && key <= '9') {
       const datumIndex = Math.floor(+key / 10 * this.data.length);
       this.melody.seekTo(datumIndex, true);
@@ -151,7 +155,9 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     if (!this.melody) {
       return;
     }
-    const { date, value } = this.data[this.melody.currentDatumIndex];
+    const datum = this.data[this.melody.currentDatumIndex];
+    const { date } = datum.categories;
+    const value = datum.values[this.currentMeasureName];
     this.readOut(t(AUDIFICATION.ACTIVE_DATUM, {
       x: formatX(date),
       y: formatY(value),

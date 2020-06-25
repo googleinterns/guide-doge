@@ -1,33 +1,57 @@
-import { Datum, XYChartD3 } from './xy-chart.d3';
+import { XYChartD3 } from './xy-chart.d3';
 import * as d3 from 'd3';
+import { ResultRow } from '../models/data-cube/types';
+
+interface LinePath {
+  line: d3.Line<ResultRow>;
+  path: d3.Selection<SVGPathElement, unknown, null, undefined>;
+}
 
 export class LineChartD3 extends XYChartD3 {
-  protected line: d3.Line<Datum>;
-  protected path: d3.Selection<SVGPathElement, unknown, null, undefined>;
+  protected linePaths: LinePath[];
   protected activeDatumCircle: d3.Selection<SVGCircleElement, unknown, null, undefined>;
   protected activeDatumToast: d3.Selection<d3.BaseType, unknown, null, undefined>;
 
   protected renderData() {
-    this.line = d3
-      .line<Datum>()
-      .defined(d => !isNaN(d.value))
-      .x(d => this.scaleX(d.date))
-      .y(d => this.scaleY(d.value));
-
-    this.path = this.svg
-      .append('path')
-      .attr('fill', 'none')
-      .attr('stroke', this.colorHighlight)
-      .attr('stroke-width', 2)
-      .attr('stroke-linejoin', 'round')
-      .attr('stroke-linecap', 'round');
+    this.linePaths = [];
   }
 
-  protected updateData(data: Datum[]) {
-    this.path
-      .datum(data)
-      .transition(this.transition)
-      .attr('d', this.line);
+  protected updateData(data: ResultRow[]) {
+    const measureNames = Object.keys(data[0]?.values ?? {});
+    const measureCount = measureNames.length;
+    const oldMeasureCount = this.linePaths.length;
+
+    if (oldMeasureCount > measureCount) {
+      const removedLinePaths = this.linePaths.splice(this.linePaths.length, oldMeasureCount - measureCount);
+      for (const linePath of removedLinePaths) {
+        linePath.path.remove();
+      }
+    } else {
+      for (let i = 0; i < measureCount - oldMeasureCount; i++) {
+        this.linePaths.push({
+          line: d3.line<ResultRow>(),
+          path: this.svg
+            .append('path')
+            .attr('fill', 'none')
+            .attr('stroke', this.colorHighlight)
+            .attr('stroke-width', 2)
+            .attr('stroke-linejoin', 'round')
+            .attr('stroke-linecap', 'round'),
+        });
+      }
+    }
+
+    this.linePaths.forEach(({ line, path }, i) => {
+      const measureName = measureNames[i];
+      line
+        .defined(d => !isNaN(d.values[measureName]))
+        .x(d => this.scaleX(d.categories.date))
+        .y(d => this.scaleY(d.values[measureName]));
+      path
+        .datum(data)
+        .transition(this.transition)
+        .attr('d', line);
+    });
   }
 
   protected renderActiveDatum() {
@@ -38,13 +62,14 @@ export class LineChartD3 extends XYChartD3 {
     this.activeDatumToast = this.container.select('.active-indicator');
   }
 
-  protected updateActiveDatum(activeDatum: Datum | null) {
+  protected updateActiveDatum(activeDatum: ResultRow | null) {
     if (!activeDatum) {
       this.activeDatumCircle.attr('display', 'none');
       this.activeDatumToast.style('opacity', 0);
       return;
     }
-    const { date, value } = activeDatum;
+    const { date } = activeDatum.categories;
+    const value = activeDatum.values[Object.keys(activeDatum.values)[0]];
     this.activeDatumCircle
       .transition(this.createTransition(50))
       .attr('display', 'inherit')

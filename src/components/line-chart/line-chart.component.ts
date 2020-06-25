@@ -1,14 +1,15 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { LineChartD3 } from '../../d3/line-chart.d3';
-import { Datum, RenderOptions } from '../../d3/xy-chart.d3';
+import { RenderOptions } from '../../d3/xy-chart.d3';
 import { AUDIFICATION, t } from '../../assets/i18n';
 import { formatX, formatY } from '../../utils/formatters';
 import { A11yPlaceholderDirective } from '../../directives/a11y-placeholder/a11y-placeholder.directive';
 import { DataService } from '../../services/data/data.service';
 import { DAY } from '../../utils/timeUnits';
-import { map, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { TimeSeriesQueryOptions } from '../../services/data/types';
+import { ResultRow } from '../../models/data-cube/types';
 
 @Component({
   selector: 'app-line-chart',
@@ -29,8 +30,8 @@ export class LineChartComponent implements TimeSeriesQueryOptions, RenderOptions
 
   dateRange$ = new BehaviorSubject(this.dateRange);
   measureNames$ = new BehaviorSubject(this.measureNames);
-  data$ = new BehaviorSubject<Datum[]>([]);
-  activeDatum$ = new BehaviorSubject<Datum | null>(null);
+  data$ = new BehaviorSubject<ResultRow[]>([]);
+  activeDatum$ = new BehaviorSubject<ResultRow | null>(null);
   private destroy$ = new Subject();
   private lineChartD3: LineChartD3;
 
@@ -53,33 +54,28 @@ export class LineChartComponent implements TimeSeriesQueryOptions, RenderOptions
     this.activeDatum$.next(activeDatum);
   }
 
-  get formattedActiveDatum() {
-    if (!this.activeDatum) {
+  get ACTIVE_DATUM() {
+    const { activeDatum } = this;
+    if (!activeDatum) {
       return null;
     }
-    const { date, value } = this.activeDatum;
-    return t(AUDIFICATION.ACTIVE_DATUM, {
-      x: formatX(date),
-      y: formatY(value),
-    });
+    const { date } = activeDatum.categories;
+    const measureNames = Object.keys(activeDatum.values);
+    return measureNames.map(measureName => {
+      return t(AUDIFICATION.ACTIVE_DATUM, {
+        x: formatX(date),
+        y: formatY(activeDatum.values[measureName]),
+      });
+    }).join('<br/>');
   }
 
   ngOnInit() {
     this.dataService.observeTimeSeries(this)
       .pipe(takeUntil(this.destroy$))
-      // TODO: the pipe below will be removed once line chart supports rendering multiple measures
-      .pipe(map(rows => {
+      .subscribe(data => {
+        this.data$.next(data);
         this.activeDatum$.next(null);
-        if (!rows.length) {
-          return [];
-        }
-        const firstMeasureName = rows[0].values.keys().next().value;
-        return rows.map(row => ({
-          date: row.categories.get('date') as Date,
-          value: row.values.get(firstMeasureName)!,
-        }));
-      }))
-      .subscribe(this.data$);
+      });
     this.lineChartD3.render();
   }
 

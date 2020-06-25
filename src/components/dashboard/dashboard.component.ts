@@ -13,6 +13,12 @@ export class DashboardComponent {
   dataTable$ = this.preferenceService.dataTable$;
   textSummary$ = this.preferenceService.textSummary$;
 
+  sampleMeasureGroups = {
+    activeUsers: ['activeUsers', 'revenue'],
+    revenue: ['revenue'],
+    eventCount: ['eventCount'],
+  };
+
   constructor(
     private preferenceService: PreferenceService,
   ) {

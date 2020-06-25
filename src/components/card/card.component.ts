@@ -13,19 +13,23 @@ export class CardComponent implements OnInit {
   @Input() title: string;
   @Input() tabbed = false;
   @Input() type: CardType;
-  @Input() measureNames: string[];
+  @Input() measureGroups: Record<string, string[]>;
   humanizeMeasureName = humanizeMeasureName;
-  currentMeasureName: string;
+  currentMeasureGroupKey: string;
 
   get VISUALIZATION() {
     return t(GUIDE_DOGE.VISUALIZATION);
   }
 
-  ngOnInit() {
-    this.setMeasureName(this.measureNames[0]);
+  get measureGroupKeys() {
+    return Object.keys(this.measureGroups);
   }
 
-  setMeasureName(measureName) {
-    this.currentMeasureName = measureName;
+  ngOnInit() {
+    this.setMeasureGroupKey(this.measureGroupKeys[0]);
+  }
+
+  setMeasureGroupKey(measureGroupKey: string) {
+    this.currentMeasureGroupKey = measureGroupKey;
   }
 }

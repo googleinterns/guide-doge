@@ -115,6 +115,6 @@ export interface Row {
  * dimension.
  */
 export interface ResultRow {
-  categories: Map<string, string | number | Date>;
-  values: Map<string, number>;
+  categories: Record<string, string | number | Date> & { date: Date };
+  values: Record<string, number>;
 }
