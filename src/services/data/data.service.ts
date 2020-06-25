@@ -11,42 +11,37 @@ import { betweenDates } from '../../models/data-cube/filters';
 import { generateCube } from 'src/models/data-cube/generation';
 import { OnDestroy } from '@angular/core';
 import { map, takeUntil, throttleTime } from 'rxjs/operators';
-import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, ReplaySubject, Subject } from 'rxjs';
 import { PreferenceService } from '../preference/preference.service';
 import { DataQueryOptions, TimeSeriesQueryOptions } from './types';
 
 export class DataService implements OnDestroy {
-  private static categories = [countryCategory, browserCategory, sourceCategory];
-  private static measures = [activeUserMeasure, revenueMeasure, eventCountMeasure];
-  private static settings = {
-    avgHits: 10000,
-    hitStdDev: 100,
-    avgUsers: 100,
-    userStdDev: 1,
-    avgSessionsPerUser: 5,
-    sessionsPerUserStdDev: 3,
-  };
-
-  private dataCube$ = new BehaviorSubject<DataCube>(generateCube(
-    DataService.categories,
-    DataService.measures,
-    DataService.settings,
-  ));
+  private dataCube$ = new ReplaySubject<DataCube>(1);
   private destroy$ = new Subject();
 
   constructor(private preferenceService: PreferenceService) {
+    const categories = [countryCategory, browserCategory, sourceCategory];
+    const measures = [activeUserMeasure, revenueMeasure, eventCountMeasure];
+    const defaultSettings = {
+      avgHits: 10000,
+      hitStdDev: 100,
+      avgUsers: 100,
+      userStdDev: 1,
+      avgSessionsPerUser: 5,
+      sessionsPerUserStdDev: 3,
+    };
+
     this.preferenceService.data$
       .pipe(takeUntil(this.destroy$))
       .pipe(throttleTime(1000))
       .subscribe(preference => {
         this.dataCube$.next(generateCube(
-          DataService.categories,
-          DataService.measures,
+          categories,
+          measures,
           {
-            ...DataService.settings,
+            ...defaultSettings,
             ...preference,
-          },
-        ));
+          }));
       });
   }
 
