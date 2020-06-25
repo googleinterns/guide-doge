@@ -1,4 +1,4 @@
-import { Category, Filter, Measure, ResultRow, Row } from './types';
+import { Category, Measure, QueryOptions, ResultRow, Row } from './types';
 
 /**
  * This cube is conceptually an n-dimensional array of numbers. The cube
@@ -113,17 +113,18 @@ export class DataCube {
    * By default, the results are sorted by the first requested category, then
    * the second, and so on.
    *
-   * @param categoryNames The categories to request a breakdown from.
-   * @param measureNames The measures to provide values for.
-   * @param filters The filters to apply to the cube before finding the results.
-   * @param sortBy The concept names to sort in ascending order.
+   * @param queryOptions.categoryNames The categories to request a breakdown from.
+   * @param queryOptions.measureNames The measures to provide values for.
+   * @param queryOptions.filters The filters to apply to the cube before finding the results.
+   * @param queryOptions.sortBy The concept names to sort in ascending order.
    */
-  getDataFor(
-    categoryNames: string[],
-    measureNames: string[],
-    filters: Filter[] = [],
-    sortBy?: string[],
-  ): ResultRow[] {
+  getDataFor(queryOptions: QueryOptions): ResultRow[] {
+    const {
+      categoryNames = [],
+      measureNames = [],
+      filters = [],
+      sortBy = [...categoryNames, ...measureNames],
+    } = queryOptions;
     const measureIndices = measureNames.map(name =>
       this.measures.findIndex(measure => measure.name === name),
     );
@@ -181,7 +182,7 @@ export class DataCube {
       result,
       categoryNames,
       measureNames,
-      sortBy ?? [...categoryNames, ...measureNames],
+      sortBy,
     );
     return result;
   }

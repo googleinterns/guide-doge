@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 import { LineChartD3 } from '../../d3/line-chart.d3';
 import { RenderOptions } from '../../d3/xy-chart.d3';
 import { AUDIFICATION, t } from '../../assets/i18n';
@@ -16,10 +16,11 @@ import { ResultRow } from '../../models/data-cube/types';
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.scss'],
 })
-export class LineChartComponent implements TimeSeriesQueryOptions, RenderOptions, OnChanges, OnInit, OnDestroy {
+export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnDestroy {
   @ViewChild(A11yPlaceholderDirective, { static: true }) a11yPlaceholder: A11yPlaceholderDirective<LineChartComponent>;
 
-  @Input() dateRange: [Date, Date] = [new Date(Date.now() - 30 * DAY), new Date()];
+  @Input() endDate = new Date();
+  @Input() startDate = new Date(this.endDate.getTime() - 30 * DAY);
   @Input() measureNames: string[] = [];
   @Input() height = 500;
   @Input() width = 800;
@@ -28,8 +29,7 @@ export class LineChartComponent implements TimeSeriesQueryOptions, RenderOptions
   @Input() marginBottom = 30;
   @Input() marginLeft = 40;
 
-  dateRange$ = new BehaviorSubject(this.dateRange);
-  measureNames$ = new BehaviorSubject(this.measureNames);
+  queryOptions$ = new ReplaySubject<TimeSeriesQueryOptions>(1);
   data$ = new BehaviorSubject<ResultRow[]>([]);
   activeDatum$ = new BehaviorSubject<ResultRow | null>(null);
   private destroy$ = new Subject();
@@ -70,7 +70,7 @@ export class LineChartComponent implements TimeSeriesQueryOptions, RenderOptions
   }
 
   ngOnInit() {
-    this.dataService.observeTimeSeries(this)
+    this.dataService.observeTimeSeries(this.queryOptions$)
       .pipe(takeUntil(this.destroy$))
       .subscribe(data => {
         this.data$.next(data);
@@ -86,11 +86,14 @@ export class LineChartComponent implements TimeSeriesQueryOptions, RenderOptions
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if ('dateRange' in changes) {
-      this.dateRange$.next(this.dateRange);
-    }
-    if ('measureNames' in changes) {
-      this.measureNames$.next(this.measureNames);
+    const queryOptions = {
+      startDate: this.startDate,
+      endDate: this.endDate,
+      measureNames: this.measureNames,
+    };
+    const changed = Object.keys(queryOptions).some(key => key in changes);
+    if (changed) {
+      this.queryOptions$.next(queryOptions);
     }
   }
 }
