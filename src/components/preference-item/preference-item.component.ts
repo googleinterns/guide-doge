@@ -29,10 +29,12 @@ export class PreferenceItemComponent<T extends Preference, U extends keyof T> im
   }
 
   set value(value: T[U]) {
-    this.preference$.next({
-      ...this.preference$.value,
-      [this.property]: value,
-    });
+    if (value !== undefined && value !== null) {
+      this.preference$.next({
+        ...this.preference$.value,
+        [this.property]: value,
+      });
+    }
   }
 
   ngOnInit() {
