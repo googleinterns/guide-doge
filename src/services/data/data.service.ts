@@ -11,9 +11,10 @@ import { betweenDates } from '../../models/data-cube/filters';
 import { generateCube } from 'src/models/data-cube/generation';
 import { OnDestroy } from '@angular/core';
 import { map, takeUntil, throttleTime } from 'rxjs/operators';
-import { BehaviorSubject, ReplaySubject, Subject, asyncScheduler, combineLatest } from 'rxjs';
+import { asyncScheduler, combineLatest, Observable, ReplaySubject, Subject } from 'rxjs';
 import { PreferenceService } from '../preference/preference.service';
-import { DataQueryOptions, TimeSeriesQueryOptions } from './types';
+import { TimeSeriesQueryOptions } from './types';
+import { QueryOptions } from '../../models/data-cube/types';
 
 export class DataService implements OnDestroy {
   private dataCube$ = new ReplaySubject<DataCube>(1);
@@ -50,38 +51,30 @@ export class DataService implements OnDestroy {
     this.destroy$.complete();
   }
 
-  observeData(queryOptions: DataQueryOptions) {
-    const {
-      categoryNames$ = new BehaviorSubject([]),
-      measureNames$ = new BehaviorSubject([]),
-      filters$ = new BehaviorSubject(undefined),
-      sortBy$ = new BehaviorSubject(undefined),
-    } = queryOptions;
-    return combineLatest([this.dataCube$, categoryNames$, measureNames$, filters$, sortBy$])
-      .pipe(map(([dataCube, categoryNames, measureNames, filters, sortBy]) => {
-        return dataCube.getDataFor(categoryNames, measureNames, filters, sortBy);
+  observeData(queryOptions$: Observable<QueryOptions>) {
+    return combineLatest([this.dataCube$, queryOptions$])
+      .pipe(map(([dataCube, queryOptions]) => {
+        return dataCube.getDataFor(queryOptions);
       }));
   }
 
-  observeTimeSeries(queryOptions: TimeSeriesQueryOptions) {
-    const {
-      dateRange$,
-      categoryNames$ = new BehaviorSubject([]),
-      measureNames$ = new BehaviorSubject([]),
-      filters$ = new BehaviorSubject(undefined),
-      sortBy$ = new BehaviorSubject(undefined),
-    } = queryOptions;
-    return combineLatest([this.dataCube$, dateRange$, categoryNames$, measureNames$, filters$, sortBy$])
-      .pipe(map(([dataCube, dateRange, categoryNames, measureNames, filters, sortBy]) => {
-        const [startDate, endDate] = dateRange;
+  observeTimeSeries(timeSeriesQueryOptions$: Observable<TimeSeriesQueryOptions>) {
+    const queryOptions$: Observable<QueryOptions> = timeSeriesQueryOptions$
+      .pipe(map(queryOptions => {
+        const {
+          startDate, endDate,
+          categoryNames = [], filters = [], sortBy = [],
+          ...restOptions
+        } = queryOptions;
         const categoryName = 'date';
         const dateFilter = betweenDates(startDate, endDate);
-        return dataCube.getDataFor(
-          [categoryName, ...categoryNames],
-          measureNames,
-          [dateFilter, ...(filters ?? [])],
-          sortBy,
-        );
+        return {
+          ...restOptions,
+          categoryNames: [categoryName, ...categoryNames],
+          filters: [dateFilter, ...filters],
+          sortBy: [categoryName, ...sortBy],
+        };
       }));
+    return this.observeData(queryOptions$);
   }
 }

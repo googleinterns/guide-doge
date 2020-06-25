@@ -118,3 +118,10 @@ export interface ResultRow {
   categories: Map<string, string | number | Date>;
   values: Map<string, number>;
 }
+
+export interface QueryOptions {
+  categoryNames?: string[];
+  measureNames?: string[];
+  filters?: Filter[];
+  sortBy?: string[];
+}
