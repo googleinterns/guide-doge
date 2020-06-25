@@ -139,10 +139,11 @@ export class DataCube {
       .forEach(row => {
         let trieNode = categoryTrie;
         for (const categoryIndex of categoryIndices) {
-          if (!trieNode.children[row.header[categoryIndex]]) {
-            trieNode.children[row.header[categoryIndex]] = { children: {} };
+          const label = row.header[categoryIndex];
+          if (!trieNode.children[label]) {
+            trieNode.children[label] = { children: {} };
           }
-          trieNode = trieNode.children[row.header[categoryIndex]];
+          trieNode = trieNode.children[label];
         }
         if (!trieNode.values) {
           trieNode.values = measureNames.map(() => 0);
@@ -154,11 +155,12 @@ export class DataCube {
 
     const result: ResultRow[] = [];
     const labelList: string[] = [];
+    const dateIndex = categoryNames.indexOf('date');
     const traverseNode = (node: TrieNode) => {
       if (node.values) {
         result.push({
           categories: new Map(
-            labelList.map((label, index) => [categoryNames[index], label]),
+            labelList.map((label, index) => [categoryNames[index], index === dateIndex ? new Date(+label) : label]),
           ),
           values: new Map(
             node.values.map((value, index) => [measureNames[index], value]),
@@ -173,7 +175,6 @@ export class DataCube {
       }
     };
     traverseNode(categoryTrie);
-    this.normalizeNthDay(result, categoryNames);
     this.sortResults(
       result,
       categoryNames,
@@ -181,17 +182,6 @@ export class DataCube {
       sortBy ?? [...categoryNames, ...measureNames],
     );
     return result;
-  }
-
-  private normalizeNthDay(rows: ResultRow[], categoryNames: string[]) {
-    if (!categoryNames.includes('nthDay')) {
-      return;
-    }
-    const largestNthDay = Math.max(...rows.map(row => row.categories.get('nthDay') as number));
-    for (const row of rows) {
-      const nthDay = row.categories.get('nthDay') as number;
-      row.categories.set('nthDay', largestNthDay - nthDay);
-    }
   }
 
   private sortResults(

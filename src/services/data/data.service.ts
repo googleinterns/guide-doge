@@ -1,4 +1,3 @@
-import { DateTime } from 'luxon';
 import {
   activeUserMeasure,
   browserCategory,
@@ -10,11 +9,12 @@ import {
 import { DataCube } from '../../models/data-cube/data-cube.model';
 import { betweenDates } from '../../models/data-cube/filters';
 import { generateCube } from 'src/models/data-cube/generation';
-import { Injectable, OnDestroy } from '@angular/core';
+import { OnDestroy } from '@angular/core';
 import { map, takeUntil, throttleTime } from 'rxjs/operators';
-import { Subject, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
 import { PreferenceService } from '../preference/preference.service';
-@Injectable()
+import { DataQueryOptions, TimeSeriesQueryOptions } from './types';
+
 export class DataService implements OnDestroy {
   private static categories = [countryCategory, browserCategory, sourceCategory];
   private static measures = [activeUserMeasure, revenueMeasure, eventCountMeasure];
@@ -24,7 +24,7 @@ export class DataService implements OnDestroy {
     avgUsers: 100,
     userStdDev: 1,
     avgSessionsPerUser: 5,
-    sessionsPerUserStdDev: 3
+    sessionsPerUserStdDev: 3,
   };
 
   private dataCube$ = new BehaviorSubject<DataCube>(generateCube(
@@ -50,29 +50,43 @@ export class DataService implements OnDestroy {
       });
   }
 
-  getMeasureOverDays(measureName: string, days = 30) {
-    const categoryName = 'nthDay';
-    const endDate = DateTime.local();
-    const startDate = endDate.minus({ day: days });
-
-    return this.dataCube$.pipe(
-      map(dataCube => dataCube
-        .getDataFor(
-          [categoryName],
-          [measureName],
-          [betweenDates(startDate.toJSDate(), endDate.toJSDate())],
-        )
-        .map(row => ({
-          date: startDate
-            .plus({ days: row.categories.get(categoryName) as number })
-            .toJSDate(),
-          value: row.values.get(measureName)!,
-        })))
-    );
-  }
-
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  observeData(queryOptions: DataQueryOptions) {
+    const {
+      categoryNames$ = new BehaviorSubject([]),
+      measureNames$ = new BehaviorSubject([]),
+      filters$ = new BehaviorSubject(undefined),
+      sortBy$ = new BehaviorSubject(undefined),
+    } = queryOptions;
+    return combineLatest([this.dataCube$, categoryNames$, measureNames$, filters$, sortBy$])
+      .pipe(map(([dataCube, categoryNames, measureNames, filters, sortBy]) => {
+        return dataCube.getDataFor(categoryNames, measureNames, filters, sortBy);
+      }));
+  }
+
+  observeTimeSeries(queryOptions: TimeSeriesQueryOptions) {
+    const {
+      dateRange$,
+      categoryNames$ = new BehaviorSubject([]),
+      measureNames$ = new BehaviorSubject([]),
+      filters$ = new BehaviorSubject(undefined),
+      sortBy$ = new BehaviorSubject(undefined),
+    } = queryOptions;
+    return combineLatest([this.dataCube$, dateRange$, categoryNames$, measureNames$, filters$, sortBy$])
+      .pipe(map(([dataCube, dateRange, categoryNames, measureNames, filters, sortBy]) => {
+        const [startDate, endDate] = dateRange;
+        const categoryName = 'date';
+        const dateFilter = betweenDates(startDate, endDate);
+        return dataCube.getDataFor(
+          [categoryName, ...categoryNames],
+          measureNames,
+          [dateFilter, ...(filters ?? [])],
+          sortBy,
+        );
+      }));
   }
 }

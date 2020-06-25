@@ -49,8 +49,8 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     return this.host.data;
   }
 
-  get measureName() {
-    return this.host.measureName;
+  get measureNames() {
+    return this.host.measureNames;
   }
 
   set activeDatum(activeDatum) {
@@ -103,7 +103,8 @@ export class LineChartAudificationComponent implements AudificationPreference, O
         max: formatY(this.range[this.range.length - 1]),
       }));
     } else if (key === 'l') {
-      this.readOut(humanizeMeasureName(this.measureName));
+      // TODO: read the entire measureNames
+      this.readOut(humanizeMeasureName(this.measureNames[0]));
     } else if ('0' <= key && key <= '9') {
       const datumIndex = Math.floor(+key / 10 * this.data.length);
       this.melody.seekTo(datumIndex, true);

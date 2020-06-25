@@ -11,6 +11,7 @@ import {
   SessionGenerationSettings,
 } from './types';
 import { DataCube } from './data-cube.model';
+import { DAY } from '../../utils/timeUnits';
 
 /**
  * Creates fake analytics data based on the model given by settings.
@@ -63,12 +64,13 @@ export function generateCube(
     ...settings,
   };
   const actualCategories = [...categories];
-  if (completeSettings.nthDay) {
-    const nthDayCategory = generateNthDay(
-      completeSettings.days,
+  if (completeSettings.timeSeries) {
+    const dateCategory = generateDateCategory(
+      completeSettings.startDate,
+      completeSettings.endDate,
       completeSettings.dailyStdDev,
     );
-    actualCategories.push(nthDayCategory);
+    actualCategories.push(dateCategory);
   }
   const rows = generateEmptyRows(actualCategories, measures);
   const cumulativeWeights = generateCumulativeWeights(rows, actualCategories);
@@ -91,8 +93,9 @@ const defaultSettings: ModelSettings = {
   userStdDev: 100,
   avgSessionsPerUser: 5,
   sessionsPerUserStdDev: 3,
-  nthDay: true,
-  days: 60,
+  timeSeries: true,
+  startDate: new Date(Date.now() - 60 * DAY),
+  endDate: new Date(),
   dailyStdDev: 0.1,
 };
 
@@ -265,17 +268,19 @@ function generateCumulativeWeights(rows: Row[], categories: Category[]) {
   );
 }
 
-function generateNthDay(days: number, dailyVariance: number): Category {
+function generateDateCategory(startDate: Date, endDate: Date, dailyVariance: number): Category {
   const dailyThunk = random.normal(1, dailyVariance);
   const values: CategoryValue[] = [];
-  for (let day = 0; day < days; day++) {
+  const date = new Date(startDate);
+  while (date <= endDate) {
     values.push({
-      name: day,
+      name: date.getTime(),
       weight: dailyThunk(),
     });
+    date.setTime(date.getTime() + DAY);
   }
   return {
-    name: 'nthDay',
+    name: 'date',
     values,
   };
 }
