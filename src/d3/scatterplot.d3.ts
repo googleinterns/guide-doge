@@ -7,8 +7,10 @@
 // const d3: typeof _d3;
 // }
 
-// for unit testing
+// for running on unit tests
 import * as d3 from 'd3';
+import * as THREE from 'three';
+
 
 export class Scatterplot{
     private data: number[];
@@ -30,7 +32,6 @@ export class Scatterplot{
     const hscale = d3.scaleLinear();
     hscale.domain([0, d3.max(this.data) as number])       // max of dataset
     .range([0, 10]);                                      // linear mapping of data set values to values from 0 to 10
-
      // enter identifies any DOM elements to be added when # array elements doesn't match
     d3.select(this.container).selectAll(this.shape).data(this.data).enter().append(this.shape);
     // d is data at index, i within
@@ -41,6 +42,12 @@ export class Scatterplot{
       const z = -this.data[i] * 2;
       return `${x} ${y} ${z}`;
     });
+    //printing out position of recently populated primitives
+    d3.select(this.container).selectAll(this.shape).attr('position');
+    let holla = this.container!.querySelectorAll(this.shape);
+    for (let i = 0; i < holla.length; i++){
+      console.log(holla[i].getAttribute('position'));
+    }
   }
   private setColor(color) {
     d3.select(this.container).selectAll(this.shape).attr('color', () => {
