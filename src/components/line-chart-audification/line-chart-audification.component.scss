@@ -11,7 +11,7 @@
   }
 
   .live-text {
-    color: $color-highlight;
+    color: mat-color($guide-doge-primary);
     font-weight: 500;
 
     &:before {

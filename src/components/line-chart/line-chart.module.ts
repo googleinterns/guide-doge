@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { A11yPlaceholderModule } from '../../directives/a11y-placeholder/a11y-placeholder.module';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { MatSelectModule } from '@angular/material/select';
     A11yPlaceholderModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatCardModule,
   ],
   exports: [
     LineChartComponent,

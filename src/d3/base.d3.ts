@@ -14,7 +14,7 @@ export interface RenderOptions {
 }
 
 export abstract class BaseD3<T extends RenderOptions> {
-  protected colorHighlight = 'rgb(66, 133, 244)';
+  protected colorPrimary = 'rgb(33, 150, 243)';
   private clear$?: Subject<undefined>;
 
   constructor(protected renderOptions: T) {

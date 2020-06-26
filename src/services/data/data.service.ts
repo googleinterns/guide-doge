@@ -83,7 +83,7 @@ export class DataService implements OnDestroy {
       .pipe(map(([dataCube, queryOptions]) => {
         const {
           startDate, endDate,
-          rollingUnits = [], periodOverPeriods = [],
+          rollingUnits = [], periodOverPeriodOffsets = [],
           categoryNames = [], measureNames = [], filters = [], sortBy = [],
           ...restOptions
         } = queryOptions;
@@ -91,7 +91,7 @@ export class DataService implements OnDestroy {
         const categoryName = 'date';
         const duration = endDate.getTime() - startDate.getTime();
         const maxRollingUnit = Math.max(0, ...rollingUnits);
-        const dateRanges: [Date, Date][] = [0, ...periodOverPeriods].map(periodOffset => {
+        const dateRanges: [Date, Date][] = [0, ...periodOverPeriodOffsets].map(periodOffset => {
           const periodStart = startDate.getTime() + periodOffset;
           const rangeStartDate = new Date(periodStart - maxRollingUnit);
           const rangeEndDate = new Date(periodStart + duration);
@@ -115,7 +115,7 @@ export class DataService implements OnDestroy {
           for (const rollingUnit of rollingUnits) {
             this.attachRollingMeasure(rawData, data, measureName, rollingUnit);
           }
-          for (const periodOffset of periodOverPeriods) {
+          for (const periodOffset of periodOverPeriodOffsets) {
             this.attachPeriodOverPeriodMeasure(rawData, data, measureName, periodOffset);
           }
         }

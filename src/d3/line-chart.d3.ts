@@ -22,7 +22,7 @@ export class LineChartD3 extends XYChartD3 {
     const oldMeasureCount = this.linePaths.length;
 
     if (oldMeasureCount > measureCount) {
-      const removedLinePaths = this.linePaths.splice(this.linePaths.length, oldMeasureCount - measureCount);
+      const removedLinePaths = this.linePaths.splice(measureCount, oldMeasureCount - measureCount);
       for (const linePath of removedLinePaths) {
         linePath.path.remove();
       }
@@ -33,7 +33,7 @@ export class LineChartD3 extends XYChartD3 {
           path: this.svg
             .append('path')
             .attr('fill', 'none')
-            .attr('stroke', this.colorHighlight)
+            .attr('stroke', this.colorPrimary)
             .attr('stroke-width', 2)
             .attr('stroke-linejoin', 'round')
             .attr('stroke-linecap', 'round'),
@@ -58,7 +58,7 @@ export class LineChartD3 extends XYChartD3 {
     this.activeDatumCircle = this.svg
       .append('circle')
       .attr('r', 4)
-      .attr('fill', this.colorHighlight);
+      .attr('fill', this.colorPrimary);
     this.activeDatumToast = this.container.select('.active-indicator');
   }
 

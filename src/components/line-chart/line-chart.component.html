@@ -1,12 +1,23 @@
 <div class="svg-wrapper">
   <svg></svg>
-  <div class="active-indicator" [innerHTML]="ACTIVE_DATUM"></div>
+  <mat-card class="active-indicator" [innerHTML]="ACTIVE_DATUM"></mat-card>
 </div>
 <ng-template appA11yPlaceholder></ng-template>
 <div class="chart-options-container">
   <mat-form-field>
-    <mat-label>Toppings</mat-label>
-    <mat-select multiple>
+    <mat-label>Rolling unit(s)</mat-label>
+    <mat-select multiple [(value)]="rollingUnits" (valueChange)="emitQueryOptions()">
+      <mat-option *ngFor="let rollingUnit of rollingUnitOptions" [value]="rollingUnit">
+        {{humanizeDuration(rollingUnit)}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Period-over-period offset(s)</mat-label>
+    <mat-select multiple [(value)]="periodOverPeriodOffsets" (valueChange)="emitQueryOptions()">
+      <mat-option *ngFor="let periodOverPeriodOffset of periodOverPeriodOffsetOptions" [value]="periodOverPeriodOffset">
+        {{humanizeDuration(periodOverPeriodOffset)}}
+      </mat-option>
     </mat-select>
   </mat-form-field>
 </div>

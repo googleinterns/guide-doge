@@ -3,15 +3,13 @@ import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 import { LineChartD3 } from '../../d3/line-chart.d3';
 import { RenderOptions } from '../../d3/xy-chart.d3';
 import { AUDIFICATION, t } from '../../assets/i18n';
-import { formatX, formatY } from '../../utils/formatters';
+import { formatX, formatY, humanizeDuration } from '../../utils/formatters';
 import { A11yPlaceholderDirective } from '../../directives/a11y-placeholder/a11y-placeholder.directive';
 import { DataService } from '../../services/data/data.service';
-import { DAY } from '../../utils/timeUnits';
+import { DAY, MONTH, WEEK, YEAR } from '../../utils/timeUnits';
 import { takeUntil } from 'rxjs/operators';
 import { TimeSeriesWithComparisonQueryOptions } from '../../services/data/types';
 import { ResultRow } from '../../models/data-cube/types';
-import { FormControl } from '@angular/forms';
-import { MatOption } from '@angular/material/core';
 
 @Component({
   selector: 'app-line-chart',
@@ -25,13 +23,17 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
   @Input() startDate = new Date(this.endDate.getTime() - 30 * DAY);
   @Input() measureNames: string[] = [];
   @Input() rollingUnits = [7 * DAY, 30 * DAY];
-  @Input() periodOverPeriods = [-30 * DAY];
+  @Input() periodOverPeriodOffsets = [-30 * DAY];
   @Input() height = 500;
   @Input() width = 800;
   @Input() marginTop = 20;
   @Input() marginRight = 30;
   @Input() marginBottom = 30;
   @Input() marginLeft = 40;
+
+  humanizeDuration = humanizeDuration;
+  rollingUnitOptions = [DAY, WEEK, MONTH];
+  periodOverPeriodOffsetOptions = [-MONTH, -YEAR];
 
   queryOptions$ = new ReplaySubject<TimeSeriesWithComparisonQueryOptions>(1);
   data$ = new BehaviorSubject<ResultRow[]>([]);
@@ -73,6 +75,20 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
     }).join('<br/>');
   }
 
+  get queryOptions(): TimeSeriesWithComparisonQueryOptions {
+    return {
+      startDate: this.startDate,
+      endDate: this.endDate,
+      measureNames: this.measureNames,
+      rollingUnits: this.rollingUnits,
+      periodOverPeriodOffsets: this.periodOverPeriodOffsets,
+    };
+  }
+
+  emitQueryOptions() {
+    this.queryOptions$.next(this.queryOptions);
+  }
+
   ngOnInit() {
     this.dataService.observeTimeSeriesWithComparison(this.queryOptions$)
       .pipe(takeUntil(this.destroy$))
@@ -90,13 +106,7 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const queryOptions: TimeSeriesWithComparisonQueryOptions = {
-      startDate: this.startDate,
-      endDate: this.endDate,
-      measureNames: this.measureNames,
-      rollingUnits: this.rollingUnits,
-      periodOverPeriods: this.periodOverPeriods,
-    };
+    const { queryOptions } = this;
     const changed = Object.keys(queryOptions).some(key => key in changes);
     if (changed) {
       this.queryOptions$.next(queryOptions);

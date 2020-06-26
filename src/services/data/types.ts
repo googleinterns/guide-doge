@@ -7,5 +7,5 @@ export interface TimeSeriesQueryOptions extends QueryOptions {
 
 export interface TimeSeriesWithComparisonQueryOptions extends TimeSeriesQueryOptions {
   rollingUnits?: number[];
-  periodOverPeriods?: number[];
+  periodOverPeriodOffsets?: number[];
 }
