@@ -160,13 +160,15 @@ export class DataCube {
     const traverseNode = (node: TrieNode) => {
       if (node.values) {
         result.push({
-          categories: new Map(
-            labelList.map((label, index) => [categoryNames[index], index === dateIndex ? new Date(+label) : label]),
-          ),
-          values: new Map(
-            node.values.map((value, index) => [measureNames[index], value]),
-          ),
-        });
+          categories: labelList.reduce((dictionary, label, index) => ({
+            ...dictionary,
+            [categoryNames[index]]: index === dateIndex ? new Date(+label) : label,
+          }), {}),
+          values: node.values.reduce((dictionary, value, index) => ({
+            ...dictionary,
+            [measureNames[index]]: value,
+          }), {}),
+        } as ResultRow);
       } else {
         for (const [label, child] of Object.entries(node.children)) {
           labelList.push(label);
@@ -194,8 +196,8 @@ export class DataCube {
     function getComparator(sortConcept: string) {
       if (categoryNames.includes(sortConcept)) {
         return (a: ResultRow, b: ResultRow) => {
-          const aCategory = a.categories.get(sortConcept)!;
-          const bCategory = b.categories.get(sortConcept)!;
+          const aCategory = a.categories[sortConcept];
+          const bCategory = b.categories[sortConcept];
           if (aCategory < bCategory) {
             return -1;
           }
@@ -207,7 +209,7 @@ export class DataCube {
       }
       if (measureNames.includes(sortConcept)) {
         return (a: ResultRow, b: ResultRow) =>
-          a.values.get(sortConcept)! - b.values.get(sortConcept)!;
+          a.values[sortConcept] - b.values[sortConcept];
       }
       return () => 0;
     }
