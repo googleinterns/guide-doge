@@ -20,4 +20,8 @@
       opacity: 0;
     }
   }
+
+  .chart-options-container {
+    @include card-section;
+  }
 }

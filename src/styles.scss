@@ -1,6 +1,9 @@
 @import "./utils/constants";
 @import "https://fonts.googleapis.com/css2?family=Quicksand:wght@700&family=Roboto:wght@300;500&display=swap";
 
+@include mat-core();
+@include angular-material-theme($guide-doge-theme);
+
 html, body {
   margin: 0;
   padding: 0;
@@ -56,4 +59,12 @@ kbd {
   line-height: 1;
   padding: 2px 4px;
   white-space: nowrap;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
 }

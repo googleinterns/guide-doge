@@ -1,7 +1,14 @@
+@import '~@angular/material/theming';
+
+$guide-doge-primary: mat-palette($mat-blue);
+$guide-doge-accent: mat-palette($mat-pink, A200, A100, A400);
+$guide-doge-warn: mat-palette($mat-red);
+$guide-doge-theme: mat-light-theme($guide-doge-primary, $guide-doge-accent, $guide-doge-warn);
+
 $color-background: rgb(248, 249, 250);
 $color-border: rgb(218, 220, 224);
 $color-font: rgb(34, 34, 34);
-$color-highlight: rgb(66, 133, 244);
+$color-highlight: mat-color($guide-doge-primary);
 $color-positive: rgb(15, 157, 88);
 $color-negative: rgb(219, 68, 55);
 
@@ -11,4 +18,9 @@ $font-size-small: 12px;
 
 @mixin card-shadow {
   box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px 0, rgba(0, 0, 0, 0.14) 0 1px 1px 0, rgba(0, 0, 0, 0.12) 0 2px 1px -1px;
+}
+
+@mixin card-section {
+  padding: 1.5rem;
+  border-top: 1px solid $color-border;
 }

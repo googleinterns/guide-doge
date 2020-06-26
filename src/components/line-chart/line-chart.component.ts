@@ -10,6 +10,8 @@ import { DAY } from '../../utils/timeUnits';
 import { takeUntil } from 'rxjs/operators';
 import { TimeSeriesWithComparisonQueryOptions } from '../../services/data/types';
 import { ResultRow } from '../../models/data-cube/types';
+import { FormControl } from '@angular/forms';
+import { MatOption } from '@angular/material/core';
 
 @Component({
   selector: 'app-line-chart',
