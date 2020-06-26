@@ -8,7 +8,7 @@ import { A11yPlaceholderDirective } from '../../directives/a11y-placeholder/a11y
 import { DataService } from '../../services/data/data.service';
 import { DAY } from '../../utils/timeUnits';
 import { takeUntil } from 'rxjs/operators';
-import { TimeSeriesQueryOptions } from '../../services/data/types';
+import { TimeSeriesWithComparisonQueryOptions } from '../../services/data/types';
 import { ResultRow } from '../../models/data-cube/types';
 
 @Component({
@@ -22,6 +22,8 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
   @Input() endDate = new Date();
   @Input() startDate = new Date(this.endDate.getTime() - 30 * DAY);
   @Input() measureNames: string[] = [];
+  @Input() rollingUnits = [7 * DAY, 30 * DAY];
+  @Input() periodOverPeriods = [-30 * DAY];
   @Input() height = 500;
   @Input() width = 800;
   @Input() marginTop = 20;
@@ -29,7 +31,7 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
   @Input() marginBottom = 30;
   @Input() marginLeft = 40;
 
-  queryOptions$ = new ReplaySubject<TimeSeriesQueryOptions>(1);
+  queryOptions$ = new ReplaySubject<TimeSeriesWithComparisonQueryOptions>(1);
   data$ = new BehaviorSubject<ResultRow[]>([]);
   activeDatum$ = new BehaviorSubject<ResultRow | null>(null);
   private destroy$ = new Subject();
@@ -70,7 +72,7 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
   }
 
   ngOnInit() {
-    this.dataService.observeTimeSeries(this.queryOptions$)
+    this.dataService.observeTimeSeriesWithComparison(this.queryOptions$)
       .pipe(takeUntil(this.destroy$))
       .subscribe(data => {
         this.data$.next(data);
@@ -86,10 +88,12 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const queryOptions = {
+    const queryOptions: TimeSeriesWithComparisonQueryOptions = {
       startDate: this.startDate,
       endDate: this.endDate,
       measureNames: this.measureNames,
+      rollingUnits: this.rollingUnits,
+      periodOverPeriods: this.periodOverPeriods,
     };
     const changed = Object.keys(queryOptions).some(key => key in changes);
     if (changed) {

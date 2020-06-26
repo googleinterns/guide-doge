@@ -94,7 +94,7 @@ const defaultSettings: ModelSettings = {
   avgSessionsPerUser: 5,
   sessionsPerUserStdDev: 3,
   timeSeries: true,
-  startDate: new Date(Date.now() - 60 * DAY),
+  startDate: new Date(Date.now() - 90 * DAY),
   endDate: new Date(),
   dailyStdDev: 0.1,
 };

@@ -4,3 +4,8 @@ export interface TimeSeriesQueryOptions extends QueryOptions {
   startDate: Date;
   endDate: Date;
 }
+
+export interface TimeSeriesWithComparisonQueryOptions extends TimeSeriesQueryOptions {
+  rollingUnits?: number[];
+  periodOverPeriods?: number[];
+}

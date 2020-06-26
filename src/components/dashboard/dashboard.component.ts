@@ -14,7 +14,7 @@ export class DashboardComponent {
   textSummary$ = this.preferenceService.textSummary$;
 
   sampleMeasureGroups = {
-    activeUsers: ['activeUsers', 'revenue'],
+    activeUsers: ['activeUsers'],
     revenue: ['revenue'],
     eventCount: ['eventCount'],
   };
