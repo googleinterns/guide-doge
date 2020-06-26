@@ -1,5 +1,5 @@
 <h2 class="card-title">{{title}}</h2>
-<div class="card-content">
+<mat-card class="card-content">
   <div class="tabs" *ngIf="tabbed">
     <div *ngFor="let measureName of measureNames"
          class="tab" [class.active]="measureName === currentMeasureName"
@@ -13,4 +13,4 @@
                     [measureNames]="[currentMeasureName]"
                     [attr.aria-label]="VISUALIZATION"></app-line-chart>
   </ng-container>
-</div>
+</mat-card>
