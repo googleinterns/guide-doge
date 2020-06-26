@@ -16,6 +16,7 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
   protected yAxis: d3.Axis<number>;
   protected xAxisG: d3.Selection<SVGGElement, unknown, null, undefined>;
   protected yAxisG: d3.Selection<SVGGElement, unknown, null, undefined>;
+  protected legendG: d3.Selection<SVGGElement, unknown, null, undefined>;
 
   render() {
     super.render();
@@ -23,6 +24,7 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
     const { data$, activeDatum$ } = this.renderOptions;
 
     this.renderAxis();
+    this.renderLegend();
     this.renderData();
     this.renderActiveDatum();
 
@@ -30,6 +32,7 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
       .pipe(this.takeUntilCleared())
       .subscribe(data => {
         this.updateAxis(data);
+        this.updateLegend(data);
         this.updateData(data);
       });
 
@@ -40,11 +43,16 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
       });
   }
 
+  protected getMeasureNames(data: ResultRow[]) {
+    return Object.keys(data[0]?.values ?? {});
+  }
+
   protected renderAxis() {
     const {
       height, width,
       marginTop, marginRight, marginBottom, marginLeft,
     } = this.renderOptions;
+    const legendHeight = 40;
 
     this.scaleX = d3
       .scaleUtc()
@@ -52,7 +60,7 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
     this.scaleY = d3
       .scaleLinear()
       .nice()
-      .range([height - marginBottom, marginTop]);
+      .range([height - marginBottom - legendHeight, marginTop]);
 
     this.xAxis = d3
       .axisBottom<Date>(this.scaleX)
@@ -62,7 +70,7 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
 
     this.xAxisG = this.svg
       .append('g')
-      .attr('transform', `translate(0,${height - marginBottom})`);
+      .attr('transform', `translate(0,${height - marginBottom - legendHeight})`);
     this.yAxisG = this.svg
       .append('g')
       .attr('transform', `translate(${marginLeft},0)`);
@@ -80,6 +88,33 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
       .transition(this.transition)
       .call(this.yAxis)
       .attr('font-size', 12);
+  }
+
+  protected renderLegend() {
+    const {
+      height,
+      marginBottom, marginLeft,
+    } = this.renderOptions;
+    this.legendG = this.svg
+      .append('g')
+      .style('display', 'block')
+      .attr('transform', `translate(${marginLeft},${height - marginBottom})`);
+  }
+
+  protected updateLegend(data: ResultRow[]) {
+    this.legendG.html('');
+
+    const measureNames = this.getMeasureNames(data);
+    measureNames.forEach(measureName => {
+      const measureG = this.legendG
+        .append('g')
+        .style('display', 'block')
+        .style('float', 'left');
+      measureG
+        .append('text')
+        .style('display', 'block')
+        .text(measureName);
+    });
   }
 
   protected abstract renderData();

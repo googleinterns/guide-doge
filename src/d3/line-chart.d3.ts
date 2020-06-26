@@ -17,7 +17,7 @@ export class LineChartD3 extends XYChartD3 {
   }
 
   protected updateData(data: ResultRow[]) {
-    const measureNames = Object.keys(data[0]?.values ?? {});
+    const measureNames = this.getMeasureNames(data);
     const measureCount = measureNames.length;
     const oldMeasureCount = this.linePaths.length;
 

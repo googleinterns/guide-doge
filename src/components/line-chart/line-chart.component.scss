@@ -21,5 +21,13 @@
 
   .chart-options-container {
     @include card-section;
+
+    > * {
+      margin-right: 1rem;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
   }
 }

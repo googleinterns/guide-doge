@@ -22,18 +22,18 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
   @Input() endDate = new Date();
   @Input() startDate = new Date(this.endDate.getTime() - 30 * DAY);
   @Input() measureNames: string[] = [];
-  @Input() rollingUnits = [7 * DAY, 30 * DAY];
-  @Input() periodOverPeriodOffsets = [-30 * DAY];
   @Input() height = 500;
   @Input() width = 800;
   @Input() marginTop = 20;
   @Input() marginRight = 30;
   @Input() marginBottom = 30;
   @Input() marginLeft = 40;
+  rollingUnits = [WEEK, MONTH];
+  periodOverPeriodOffsets = [];
 
   humanizeDuration = humanizeDuration;
-  rollingUnitOptions = [DAY, WEEK, MONTH];
-  periodOverPeriodOffsetOptions = [-MONTH, -YEAR];
+  rollingUnitOptions = [WEEK, MONTH];
+  periodOverPeriodOffsetOptions = [-MONTH];
 
   queryOptions$ = new ReplaySubject<TimeSeriesWithComparisonQueryOptions>(1);
   data$ = new BehaviorSubject<ResultRow[]>([]);
