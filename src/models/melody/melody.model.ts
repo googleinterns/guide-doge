@@ -1,38 +1,38 @@
 import * as Tone from 'tone';
 
-export type OnSeek = (index: number, playing: boolean) => void;
+export type OnSeek = (index: number) => void;
 
 export class Melody {
+  currentDatumIndex = 0;
   private synth = new Tone.Synth().toDestination();
-  private forwardSequence: Tone.Sequence;
-  private backwardSequence: Tone.Sequence;
-  private currentDatumIndex = 0;
   private inclusive = true; // if true, playing the melody starting inclusively from currentDatumIndex
   private reversed = false; // if true, playing the melody backward
+  private readonly frequencies: number[];
+  private timeoutId: number | null = null;
 
   constructor(
     private values: number[],
     private frequencyRange: [number, number],
-    private duration: number, // duration (in seconds) of the melody
+    private noteDuration: number, // duration (in ms) of a note
     private onSeek?: OnSeek,
   ) {
-    const reversedValues = [...values].reverse();
-    this.forwardSequence = this.createSequence(values);
-    this.backwardSequence = this.createSequence(reversedValues);
+    const minValue = Math.min(...values);
+    const maxValue = Math.max(...values);
+    const [minFrequency, maxFrequency] = this.frequencyRange;
+    const minKeyNumber = Melody.getKeyNumber(minFrequency);
+    const maxKeyNumber = Melody.getKeyNumber(maxFrequency);
+    this.frequencies = values.map(value => {
+      const keyNumber = (value - minValue) / (maxValue - minValue) * (maxKeyNumber - minKeyNumber) + minKeyNumber;
+      return Melody.getFrequency(keyNumber);
+    });
   }
 
-  get noteDuration() {
-    return this.duration / this.values.length;
-  }
-
-  get currentSeconds() {
-    return this.reversed
-      ? this.duration - Tone.Transport.seconds
-      : Tone.Transport.seconds;
+  get duration() {
+    return this.noteDuration * this.values.length;
   }
 
   get isPlaying() {
-    return Tone.Transport.state === 'started';
+    return this.timeoutId !== null;
   }
 
   get isEnded() {
@@ -42,9 +42,9 @@ export class Melody {
     );
   }
 
-  get nextIndex() {
+  get nextDatumIndex() {
     if (this.isEnded) {
-      return (this.values.length - 1) - this.currentDatumIndex; // bring playhead to the opposite end
+      return this.reverseDatumIndex(this.currentDatumIndex); // bring playhead to the opposite end
     }
     const offset = this.inclusive ? 0 : (this.reversed ? -1 : +1);
     return this.currentDatumIndex + offset;
@@ -64,73 +64,41 @@ export class Melody {
     }
     if (!this.isPlaying) {
       this.reversed = reversed;
-      this.currentDatumIndex = this.nextIndex;
-      let nextSeconds = this.getSeconds(this.currentDatumIndex);
-      if (this.reversed) {
-        this.backwardSequence.start(0);
-        this.forwardSequence.stop(0);
-        nextSeconds += this.noteDuration / 2;
-        Tone.Transport.start(undefined, this.duration - nextSeconds);
-      } else {
-        this.backwardSequence.stop(0);
-        this.forwardSequence.start(0);
-        nextSeconds -= this.noteDuration / 2;
-        Tone.Transport.start(undefined, nextSeconds);
-      }
+      this.playNextNote();
     }
   }
 
   pause() {
-    if (this.isPlaying) {
-      Tone.Transport.pause();
-      this.backwardSequence.stop(0);
-      this.forwardSequence.stop(0);
-      this.seekTo(this.currentSeconds);
+    if (this.timeoutId !== null) {
+      window.clearInterval(this.timeoutId);
+      this.timeoutId = null;
     }
   }
 
-  getCurrentDatumIndex() {
-    return this.currentDatumIndex;
-  }
-
-  seekTo(seconds: number, inclusive = false) {
-    this.currentDatumIndex = this.getDatumIndex(seconds);
+  seekTo(datumIndex: number, inclusive = false) {
+    this.currentDatumIndex = datumIndex;
     this.inclusive = this.isEnded || inclusive;
-    this.onSeek?.(this.currentDatumIndex, this.isPlaying);
+    this.onSeek?.(this.currentDatumIndex);
   }
 
   dispose() {
-    this.forwardSequence.dispose();
-    this.backwardSequence.dispose();
+    this.pause();
     this.synth.dispose();
   }
 
-  private createSequence(values: number[]) {
-    const minValue = Math.min(...values);
-    const maxValue = Math.max(...values);
-    const [minFrequency, maxFrequency] = this.frequencyRange;
-    const minKeyNumber = Melody.getKeyNumber(minFrequency);
-    const maxKeyNumber = Melody.getKeyNumber(maxFrequency);
-    const sequence = new Tone.Sequence(
-      (time, value) => {
-        this.seekTo(this.currentSeconds);
-        const keyNumber = (value - minValue) / (maxValue - minValue) * (maxKeyNumber - minKeyNumber) + minKeyNumber;
-        const frequency = Melody.getFrequency(keyNumber);
-        this.synth.triggerAttackRelease(frequency, this.noteDuration, time);
-      },
-      values,
-      this.noteDuration,
-    );
-    sequence.loop = 1;
-    return sequence;
+  private playNextNote() {
+    this.seekTo(this.nextDatumIndex);
+    const frequency = this.frequencies[this.currentDatumIndex];
+    this.synth.triggerAttackRelease(frequency, this.noteDuration / 1000);
+    if (!this.isEnded) {
+      this.timeoutId = window.setTimeout(() => {
+        this.timeoutId = null;
+        this.playNextNote();
+      }, this.noteDuration);
+    }
   }
 
-  private getSeconds(index: number) {
-    return (index + .5) * this.noteDuration;
-  }
-
-  private getDatumIndex(seconds: number) {
-    const index = Math.round(seconds / this.noteDuration - .5);
-    return Math.min(Math.max(index, 0), this.values.length - 1);
+  private reverseDatumIndex(index: number) {
+    return (this.values.length - 1) - index;
   }
 }
