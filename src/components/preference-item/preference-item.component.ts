@@ -8,12 +8,12 @@ import { BehaviorSubject } from 'rxjs';
   templateUrl: './preference-item.component.html',
   styleUrls: ['./preference-item.component.scss'],
 })
-export class PreferenceItemComponent<T extends Preference, U extends keyof T> implements OnInit {
+export class PreferenceItemComponent<T extends Preference, P extends keyof T> implements OnInit {
   @Input() name: string;
 
   // the component should either be nested under PreferenceGroupComponent, or have the preference$ property provided
   @Input() preference$: BehaviorSubject<T>;
-  @Input() property: U;
+  @Input() property: P;
 
   constructor(
     @Optional() @Host() private host: PreferenceGroupComponent<T> | null,
@@ -24,11 +24,11 @@ export class PreferenceItemComponent<T extends Preference, U extends keyof T> im
     return typeof this.value;
   }
 
-  get value(): T[U] {
+  get value(): T[P] {
     return this.preference$.value[this.property];
   }
 
-  set value(value: T[U]) {
+  set value(value: T[P]) {
     if (value !== undefined && value !== null) {
       this.preference$.next({
         ...this.preference$.value,
