@@ -7,14 +7,20 @@ import {
   sourceCategory,
 } from '../../models/data-cube/presets';
 import { DataCube } from '../../models/data-cube/data-cube.model';
-import { betweenDates, inOneOfDateRanges } from '../../models/data-cube/filters';
+import { inOneOfDateRanges } from '../../models/data-cube/filters';
 import { generateCube } from 'src/models/data-cube/generation';
 import { OnDestroy } from '@angular/core';
 import { map, takeUntil, throttleTime } from 'rxjs/operators';
 import { asyncScheduler, combineLatest, Observable, ReplaySubject, Subject } from 'rxjs';
 import { PreferenceService } from '../preference/preference.service';
-import { TimeSeriesQueryOptions, TimeSeriesWithComparisonQueryOptions } from './types';
+import { CompoundMeasure, CompoundMeasureType, PeriodOverPeriodMeasure, RollingMeasure, TimeSeriesQueryOptions } from './types';
 import { QueryOptions, ResultRow } from '../../models/data-cube/types';
+import {
+  destructureCompoundMeasure,
+  isCompoundMeasure,
+  namePeriodOverPeriodMeasure,
+  nameRollingMeasure,
+} from '../../utils/compoundMeasures';
 
 export class DataService implements OnDestroy {
   private dataCube$ = new ReplaySubject<DataCube>(1);
@@ -58,42 +64,30 @@ export class DataService implements OnDestroy {
       }));
   }
 
-  observeTimeSeries(timeSeriesQueryOptions$: Observable<TimeSeriesQueryOptions>) {
-    const queryOptions$: Observable<QueryOptions> = timeSeriesQueryOptions$
-      .pipe(map(queryOptions => {
-        const {
-          startDate, endDate,
-          categoryNames = [], filters = [], sortBy = [],
-          ...restOptions
-        } = queryOptions;
-        const categoryName = 'date';
-        const dateFilter = betweenDates(startDate, endDate, { excludeStart: true });
-        return {
-          ...restOptions,
-          categoryNames: [categoryName, ...categoryNames],
-          filters: [dateFilter, ...filters],
-          sortBy: [categoryName, ...sortBy],
-        };
-      }));
-    return this.observeData(queryOptions$);
-  }
-
-  observeTimeSeriesWithComparison(queryOptions$: Observable<TimeSeriesWithComparisonQueryOptions>) {
+  observeTimeSeries(queryOptions$: Observable<TimeSeriesQueryOptions>) {
     return combineLatest([this.dataCube$, queryOptions$])
       .pipe(map(([dataCube, queryOptions]) => {
         const {
           startDate, endDate,
-          rollingUnits = [], periodOverPeriodOffsets = [],
           categoryNames = [], measureNames = [], filters = [], sortBy = [],
           ...restOptions
         } = queryOptions;
 
-        const categoryName = 'date';
+        const pureMeasureNames = measureNames.filter(measureName => !isCompoundMeasure(measureName));
+        const compoundMeasures = measureNames.filter(isCompoundMeasure).map(destructureCompoundMeasure);
+        const windowSizes = compoundMeasures
+          .filter((measure: CompoundMeasure): measure is RollingMeasure => measure.type === CompoundMeasureType.ROLLING)
+          .map(({ windowSize }) => windowSize);
+        const periodOffsets = compoundMeasures
+          .filter((measure: CompoundMeasure): measure is PeriodOverPeriodMeasure => measure.type === CompoundMeasureType.PERIOD_OVER_PERIOD)
+          .map(({ periodOffset }) => periodOffset);
+
+        const dateCategoryName = 'date';
         const duration = endDate.getTime() - startDate.getTime();
-        const maxRollingUnit = Math.max(0, ...rollingUnits);
-        const dateRanges: [Date, Date][] = [0, ...periodOverPeriodOffsets].map(periodOffset => {
+        const maxWindowSize = Math.max(0, ...windowSizes);
+        const dateRanges: [Date, Date][] = [0, ...periodOffsets].map(periodOffset => {
           const periodStart = startDate.getTime() + periodOffset;
-          const rangeStartDate = new Date(periodStart - maxRollingUnit);
+          const rangeStartDate = new Date(periodStart - maxWindowSize);
           const rangeEndDate = new Date(periodStart + duration);
           return [rangeStartDate, rangeEndDate];
         });
@@ -101,21 +95,21 @@ export class DataService implements OnDestroy {
 
         const rawData = dataCube.getDataFor({
           ...restOptions,
-          categoryNames: [categoryName, ...categoryNames],
+          categoryNames: [dateCategoryName, ...pureMeasureNames],
           measureNames,
           filters: [dateFilter, ...filters],
-          sortBy: [categoryName, ...sortBy],
+          sortBy: [dateCategoryName, ...sortBy],
         });
         const data = rawData.filter(datum => {
           const { date } = datum.categories;
           return startDate < date && date <= endDate;
         });
 
-        for (const measureName of measureNames) {
-          for (const rollingUnit of rollingUnits) {
+        for (const measureName of pureMeasureNames) {
+          for (const rollingUnit of windowSizes) {
             this.attachRollingMeasure(rawData, data, measureName, rollingUnit);
           }
-          for (const periodOffset of periodOverPeriodOffsets) {
+          for (const periodOffset of periodOffsets) {
             this.attachPeriodOverPeriodMeasure(rawData, data, measureName, periodOffset);
           }
         }
@@ -124,12 +118,12 @@ export class DataService implements OnDestroy {
       }));
   }
 
-  private attachRollingMeasure(rawData: ResultRow[], data: ResultRow[], measureName: string, rollingUnit: number) {
-    const newMeasureName = `${measureName}-rolling-${rollingUnit}`;
+  private attachRollingMeasure(rawData: ResultRow[], data: ResultRow[], measureName: string, windowSize: number) {
+    const newMeasureName = nameRollingMeasure(measureName, windowSize);
     const [headDatum, ...tailData] = data;
 
     // pre-calculate the sum of the window for the very first datum
-    const rollingStart = headDatum.categories.date.getTime() - rollingUnit;
+    const rollingStart = headDatum.categories.date.getTime() - windowSize;
     let startIndex = rawData.findIndex(datum => rollingStart < datum.categories.date.getTime());
     if (startIndex < 0) {
       return;
@@ -149,7 +143,7 @@ export class DataService implements OnDestroy {
   }
 
   private attachPeriodOverPeriodMeasure(rawData: ResultRow[], data: ResultRow[], measureName: string, periodOffset: number) {
-    const newMeasureName = `${measureName}-pop-${periodOffset}`;
+    const newMeasureName = namePeriodOverPeriodMeasure(measureName, periodOffset);
     const [headDatum, ...tailData] = data;
 
     // find the corresponding datum to the very first datum
