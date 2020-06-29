@@ -36,6 +36,7 @@ export class Scatterplot{
     d3.select(this.container).selectAll(this.shape).data(this.data).enter().append(this.shape);
     // d is data at index, i within
     // select all shapes within given container
+    debugger;
     d3.select(this.container).selectAll(this.shape).attr('position', (d, i) => {
       const x = i * 5;
       const y = i * 10;
@@ -43,15 +44,18 @@ export class Scatterplot{
       return `${x} ${y} ${z}`;
     });
     //printing out position of recently populated primitives
-    d3.select(this.container).selectAll(this.shape).attr('position');
+    //d3.select(this.container).selectAll(this.shape).attr('position');
     let holla = this.container!.querySelectorAll(this.shape);
+  
     for (let i = 0; i < holla.length; i++){
       console.log(holla[i].getAttribute('position'));
+      //let position = holla[i].getAttribute('position');
     }
   }
   private setColor(color) {
     d3.select(this.container).selectAll(this.shape).attr('color', () => {
       return color;
     });
+
   }
 }
