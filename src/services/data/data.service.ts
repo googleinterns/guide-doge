@@ -13,13 +13,17 @@ import { OnDestroy } from '@angular/core';
 import { map, takeUntil, throttleTime } from 'rxjs/operators';
 import { asyncScheduler, combineLatest, Observable, ReplaySubject, Subject } from 'rxjs';
 import { PreferenceService } from '../preference/preference.service';
-import { CompoundMeasure, CompoundMeasureType, PeriodOverPeriodMeasure, RollingMeasure, TimeSeriesQueryOptions } from './types';
+import { TimeSeriesQueryOptions } from './types';
 import { QueryOptions, ResultRow } from '../../models/data-cube/types';
 import {
+  CompoundMeasure,
+  CompoundMeasureType,
   destructureCompoundMeasure,
   isCompoundMeasure,
   namePeriodOverPeriodMeasure,
   nameRollingMeasure,
+  PeriodOverPeriodMeasure,
+  RollingMeasure,
 } from '../../utils/compoundMeasures';
 
 export class DataService implements OnDestroy {
