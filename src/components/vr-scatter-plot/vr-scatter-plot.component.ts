@@ -21,7 +21,7 @@ export class VRScatterPlotComponent{
   
 
   ngOnInit() {
-   this.vrScatterPlot.init(document.querySelector('a-scene'), [10, 20, 30, 40, 50, 60]);
+   this.vrScatterPlot.init(document.querySelector('a-scene'), [5, 10, 15, 20]);
   }
 
   ngOnDestroy() {
