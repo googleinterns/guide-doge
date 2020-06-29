@@ -5,16 +5,13 @@ import { takeUntil } from 'rxjs/operators';
 
 export interface RenderOptions {
   elementRef: ElementRef<HTMLElement>;
-  height: number;
   width: number;
-  marginTop: number;
-  marginRight: number;
-  marginBottom: number;
-  marginLeft: number;
+  height: number;
 }
 
 export abstract class BaseD3<T extends RenderOptions> {
-  protected colorHighlight = 'rgb(33, 150, 243)';
+  static colorPrimary = 'rgb(33, 150, 243)';
+
   private clear$?: Subject<undefined>;
 
   constructor(protected renderOptions: T) {

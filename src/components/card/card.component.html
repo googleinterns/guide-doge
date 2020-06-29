@@ -10,7 +10,6 @@
   <ng-container [ngSwitch]="type">
     <app-line-chart *ngSwitchCase="'line'"
                     role="img" appAudification
-                    [measureNames]="[currentMeasureName]"
                     [attr.aria-label]="VISUALIZATION"></app-line-chart>
   </ng-container>
 </mat-card>

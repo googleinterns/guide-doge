@@ -1,7 +1,19 @@
 <div class="svg-wrapper">
   <svg></svg>
-  <mat-card class="active-indicator">
-    {{formattedActiveDatum}}
+  <mat-card class="active-indicator" *ngIf="activeDatum && legendItems.length"
+            [style.top.px]="lineChartD3.y(activeDatum.values[legendItems[0].measureName])"
+            [style.left.px]="lineChartD3.x(activeDatum.categories.date)">
+    <div class="date">
+      {{formatX(activeDatum.categories.date)}}
+    </div>
+    <div *ngFor="let legendItem of legendItems" class="legend-item">
+      <div class="label">
+        {{legendItem.label}}
+      </div>
+      <div class="value">
+        {{formatY(activeDatum.values[legendItem.measureName])}}
+      </div>
+    </div>
   </mat-card>
 </div>
 <ng-template appA11yPlaceholder></ng-template>
