@@ -31,17 +31,21 @@ describe('LineChartComponent', () => {
   });
 
   it('should synchronize data with data$.', () => {
-    component.data = [];
-    expect(component.data$.value).toBe(component.data);
-    component.data = [mockDatum];
-    expect(component.data$.value).toBe(component.data);
+    const data = [mockDatum];
+
+    component.data = data;
+
+    expect(component.data$.value).toBe(data);
+    expect(component.data).toBe(data);
   });
 
   it('should synchronize activeActiveDatum with activeDatum$.', () => {
-    component.activeDatum = null;
-    expect(component.activeDatum$.value).toBe(component.activeDatum);
-    component.activeDatum = mockDatum;
-    expect(component.activeDatum$.value).toBe(component.activeDatum);
+    const activeDatum = mockDatum;
+
+    component.activeDatum = activeDatum;
+
+    expect(component.activeDatum$.value).toBe(activeDatum);
+    expect(component.activeDatum).toBe(activeDatum);
   });
 
   it('should render d3 on init.', () => {
