@@ -82,7 +82,7 @@ AppRoutingModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineI
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AppComponent", function() { return AppComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
-/* harmony import */ var _assets_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./assets/i18n */ "./src/assets/i18n/index.ts");
+/* harmony import */ var _i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./i18n */ "./src/i18n/index.ts");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/__ivy_ngcc__/fesm2015/router.js");
 
 
@@ -90,7 +90,7 @@ __webpack_require__.r(__webpack_exports__);
 
 class AppComponent {
     get TITLE() {
-        return Object(_assets_i18n__WEBPACK_IMPORTED_MODULE_1__["t"])(_assets_i18n__WEBPACK_IMPORTED_MODULE_1__["GUIDE_DOGE"].TITLE);
+        return Object(_i18n__WEBPACK_IMPORTED_MODULE_1__["t"])(_i18n__WEBPACK_IMPORTED_MODULE_1__["GUIDE_DOGE"].TITLE);
     }
 }
 AppComponent.ɵfac = function AppComponent_Factory(t) { return new (t || AppComponent)(); };
@@ -174,140 +174,6 @@ AppModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineInjector
 
 /***/ }),
 
-/***/ "./src/assets/i18n/en.ts":
-/*!*******************************!*\
-  !*** ./src/assets/i18n/en.ts ***!
-  \*******************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./types */ "./src/assets/i18n/types.ts");
-
-const en = {
-    [_types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].TITLE]: 'Guide-Doge',
-    [_types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].VISUALIZATION]: 'Data visualization',
-    [_types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].AUDIFICATION]: 'Data audification',
-    [_types__WEBPACK_IMPORTED_MODULE_0__["VISUALIZATION"].ACTIVE_DATUM]: '%(y)s on %(x)s',
-    [_types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].INSTRUCTIONS]: [
-        'Hold down <kbd>SPACE</kbd> to play audification and <kbd>SHIFT</kbd> + <kbd>SPACE</kbd> to play it backward.',
-        'Press <kbd>X</kbd> or <kbd>Y</kbd> to read out the domain and range.',
-        'Press <kbd>L</kbd> to read out the legend items.',
-        'Press <kbd>0</kbd> ... <kbd>9</kbd> to move playhead.',
-    ].join(' <br/>'),
-    [_types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].DOMAIN]: 'Domain from %(min)s to %(max)s',
-    [_types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].RANGE]: 'Range from %(min)s to %(max)s',
-    [_types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].ACTIVE_DATUM]: '%(y)s on %(x)s',
-};
-/* harmony default export */ __webpack_exports__["default"] = (en);
-
-
-/***/ }),
-
-/***/ "./src/assets/i18n/index.ts":
-/*!**********************************!*\
-  !*** ./src/assets/i18n/index.ts ***!
-  \**********************************/
-/*! exports provided: GUIDE_DOGE, VISUALIZATION, AUDIFICATION, setLanguage, getLanguage, t, tA11y */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./types */ "./src/assets/i18n/types.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GUIDE_DOGE", function() { return _types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VISUALIZATION", function() { return _types__WEBPACK_IMPORTED_MODULE_0__["VISUALIZATION"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AUDIFICATION", function() { return _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"]; });
-
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils */ "./src/assets/i18n/utils.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "setLanguage", function() { return _utils__WEBPACK_IMPORTED_MODULE_1__["setLanguage"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getLanguage", function() { return _utils__WEBPACK_IMPORTED_MODULE_1__["getLanguage"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "t", function() { return _utils__WEBPACK_IMPORTED_MODULE_1__["t"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "tA11y", function() { return _utils__WEBPACK_IMPORTED_MODULE_1__["tA11y"]; });
-
-
-
-
-
-/***/ }),
-
-/***/ "./src/assets/i18n/types.ts":
-/*!**********************************!*\
-  !*** ./src/assets/i18n/types.ts ***!
-  \**********************************/
-/*! exports provided: GUIDE_DOGE, VISUALIZATION, AUDIFICATION */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GUIDE_DOGE", function() { return GUIDE_DOGE; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VISUALIZATION", function() { return VISUALIZATION; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AUDIFICATION", function() { return AUDIFICATION; });
-var GUIDE_DOGE;
-(function (GUIDE_DOGE) {
-    GUIDE_DOGE[GUIDE_DOGE["TITLE"] = 0] = "TITLE";
-    GUIDE_DOGE[GUIDE_DOGE["VISUALIZATION"] = 1] = "VISUALIZATION";
-    GUIDE_DOGE[GUIDE_DOGE["AUDIFICATION"] = 2] = "AUDIFICATION";
-})(GUIDE_DOGE || (GUIDE_DOGE = {}));
-var VISUALIZATION;
-(function (VISUALIZATION) {
-    VISUALIZATION[VISUALIZATION["ACTIVE_DATUM"] = 256] = "ACTIVE_DATUM";
-})(VISUALIZATION || (VISUALIZATION = {}));
-var AUDIFICATION;
-(function (AUDIFICATION) {
-    AUDIFICATION[AUDIFICATION["INSTRUCTIONS"] = 512] = "INSTRUCTIONS";
-    AUDIFICATION[AUDIFICATION["DOMAIN"] = 513] = "DOMAIN";
-    AUDIFICATION[AUDIFICATION["RANGE"] = 514] = "RANGE";
-    AUDIFICATION[AUDIFICATION["ACTIVE_DATUM"] = 515] = "ACTIVE_DATUM";
-})(AUDIFICATION || (AUDIFICATION = {}));
-
-
-/***/ }),
-
-/***/ "./src/assets/i18n/utils.ts":
-/*!**********************************!*\
-  !*** ./src/assets/i18n/utils.ts ***!
-  \**********************************/
-/*! exports provided: setLanguage, getLanguage, t, tA11y */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setLanguage", function() { return setLanguage; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getLanguage", function() { return getLanguage; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "t", function() { return t; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "tA11y", function() { return tA11y; });
-/* harmony import */ var sprintf_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! sprintf-js */ "./node_modules/sprintf-js/src/sprintf.js");
-/* harmony import */ var sprintf_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(sprintf_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _en__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./en */ "./src/assets/i18n/en.ts");
-/* harmony import */ var striptags__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! striptags */ "./node_modules/striptags/src/striptags.js");
-/* harmony import */ var striptags__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(striptags__WEBPACK_IMPORTED_MODULE_2__);
-
-
-
-const dictionary = { en: _en__WEBPACK_IMPORTED_MODULE_1__["default"] };
-let language = 'en';
-function setLanguage(lang) {
-    language = lang;
-}
-function getLanguage() {
-    return language;
-}
-function t(key, ...args) {
-    return Object(sprintf_js__WEBPACK_IMPORTED_MODULE_0__["sprintf"])(dictionary[language][key], ...args);
-}
-function tA11y(key, ...args) {
-    return striptags__WEBPACK_IMPORTED_MODULE_2__(t(key, ...args));
-}
-
-
-/***/ }),
-
 /***/ "./src/components/card/card.component.ts":
 /*!***********************************************!*\
   !*** ./src/components/card/card.component.ts ***!
@@ -319,7 +185,7 @@ function tA11y(key, ...args) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CardComponent", function() { return CardComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
-/* harmony import */ var _assets_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../assets/i18n */ "./src/assets/i18n/index.ts");
+/* harmony import */ var _i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../i18n */ "./src/i18n/index.ts");
 /* harmony import */ var _utils_formatters__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils/formatters */ "./src/utils/formatters.ts");
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
 /* harmony import */ var _line_chart_line_chart_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../line-chart/line-chart.component */ "./src/components/line-chart/line-chart.component.ts");
@@ -366,7 +232,7 @@ class CardComponent {
         this.humanizeMeasureName = _utils_formatters__WEBPACK_IMPORTED_MODULE_2__["humanizeMeasureName"];
     }
     get VISUALIZATION() {
-        return Object(_assets_i18n__WEBPACK_IMPORTED_MODULE_1__["t"])(_assets_i18n__WEBPACK_IMPORTED_MODULE_1__["GUIDE_DOGE"].VISUALIZATION);
+        return Object(_i18n__WEBPACK_IMPORTED_MODULE_1__["t"])(_i18n__WEBPACK_IMPORTED_MODULE_1__["GUIDE_DOGE"].VISUALIZATION);
     }
     ngOnInit() {
         this.setMeasureName(this.measureNames[0]);
@@ -632,7 +498,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
 /* harmony import */ var _models_melody_melody_model__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../models/melody/melody.model */ "./src/models/melody/melody.model.ts");
-/* harmony import */ var _assets_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../assets/i18n */ "./src/assets/i18n/index.ts");
+/* harmony import */ var _i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../i18n */ "./src/i18n/index.ts");
 /* harmony import */ var _utils_formatters__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../utils/formatters */ "./src/utils/formatters.ts");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm2015/operators/index.js");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm2015/index.js");
@@ -659,10 +525,10 @@ class LineChartAudificationComponent {
         this.handleSeek = this.handleSeek.bind(this);
     }
     get INSTRUCTIONS() {
-        return Object(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].INSTRUCTIONS);
+        return Object(_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].INSTRUCTIONS);
     }
     get INSTRUCTIONS_A11Y() {
-        return Object(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["tA11y"])(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].INSTRUCTIONS);
+        return Object(_i18n__WEBPACK_IMPORTED_MODULE_3__["tA11y"])(_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].INSTRUCTIONS);
     }
     get data() {
         return this.host.data;
@@ -708,13 +574,13 @@ class LineChartAudificationComponent {
                 yield this.melody.resume(shiftKey);
             }
             else if (key === 'x') {
-                this.readOut(Object(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].DOMAIN, {
+                this.readOut(Object(_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].DOMAIN, {
                     min: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatX"])(this.domain[0]),
                     max: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatX"])(this.domain[this.domain.length - 1]),
                 }));
             }
             else if (key === 'y') {
-                this.readOut(Object(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].RANGE, {
+                this.readOut(Object(_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].RANGE, {
                     min: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatY"])(this.range[0]),
                     max: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatY"])(this.range[this.range.length - 1]),
                 }));
@@ -766,7 +632,7 @@ class LineChartAudificationComponent {
             return;
         }
         const { date, value } = this.data[this.melody.currentDatumIndex];
-        this.readOut(Object(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].ACTIVE_DATUM, {
+        this.readOut(Object(_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].ACTIVE_DATUM, {
             x: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatX"])(date),
             y: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatY"])(value),
         }));
@@ -838,7 +704,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
 /* harmony import */ var _d3_line_chart_d3__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../d3/line-chart.d3 */ "./src/d3/line-chart.d3.ts");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm2015/index.js");
-/* harmony import */ var _assets_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../assets/i18n */ "./src/assets/i18n/index.ts");
+/* harmony import */ var _i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../i18n */ "./src/i18n/index.ts");
 /* harmony import */ var _utils_formatters__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../utils/formatters */ "./src/utils/formatters.ts");
 /* harmony import */ var _directives_a11y_placeholder_a11y_placeholder_directive__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../directives/a11y-placeholder/a11y-placeholder.directive */ "./src/directives/a11y-placeholder/a11y-placeholder.directive.ts");
 /* harmony import */ var _services_data_data_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../services/data/data.service */ "./src/services/data/data.service.ts");
@@ -883,7 +749,7 @@ class LineChartComponent {
             return null;
         }
         const { date, value } = this.activeDatum;
-        return Object(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].ACTIVE_DATUM, {
+        return Object(_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].ACTIVE_DATUM, {
             x: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatX"])(date),
             y: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatY"])(value),
         });
@@ -1779,6 +1645,191 @@ __webpack_require__.r(__webpack_exports__);
 const environment = {
     production: false,
 };
+
+
+/***/ }),
+
+/***/ "./src/i18n/index.ts":
+/*!***************************!*\
+  !*** ./src/i18n/index.ts ***!
+  \***************************/
+/*! exports provided: GUIDE_DOGE, VISUALIZATION, AUDIFICATION, setLanguage, getLanguage, t, tA11y */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./types */ "./src/i18n/types.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GUIDE_DOGE", function() { return _types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VISUALIZATION", function() { return _types__WEBPACK_IMPORTED_MODULE_0__["VISUALIZATION"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AUDIFICATION", function() { return _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"]; });
+
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils */ "./src/i18n/utils.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "setLanguage", function() { return _utils__WEBPACK_IMPORTED_MODULE_1__["setLanguage"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getLanguage", function() { return _utils__WEBPACK_IMPORTED_MODULE_1__["getLanguage"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "t", function() { return _utils__WEBPACK_IMPORTED_MODULE_1__["t"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "tA11y", function() { return _utils__WEBPACK_IMPORTED_MODULE_1__["tA11y"]; });
+
+
+
+
+
+/***/ }),
+
+/***/ "./src/i18n/languages/en.ts":
+/*!**********************************!*\
+  !*** ./src/i18n/languages/en.ts ***!
+  \**********************************/
+/*! exports provided: en */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "en", function() { return en; });
+/* harmony import */ var _types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../types */ "./src/i18n/types.ts");
+
+const en = {
+    [_types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].TITLE]: 'Guide-Doge',
+    [_types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].VISUALIZATION]: 'Data visualization',
+    [_types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].AUDIFICATION]: 'Data audification',
+    [_types__WEBPACK_IMPORTED_MODULE_0__["VISUALIZATION"].ACTIVE_DATUM]: '%(y)s on %(x)s',
+    [_types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].INSTRUCTIONS]: [
+        'Hold down <kbd>SPACE</kbd> to play the audified melody and <kbd>SHIFT</kbd> + <kbd>SPACE</kbd> to play it backward.',
+        'Press <kbd>X</kbd> or <kbd>Y</kbd> to read out the domain or range respectively.',
+        'Press <kbd>L</kbd> to read out the legend items.',
+        'Press <kbd>0</kbd> ... <kbd>9</kbd> to move playhead.',
+    ].join(' <br/>'),
+    [_types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].DOMAIN]: 'Domain from %(min)s to %(max)s',
+    [_types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].RANGE]: 'Range from %(min)s to %(max)s',
+    [_types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].ACTIVE_DATUM]: '%(y)s on %(x)s',
+};
+
+
+/***/ }),
+
+/***/ "./src/i18n/languages/index.ts":
+/*!*************************************!*\
+  !*** ./src/i18n/languages/index.ts ***!
+  \*************************************/
+/*! exports provided: en, ko */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _en__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./en */ "./src/i18n/languages/en.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "en", function() { return _en__WEBPACK_IMPORTED_MODULE_0__["en"]; });
+
+/* harmony import */ var _ko__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ko */ "./src/i18n/languages/ko.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ko", function() { return _ko__WEBPACK_IMPORTED_MODULE_1__["ko"]; });
+
+
+
+
+
+/***/ }),
+
+/***/ "./src/i18n/languages/ko.ts":
+/*!**********************************!*\
+  !*** ./src/i18n/languages/ko.ts ***!
+  \**********************************/
+/*! exports provided: ko */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ko", function() { return ko; });
+/* harmony import */ var _types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../types */ "./src/i18n/types.ts");
+
+const ko = {
+    [_types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].TITLE]: 'Guide-Doge',
+    [_types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].VISUALIZATION]: '데이터 시각화',
+    [_types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].AUDIFICATION]: '데이터 청각화',
+    [_types__WEBPACK_IMPORTED_MODULE_0__["VISUALIZATION"].ACTIVE_DATUM]: '%(y)s, %(x)s',
+    [_types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].INSTRUCTIONS]: [
+        '<kbd>SPACE</kbd>를 눌러 청각화된 음향을 재생하고 <kbd>SHIFT</kbd> + <kbd>SPACE</kbd>를 눌러 거꾸로 재생합니다.',
+        '<kbd>X</kbd> 또는 <kbd>Y</kbd>를 눌러 정의역 또는 치역을 읽습니다.',
+        '<kbd>L</kbd>을 눌러 범례 항목들을 읽습니다.',
+        '<kbd>0</kbd> ... <kbd>9</kbd>를 눌러 재생 위치를 이동합니다.',
+    ].join(' <br/>'),
+    [_types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].DOMAIN]: '정의역 %(min)s 부터 %(max)s 까지',
+    [_types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].RANGE]: '치역 %(min)s 부터 %(max)s 까지',
+    [_types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].ACTIVE_DATUM]: '%(y)s, %(x)s',
+};
+
+
+/***/ }),
+
+/***/ "./src/i18n/types.ts":
+/*!***************************!*\
+  !*** ./src/i18n/types.ts ***!
+  \***************************/
+/*! exports provided: GUIDE_DOGE, VISUALIZATION, AUDIFICATION */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GUIDE_DOGE", function() { return GUIDE_DOGE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VISUALIZATION", function() { return VISUALIZATION; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AUDIFICATION", function() { return AUDIFICATION; });
+var GUIDE_DOGE;
+(function (GUIDE_DOGE) {
+    GUIDE_DOGE[GUIDE_DOGE["TITLE"] = 0] = "TITLE";
+    GUIDE_DOGE[GUIDE_DOGE["VISUALIZATION"] = 1] = "VISUALIZATION";
+    GUIDE_DOGE[GUIDE_DOGE["AUDIFICATION"] = 2] = "AUDIFICATION";
+})(GUIDE_DOGE || (GUIDE_DOGE = {}));
+var VISUALIZATION;
+(function (VISUALIZATION) {
+    VISUALIZATION[VISUALIZATION["ACTIVE_DATUM"] = 256] = "ACTIVE_DATUM";
+})(VISUALIZATION || (VISUALIZATION = {}));
+var AUDIFICATION;
+(function (AUDIFICATION) {
+    AUDIFICATION[AUDIFICATION["INSTRUCTIONS"] = 512] = "INSTRUCTIONS";
+    AUDIFICATION[AUDIFICATION["DOMAIN"] = 513] = "DOMAIN";
+    AUDIFICATION[AUDIFICATION["RANGE"] = 514] = "RANGE";
+    AUDIFICATION[AUDIFICATION["ACTIVE_DATUM"] = 515] = "ACTIVE_DATUM";
+})(AUDIFICATION || (AUDIFICATION = {}));
+
+
+/***/ }),
+
+/***/ "./src/i18n/utils.ts":
+/*!***************************!*\
+  !*** ./src/i18n/utils.ts ***!
+  \***************************/
+/*! exports provided: setLanguage, getLanguage, t, tA11y */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setLanguage", function() { return setLanguage; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getLanguage", function() { return getLanguage; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "t", function() { return t; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "tA11y", function() { return tA11y; });
+/* harmony import */ var sprintf_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! sprintf-js */ "./node_modules/sprintf-js/src/sprintf.js");
+/* harmony import */ var sprintf_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(sprintf_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var striptags__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! striptags */ "./node_modules/striptags/src/striptags.js");
+/* harmony import */ var striptags__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(striptags__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _languages__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./languages */ "./src/i18n/languages/index.ts");
+
+
+
+let language = 'en';
+function setLanguage(lang) {
+    language = lang;
+}
+function getLanguage() {
+    return language;
+}
+function t(key, ...args) {
+    return Object(sprintf_js__WEBPACK_IMPORTED_MODULE_0__["sprintf"])(_languages__WEBPACK_IMPORTED_MODULE_2__[language][key], ...args);
+}
+function tA11y(key, ...args) {
+    return striptags__WEBPACK_IMPORTED_MODULE_1__(t(key, ...args));
+}
 
 
 /***/ }),

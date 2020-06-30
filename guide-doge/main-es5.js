@@ -20,6 +20,8 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
 
 function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
@@ -37,8 +39,6 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
@@ -189,9 +189,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     /* harmony import */
 
 
-    var _assets_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
-    /*! ./assets/i18n */
-    "./src/assets/i18n/index.ts");
+    var _i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
+    /*! ./i18n */
+    "./src/i18n/index.ts");
     /* harmony import */
 
 
@@ -207,7 +207,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       _createClass(AppComponent, [{
         key: "TITLE",
         get: function get() {
-          return Object(_assets_i18n__WEBPACK_IMPORTED_MODULE_1__["t"])(_assets_i18n__WEBPACK_IMPORTED_MODULE_1__["GUIDE_DOGE"].TITLE);
+          return Object(_i18n__WEBPACK_IMPORTED_MODULE_1__["t"])(_i18n__WEBPACK_IMPORTED_MODULE_1__["GUIDE_DOGE"].TITLE);
         }
       }]);
 
@@ -364,260 +364,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   },
 
   /***/
-  "./src/assets/i18n/en.ts":
-  /*!*******************************!*\
-    !*** ./src/assets/i18n/en.ts ***!
-    \*******************************/
-
-  /*! exports provided: default */
-
-  /***/
-  function srcAssetsI18nEnTs(module, __webpack_exports__, __webpack_require__) {
-    "use strict";
-
-    var _en;
-
-    __webpack_require__.r(__webpack_exports__);
-    /* harmony import */
-
-
-    var _types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
-    /*! ./types */
-    "./src/assets/i18n/types.ts");
-
-    var en = (_en = {}, _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].TITLE, 'Guide-Doge'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].VISUALIZATION, 'Data visualization'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].AUDIFICATION, 'Data audification'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["VISUALIZATION"].ACTIVE_DATUM, '%(y)s on %(x)s'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].INSTRUCTIONS, ['Hold down <kbd>SPACE</kbd> to play audification and <kbd>SHIFT</kbd> + <kbd>SPACE</kbd> to play it backward.', 'Press <kbd>X</kbd> or <kbd>Y</kbd> to read out the domain and range.', 'Press <kbd>L</kbd> to read out the legend items.', 'Press <kbd>0</kbd> ... <kbd>9</kbd> to move playhead.'].join(' <br/>')), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].DOMAIN, 'Domain from %(min)s to %(max)s'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].RANGE, 'Range from %(min)s to %(max)s'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].ACTIVE_DATUM, '%(y)s on %(x)s'), _en);
-    /* harmony default export */
-
-    __webpack_exports__["default"] = en;
-    /***/
-  },
-
-  /***/
-  "./src/assets/i18n/index.ts":
-  /*!**********************************!*\
-    !*** ./src/assets/i18n/index.ts ***!
-    \**********************************/
-
-  /*! exports provided: GUIDE_DOGE, VISUALIZATION, AUDIFICATION, setLanguage, getLanguage, t, tA11y */
-
-  /***/
-  function srcAssetsI18nIndexTs(module, __webpack_exports__, __webpack_require__) {
-    "use strict";
-
-    __webpack_require__.r(__webpack_exports__);
-    /* harmony import */
-
-
-    var _types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
-    /*! ./types */
-    "./src/assets/i18n/types.ts");
-    /* harmony reexport (safe) */
-
-
-    __webpack_require__.d(__webpack_exports__, "GUIDE_DOGE", function () {
-      return _types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"];
-    });
-    /* harmony reexport (safe) */
-
-
-    __webpack_require__.d(__webpack_exports__, "VISUALIZATION", function () {
-      return _types__WEBPACK_IMPORTED_MODULE_0__["VISUALIZATION"];
-    });
-    /* harmony reexport (safe) */
-
-
-    __webpack_require__.d(__webpack_exports__, "AUDIFICATION", function () {
-      return _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"];
-    });
-    /* harmony import */
-
-
-    var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
-    /*! ./utils */
-    "./src/assets/i18n/utils.ts");
-    /* harmony reexport (safe) */
-
-
-    __webpack_require__.d(__webpack_exports__, "setLanguage", function () {
-      return _utils__WEBPACK_IMPORTED_MODULE_1__["setLanguage"];
-    });
-    /* harmony reexport (safe) */
-
-
-    __webpack_require__.d(__webpack_exports__, "getLanguage", function () {
-      return _utils__WEBPACK_IMPORTED_MODULE_1__["getLanguage"];
-    });
-    /* harmony reexport (safe) */
-
-
-    __webpack_require__.d(__webpack_exports__, "t", function () {
-      return _utils__WEBPACK_IMPORTED_MODULE_1__["t"];
-    });
-    /* harmony reexport (safe) */
-
-
-    __webpack_require__.d(__webpack_exports__, "tA11y", function () {
-      return _utils__WEBPACK_IMPORTED_MODULE_1__["tA11y"];
-    });
-    /***/
-
-  },
-
-  /***/
-  "./src/assets/i18n/types.ts":
-  /*!**********************************!*\
-    !*** ./src/assets/i18n/types.ts ***!
-    \**********************************/
-
-  /*! exports provided: GUIDE_DOGE, VISUALIZATION, AUDIFICATION */
-
-  /***/
-  function srcAssetsI18nTypesTs(module, __webpack_exports__, __webpack_require__) {
-    "use strict";
-
-    __webpack_require__.r(__webpack_exports__);
-    /* harmony export (binding) */
-
-
-    __webpack_require__.d(__webpack_exports__, "GUIDE_DOGE", function () {
-      return GUIDE_DOGE;
-    });
-    /* harmony export (binding) */
-
-
-    __webpack_require__.d(__webpack_exports__, "VISUALIZATION", function () {
-      return VISUALIZATION;
-    });
-    /* harmony export (binding) */
-
-
-    __webpack_require__.d(__webpack_exports__, "AUDIFICATION", function () {
-      return AUDIFICATION;
-    });
-
-    var GUIDE_DOGE;
-
-    (function (GUIDE_DOGE) {
-      GUIDE_DOGE[GUIDE_DOGE["TITLE"] = 0] = "TITLE";
-      GUIDE_DOGE[GUIDE_DOGE["VISUALIZATION"] = 1] = "VISUALIZATION";
-      GUIDE_DOGE[GUIDE_DOGE["AUDIFICATION"] = 2] = "AUDIFICATION";
-    })(GUIDE_DOGE || (GUIDE_DOGE = {}));
-
-    var VISUALIZATION;
-
-    (function (VISUALIZATION) {
-      VISUALIZATION[VISUALIZATION["ACTIVE_DATUM"] = 256] = "ACTIVE_DATUM";
-    })(VISUALIZATION || (VISUALIZATION = {}));
-
-    var AUDIFICATION;
-
-    (function (AUDIFICATION) {
-      AUDIFICATION[AUDIFICATION["INSTRUCTIONS"] = 512] = "INSTRUCTIONS";
-      AUDIFICATION[AUDIFICATION["DOMAIN"] = 513] = "DOMAIN";
-      AUDIFICATION[AUDIFICATION["RANGE"] = 514] = "RANGE";
-      AUDIFICATION[AUDIFICATION["ACTIVE_DATUM"] = 515] = "ACTIVE_DATUM";
-    })(AUDIFICATION || (AUDIFICATION = {}));
-    /***/
-
-  },
-
-  /***/
-  "./src/assets/i18n/utils.ts":
-  /*!**********************************!*\
-    !*** ./src/assets/i18n/utils.ts ***!
-    \**********************************/
-
-  /*! exports provided: setLanguage, getLanguage, t, tA11y */
-
-  /***/
-  function srcAssetsI18nUtilsTs(module, __webpack_exports__, __webpack_require__) {
-    "use strict";
-
-    __webpack_require__.r(__webpack_exports__);
-    /* harmony export (binding) */
-
-
-    __webpack_require__.d(__webpack_exports__, "setLanguage", function () {
-      return setLanguage;
-    });
-    /* harmony export (binding) */
-
-
-    __webpack_require__.d(__webpack_exports__, "getLanguage", function () {
-      return getLanguage;
-    });
-    /* harmony export (binding) */
-
-
-    __webpack_require__.d(__webpack_exports__, "t", function () {
-      return t;
-    });
-    /* harmony export (binding) */
-
-
-    __webpack_require__.d(__webpack_exports__, "tA11y", function () {
-      return tA11y;
-    });
-    /* harmony import */
-
-
-    var sprintf_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
-    /*! sprintf-js */
-    "./node_modules/sprintf-js/src/sprintf.js");
-    /* harmony import */
-
-
-    var sprintf_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(sprintf_js__WEBPACK_IMPORTED_MODULE_0__);
-    /* harmony import */
-
-
-    var _en__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
-    /*! ./en */
-    "./src/assets/i18n/en.ts");
-    /* harmony import */
-
-
-    var striptags__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
-    /*! striptags */
-    "./node_modules/striptags/src/striptags.js");
-    /* harmony import */
-
-
-    var striptags__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(striptags__WEBPACK_IMPORTED_MODULE_2__);
-
-    var dictionary = {
-      en: _en__WEBPACK_IMPORTED_MODULE_1__["default"]
-    };
-    var language = 'en';
-
-    function setLanguage(lang) {
-      language = lang;
-    }
-
-    function getLanguage() {
-      return language;
-    }
-
-    function t(key) {
-      for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        args[_key - 1] = arguments[_key];
-      }
-
-      return Object(sprintf_js__WEBPACK_IMPORTED_MODULE_0__["sprintf"]).apply(void 0, [dictionary[language][key]].concat(args));
-    }
-
-    function tA11y(key) {
-      for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-        args[_key2 - 1] = arguments[_key2];
-      }
-
-      return striptags__WEBPACK_IMPORTED_MODULE_2__(t.apply(void 0, [key].concat(args)));
-    }
-    /***/
-
-  },
-
-  /***/
   "./src/components/card/card.component.ts":
   /*!***********************************************!*\
     !*** ./src/components/card/card.component.ts ***!
@@ -645,9 +391,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     /* harmony import */
 
 
-    var _assets_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
-    /*! ../../assets/i18n */
-    "./src/assets/i18n/index.ts");
+    var _i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
+    /*! ../../i18n */
+    "./src/i18n/index.ts");
     /* harmony import */
 
 
@@ -760,7 +506,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "VISUALIZATION",
         get: function get() {
-          return Object(_assets_i18n__WEBPACK_IMPORTED_MODULE_1__["t"])(_assets_i18n__WEBPACK_IMPORTED_MODULE_1__["GUIDE_DOGE"].VISUALIZATION);
+          return Object(_i18n__WEBPACK_IMPORTED_MODULE_1__["t"])(_i18n__WEBPACK_IMPORTED_MODULE_1__["GUIDE_DOGE"].VISUALIZATION);
         }
       }]);
 
@@ -1259,9 +1005,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     /* harmony import */
 
 
-    var _assets_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
-    /*! ../../assets/i18n */
-    "./src/assets/i18n/index.ts");
+    var _i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+    /*! ../../i18n */
+    "./src/i18n/index.ts");
     /* harmony import */
 
 
@@ -1380,12 +1126,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                   case 10:
                     if (key === 'x') {
-                      this.readOut(Object(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].DOMAIN, {
+                      this.readOut(Object(_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].DOMAIN, {
                         min: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatX"])(this.domain[0]),
                         max: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatX"])(this.domain[this.domain.length - 1])
                       }));
                     } else if (key === 'y') {
-                      this.readOut(Object(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].RANGE, {
+                      this.readOut(Object(_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].RANGE, {
                         min: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatY"])(this.range[0]),
                         max: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatY"])(this.range[this.range.length - 1])
                       }));
@@ -1459,7 +1205,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           var _this$data$this$melod = this.data[this.melody.currentDatumIndex],
               date = _this$data$this$melod.date,
               value = _this$data$this$melod.value;
-          this.readOut(Object(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].ACTIVE_DATUM, {
+          this.readOut(Object(_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].ACTIVE_DATUM, {
             x: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatX"])(date),
             y: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatY"])(value)
           }));
@@ -1467,12 +1213,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "INSTRUCTIONS",
         get: function get() {
-          return Object(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].INSTRUCTIONS);
+          return Object(_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].INSTRUCTIONS);
         }
       }, {
         key: "INSTRUCTIONS_A11Y",
         get: function get() {
-          return Object(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["tA11y"])(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].INSTRUCTIONS);
+          return Object(_i18n__WEBPACK_IMPORTED_MODULE_3__["tA11y"])(_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].INSTRUCTIONS);
         }
       }, {
         key: "data",
@@ -1647,9 +1393,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     /* harmony import */
 
 
-    var _assets_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
-    /*! ../../assets/i18n */
-    "./src/assets/i18n/index.ts");
+    var _i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+    /*! ../../i18n */
+    "./src/i18n/index.ts");
     /* harmony import */
 
 
@@ -1732,7 +1478,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           var _this$activeDatum = this.activeDatum,
               date = _this$activeDatum.date,
               value = _this$activeDatum.value;
-          return Object(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_assets_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].ACTIVE_DATUM, {
+          return Object(_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].ACTIVE_DATUM, {
             x: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatX"])(date),
             y: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatY"])(value)
           });
@@ -3360,6 +3106,333 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       production: false
     };
     /***/
+  },
+
+  /***/
+  "./src/i18n/index.ts":
+  /*!***************************!*\
+    !*** ./src/i18n/index.ts ***!
+    \***************************/
+
+  /*! exports provided: GUIDE_DOGE, VISUALIZATION, AUDIFICATION, setLanguage, getLanguage, t, tA11y */
+
+  /***/
+  function srcI18nIndexTs(module, __webpack_exports__, __webpack_require__) {
+    "use strict";
+
+    __webpack_require__.r(__webpack_exports__);
+    /* harmony import */
+
+
+    var _types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
+    /*! ./types */
+    "./src/i18n/types.ts");
+    /* harmony reexport (safe) */
+
+
+    __webpack_require__.d(__webpack_exports__, "GUIDE_DOGE", function () {
+      return _types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"];
+    });
+    /* harmony reexport (safe) */
+
+
+    __webpack_require__.d(__webpack_exports__, "VISUALIZATION", function () {
+      return _types__WEBPACK_IMPORTED_MODULE_0__["VISUALIZATION"];
+    });
+    /* harmony reexport (safe) */
+
+
+    __webpack_require__.d(__webpack_exports__, "AUDIFICATION", function () {
+      return _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"];
+    });
+    /* harmony import */
+
+
+    var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
+    /*! ./utils */
+    "./src/i18n/utils.ts");
+    /* harmony reexport (safe) */
+
+
+    __webpack_require__.d(__webpack_exports__, "setLanguage", function () {
+      return _utils__WEBPACK_IMPORTED_MODULE_1__["setLanguage"];
+    });
+    /* harmony reexport (safe) */
+
+
+    __webpack_require__.d(__webpack_exports__, "getLanguage", function () {
+      return _utils__WEBPACK_IMPORTED_MODULE_1__["getLanguage"];
+    });
+    /* harmony reexport (safe) */
+
+
+    __webpack_require__.d(__webpack_exports__, "t", function () {
+      return _utils__WEBPACK_IMPORTED_MODULE_1__["t"];
+    });
+    /* harmony reexport (safe) */
+
+
+    __webpack_require__.d(__webpack_exports__, "tA11y", function () {
+      return _utils__WEBPACK_IMPORTED_MODULE_1__["tA11y"];
+    });
+    /***/
+
+  },
+
+  /***/
+  "./src/i18n/languages/en.ts":
+  /*!**********************************!*\
+    !*** ./src/i18n/languages/en.ts ***!
+    \**********************************/
+
+  /*! exports provided: en */
+
+  /***/
+  function srcI18nLanguagesEnTs(module, __webpack_exports__, __webpack_require__) {
+    "use strict";
+
+    var _en;
+
+    __webpack_require__.r(__webpack_exports__);
+    /* harmony export (binding) */
+
+
+    __webpack_require__.d(__webpack_exports__, "en", function () {
+      return en;
+    });
+    /* harmony import */
+
+
+    var _types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
+    /*! ../types */
+    "./src/i18n/types.ts");
+
+    var en = (_en = {}, _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].TITLE, 'Guide-Doge'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].VISUALIZATION, 'Data visualization'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].AUDIFICATION, 'Data audification'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["VISUALIZATION"].ACTIVE_DATUM, '%(y)s on %(x)s'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].INSTRUCTIONS, ['Hold down <kbd>SPACE</kbd> to play the audified melody and <kbd>SHIFT</kbd> + <kbd>SPACE</kbd> to play it backward.', 'Press <kbd>X</kbd> or <kbd>Y</kbd> to read out the domain or range respectively.', 'Press <kbd>L</kbd> to read out the legend items.', 'Press <kbd>0</kbd> ... <kbd>9</kbd> to move playhead.'].join(' <br/>')), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].DOMAIN, 'Domain from %(min)s to %(max)s'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].RANGE, 'Range from %(min)s to %(max)s'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].ACTIVE_DATUM, '%(y)s on %(x)s'), _en);
+    /***/
+  },
+
+  /***/
+  "./src/i18n/languages/index.ts":
+  /*!*************************************!*\
+    !*** ./src/i18n/languages/index.ts ***!
+    \*************************************/
+
+  /*! exports provided: en, ko */
+
+  /***/
+  function srcI18nLanguagesIndexTs(module, __webpack_exports__, __webpack_require__) {
+    "use strict";
+
+    __webpack_require__.r(__webpack_exports__);
+    /* harmony import */
+
+
+    var _en__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
+    /*! ./en */
+    "./src/i18n/languages/en.ts");
+    /* harmony reexport (safe) */
+
+
+    __webpack_require__.d(__webpack_exports__, "en", function () {
+      return _en__WEBPACK_IMPORTED_MODULE_0__["en"];
+    });
+    /* harmony import */
+
+
+    var _ko__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
+    /*! ./ko */
+    "./src/i18n/languages/ko.ts");
+    /* harmony reexport (safe) */
+
+
+    __webpack_require__.d(__webpack_exports__, "ko", function () {
+      return _ko__WEBPACK_IMPORTED_MODULE_1__["ko"];
+    });
+    /***/
+
+  },
+
+  /***/
+  "./src/i18n/languages/ko.ts":
+  /*!**********************************!*\
+    !*** ./src/i18n/languages/ko.ts ***!
+    \**********************************/
+
+  /*! exports provided: ko */
+
+  /***/
+  function srcI18nLanguagesKoTs(module, __webpack_exports__, __webpack_require__) {
+    "use strict";
+
+    var _ko;
+
+    __webpack_require__.r(__webpack_exports__);
+    /* harmony export (binding) */
+
+
+    __webpack_require__.d(__webpack_exports__, "ko", function () {
+      return ko;
+    });
+    /* harmony import */
+
+
+    var _types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
+    /*! ../types */
+    "./src/i18n/types.ts");
+
+    var ko = (_ko = {}, _defineProperty(_ko, _types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].TITLE, 'Guide-Doge'), _defineProperty(_ko, _types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].VISUALIZATION, '데이터 시각화'), _defineProperty(_ko, _types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].AUDIFICATION, '데이터 청각화'), _defineProperty(_ko, _types__WEBPACK_IMPORTED_MODULE_0__["VISUALIZATION"].ACTIVE_DATUM, '%(y)s, %(x)s'), _defineProperty(_ko, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].INSTRUCTIONS, ['<kbd>SPACE</kbd>를 눌러 청각화된 음향을 재생하고 <kbd>SHIFT</kbd> + <kbd>SPACE</kbd>를 눌러 거꾸로 재생합니다.', '<kbd>X</kbd> 또는 <kbd>Y</kbd>를 눌러 정의역 또는 치역을 읽습니다.', '<kbd>L</kbd>을 눌러 범례 항목들을 읽습니다.', '<kbd>0</kbd> ... <kbd>9</kbd>를 눌러 재생 위치를 이동합니다.'].join(' <br/>')), _defineProperty(_ko, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].DOMAIN, '정의역 %(min)s 부터 %(max)s 까지'), _defineProperty(_ko, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].RANGE, '치역 %(min)s 부터 %(max)s 까지'), _defineProperty(_ko, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].ACTIVE_DATUM, '%(y)s, %(x)s'), _ko);
+    /***/
+  },
+
+  /***/
+  "./src/i18n/types.ts":
+  /*!***************************!*\
+    !*** ./src/i18n/types.ts ***!
+    \***************************/
+
+  /*! exports provided: GUIDE_DOGE, VISUALIZATION, AUDIFICATION */
+
+  /***/
+  function srcI18nTypesTs(module, __webpack_exports__, __webpack_require__) {
+    "use strict";
+
+    __webpack_require__.r(__webpack_exports__);
+    /* harmony export (binding) */
+
+
+    __webpack_require__.d(__webpack_exports__, "GUIDE_DOGE", function () {
+      return GUIDE_DOGE;
+    });
+    /* harmony export (binding) */
+
+
+    __webpack_require__.d(__webpack_exports__, "VISUALIZATION", function () {
+      return VISUALIZATION;
+    });
+    /* harmony export (binding) */
+
+
+    __webpack_require__.d(__webpack_exports__, "AUDIFICATION", function () {
+      return AUDIFICATION;
+    });
+
+    var GUIDE_DOGE;
+
+    (function (GUIDE_DOGE) {
+      GUIDE_DOGE[GUIDE_DOGE["TITLE"] = 0] = "TITLE";
+      GUIDE_DOGE[GUIDE_DOGE["VISUALIZATION"] = 1] = "VISUALIZATION";
+      GUIDE_DOGE[GUIDE_DOGE["AUDIFICATION"] = 2] = "AUDIFICATION";
+    })(GUIDE_DOGE || (GUIDE_DOGE = {}));
+
+    var VISUALIZATION;
+
+    (function (VISUALIZATION) {
+      VISUALIZATION[VISUALIZATION["ACTIVE_DATUM"] = 256] = "ACTIVE_DATUM";
+    })(VISUALIZATION || (VISUALIZATION = {}));
+
+    var AUDIFICATION;
+
+    (function (AUDIFICATION) {
+      AUDIFICATION[AUDIFICATION["INSTRUCTIONS"] = 512] = "INSTRUCTIONS";
+      AUDIFICATION[AUDIFICATION["DOMAIN"] = 513] = "DOMAIN";
+      AUDIFICATION[AUDIFICATION["RANGE"] = 514] = "RANGE";
+      AUDIFICATION[AUDIFICATION["ACTIVE_DATUM"] = 515] = "ACTIVE_DATUM";
+    })(AUDIFICATION || (AUDIFICATION = {}));
+    /***/
+
+  },
+
+  /***/
+  "./src/i18n/utils.ts":
+  /*!***************************!*\
+    !*** ./src/i18n/utils.ts ***!
+    \***************************/
+
+  /*! exports provided: setLanguage, getLanguage, t, tA11y */
+
+  /***/
+  function srcI18nUtilsTs(module, __webpack_exports__, __webpack_require__) {
+    "use strict";
+
+    __webpack_require__.r(__webpack_exports__);
+    /* harmony export (binding) */
+
+
+    __webpack_require__.d(__webpack_exports__, "setLanguage", function () {
+      return setLanguage;
+    });
+    /* harmony export (binding) */
+
+
+    __webpack_require__.d(__webpack_exports__, "getLanguage", function () {
+      return getLanguage;
+    });
+    /* harmony export (binding) */
+
+
+    __webpack_require__.d(__webpack_exports__, "t", function () {
+      return t;
+    });
+    /* harmony export (binding) */
+
+
+    __webpack_require__.d(__webpack_exports__, "tA11y", function () {
+      return tA11y;
+    });
+    /* harmony import */
+
+
+    var sprintf_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
+    /*! sprintf-js */
+    "./node_modules/sprintf-js/src/sprintf.js");
+    /* harmony import */
+
+
+    var sprintf_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(sprintf_js__WEBPACK_IMPORTED_MODULE_0__);
+    /* harmony import */
+
+
+    var striptags__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
+    /*! striptags */
+    "./node_modules/striptags/src/striptags.js");
+    /* harmony import */
+
+
+    var striptags__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(striptags__WEBPACK_IMPORTED_MODULE_1__);
+    /* harmony import */
+
+
+    var _languages__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
+    /*! ./languages */
+    "./src/i18n/languages/index.ts");
+
+    var language = 'en';
+
+    function setLanguage(lang) {
+      language = lang;
+    }
+
+    function getLanguage() {
+      return language;
+    }
+
+    function t(key) {
+      for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        args[_key - 1] = arguments[_key];
+      }
+
+      return Object(sprintf_js__WEBPACK_IMPORTED_MODULE_0__["sprintf"]).apply(void 0, [_languages__WEBPACK_IMPORTED_MODULE_2__[language][key]].concat(args));
+    }
+
+    function tA11y(key) {
+      for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+        args[_key2 - 1] = arguments[_key2];
+      }
+
+      return striptags__WEBPACK_IMPORTED_MODULE_1__(t.apply(void 0, [key].concat(args)));
+    }
+    /***/
+
   },
 
   /***/
