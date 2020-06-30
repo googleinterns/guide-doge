@@ -6,25 +6,30 @@ describe('BaseD3', () => {
   class TestBaseD3 extends BaseD3<RenderOptions> {
   }
 
-  const svgElement = document.createElement('svg');
-  const containerElement = document.createElement('div');
-  containerElement.appendChild(svgElement);
-  const renderOptions = {
-    elementRef: new ElementRef<HTMLElement>(containerElement),
-    height: 256,
-    width: 256,
-    marginTop: 8,
-    marginRight: 8,
-    marginBottom: 8,
-    marginLeft: 8,
-  };
+  let containerElement: HTMLElement;
+  let svgElement: HTMLElement;
+  let renderOptions: RenderOptions;
   let baseD3: TestBaseD3;
 
   beforeEach(() => {
+    containerElement = document.createElement('div');
+    svgElement = document.createElement('svg');
+    containerElement.appendChild(svgElement);
+    renderOptions = {
+      elementRef: new ElementRef<HTMLElement>(containerElement),
+      height: 256,
+      width: 256,
+      marginTop: 8,
+      marginRight: 8,
+      marginBottom: 8,
+      marginLeft: 8,
+    };
     baseD3 = new TestBaseD3(renderOptions);
   });
 
   afterEach(() => {
+    svgElement.remove();
+    containerElement.remove();
     baseD3.clear();
   });
 
