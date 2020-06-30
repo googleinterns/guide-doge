@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { LineChartD3 } from '../../d3/line-chart.d3';
-import { DatumDN, RenderOptions } from '../../d3/xy-chart.d3';
+import { DNPoint, RenderOptions } from '../../d3/xy-chart.d3';
 import { AUDIFICATION, t } from '../../assets/i18n';
 import { formatX, formatY } from '../../utils/formatters';
 import { A11yPlaceholderDirective } from '../../directives/a11y-placeholder/a11y-placeholder.directive';
@@ -31,9 +31,9 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
     range: [this.startDate, this.endDate],
   });
   data$ = new BehaviorSubject<LineChartData>({
-    data: [],
+    points: [],
   });
-  activeDatum$ = new BehaviorSubject<DatumDN | null>(null);
+  activeDatum$ = new BehaviorSubject<DNPoint | null>(null);
   private destroy$ = new Subject();
   private lineChartD3: LineChartD3;
 
@@ -71,7 +71,7 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
       .pipe(takeUntil(this.destroy$))
       .pipe(map(queryOption => {
         this.activeDatum$.next(null);
-        return this.meta[0].fetchs(queryOption)[0];
+        return this.meta[0].query(queryOption)[0];
       }))
       .subscribe(this.data$);
     this.lineChartD3.render();

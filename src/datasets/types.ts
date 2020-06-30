@@ -9,14 +9,14 @@ export type ChartMetaType = LineChartMeta | TabbedChartsMeta;
 
 export type XYChartData = LineChartData;
 
-export interface Datum<T, U> {
+export interface XYPoint<T, U> {
   x: T;
   y: U;
 }
 
-export interface ChartMeta<Type, DataGeneratorType> {
-  type: Type;
-  fetchs: DataGeneratorType;
+export interface ChartMeta<T extends string, QueryT> {
+  type: T;
+  query: QueryT;
   title: string;
   xlabel?: string;
   ylabel?: string;
@@ -28,16 +28,16 @@ export interface TabbedChartsMeta {
   title: string;
 }
 
-export type LineChartMeta = ChartMeta<'line', LineChartDataGenerator>;
+export type LineChartMeta = ChartMeta<'line', LineChartQuery>;
 
-export type LineChartDataGenerator = (options: LineChartQueryOptions) => LineChartData[];
+export type LineChartQuery = (options: LineChartQueryOptions) => LineChartData[];
 
 export interface LineChartQueryOptions {
   range: [Date, Date];
 }
 
 export interface LineChartData {
-  data: Datum<Date, number>[];
+  points: XYPoint<Date, number>[];
   legend?: string;
   style?: LineChartStyle;
 }

@@ -106,15 +106,15 @@ export function UserWGNDataset(config: UserWGNDatasetConfig): Dataset {
       y: row.values[measureName],
     }));
 
-    const dataGenerator = (options: LineChartQueryOptions) => ([{
-      data: rows.filter(xBetweenDates(...options.range)),
+    const query = (options: LineChartQueryOptions) => ([{
+      points: rows.filter(xBetweenDates(...options.range)),
     }]);
 
     return {
       type: 'line',
-      fetchs: dataGenerator,
       title: measureName,
       xlabel: 'time',
+      query,
     };
   };
 

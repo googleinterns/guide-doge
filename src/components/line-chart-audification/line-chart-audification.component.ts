@@ -46,7 +46,7 @@ export class LineChartAudificationComponent implements AudificationPreference, O
   }
 
   get data() {
-    return this.host.data.data;
+    return this.host.data.points;
   }
 
   get meta() {
@@ -61,10 +61,10 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     this.host.data$
       .pipe(takeUntil(this.destroy$))
       .subscribe(data => {
-        const ds = data.data;
-        const values = ds.map(datum => datum.y);
-        this.domain = ds.map(d => d.x).sort(ascendingDate);
-        this.range = ds.map(d => d.y).sort(ascendingNumber);
+        const points = data.points;
+        const values = points.map(datum => datum.y);
+        this.domain = points.map(d => d.x).sort(ascendingDate);
+        this.range = points.map(d => d.y).sort(ascendingNumber);
         this.melody?.dispose();
         this.melody = new Melody(values, [this.lowestPitch, this.highestPitch], this.noteDuration, this.handleSeek);
       });

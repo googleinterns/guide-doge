@@ -1,15 +1,15 @@
-import { DatumDN, XYChartD3 } from './xy-chart.d3';
+import { DNPoint, XYChartD3 } from './xy-chart.d3';
 import * as d3 from 'd3';
 
 export class LineChartD3 extends XYChartD3 {
-  protected line: d3.Line<DatumDN>;
+  protected line: d3.Line<DNPoint>;
   protected path: d3.Selection<SVGPathElement, unknown, null, undefined>;
   protected activeDatumCircle: d3.Selection<SVGCircleElement, unknown, null, undefined>;
   protected activeDatumToast: d3.Selection<d3.BaseType, unknown, null, undefined>;
 
   protected renderData() {
     this.line = d3
-      .line<DatumDN>()
+      .line<DNPoint>()
       .defined(d => !isNaN(d.y))
       .x(d => this.scaleX(d.x))
       .y(d => this.scaleY(d.y));
@@ -23,7 +23,7 @@ export class LineChartD3 extends XYChartD3 {
       .attr('stroke-linecap', 'round');
   }
 
-  protected updateData(data: DatumDN[]) {
+  protected updateData(data: DNPoint[]) {
     this.path
       .datum(data)
       .transition(this.transition)
@@ -38,7 +38,7 @@ export class LineChartD3 extends XYChartD3 {
     this.activeDatumToast = this.container.select('.active-indicator');
   }
 
-  protected updateActiveDatum(activeDatum: DatumDN | null) {
+  protected updateActiveDatum(activeDatum: DNPoint | null) {
     if (!activeDatum) {
       this.activeDatumCircle.attr('display', 'none');
       this.activeDatumToast.style('opacity', 0);

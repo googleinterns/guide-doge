@@ -2,14 +2,14 @@ import * as d3 from 'd3';
 import { BaseD3, RenderOptions as BaseRenderOptions } from './base.d3';
 import { Observable } from 'rxjs';
 import { formatX } from '../utils/formatters';
-import { XYChartData, Datum } from '../datasets/types';
+import { XYChartData, XYPoint } from '../datasets/types';
 
 // TODO: Generic Datum type
-export type DatumDN = Datum<Date, number>;
+export type DNPoint = XYPoint<Date, number>;
 
 export interface RenderOptions extends BaseRenderOptions {
   data$: Observable<XYChartData>;
-  activeDatum$: Observable<DatumDN | null>;
+  activeDatum$: Observable<DNPoint | null>;
 }
 
 export abstract class XYChartD3 extends BaseD3<RenderOptions> {
@@ -32,9 +32,9 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
     data$
       .pipe(this.takeUntilCleared())
       .subscribe(data => {
-        const d = data.data;
-        this.updateAxis(d);
-        this.updateData(d);
+        const points = data.points;
+        this.updateAxis(points);
+        this.updateData(points);
       });
 
     activeDatum$
@@ -72,8 +72,8 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
       .attr('transform', `translate(${marginLeft},0)`);
   }
 
-  protected updateAxis(data: DatumDN[]) {
-    this.scaleX.domain(d3.extent<DatumDN, Date>(data, d => d.x) as [Date, Date]);
+  protected updateAxis(data: DNPoint[]) {
+    this.scaleX.domain(d3.extent<DNPoint, Date>(data, d => d.x) as [Date, Date]);
     this.scaleY.domain([0, d3.max(data, d => d.y)!]);
 
     this.xAxisG
@@ -88,9 +88,9 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
 
   protected abstract renderData();
 
-  protected abstract updateData(data: DatumDN[]);
+  protected abstract updateData(data: DNPoint[]);
 
   protected abstract renderActiveDatum();
 
-  protected abstract updateActiveDatum(activeDatum: DatumDN | null);
+  protected abstract updateActiveDatum(activeDatum: DNPoint | null);
 }
