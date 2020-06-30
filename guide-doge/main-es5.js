@@ -1469,7 +1469,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           this.activeDatum$.next(activeDatum);
         }
       }, {
-        key: "formattedActiveDatum",
+        key: "ACTIVE_DATUM",
         get: function get() {
           if (!this.activeDatum) {
             return null;
@@ -1543,7 +1543,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (rf & 2) {
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](3);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"](" ", ctx.formattedActiveDatum, " ");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"](" ", ctx.ACTIVE_DATUM, " ");
         }
       },
       directives: [_directives_a11y_placeholder_a11y_placeholder_directive__WEBPACK_IMPORTED_MODULE_5__["A11yPlaceholderDirective"]],
