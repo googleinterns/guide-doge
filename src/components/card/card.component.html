@@ -1,16 +1,16 @@
-<h2 class="card-title">{{title}}</h2>
+<h2 class="card-title">{{chart.title}}</h2>
 <mat-card class="card-content">
   <div class="tabs" *ngIf="tabbed">
-    <div *ngFor="let measureName of measureNames"
-         class="tab" [class.active]="measureName === currentMeasureName"
-         (click)="setMeasureName(measureName)" role="button">
-      {{humanizeMeasureName(measureName)}}
+    <div *ngFor="let title of titles"
+         class="tab" [class.active]="title === currentTabTitle"
+         (click)="setCurrentTabTitle(title)" role="button">
+      {{humanizeMeasureName(title)}}
     </div>
   </div>
-  <ng-container [ngSwitch]="type">
+  <ng-container [ngSwitch]="currentChart.type">
     <app-line-chart *ngSwitchCase="'line'"
                     role="img" appAudification
-                    [measureNames]="[currentMeasureName]"
+                    [meta]="[currentChart]"
                     [attr.aria-label]="VISUALIZATION"></app-line-chart>
   </ng-container>
 </mat-card>

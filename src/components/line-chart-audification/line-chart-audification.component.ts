@@ -46,11 +46,11 @@ export class LineChartAudificationComponent implements AudificationPreference, O
   }
 
   get data() {
-    return this.host.data;
+    return this.host.data.data;
   }
 
-  get measureNames() {
-    return this.host.measureNames;
+  get meta() {
+    return this.host.meta;
   }
 
   set activeDatum(activeDatum) {
@@ -61,9 +61,10 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     this.host.data$
       .pipe(takeUntil(this.destroy$))
       .subscribe(data => {
-        const values = data.map(datum => datum.value);
-        this.domain = data.map(d => d.date).sort(ascendingDate);
-        this.range = data.map(d => d.value).sort(ascendingNumber);
+        const ds = data.data;
+        const values = ds.map(datum => datum.y);
+        this.domain = ds.map(d => d.x).sort(ascendingDate);
+        this.range = ds.map(d => d.y).sort(ascendingNumber);
         this.melody?.dispose();
         this.melody = new Melody(values, [this.lowestPitch, this.highestPitch], this.noteDuration, this.handleSeek);
       });
@@ -104,7 +105,7 @@ export class LineChartAudificationComponent implements AudificationPreference, O
       }));
     } else if (key === 'l') {
       // TODO: read the entire measureNames
-      this.readOut(humanizeMeasureName(this.measureNames[0]));
+      this.readOut(humanizeMeasureName(this.meta.ylabel || ''));
     } else if ('0' <= key && key <= '9') {
       const datumIndex = Math.floor(+key / 10 * this.data.length);
       this.melody.seekTo(datumIndex, true);
@@ -151,10 +152,10 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     if (!this.melody) {
       return;
     }
-    const { date, value } = this.data[this.melody.currentDatumIndex];
+    const { x, y } = this.data[this.melody.currentDatumIndex];
     this.readOut(t(AUDIFICATION.ACTIVE_DATUM, {
-      x: formatX(date),
-      y: formatY(value),
+      x: formatX(x),
+      y: formatY(y),
     }));
   }
 }

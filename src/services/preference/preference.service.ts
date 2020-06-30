@@ -1,6 +1,7 @@
 import { BehaviorSubject } from 'rxjs';
 import * as Cookies from 'js-cookie';
-import { AudificationPreference, DataPreference, DataTablePreference, Preference, TextSummaryPreference } from './types';
+import { AudificationPreference, DatasetPreference, DataTablePreference, Preference, TextSummaryPreference } from './types';
+import { UserWGNDatasetDefaultConfig } from '../../datasets/user-wgn.dataset';
 
 export class PreferenceService {
   audification$ = this.createPreference<AudificationPreference>({
@@ -12,15 +13,10 @@ export class PreferenceService {
     readAfter: true,
   }, 'audification');
 
-  data$ = this.createPreference<DataPreference>({
+  dataset$ = this.createPreference<DatasetPreference>({
     enabled: true,
-    avgHits: 10000,
-    hitStdDev: 100,
-    avgUsers: 100,
-    userStdDev: 1,
-    avgSessionsPerUser: 5,
-    sessionsPerUserStdDev: 3,
-  }, 'data');
+    ...UserWGNDatasetDefaultConfig
+  }, 'dataset');
 
   dataTable$ = this.createPreference<DataTablePreference>({
     enabled: true,
