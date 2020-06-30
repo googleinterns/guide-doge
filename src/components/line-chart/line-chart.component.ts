@@ -25,7 +25,7 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
 
   data$ = new BehaviorSubject<Datum[]>([]);
   activeDatum$ = new BehaviorSubject<Datum | null>(null);
-  private lineChartD3: LineChartD3;
+  lineChartD3: LineChartD3;
 
   constructor(
     private dataService: DataService,
@@ -50,7 +50,7 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
     this.activeDatum$.next(activeDatum);
   }
 
-  get formattedActiveDatum() {
+  get ACTIVE_DATUM() {
     if (!this.activeDatum) {
       return null;
     }

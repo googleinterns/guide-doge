@@ -24,7 +24,7 @@ export class LineChartAudificationComponent implements AudificationPreference, O
 
   liveText: string | null = null;
   private destroy$ = new Subject();
-  private melody?: Melody;
+  melody?: Melody;
   private domain: Date[];
   private range: number[];
   @HostBinding('attr.tabindex') private readonly tabindex = 0;
@@ -130,7 +130,7 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     this.melody?.pause();
   }
 
-  private readOut(text: string) {
+  readOut(text: string) {
     if (this.readOutTimeoutId !== null) {
       window.clearTimeout(this.readOutTimeoutId);
       this.readOutTimeoutId = null;
