@@ -1,6 +1,6 @@
 import { Component, HostBinding, HostListener, Inject, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { Melody } from '../../models/melody/melody.model';
-import { AUDIFICATION, t, tA11y } from '../../assets/i18n';
+import { AUDIFICATION, t, tA11y } from '../../i18n';
 import { formatX, formatY, humanizeMeasureName } from '../../utils/formatters';
 import { LineChartComponent } from '../line-chart/line-chart.component';
 import { takeUntil } from 'rxjs/operators';
