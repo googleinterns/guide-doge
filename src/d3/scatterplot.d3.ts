@@ -45,7 +45,6 @@ export class Scatterplot{
     this.generatePts();
     this.setColor('blue');
     this.createGridPlane();
-    
   }
 
   private generatePts() {
@@ -66,48 +65,43 @@ export class Scatterplot{
     });
   }
   private createSky(){
-    let sky = document.createElement('a-sky');
-    this.container!.appendChild(sky);
-    // let xPlane = document.createElement('a-plane');
-    // this.container!.appendChild(xPlane);
-    let xAxis = document.createElement('div');
-    xAxis.id = 'res';
-    this.container!.appendChild(xAxis);
+    const aSky = document.createElement('a-sky');
+    this.container!.appendChild(aSky);
     d3.select(this.container).selectAll('a-sky').attr('color', () => {
-      return "#e3e5fa";
+      return '#e3e5fa';
     });
   }
   private createGridPlane()
   {
-    let xPlane = document.createElement('a-plane');
+    const xPlane = document.createElement('a-plane');
     xPlane.id = 'xPlane';
-    let yPlane = document.createElement('a-plane');
+    const yPlane = document.createElement('a-plane');
     yPlane.id = 'yPlane';
-    let zPlane = document.createElement('a-plane');
+    const zPlane = document.createElement('a-plane');
     zPlane.id = 'zPlane';
     this.container!.appendChild(xPlane);
     this.container!.appendChild(yPlane);
     this.container!.appendChild(zPlane);
     d3.select(this.container).select('#xPlane').attr('color', () => {
-      return "#ffffff";
+      return '#ffffff';
     })
-    .attr('rotation', "0 0 0")
+    .attr('rotation', '0 0 0')
     .attr('width', this.xWidth)
     .attr('height', this.xHeight)
     .attr('wireframe', true)
     .attr('segments-height', 10);
     d3.select(this.container).select('#yPlane').attr('color', () => {
-      return "#777777";
+      return '#777777';
     })
-    .attr('rotation', "0 -90 0 ")
+    .attr('rotation', '0 -90 0 ')
     .attr('width', this.yWidth)
     .attr('height', this.yHeight)
     .attr('wireframe', true)
     .attr('segments-height', 10);
     d3.select(this.container).select('#zPlane').attr('color', () => {
-      return "#000000";
+      return '#000000';
     })
-    .attr('rotation', "-90 0 0")
+    .attr('rotation', '-90 0 0')
     .attr('width', this.yWidth)
     .attr('height', this.yHeight)
     .attr('wireframe', true)
