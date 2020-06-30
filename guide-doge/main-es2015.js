@@ -1978,11 +1978,22 @@ class DataCube {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "betweenDates", function() { return betweenDates; });
 const millisecondsPerDay = 24 * 60 * 60 * 1000;
-function betweenDates(startDate, endDate) {
+const defaultOptions = {
+    excludeStartDate: false,
+    excludeEndDate: false,
+};
+function betweenDates(startDate, endDate, options = {}) {
+    const { excludeStartDate, excludeEndDate } = Object.assign(Object.assign({}, defaultOptions), options);
     return (categories) => {
         const nThDayIndex = categories.findIndex(category => category.name === 'nthDay');
-        const startIndex = Math.round((Date.now() - startDate.getTime()) / millisecondsPerDay);
-        const endIndex = Math.round((Date.now() - endDate.getTime()) / millisecondsPerDay);
+        let startIndex = Math.round((Date.now() - startDate.getTime()) / millisecondsPerDay);
+        if (excludeStartDate) {
+            startIndex--;
+        }
+        let endIndex = Math.round((Date.now() - endDate.getTime()) / millisecondsPerDay);
+        if (excludeEndDate) {
+            endIndex++;
+        }
         return (row) => row.header[nThDayIndex] <= startIndex &&
             row.header[nThDayIndex] >= endIndex;
     };
@@ -2440,7 +2451,7 @@ class DataService {
         const endDate = luxon__WEBPACK_IMPORTED_MODULE_0__["DateTime"].local();
         const startDate = endDate.minus({ day: days });
         return this.dataCube
-            .getDataFor([categoryName], [measureName], [Object(_models_data_cube_filters__WEBPACK_IMPORTED_MODULE_2__["betweenDates"])(startDate.toJSDate(), endDate.toJSDate())])
+            .getDataFor([categoryName], [measureName], [Object(_models_data_cube_filters__WEBPACK_IMPORTED_MODULE_2__["betweenDates"])(startDate.toJSDate(), endDate.toJSDate(), { excludeStartDate: true })])
             .map(row => ({
             date: startDate
                 .plus({ days: row.categories.get(categoryName) })
@@ -2515,7 +2526,7 @@ class PreferenceService {
             enabled: new rxjs__WEBPACK_IMPORTED_MODULE_0__["BehaviorSubject"](false),
             placeholder: new rxjs__WEBPACK_IMPORTED_MODULE_0__["BehaviorSubject"](null),
         };
-        this.datatable$ = this.combineObservableDictionary(this.dataTable);
+        this.dataTable$ = this.combineObservableDictionary(this.dataTable);
         this.textSummary = {
             enabled: new rxjs__WEBPACK_IMPORTED_MODULE_0__["BehaviorSubject"](false),
             placeholder: new rxjs__WEBPACK_IMPORTED_MODULE_0__["BehaviorSubject"](null),

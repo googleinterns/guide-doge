@@ -3731,14 +3731,34 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     });
 
     var millisecondsPerDay = 24 * 60 * 60 * 1000;
+    var defaultOptions = {
+      excludeStartDate: false,
+      excludeEndDate: false
+    };
 
     function betweenDates(startDate, endDate) {
+      var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+      var _Object$assign = Object.assign(Object.assign({}, defaultOptions), options),
+          excludeStartDate = _Object$assign.excludeStartDate,
+          excludeEndDate = _Object$assign.excludeEndDate;
+
       return function (categories) {
         var nThDayIndex = categories.findIndex(function (category) {
           return category.name === 'nthDay';
         });
         var startIndex = Math.round((Date.now() - startDate.getTime()) / millisecondsPerDay);
+
+        if (excludeStartDate) {
+          startIndex--;
+        }
+
         var endIndex = Math.round((Date.now() - endDate.getTime()) / millisecondsPerDay);
+
+        if (excludeEndDate) {
+          endIndex++;
+        }
+
         return function (row) {
           return row.header[nThDayIndex] <= startIndex && row.header[nThDayIndex] >= endIndex;
         };
@@ -4479,7 +4499,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           var startDate = endDate.minus({
             day: days
           });
-          return this.dataCube.getDataFor([categoryName], [measureName], [Object(_models_data_cube_filters__WEBPACK_IMPORTED_MODULE_2__["betweenDates"])(startDate.toJSDate(), endDate.toJSDate())]).map(function (row) {
+          return this.dataCube.getDataFor([categoryName], [measureName], [Object(_models_data_cube_filters__WEBPACK_IMPORTED_MODULE_2__["betweenDates"])(startDate.toJSDate(), endDate.toJSDate(), {
+            excludeStartDate: true
+          })]).map(function (row) {
             return {
               date: startDate.plus({
                 days: row.categories.get(categoryName)
@@ -4603,7 +4625,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           enabled: new rxjs__WEBPACK_IMPORTED_MODULE_0__["BehaviorSubject"](false),
           placeholder: new rxjs__WEBPACK_IMPORTED_MODULE_0__["BehaviorSubject"](null)
         };
-        this.datatable$ = this.combineObservableDictionary(this.dataTable);
+        this.dataTable$ = this.combineObservableDictionary(this.dataTable);
         this.textSummary = {
           enabled: new rxjs__WEBPACK_IMPORTED_MODULE_0__["BehaviorSubject"](false),
           placeholder: new rxjs__WEBPACK_IMPORTED_MODULE_0__["BehaviorSubject"](null)
