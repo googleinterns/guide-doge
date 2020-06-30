@@ -2595,7 +2595,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! d3 */ "./node_modules/d3/index.js");
 
 const formatX = d3__WEBPACK_IMPORTED_MODULE_0__["timeFormat"]('%B %d');
-const formatY = (value) => Number.isInteger(value) ? value : value.toFixed(1);
+const formatY = (value) => Number.isInteger(value) ? `${value}` : value.toFixed(1);
 const humanizeMeasureName = (str) => str
     .replace(/([A-Z])/g, ' $1')
     .replace(/^./, firstCharacter => firstCharacter.toUpperCase());

@@ -4753,7 +4753,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     var formatX = d3__WEBPACK_IMPORTED_MODULE_0__["timeFormat"]('%B %d');
 
     var formatY = function formatY(value) {
-      return Number.isInteger(value) ? value : value.toFixed(1);
+      return Number.isInteger(value) ? "".concat(value) : value.toFixed(1);
     };
 
     var humanizeMeasureName = function humanizeMeasureName(str) {
