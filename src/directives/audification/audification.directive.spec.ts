@@ -5,6 +5,7 @@ import { LineChartModule } from '../../components/line-chart/line-chart.module';
 import { AudificationModule } from './audification.module';
 import { LineChartComponent } from '../../components/line-chart/line-chart.component';
 import { mockAudificationPreference } from '../../utils/mocks.spec';
+import { PreferenceService } from '../../services/preference/preference.service';
 
 describe('AudificationDirective', () => {
   @Component({
@@ -17,17 +18,24 @@ describe('AudificationDirective', () => {
     @ViewChild(AudificationDirective, { static: true }) directive: AudificationDirective;
   }
 
+  let preferenceService: PreferenceService;
   let fixture: ComponentFixture<WrapperComponent>;
   let wrapperComponent: WrapperComponent;
   let hostComponent: LineChartComponent;
   let directive: AudificationDirective;
 
   beforeEach(() => {
+    preferenceService = new PreferenceService();
+
     TestBed.configureTestingModule({
       imports: [
         LineChartModule,
         AudificationModule,
       ],
+      providers: [{
+        provide: PreferenceService,
+        useValue: preferenceService,
+      }],
       declarations: [
         WrapperComponent,
       ],
@@ -50,11 +58,11 @@ describe('AudificationDirective', () => {
     directive.ngOnInit();
 
     spyOn(directive, 'attach');
-    directive.preferenceService.audification.enabled.next(true);
+    preferenceService.audification.enabled.next(true);
     expect(directive.attach).toHaveBeenCalled();
 
     spyOn(directive, 'detach');
-    directive.preferenceService.audification.enabled.next(false);
+    preferenceService.audification.enabled.next(false);
     expect(directive.detach).toHaveBeenCalled();
   });
 
