@@ -22,9 +22,20 @@ describe('LineChartAudificationComponent', () => {
       imports: [
         DataModule,
       ],
+      declarations: [
+        LineChartComponent,
+      ],
+    });
+    const hostFixture = TestBed.createComponent(LineChartComponent);
+    const host = hostFixture.componentInstance;
+    host.measureName = 'activeUsers';
+    host.ngOnChanges({ measureName: new SimpleChange(null, host.measureName, true) });
+
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
       providers: [{
         provide: 'host',
-        useClass: LineChartComponent,
+        useValue: host,
       }],
       declarations: [
         LineChartAudificationComponent,
@@ -38,10 +49,6 @@ describe('LineChartAudificationComponent', () => {
     component.lowestPitch = 256;
     component.highestPitch = 1024;
     component.noteDuration = 100;
-
-    // trigger host to create data
-    component.host.measureName = 'activeUsers';
-    component.host.ngOnChanges({ measureName: new SimpleChange(null, component.host.measureName, true) });
   });
 
   it('should instantiate.', () => {

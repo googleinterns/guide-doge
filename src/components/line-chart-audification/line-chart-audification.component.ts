@@ -31,7 +31,7 @@ export class LineChartAudificationComponent implements AudificationPreference, O
   private readOutTimeoutId: number | null = null;
 
   constructor(
-    @Inject('host') public host: LineChartComponent,
+    @Inject('host') private host: LineChartComponent,
     private zone: NgZone,
   ) {
     this.handleSeek = this.handleSeek.bind(this);
