@@ -56,7 +56,7 @@ export class Scatterplot{
     d3.select(this.container).selectAll(this.shape).attr('position', (d, i) => {
       const x = 0;
       const y = 0;
-      const z = this.hscale(-this.data[i] * 2);
+      const z = (-this.data[i] * 2);
       return `${x} ${y} ${z}`;
     });
   }
@@ -92,23 +92,26 @@ export class Scatterplot{
       return "#ffffff";
     })
     .attr('rotation', "0 0 0")
-    .attr('position', `${this.xWidth/2 -2} ${this.yHeight/2 -2} ${-this.zHeight/2-100}`)
     .attr('width', this.xWidth)
-    .attr('height', this.xHeight);
+    .attr('height', this.xHeight)
+    .attr('wireframe', true)
+    .attr('segments-height', 10);
     d3.select(this.container).select('#yPlane').attr('color', () => {
       return "#777777";
     })
     .attr('rotation', "0 -90 0 ")
-    .attr('position', `${this.xWidth - 2} ${this.yHeight/2 - 2} -100`)
     .attr('width', this.yWidth)
-    .attr('height', this.yHeight);
+    .attr('height', this.yHeight)
+    .attr('wireframe', true)
+    .attr('segments-height', 10);
     d3.select(this.container).select('#zPlane').attr('color', () => {
       return "#000000";
     })
     .attr('rotation', "-90 0 0")
-    .attr('position', `${this.xWidth/2 -2} -2 -100`)
     .attr('width', this.yWidth)
-    .attr('height', this.yHeight);
+    .attr('height', this.yHeight)
+    .attr('wireframe', true)
+    .attr('segments-height', 10);
   }
   
 }
