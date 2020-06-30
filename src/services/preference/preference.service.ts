@@ -20,7 +20,7 @@ export class PreferenceService {
     enabled: new BehaviorSubject(false),
     placeholder: new BehaviorSubject(null),
   };
-  datatable$: Observable<DataTablePreference> = this.combineObservableDictionary(this.dataTable);
+  dataTable$: Observable<DataTablePreference> = this.combineObservableDictionary(this.dataTable);
 
   textSummary = {
     enabled: new BehaviorSubject(false),
