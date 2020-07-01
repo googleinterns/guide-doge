@@ -16,11 +16,9 @@ export interface DataComponentMeta<T extends string, QueryT> extends ComponentMe
   query: QueryT;
 }
 
-export interface ContainerComponentMeta<T extends string, MetaT> extends ComponentMeta<T> {
-  metas: MetaT;
+export interface TabbedChartsMeta extends ComponentMeta<'tabbed'> {
+  metas: ChartMeta[];
 }
-
-export type TabbedChartsMeta = ContainerComponentMeta<'tabbed', ChartMeta[]>;
 
 export type ChartMeta = LineChartMeta;
 
