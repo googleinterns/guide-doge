@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
+import { PreferenceItemModule } from '../preference-item/preference-item.module';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import { MatCardModule } from '@angular/material/card';
     MatSlideToggleModule,
     FormsModule,
     MatCardModule,
+    PreferenceItemModule,
   ],
   exports: [
     PreferenceGroupComponent,

@@ -3,15 +3,6 @@ import * as Cookies from 'js-cookie';
 import { AudificationPreference, DataPreference, DataTablePreference, Preference, TextSummaryPreference } from './types';
 
 export class PreferenceService {
-  audification$ = this.createPreference<AudificationPreference>({
-    enabled: true,
-    lowestPitch: 256,
-    highestPitch: 1024,
-    noteDuration: 167,
-    readBefore: false,
-    readAfter: true,
-  }, 'audification');
-
   data$ = this.createPreference<DataPreference>({
     enabled: true,
     avgHits: 10000,
@@ -22,14 +13,21 @@ export class PreferenceService {
     sessionsPerUserStdDev: 3,
   }, 'data');
 
+  audification$ = this.createPreference<AudificationPreference>({
+    enabled: true,
+    lowestPitch: 256,
+    highestPitch: 1024,
+    noteDuration: 167,
+    readBefore: false,
+    readAfter: true,
+  }, 'audification');
+
   dataTable$ = this.createPreference<DataTablePreference>({
     enabled: true,
-    placeholder: null,
   }, 'data_table');
 
   textSummary$ = this.createPreference<TextSummaryPreference>({
     enabled: true,
-    placeholder: null,
   }, 'text_summary');
 
   private createPreference<T extends Preference>(defaultPreference: T, cookieKeySuffix: string) {
@@ -40,8 +38,13 @@ export class PreferenceService {
     };
 
     // make sure the loaded preference object conforms to type T
-    const keys = Object.keys(defaultPreference) as (keyof T)[];
+    const keys = Object.keys(loadedPreference) as (keyof T)[];
     for (const key of keys) {
+      if (!(key in defaultPreference)) {
+        delete loadedPreference[key];
+        continue;
+      }
+
       const expectedType = typeof defaultPreference[key];
       const actualType = typeof loadedPreference[key];
 
