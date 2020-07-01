@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { GUIDE_DOGE, t } from '../../assets/i18n';
 import { humanizeMeasureName } from '../../utils/formatters';
 import { Meta, TabbedChartsMeta } from '../../datasets/types';
 
@@ -14,10 +13,6 @@ export class CardComponent implements OnInit {
   @Input() meta: Meta;
   humanizeMeasureName = humanizeMeasureName;
   currentTabTitle: string;
-
-  get VISUALIZATION() {
-    return t(GUIDE_DOGE.VISUALIZATION);
-  }
 
   get tabbed() {
     return this.meta.type === 'tabbed';

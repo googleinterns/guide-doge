@@ -12,13 +12,9 @@ export interface AudificationPreference extends Preference {
   readAfter: boolean;
 }
 
-export interface DataTablePreference extends Preference {
-  placeholder: unknown; // to disable no-empty-interface TSLint error
-}
+export type DataTablePreference = Preference;
 
-export interface TextSummaryPreference extends Preference {
-  placeholder: unknown;
-}
+export type TextSummaryPreference = Preference;
 
 type UserWGNDatasetPreference = UserWhiteNoiseDataset.Config & Preference;
 

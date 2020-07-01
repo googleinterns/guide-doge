@@ -1,7 +1,8 @@
-<div class="svg-wrapper">
+<div class="svg-wrapper"
+     role="img" [attr.aria-label]="VISUALIZATION">
   <svg></svg>
   <mat-card class="active-indicator">
-    {{formattedActiveDatum}}
+    {{ACTIVE_DATUM}}
   </mat-card>
 </div>
 <ng-template appA11yPlaceholder></ng-template>
