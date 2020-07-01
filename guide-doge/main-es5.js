@@ -391,31 +391,25 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     /* harmony import */
 
 
-    var _i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
-    /*! ../../i18n */
-    "./src/i18n/index.ts");
-    /* harmony import */
-
-
-    var _utils_formatters__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
+    var _utils_formatters__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
     /*! ../../utils/formatters */
     "./src/utils/formatters.ts");
     /* harmony import */
 
 
-    var _angular_common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+    var _angular_common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
     /*! @angular/common */
     "./node_modules/@angular/common/__ivy_ngcc__/fesm2015/common.js");
     /* harmony import */
 
 
-    var _line_chart_line_chart_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
+    var _line_chart_line_chart_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
     /*! ../line-chart/line-chart.component */
     "./src/components/line-chart/line-chart.component.ts");
     /* harmony import */
 
 
-    var _directives_audification_audification_directive__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
+    var _directives_audification_audification_directive__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
     /*! ../../directives/audification/audification.directive */
     "./src/directives/audification/audification.directive.ts");
 
@@ -480,8 +474,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var ctx_r1 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("measureName", ctx_r1.currentMeasureName);
-
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵattribute"]("aria-label", ctx_r1.VISUALIZATION);
       }
     }
 
@@ -490,7 +482,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _classCallCheck(this, CardComponent);
 
         this.tabbed = false;
-        this.humanizeMeasureName = _utils_formatters__WEBPACK_IMPORTED_MODULE_2__["humanizeMeasureName"];
+        this.humanizeMeasureName = _utils_formatters__WEBPACK_IMPORTED_MODULE_1__["humanizeMeasureName"];
       }
 
       _createClass(CardComponent, [{
@@ -502,11 +494,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         key: "setMeasureName",
         value: function setMeasureName(measureName) {
           this.currentMeasureName = measureName;
-        }
-      }, {
-        key: "VISUALIZATION",
-        get: function get() {
-          return Object(_i18n__WEBPACK_IMPORTED_MODULE_1__["t"])(_i18n__WEBPACK_IMPORTED_MODULE_1__["GUIDE_DOGE"].VISUALIZATION);
         }
       }]);
 
@@ -528,7 +515,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       },
       decls: 6,
       vars: 4,
-      consts: [[1, "card-title"], [1, "card-content"], ["class", "tabs", 4, "ngIf"], [3, "ngSwitch"], ["role", "img", "appAudification", "", 3, "measureName", 4, "ngSwitchCase"], [1, "tabs"], ["class", "tab", "role", "button", 3, "active", "click", 4, "ngFor", "ngForOf"], ["role", "button", 1, "tab", 3, "click"], ["role", "img", "appAudification", "", 3, "measureName"]],
+      consts: [[1, "card-title"], [1, "card-content"], ["class", "tabs", 4, "ngIf"], [3, "ngSwitch"], ["appAudification", "", 3, "measureName", 4, "ngSwitchCase"], [1, "tabs"], ["class", "tab", "role", "button", 3, "active", "click", 4, "ngFor", "ngForOf"], ["role", "button", 1, "tab", 3, "click"], ["appAudification", "", 3, "measureName"]],
       template: function CardComponent_Template(rf, ctx) {
         if (rf & 1) {
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "h2", 0);
@@ -543,7 +530,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerStart"](4, 3);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](5, CardComponent_app_line_chart_5_Template, 1, 2, "app-line-chart", 4);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](5, CardComponent_app_line_chart_5_Template, 1, 1, "app-line-chart", 4);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerEnd"]();
 
@@ -568,7 +555,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngSwitchCase", "line");
         }
       },
-      directives: [_angular_common__WEBPACK_IMPORTED_MODULE_3__["NgIf"], _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgSwitch"], _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgSwitchCase"], _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgForOf"], _line_chart_line_chart_component__WEBPACK_IMPORTED_MODULE_4__["LineChartComponent"], _directives_audification_audification_directive__WEBPACK_IMPORTED_MODULE_5__["AudificationDirective"]],
+      directives: [_angular_common__WEBPACK_IMPORTED_MODULE_2__["NgIf"], _angular_common__WEBPACK_IMPORTED_MODULE_2__["NgSwitch"], _angular_common__WEBPACK_IMPORTED_MODULE_2__["NgSwitchCase"], _angular_common__WEBPACK_IMPORTED_MODULE_2__["NgForOf"], _line_chart_line_chart_component__WEBPACK_IMPORTED_MODULE_3__["LineChartComponent"], _directives_audification_audification_directive__WEBPACK_IMPORTED_MODULE_4__["AudificationDirective"]],
       styles: ["[_nghost-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  align-items: stretch;\n}\n[_nghost-%COMP%]   .card-title[_ngcontent-%COMP%] {\n  font-size: 24px;\n  margin: 1rem 0;\n}\n[_nghost-%COMP%]   .card-content[_ngcontent-%COMP%] {\n  box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px 0, rgba(0, 0, 0, 0.14) 0 1px 1px 0, rgba(0, 0, 0, 0.12) 0 2px 1px -1px;\n  display: flex;\n  flex-direction: column;\n  align-items: stretch;\n  border-radius: 2px;\n  background-color: white;\n}\n[_nghost-%COMP%]   .card-content[_ngcontent-%COMP%]   .tabs[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: stretch;\n  height: 4rem;\n}\n[_nghost-%COMP%]   .card-content[_ngcontent-%COMP%]   .tabs[_ngcontent-%COMP%]   .tab[_ngcontent-%COMP%] {\n  flex: 1;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n}\n[_nghost-%COMP%]   .card-content[_ngcontent-%COMP%]   .tabs[_ngcontent-%COMP%]   .tab.active[_ngcontent-%COMP%] {\n  border-top: 4px solid #4285f4;\n  font-weight: 500;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL3J1bm5lci93b3JrL2d1aWRlLWRvZ2UvZ3VpZGUtZG9nZS9zcmMvY29tcG9uZW50cy9jYXJkL2NhcmQuY29tcG9uZW50LnNjc3MiLCJzcmMvY29tcG9uZW50cy9jYXJkL2NhcmQuY29tcG9uZW50LnNjc3MiLCIvaG9tZS9ydW5uZXIvd29yay9ndWlkZS1kb2dlL2d1aWRlLWRvZ2Uvc3JjL3V0aWxzL2NvbnN0YW50cy5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUVBO0VBQ0UsYUFBQTtFQUNBLHNCQUFBO0VBQ0Esb0JBQUE7QUNERjtBREdFO0VBQ0UsZUVEYztFRkVkLGNBQUE7QUNESjtBRElFO0VFQUEsK0dBQUE7RUZFRSxhQUFBO0VBQ0Esc0JBQUE7RUFDQSxvQkFBQTtFQUNBLGtCQUFBO0VBQ0EsdUJBQUE7QUNGSjtBRElJO0VBQ0UsYUFBQTtFQUNBLG9CQUFBO0VBQ0EsWUFBQTtBQ0ZOO0FESU07RUFDRSxPQUFBO0VBQ0EsYUFBQTtFQUNBLG1CQUFBO0VBQ0EsdUJBQUE7RUFDQSxlQUFBO0FDRlI7QURJUTtFQUNFLDZCQUFBO0VBQ0EsZ0JBQUE7QUNGViIsImZpbGUiOiJzcmMvY29tcG9uZW50cy9jYXJkL2NhcmQuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyJAaW1wb3J0IFwiLi4vLi4vdXRpbHMvY29uc3RhbnRzXCI7XG5cbjpob3N0IHtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcbiAgYWxpZ24taXRlbXM6IHN0cmV0Y2g7XG5cbiAgLmNhcmQtdGl0bGUge1xuICAgIGZvbnQtc2l6ZTogJGZvbnQtc2l6ZS1sYXJnZTtcbiAgICBtYXJnaW46IDFyZW0gMDtcbiAgfVxuXG4gIC5jYXJkLWNvbnRlbnQge1xuICAgIEBpbmNsdWRlIGNhcmQtc2hhZG93O1xuICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcbiAgICBhbGlnbi1pdGVtczogc3RyZXRjaDtcbiAgICBib3JkZXItcmFkaXVzOiAycHg7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogd2hpdGU7XG5cbiAgICAudGFicyB7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgYWxpZ24taXRlbXM6IHN0cmV0Y2g7XG4gICAgICBoZWlnaHQ6IDRyZW07XG5cbiAgICAgIC50YWIge1xuICAgICAgICBmbGV4OiAxO1xuICAgICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgICBhbGlnbi1pdGVtczogY2VudGVyO1xuICAgICAgICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgICAgICAgY3Vyc29yOiBwb2ludGVyO1xuXG4gICAgICAgICYuYWN0aXZlIHtcbiAgICAgICAgICBib3JkZXItdG9wOiA0cHggc29saWQgJGNvbG9yLWhpZ2hsaWdodDtcbiAgICAgICAgICBmb250LXdlaWdodDogNTAwO1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iLCI6aG9zdCB7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG4gIGFsaWduLWl0ZW1zOiBzdHJldGNoO1xufVxuOmhvc3QgLmNhcmQtdGl0bGUge1xuICBmb250LXNpemU6IDI0cHg7XG4gIG1hcmdpbjogMXJlbSAwO1xufVxuOmhvc3QgLmNhcmQtY29udGVudCB7XG4gIGJveC1zaGFkb3c6IHJnYmEoMCwgMCwgMCwgMC4yKSAwIDFweCAzcHggMCwgcmdiYSgwLCAwLCAwLCAwLjE0KSAwIDFweCAxcHggMCwgcmdiYSgwLCAwLCAwLCAwLjEyKSAwIDJweCAxcHggLTFweDtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcbiAgYWxpZ24taXRlbXM6IHN0cmV0Y2g7XG4gIGJvcmRlci1yYWRpdXM6IDJweDtcbiAgYmFja2dyb3VuZC1jb2xvcjogd2hpdGU7XG59XG46aG9zdCAuY2FyZC1jb250ZW50IC50YWJzIHtcbiAgZGlzcGxheTogZmxleDtcbiAgYWxpZ24taXRlbXM6IHN0cmV0Y2g7XG4gIGhlaWdodDogNHJlbTtcbn1cbjpob3N0IC5jYXJkLWNvbnRlbnQgLnRhYnMgLnRhYiB7XG4gIGZsZXg6IDE7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICBjdXJzb3I6IHBvaW50ZXI7XG59XG46aG9zdCAuY2FyZC1jb250ZW50IC50YWJzIC50YWIuYWN0aXZlIHtcbiAgYm9yZGVyLXRvcDogNHB4IHNvbGlkICM0Mjg1ZjQ7XG4gIGZvbnQtd2VpZ2h0OiA1MDA7XG59IiwiJGNvbG9yLWJhY2tncm91bmQ6IHJnYigyNDgsIDI0OSwgMjUwKTtcbiRjb2xvci1ib3JkZXI6IHJnYigyMTgsIDIyMCwgMjI0KTtcbiRjb2xvci1mb250OiByZ2IoMzQsIDM0LCAzNCk7XG4kY29sb3ItaGlnaGxpZ2h0OiByZ2IoNjYsIDEzMywgMjQ0KTtcbiRjb2xvci1wb3NpdGl2ZTogcmdiKDE1LCAxNTcsIDg4KTtcbiRjb2xvci1uZWdhdGl2ZTogcmdiKDIxOSwgNjgsIDU1KTtcblxuJGZvbnQtc2l6ZS1sYXJnZTogMjRweDtcbiRmb250LXNpemUtbWVkaXVtOiAxNnB4O1xuJGZvbnQtc2l6ZS1zbWFsbDogMTJweDtcblxuQG1peGluIGNhcmQtc2hhZG93IHtcbiAgYm94LXNoYWRvdzogcmdiYSgwLCAwLCAwLCAwLjIpIDAgMXB4IDNweCAwLCByZ2JhKDAsIDAsIDAsIDAuMTQpIDAgMXB4IDFweCAwLCByZ2JhKDAsIDAsIDAsIDAuMTIpIDAgMnB4IDFweCAtMXB4O1xufVxuIl19 */"]
     });
 
@@ -966,394 +953,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   },
 
   /***/
-  "./src/components/line-chart-audification/line-chart-audification.component.ts":
-  /*!*************************************************************************************!*\
-    !*** ./src/components/line-chart-audification/line-chart-audification.component.ts ***!
-    \*************************************************************************************/
-
-  /*! exports provided: LineChartAudificationComponent */
-
-  /***/
-  function srcComponentsLineChartAudificationLineChartAudificationComponentTs(module, __webpack_exports__, __webpack_require__) {
-    "use strict";
-
-    __webpack_require__.r(__webpack_exports__);
-    /* harmony export (binding) */
-
-
-    __webpack_require__.d(__webpack_exports__, "LineChartAudificationComponent", function () {
-      return LineChartAudificationComponent;
-    });
-    /* harmony import */
-
-
-    var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
-    /*! tslib */
-    "./node_modules/tslib/tslib.es6.js");
-    /* harmony import */
-
-
-    var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
-    /*! @angular/core */
-    "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
-    /* harmony import */
-
-
-    var _models_melody_melody_model__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
-    /*! ../../models/melody/melody.model */
-    "./src/models/melody/melody.model.ts");
-    /* harmony import */
-
-
-    var _i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
-    /*! ../../i18n */
-    "./src/i18n/index.ts");
-    /* harmony import */
-
-
-    var _utils_formatters__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
-    /*! ../../utils/formatters */
-    "./src/utils/formatters.ts");
-    /* harmony import */
-
-
-    var rxjs_operators__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
-    /*! rxjs/operators */
-    "./node_modules/rxjs/_esm2015/operators/index.js");
-    /* harmony import */
-
-
-    var rxjs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
-    /*! rxjs */
-    "./node_modules/rxjs/_esm2015/index.js");
-    /* harmony import */
-
-
-    var _utils_comparators__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
-    /*! ../../utils/comparators */
-    "./src/utils/comparators.ts");
-    /* harmony import */
-
-
-    var _line_chart_line_chart_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(
-    /*! ../line-chart/line-chart.component */
-    "./src/components/line-chart/line-chart.component.ts");
-
-    var LineChartAudificationComponent = /*#__PURE__*/function () {
-      function LineChartAudificationComponent(host, zone) {
-        _classCallCheck(this, LineChartAudificationComponent);
-
-        this.host = host;
-        this.zone = zone;
-        this.liveText = null;
-        this.destroy$ = new rxjs__WEBPACK_IMPORTED_MODULE_6__["Subject"]();
-        this.tabindex = 0;
-        this.readOutTimeoutId = null;
-        this.handleSeek = this.handleSeek.bind(this);
-      }
-
-      _createClass(LineChartAudificationComponent, [{
-        key: "ngOnInit",
-        value: function ngOnInit() {
-          var _this = this;
-
-          this.host.data$.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["takeUntil"])(this.destroy$)).subscribe(function (data) {
-            var _a;
-
-            var values = data.map(function (datum) {
-              return datum.value;
-            });
-            _this.domain = data.map(function (d) {
-              return d.date;
-            }).sort(_utils_comparators__WEBPACK_IMPORTED_MODULE_7__["ascendingDate"]);
-            _this.range = data.map(function (d) {
-              return d.value;
-            }).sort(_utils_comparators__WEBPACK_IMPORTED_MODULE_7__["ascendingNumber"]);
-            (_a = _this.melody) === null || _a === void 0 ? void 0 : _a.dispose();
-            _this.melody = new _models_melody_melody_model__WEBPACK_IMPORTED_MODULE_2__["Melody"](values, [_this.lowestPitch, _this.highestPitch], _this.noteDuration, _this.handleSeek);
-          });
-        }
-      }, {
-        key: "ngOnDestroy",
-        value: function ngOnDestroy() {
-          var _a;
-
-          this.destroy$.next();
-          this.destroy$.complete();
-          (_a = this.melody) === null || _a === void 0 ? void 0 : _a.dispose();
-        }
-      }, {
-        key: "handleSeek",
-        value: function handleSeek(index) {
-          var _this2 = this;
-
-          this.zone.run(function () {
-            _this2.activeDatum = _this2.data[index];
-          });
-        }
-      }, {
-        key: "handleKeyDown",
-        value: function handleKeyDown($event) {
-          return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-            var key, shiftKey, repeat, datumIndex;
-            return regeneratorRuntime.wrap(function _callee$(_context) {
-              while (1) {
-                switch (_context.prev = _context.next) {
-                  case 0:
-                    $event.preventDefault();
-                    $event.stopPropagation();
-                    key = $event.key, shiftKey = $event.shiftKey, repeat = $event.repeat;
-
-                    if (!(!this.melody || repeat)) {
-                      _context.next = 5;
-                      break;
-                    }
-
-                    return _context.abrupt("return");
-
-                  case 5:
-                    if (!(key === ' ')) {
-                      _context.next = 10;
-                      break;
-                    }
-
-                    _context.next = 8;
-                    return this.melody.resume(shiftKey);
-
-                  case 8:
-                    _context.next = 11;
-                    break;
-
-                  case 10:
-                    if (key === 'x') {
-                      this.readOut(Object(_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].DOMAIN, {
-                        min: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatX"])(this.domain[0]),
-                        max: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatX"])(this.domain[this.domain.length - 1])
-                      }));
-                    } else if (key === 'y') {
-                      this.readOut(Object(_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].RANGE, {
-                        min: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatY"])(this.range[0]),
-                        max: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatY"])(this.range[this.range.length - 1])
-                      }));
-                    } else if (key === 'l') {
-                      this.readOut(Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["humanizeMeasureName"])(this.measureName));
-                    } else if ('0' <= key && key <= '9') {
-                      datumIndex = Math.floor(+key / 10 * this.data.length);
-                      this.melody.seekTo(datumIndex, true);
-                      this.readOutCurrentDatum();
-                    }
-
-                  case 11:
-                  case "end":
-                    return _context.stop();
-                }
-              }
-            }, _callee, this);
-          }));
-        }
-      }, {
-        key: "handleKeyUp",
-        value: function handleKeyUp($event) {
-          if (!this.melody) {
-            return;
-          }
-
-          $event.preventDefault();
-          $event.stopPropagation();
-          var key = $event.key;
-
-          if (key === ' ') {
-            this.melody.pause();
-            this.readOutCurrentDatum();
-          }
-        }
-      }, {
-        key: "handleBlur",
-        value: function handleBlur() {
-          var _a;
-
-          (_a = this.melody) === null || _a === void 0 ? void 0 : _a.pause();
-        }
-      }, {
-        key: "readOut",
-        value: function readOut(text) {
-          var _this3 = this;
-
-          if (this.readOutTimeoutId !== null) {
-            window.clearTimeout(this.readOutTimeoutId);
-            this.readOutTimeoutId = null;
-          }
-
-          if (this.liveText === text) {
-            this.liveText = null;
-            this.readOutTimeoutId = window.setTimeout(function () {
-              _this3.readOutTimeoutId = null;
-
-              _this3.readOut(text);
-            }, 500);
-          } else {
-            this.liveText = text;
-          }
-        }
-      }, {
-        key: "readOutCurrentDatum",
-        value: function readOutCurrentDatum() {
-          if (!this.melody) {
-            return;
-          }
-
-          var _this$data$this$melod = this.data[this.melody.currentDatumIndex],
-              date = _this$data$this$melod.date,
-              value = _this$data$this$melod.value;
-          this.readOut(Object(_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].ACTIVE_DATUM, {
-            x: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatX"])(date),
-            y: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatY"])(value)
-          }));
-        }
-      }, {
-        key: "INSTRUCTIONS",
-        get: function get() {
-          return Object(_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].INSTRUCTIONS);
-        }
-      }, {
-        key: "INSTRUCTIONS_A11Y",
-        get: function get() {
-          return Object(_i18n__WEBPACK_IMPORTED_MODULE_3__["tA11y"])(_i18n__WEBPACK_IMPORTED_MODULE_3__["AUDIFICATION"].INSTRUCTIONS);
-        }
-      }, {
-        key: "data",
-        get: function get() {
-          return this.host.data;
-        }
-      }, {
-        key: "measureName",
-        get: function get() {
-          return this.host.measureName;
-        }
-      }, {
-        key: "activeDatum",
-        set: function set(activeDatum) {
-          this.host.activeDatum = activeDatum;
-        }
-      }]);
-
-      return LineChartAudificationComponent;
-    }();
-
-    LineChartAudificationComponent.ɵfac = function LineChartAudificationComponent_Factory(t) {
-      return new (t || LineChartAudificationComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"]('host'), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgZone"]));
-    };
-
-    LineChartAudificationComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComponent"]({
-      type: LineChartAudificationComponent,
-      selectors: [["app-line-chart-audification"]],
-      hostVars: 1,
-      hostBindings: function LineChartAudificationComponent_HostBindings(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("keydown", function LineChartAudificationComponent_keydown_HostBindingHandler($event) {
-            return ctx.handleKeyDown($event);
-          })("keyup", function LineChartAudificationComponent_keyup_HostBindingHandler($event) {
-            return ctx.handleKeyUp($event);
-          })("blur", function LineChartAudificationComponent_blur_HostBindingHandler($event) {
-            return ctx.handleBlur($event);
-          });
-        }
-
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵattribute"]("tabindex", ctx.tabindex);
-        }
-      },
-      inputs: {
-        enabled: "enabled",
-        lowestPitch: "lowestPitch",
-        highestPitch: "highestPitch",
-        noteDuration: "noteDuration",
-        readBefore: "readBefore",
-        readAfter: "readAfter"
-      },
-      decls: 2,
-      vars: 3,
-      consts: [["role", "img", 1, "instructions", 3, "innerHTML"], ["aria-live", "assertive", 1, "live-text", 3, "innerText"]],
-      template: function LineChartAudificationComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelement"](0, "div", 0);
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelement"](1, "div", 1);
-        }
-
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("innerHTML", ctx.INSTRUCTIONS, _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵsanitizeHtml"]);
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵattribute"]("aria-label", ctx.INSTRUCTIONS_A11Y);
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("innerText", ctx.liveText);
-        }
-      },
-      styles: ["@charset \"UTF-8\";\n[_nghost-%COMP%] {\n  display: block;\n  padding: 1.5rem;\n  border-top: 1px solid #dadce0;\n}\n[_nghost-%COMP%]   .instructions[_ngcontent-%COMP%] {\n  font-size: 12px;\n  line-height: 2em;\n  margin-bottom: 0.5rem;\n}\n[_nghost-%COMP%]   .live-text[_ngcontent-%COMP%] {\n  color: #4285f4;\n  font-weight: 500;\n}\n[_nghost-%COMP%]   .live-text[_ngcontent-%COMP%]:before {\n  content: \"\uD83D\uDD0A \";\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9jb21wb25lbnRzL2xpbmUtY2hhcnQtYXVkaWZpY2F0aW9uL2xpbmUtY2hhcnQtYXVkaWZpY2F0aW9uLmNvbXBvbmVudC5zY3NzIiwiL2hvbWUvcnVubmVyL3dvcmsvZ3VpZGUtZG9nZS9ndWlkZS1kb2dlL3NyYy9jb21wb25lbnRzL2xpbmUtY2hhcnQtYXVkaWZpY2F0aW9uL2xpbmUtY2hhcnQtYXVkaWZpY2F0aW9uLmNvbXBvbmVudC5zY3NzIiwiL2hvbWUvcnVubmVyL3dvcmsvZ3VpZGUtZG9nZS9ndWlkZS1kb2dlL3NyYy91dGlscy9jb25zdGFudHMuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxnQkFBZ0I7QUNFaEI7RUFDRSxjQUFBO0VBQ0EsZUFBQTtFQUNBLDZCQUFBO0FEQUY7QUNFRTtFQUNFLGVDQ2M7RURBZCxnQkFBQTtFQUNBLHFCQUFBO0FEQUo7QUNHRTtFQUNFLGNDWGM7RURZZCxnQkFBQTtBRERKO0FDR0k7RUFDRSxjQUFBO0FERE4iLCJmaWxlIjoic3JjL2NvbXBvbmVudHMvbGluZS1jaGFydC1hdWRpZmljYXRpb24vbGluZS1jaGFydC1hdWRpZmljYXRpb24uY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyJAY2hhcnNldCBcIlVURi04XCI7XG46aG9zdCB7XG4gIGRpc3BsYXk6IGJsb2NrO1xuICBwYWRkaW5nOiAxLjVyZW07XG4gIGJvcmRlci10b3A6IDFweCBzb2xpZCAjZGFkY2UwO1xufVxuOmhvc3QgLmluc3RydWN0aW9ucyB7XG4gIGZvbnQtc2l6ZTogMTJweDtcbiAgbGluZS1oZWlnaHQ6IDJlbTtcbiAgbWFyZ2luLWJvdHRvbTogMC41cmVtO1xufVxuOmhvc3QgLmxpdmUtdGV4dCB7XG4gIGNvbG9yOiAjNDI4NWY0O1xuICBmb250LXdlaWdodDogNTAwO1xufVxuOmhvc3QgLmxpdmUtdGV4dDpiZWZvcmUge1xuICBjb250ZW50OiBcIvCflIogXCI7XG59IiwiQGltcG9ydCBcIi4uLy4uL3V0aWxzL2NvbnN0YW50c1wiO1xuXG46aG9zdCB7XG4gIGRpc3BsYXk6IGJsb2NrO1xuICBwYWRkaW5nOiAxLjVyZW07XG4gIGJvcmRlci10b3A6IDFweCBzb2xpZCAkY29sb3ItYm9yZGVyO1xuXG4gIC5pbnN0cnVjdGlvbnMge1xuICAgIGZvbnQtc2l6ZTogJGZvbnQtc2l6ZS1zbWFsbDtcbiAgICBsaW5lLWhlaWdodDogMmVtO1xuICAgIG1hcmdpbi1ib3R0b206IC41cmVtO1xuICB9XG5cbiAgLmxpdmUtdGV4dCB7XG4gICAgY29sb3I6ICRjb2xvci1oaWdobGlnaHQ7XG4gICAgZm9udC13ZWlnaHQ6IDUwMDtcblxuICAgICY6YmVmb3JlIHtcbiAgICAgIGNvbnRlbnQ6ICfwn5SKICc7XG4gICAgfVxuICB9XG59XG4iLCIkY29sb3ItYmFja2dyb3VuZDogcmdiKDI0OCwgMjQ5LCAyNTApO1xuJGNvbG9yLWJvcmRlcjogcmdiKDIxOCwgMjIwLCAyMjQpO1xuJGNvbG9yLWZvbnQ6IHJnYigzNCwgMzQsIDM0KTtcbiRjb2xvci1oaWdobGlnaHQ6IHJnYig2NiwgMTMzLCAyNDQpO1xuJGNvbG9yLXBvc2l0aXZlOiByZ2IoMTUsIDE1NywgODgpO1xuJGNvbG9yLW5lZ2F0aXZlOiByZ2IoMjE5LCA2OCwgNTUpO1xuXG4kZm9udC1zaXplLWxhcmdlOiAyNHB4O1xuJGZvbnQtc2l6ZS1tZWRpdW06IDE2cHg7XG4kZm9udC1zaXplLXNtYWxsOiAxMnB4O1xuXG5AbWl4aW4gY2FyZC1zaGFkb3cge1xuICBib3gtc2hhZG93OiByZ2JhKDAsIDAsIDAsIDAuMikgMCAxcHggM3B4IDAsIHJnYmEoMCwgMCwgMCwgMC4xNCkgMCAxcHggMXB4IDAsIHJnYmEoMCwgMCwgMCwgMC4xMikgMCAycHggMXB4IC0xcHg7XG59XG4iXX0= */"]
-    });
-
-    (function () {
-      _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵsetClassMetadata"](LineChartAudificationComponent, [{
-        type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"],
-        args: [{
-          selector: 'app-line-chart-audification',
-          templateUrl: './line-chart-audification.component.html',
-          styleUrls: ['./line-chart-audification.component.scss']
-        }]
-      }], function () {
-        return [{
-          type: _line_chart_line_chart_component__WEBPACK_IMPORTED_MODULE_8__["LineChartComponent"],
-          decorators: [{
-            type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Inject"],
-            args: ['host']
-          }]
-        }, {
-          type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["NgZone"]
-        }];
-      }, {
-        enabled: [{
-          type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"]
-        }],
-        lowestPitch: [{
-          type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"]
-        }],
-        highestPitch: [{
-          type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"]
-        }],
-        noteDuration: [{
-          type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"]
-        }],
-        readBefore: [{
-          type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"]
-        }],
-        readAfter: [{
-          type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"]
-        }],
-        tabindex: [{
-          type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["HostBinding"],
-          args: ['attr.tabindex']
-        }],
-        handleKeyDown: [{
-          type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["HostListener"],
-          args: ['keydown', ['$event']]
-        }],
-        handleKeyUp: [{
-          type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["HostListener"],
-          args: ['keyup', ['$event']]
-        }],
-        handleBlur: [{
-          type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["HostListener"],
-          args: ['blur', ['$event']]
-        }]
-      });
-    })();
-    /***/
-
-  },
-
-  /***/
   "./src/components/line-chart/line-chart.component.ts":
   /*!***********************************************************!*\
     !*** ./src/components/line-chart/line-chart.component.ts ***!
@@ -1483,6 +1082,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             y: Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["formatY"])(value)
           });
         }
+      }, {
+        key: "VISUALIZATION",
+        get: function get() {
+          return Object(_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_i18n__WEBPACK_IMPORTED_MODULE_3__["GUIDE_DOGE"].VISUALIZATION);
+        }
       }]);
 
       return LineChartComponent;
@@ -1517,8 +1121,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       },
       features: [_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵNgOnChangesFeature"]],
       decls: 5,
-      vars: 1,
-      consts: [[1, "svg-wrapper"], [1, "active-indicator"], ["appA11yPlaceholder", ""]],
+      vars: 2,
+      consts: [["role", "img", 1, "svg-wrapper"], [1, "active-indicator"], ["appA11yPlaceholder", ""]],
       template: function LineChartComponent_Template(rf, ctx) {
         if (rf & 1) {
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 0);
@@ -1541,6 +1145,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
 
         if (rf & 2) {
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵattribute"]("aria-label", ctx.VISUALIZATION);
+
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](3);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"](" ", ctx.ACTIVE_DATUM, " ");
@@ -2547,14 +2153,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       _createClass(LineChartD3, [{
         key: "renderData",
         value: function renderData() {
-          var _this4 = this;
+          var _this = this;
 
           this.line = d3__WEBPACK_IMPORTED_MODULE_1__["line"]().defined(function (d) {
             return !isNaN(d.value);
           }).x(function (d) {
-            return _this4.scaleX(d.date);
+            return _this.scaleX(d.date);
           }).y(function (d) {
-            return _this4.scaleY(d.value);
+            return _this.scaleY(d.value);
           });
           this.path = this.svg.append('path').attr('fill', 'none').attr('stroke', this.colorHighlight).attr('stroke-width', 2).attr('stroke-linejoin', 'round').attr('stroke-linecap', 'round');
         }
@@ -2643,7 +2249,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       _createClass(XYChartD3, [{
         key: "render",
         value: function render() {
-          var _this5 = this;
+          var _this2 = this;
 
           _get(_getPrototypeOf(XYChartD3.prototype), "render", this).call(this);
 
@@ -2654,12 +2260,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           this.renderData();
           this.renderActiveDatum();
           data$.pipe(this.takeUntilCleared()).subscribe(function (data) {
-            _this5.updateAxis(data);
+            _this2.updateAxis(data);
 
-            _this5.updateData(data);
+            _this2.updateData(data);
           });
           activeDatum$.pipe(this.takeUntilCleared()).subscribe(function (activeDatum) {
-            _this5.updateActiveDatum(activeDatum);
+            _this2.updateActiveDatum(activeDatum);
           });
         }
       }, {
@@ -2721,34 +2327,61 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     /* harmony import */
 
 
-    var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
+    var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
+    /*! tslib */
+    "./node_modules/tslib/tslib.es6.js");
+    /* harmony import */
+
+
+    var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
     /*! @angular/core */
     "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
 
     var A11yPlaceholderDirective = /*#__PURE__*/function () {
-      function A11yPlaceholderDirective(componentFactoryResolver, viewContainerRef) {
+      function A11yPlaceholderDirective(componentFactoryResolver, viewContainerRef, compiler) {
         _classCallCheck(this, A11yPlaceholderDirective);
 
         this.componentFactoryResolver = componentFactoryResolver;
         this.viewContainerRef = viewContainerRef;
+        this.compiler = compiler;
       }
 
       _createClass(A11yPlaceholderDirective, [{
         key: "addComponent",
-        value: function addComponent(A11yComponent, host, preference) {
-          this.viewContainerRef.clear();
-          var componentFactory = this.componentFactoryResolver.resolveComponentFactory(A11yComponent);
+        value: function addComponent(A11yModule, host, preference) {
+          return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+            var moduleFactory, moduleRef, module, injector, componentFactory, componentRef, component;
+            return regeneratorRuntime.wrap(function _callee$(_context) {
+              while (1) {
+                switch (_context.prev = _context.next) {
+                  case 0:
+                    this.viewContainerRef.clear();
+                    _context.next = 3;
+                    return this.compiler.compileModuleAsync(A11yModule);
 
-          var injector = _angular_core__WEBPACK_IMPORTED_MODULE_0__["Injector"].create({
-            providers: [{
-              provide: 'host',
-              useValue: host
-            }]
-          });
+                  case 3:
+                    moduleFactory = _context.sent;
+                    moduleRef = moduleFactory.create(null);
+                    module = moduleRef.instance;
+                    injector = _angular_core__WEBPACK_IMPORTED_MODULE_1__["Injector"].create({
+                      providers: [{
+                        provide: 'host',
+                        useValue: host
+                      }]
+                    });
+                    componentFactory = this.componentFactoryResolver.resolveComponentFactory(module.A11yComponent);
+                    componentRef = this.viewContainerRef.createComponent(componentFactory, 0, injector);
+                    component = componentRef.instance;
+                    Object.assign(component, preference);
+                    return _context.abrupt("return", componentRef);
 
-          var componentRef = this.viewContainerRef.createComponent(componentFactory, 0, injector);
-          Object.assign(componentRef.instance, preference);
-          return componentRef;
+                  case 12:
+                  case "end":
+                    return _context.stop();
+                }
+              }
+            }, _callee, this);
+          }));
         }
       }, {
         key: "removeComponent",
@@ -2767,25 +2400,27 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }();
 
     A11yPlaceholderDirective.ɵfac = function A11yPlaceholderDirective_Factory(t) {
-      return new (t || A11yPlaceholderDirective)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["ComponentFactoryResolver"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewContainerRef"]));
+      return new (t || A11yPlaceholderDirective)(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_1__["ComponentFactoryResolver"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_1__["Compiler"]));
     };
 
-    A11yPlaceholderDirective.ɵdir = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineDirective"]({
+    A11yPlaceholderDirective.ɵdir = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineDirective"]({
       type: A11yPlaceholderDirective,
       selectors: [["", "appA11yPlaceholder", ""]]
     });
 
     (function () {
-      _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](A11yPlaceholderDirective, [{
-        type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Directive"],
+      _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵsetClassMetadata"](A11yPlaceholderDirective, [{
+        type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Directive"],
         args: [{
           selector: '[appA11yPlaceholder]'
         }]
       }], function () {
         return [{
-          type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ComponentFactoryResolver"]
+          type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["ComponentFactoryResolver"]
         }, {
-          type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewContainerRef"]
+          type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"]
+        }, {
+          type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Compiler"]
         }];
       }, null);
     })();
@@ -2880,15 +2515,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     /* harmony import */
 
 
-    var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
-    /*! @angular/core */
-    "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
+    var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
+    /*! tslib */
+    "./node_modules/tslib/tslib.es6.js");
     /* harmony import */
 
 
-    var _components_line_chart_audification_line_chart_audification_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
-    /*! ../../components/line-chart-audification/line-chart-audification.component */
-    "./src/components/line-chart-audification/line-chart-audification.component.ts");
+    var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
+    /*! @angular/core */
+    "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
     /* harmony import */
 
 
@@ -2926,14 +2561,36 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       _createClass(AudificationDirective, [{
         key: "ngOnInit",
         value: function ngOnInit() {
-          var _this6 = this;
+          var _this3 = this;
 
           this.preferenceService.audification$.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["takeUntil"])(this.destroy$)).subscribe(function (preference) {
-            if (preference.enabled) {
-              _this6.attach(preference);
-            } else {
-              _this6.detach();
-            }
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(_this3, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+              return regeneratorRuntime.wrap(function _callee2$(_context2) {
+                while (1) {
+                  switch (_context2.prev = _context2.next) {
+                    case 0:
+                      if (!preference.enabled) {
+                        _context2.next = 5;
+                        break;
+                      }
+
+                      _context2.next = 3;
+                      return this.attach(preference);
+
+                    case 3:
+                      _context2.next = 6;
+                      break;
+
+                    case 5:
+                      this.detach();
+
+                    case 6:
+                    case "end":
+                      return _context2.stop();
+                  }
+                }
+              }, _callee2, this);
+            }));
           });
         }
       }, {
@@ -2946,9 +2603,38 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "attach",
         value: function attach(preference) {
-          this.detach();
-          var host = this.host;
-          this.audificationComponentRef = host.a11yPlaceholder.addComponent(_components_line_chart_audification_line_chart_audification_component__WEBPACK_IMPORTED_MODULE_1__["LineChartAudificationComponent"], host, preference);
+          return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+            var host, _yield$__webpack_requ, LineChartAudificationModule;
+
+            return regeneratorRuntime.wrap(function _callee3$(_context3) {
+              while (1) {
+                switch (_context3.prev = _context3.next) {
+                  case 0:
+                    this.detach();
+                    host = this.host;
+                    _context3.next = 4;
+                    return __webpack_require__.e(
+                    /*! import() | components-line-chart-audification-line-chart-audification-module */
+                    "components-line-chart-audification-line-chart-audification-module").then(__webpack_require__.bind(null,
+                    /*! ../../components/line-chart-audification/line-chart-audification.module */
+                    "./src/components/line-chart-audification/line-chart-audification.module.ts"));
+
+                  case 4:
+                    _yield$__webpack_requ = _context3.sent;
+                    LineChartAudificationModule = _yield$__webpack_requ.LineChartAudificationModule;
+                    _context3.next = 8;
+                    return host.a11yPlaceholder.addComponent(LineChartAudificationModule, host, preference);
+
+                  case 8:
+                    this.audificationComponentRef = _context3.sent;
+
+                  case 9:
+                  case "end":
+                    return _context3.stop();
+                }
+              }
+            }, _callee3, this);
+          }));
         }
       }, {
         key: "detach",
@@ -2975,17 +2661,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }();
 
     AudificationDirective.ɵfac = function AudificationDirective_Factory(t) {
-      return new (t || AudificationDirective)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_preference_preference_service__WEBPACK_IMPORTED_MODULE_4__["PreferenceService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_components_line_chart_line_chart_component__WEBPACK_IMPORTED_MODULE_5__["LineChartComponent"], 11));
+      return new (t || AudificationDirective)(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_preference_preference_service__WEBPACK_IMPORTED_MODULE_4__["PreferenceService"]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_components_line_chart_line_chart_component__WEBPACK_IMPORTED_MODULE_5__["LineChartComponent"], 11));
     };
 
-    AudificationDirective.ɵdir = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineDirective"]({
+    AudificationDirective.ɵdir = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineDirective"]({
       type: AudificationDirective,
       selectors: [["", "appAudification", ""]]
     });
 
     (function () {
-      _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](AudificationDirective, [{
-        type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Directive"],
+      _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵsetClassMetadata"](AudificationDirective, [{
+        type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Directive"],
         args: [{
           selector: '[appAudification]'
         }]
@@ -2995,11 +2681,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
           type: _components_line_chart_line_chart_component__WEBPACK_IMPORTED_MODULE_5__["LineChartComponent"],
           decorators: [{
-            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Host"]
+            type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Host"]
           }, {
-            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Self"]
+            type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Self"]
           }, {
-            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Optional"]
+            type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Optional"]
           }]
         }];
       }, null);
@@ -3516,17 +3202,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       _createClass(DataCube, [{
         key: "getDataFor",
         value: function getDataFor(categoryNames, measureNames) {
-          var _this7 = this;
+          var _this4 = this;
 
           var filters = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
           var sortBy = arguments.length > 3 ? arguments[3] : undefined;
           var measureIndices = measureNames.map(function (name) {
-            return _this7.measures.findIndex(function (measure) {
+            return _this4.measures.findIndex(function (measure) {
               return measure.name === name;
             });
           });
           var categoryIndices = categoryNames.map(function (name) {
-            return _this7.categories.findIndex(function (category) {
+            return _this4.categories.findIndex(function (category) {
               return category.name === name;
             });
           });
@@ -3534,7 +3220,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             children: {}
           };
           var filterFuncs = filters.map(function (filter) {
-            return filter(_this7.categories, _this7.measures);
+            return filter(_this4.categories, _this4.measures);
           });
           this.rows.filter(function (row) {
             return filterFuncs.every(function (filter) {
@@ -4191,186 +3877,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   },
 
   /***/
-  "./src/models/melody/melody.model.ts":
-  /*!*******************************************!*\
-    !*** ./src/models/melody/melody.model.ts ***!
-    \*******************************************/
-
-  /*! exports provided: Melody */
-
-  /***/
-  function srcModelsMelodyMelodyModelTs(module, __webpack_exports__, __webpack_require__) {
-    "use strict";
-
-    __webpack_require__.r(__webpack_exports__);
-    /* harmony export (binding) */
-
-
-    __webpack_require__.d(__webpack_exports__, "Melody", function () {
-      return Melody;
-    });
-    /* harmony import */
-
-
-    var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
-    /*! tslib */
-    "./node_modules/tslib/tslib.es6.js");
-    /* harmony import */
-
-
-    var tone__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
-    /*! tone */
-    "./node_modules/tone/build/esm/index.js");
-
-    var Melody = /*#__PURE__*/function () {
-      function Melody(values, frequencyRange, noteDuration, onSeek) {
-        _classCallCheck(this, Melody);
-
-        this.values = values;
-        this.frequencyRange = frequencyRange;
-        this.noteDuration = noteDuration;
-        this.onSeek = onSeek;
-        this.currentDatumIndex = 0;
-        this.synth = new tone__WEBPACK_IMPORTED_MODULE_1__["Synth"]().toDestination();
-        this.inclusive = true;
-        this.reversed = false;
-        this.timeoutId = null;
-        var minValue = Math.min.apply(Math, _toConsumableArray(values));
-        var maxValue = Math.max.apply(Math, _toConsumableArray(values));
-
-        var _this$frequencyRange = _slicedToArray(this.frequencyRange, 2),
-            minFrequency = _this$frequencyRange[0],
-            maxFrequency = _this$frequencyRange[1];
-
-        var minKeyNumber = Melody.getKeyNumber(minFrequency);
-        var maxKeyNumber = Melody.getKeyNumber(maxFrequency);
-        this.frequencies = values.map(function (value) {
-          var keyNumber = (value - minValue) / (maxValue - minValue) * (maxKeyNumber - minKeyNumber) + minKeyNumber;
-          return Melody.getFrequency(keyNumber);
-        });
-      }
-
-      _createClass(Melody, [{
-        key: "resume",
-        value: function resume(reversed) {
-          return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-            return regeneratorRuntime.wrap(function _callee2$(_context2) {
-              while (1) {
-                switch (_context2.prev = _context2.next) {
-                  case 0:
-                    if (!(tone__WEBPACK_IMPORTED_MODULE_1__["getContext"]().state === 'suspended')) {
-                      _context2.next = 3;
-                      break;
-                    }
-
-                    _context2.next = 3;
-                    return tone__WEBPACK_IMPORTED_MODULE_1__["start"]();
-
-                  case 3:
-                    if (!this.isPlaying) {
-                      this.reversed = reversed;
-                      this.playNextNote();
-                    }
-
-                  case 4:
-                  case "end":
-                    return _context2.stop();
-                }
-              }
-            }, _callee2, this);
-          }));
-        }
-      }, {
-        key: "pause",
-        value: function pause() {
-          if (this.timeoutId !== null) {
-            window.clearInterval(this.timeoutId);
-            this.timeoutId = null;
-          }
-        }
-      }, {
-        key: "seekTo",
-        value: function seekTo(datumIndex) {
-          var inclusive = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-
-          var _a;
-
-          this.currentDatumIndex = datumIndex;
-          this.inclusive = this.isEnded || inclusive;
-          (_a = this.onSeek) === null || _a === void 0 ? void 0 : _a.call(this, this.currentDatumIndex);
-        }
-      }, {
-        key: "dispose",
-        value: function dispose() {
-          this.pause();
-          this.synth.dispose();
-        }
-      }, {
-        key: "playNextNote",
-        value: function playNextNote() {
-          var _this8 = this;
-
-          this.seekTo(this.nextDatumIndex);
-          var frequency = this.frequencies[this.currentDatumIndex];
-          this.synth.triggerAttackRelease(frequency, this.noteDuration / 1000);
-
-          if (!this.isEnded) {
-            this.timeoutId = window.setTimeout(function () {
-              _this8.timeoutId = null;
-
-              _this8.playNextNote();
-            }, this.noteDuration);
-          }
-        }
-      }, {
-        key: "reverseDatumIndex",
-        value: function reverseDatumIndex(index) {
-          return this.values.length - 1 - index;
-        }
-      }, {
-        key: "duration",
-        get: function get() {
-          return this.noteDuration * this.values.length;
-        }
-      }, {
-        key: "isPlaying",
-        get: function get() {
-          return this.timeoutId !== null;
-        }
-      }, {
-        key: "isEnded",
-        get: function get() {
-          return this.reversed && this.currentDatumIndex === 0 || !this.reversed && this.currentDatumIndex === this.values.length - 1;
-        }
-      }, {
-        key: "nextDatumIndex",
-        get: function get() {
-          if (this.isEnded) {
-            return this.reverseDatumIndex(this.currentDatumIndex);
-          }
-
-          var offset = this.inclusive ? 0 : this.reversed ? -1 : +1;
-          return this.currentDatumIndex + offset;
-        }
-      }], [{
-        key: "getKeyNumber",
-        value: function getKeyNumber(frequency) {
-          return Math.log2(frequency / 440) * 12 + 49;
-        }
-      }, {
-        key: "getFrequency",
-        value: function getFrequency(keyNumber) {
-          return Math.pow(2, (keyNumber - 49) / 12) * 440;
-        }
-      }]);
-
-      return Melody;
-    }();
-    /***/
-
-  },
-
-  /***/
   "./src/services/data/data.module.ts":
   /*!******************************************!*\
     !*** ./src/services/data/data.module.ts ***!
@@ -4651,63 +4157,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
       return PreferenceService;
     }();
-    /***/
-
-  },
-
-  /***/
-  "./src/utils/comparators.ts":
-  /*!**********************************!*\
-    !*** ./src/utils/comparators.ts ***!
-    \**********************************/
-
-  /*! exports provided: ascendingNumber, descendingNumber, ascendingDate, descendingDate */
-
-  /***/
-  function srcUtilsComparatorsTs(module, __webpack_exports__, __webpack_require__) {
-    "use strict";
-
-    __webpack_require__.r(__webpack_exports__);
-    /* harmony export (binding) */
-
-
-    __webpack_require__.d(__webpack_exports__, "ascendingNumber", function () {
-      return ascendingNumber;
-    });
-    /* harmony export (binding) */
-
-
-    __webpack_require__.d(__webpack_exports__, "descendingNumber", function () {
-      return descendingNumber;
-    });
-    /* harmony export (binding) */
-
-
-    __webpack_require__.d(__webpack_exports__, "ascendingDate", function () {
-      return ascendingDate;
-    });
-    /* harmony export (binding) */
-
-
-    __webpack_require__.d(__webpack_exports__, "descendingDate", function () {
-      return descendingDate;
-    });
-
-    function ascendingNumber(a, b) {
-      return a - b;
-    }
-
-    function descendingNumber(a, b) {
-      return -ascendingNumber(a, b);
-    }
-
-    function ascendingDate(a, b) {
-      return ascendingNumber(a.getTime(), b.getTime());
-    }
-
-    function descendingDate(a, b) {
-      return -ascendingDate(a, b);
-    }
     /***/
 
   },
