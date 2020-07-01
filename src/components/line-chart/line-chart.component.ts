@@ -2,7 +2,7 @@ import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChang
 import { LineChartD3 } from '../../d3/line-chart.d3';
 import { BehaviorSubject } from 'rxjs';
 import { Datum, RenderOptions } from '../../d3/xy-chart.d3';
-import { AUDIFICATION, GUIDE_DOGE, t } from '../../assets/i18n';
+import { AUDIFICATION, GUIDE_DOGE, t } from '../../i18n';
 import { formatX, formatY } from '../../utils/formatters';
 import { A11yPlaceholderDirective } from '../../directives/a11y-placeholder/a11y-placeholder.directive';
 import { DataService } from '../../services/data/data.service';
@@ -25,7 +25,7 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
 
   data$ = new BehaviorSubject<Datum[]>([]);
   activeDatum$ = new BehaviorSubject<Datum | null>(null);
-  private lineChartD3: LineChartD3;
+  lineChartD3: LineChartD3;
 
   constructor(
     private dataService: DataService,
@@ -50,7 +50,7 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
     this.activeDatum$.next(activeDatum);
   }
 
-  get formattedActiveDatum() {
+  get ACTIVE_DATUM() {
     if (!this.activeDatum) {
       return null;
     }
