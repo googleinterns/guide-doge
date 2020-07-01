@@ -3,7 +3,7 @@ import { PreferenceService } from '../../services/preference/preference.service'
 import { Subject } from 'rxjs';
 import { DataService } from '../../services/data/data.service';
 import { takeUntil } from 'rxjs/operators';
-import { ChartMetaType } from '../../datasets/types';
+import { Meta } from '../../datasets/types';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,7 +16,7 @@ export class DashboardComponent {
   dataset$ = this.preferenceService.dataset$;
   dataTable$ = this.preferenceService.dataTable$;
   textSummary$ = this.preferenceService.textSummary$;
-  charts: ChartMetaType[];
+  componentMetas: Meta[];
   private destroy$ = new Subject();
 
   constructor(
@@ -26,7 +26,7 @@ export class DashboardComponent {
     this.dataService.dataset$
       .pipe(takeUntil(this.destroy$))
       .subscribe(dataset => {
-        this.charts = dataset.charts;
+        this.componentMetas = dataset.metas;
       });
   }
 }

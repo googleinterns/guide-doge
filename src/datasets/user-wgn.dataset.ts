@@ -118,17 +118,17 @@ export function UserWGNDataset(config: UserWGNDatasetConfig): Dataset {
     };
   };
 
-  const chartMetas = [
+  const metas = [
     {
       type: 'tabbed' as 'tabbed',
-      charts: measureNames.map(makeLineChartMeta),
+      metas: measureNames.map(makeLineChartMeta),
       title: 'Tabbed Line Chart',
     },
     makeLineChartMeta('activeUsers'),
   ];
 
   return {
-    charts: chartMetas,
+    metas,
     dataCube,
   };
 }

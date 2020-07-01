@@ -1,34 +1,42 @@
 import { DataCube } from 'src/models/data-cube/data-cube.model';
 
-export interface Dataset {
-  charts: ChartMetaType[];
+export interface Dataset  {
+  metas: Array<Meta>;
   dataCube: DataCube;
 }
 
-export type ChartMetaType = LineChartMeta | TabbedChartsMeta;
+export type Meta = TabbedChartsMeta | ChartMeta;
 
-export type XYChartData = LineChartData;
+export interface ComponentMeta<T extends string> {
+  type: T;
+  title: string;
+}
+
+export interface DataComponentMeta<T extends string, QueryT> extends ComponentMeta<T> {
+  query: QueryT;
+}
+
+export interface ContainerComponentMeta<T extends string, MetaT> extends ComponentMeta<T> {
+  metas: MetaT;
+}
+
+export type TabbedChartsMeta = ContainerComponentMeta<'tabbed', ChartMeta[]>;
+
+export type ChartMeta = LineChartMeta;
+
+export interface XYChartMeta<T extends string, QueryT> extends DataComponentMeta<T, QueryT> {
+  xlabel?: string;
+  ylabel?: string;
+}
 
 export interface XYPoint<T, U> {
   x: T;
   y: U;
 }
 
-export interface ChartMeta<T extends string, QueryT> {
-  type: T;
-  query: QueryT;
-  title: string;
-  xlabel?: string;
-  ylabel?: string;
-}
+export type XYChartData = LineChartData;
 
-export interface TabbedChartsMeta {
-  type: 'tabbed';
-  charts: ChartMetaType[];
-  title: string;
-}
-
-export type LineChartMeta = ChartMeta<'line', LineChartQuery>;
+export type LineChartMeta = XYChartMeta<'line', LineChartQuery>;
 
 export type LineChartQuery = (options: LineChartQueryOptions) => LineChartData[];
 

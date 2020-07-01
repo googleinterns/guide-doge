@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { GUIDE_DOGE, t } from '../../assets/i18n';
 import { humanizeMeasureName } from '../../utils/formatters';
-import { ChartMetaType, TabbedChartsMeta } from '../../datasets/types';
+import { Meta, TabbedChartsMeta } from '../../datasets/types';
 
 export type CardType = 'line' | 'bar';
 
@@ -11,7 +11,7 @@ export type CardType = 'line' | 'bar';
   styleUrls: ['./card.component.scss'],
 })
 export class CardComponent implements OnInit {
-  @Input() chart: ChartMetaType;
+  @Input() meta: Meta;
   humanizeMeasureName = humanizeMeasureName;
   currentTabTitle: string;
 
@@ -20,30 +20,30 @@ export class CardComponent implements OnInit {
   }
 
   get tabbed() {
-    return this.chart.type === 'tabbed';
+    return this.meta.type === 'tabbed';
   }
 
   get titles() {
     if (this.tabbed) {
-      return (this.chart as TabbedChartsMeta).charts.map(c => c.title);
+      return (this.meta as TabbedChartsMeta).metas.map(c => c.title);
     } else {
-      return [this.chart.title];
+      return [this.meta.title];
     }
   }
 
-  get currentChart(): ChartMetaType {
+  get currentChart(): Meta {
     if (this.tabbed) {
-      const tabbedChart = this.chart as TabbedChartsMeta;
-      return tabbedChart.charts.find(c => c.title === this.currentTabTitle) ||
-        tabbedChart.charts[0];
+      const tabbedCharts = this.meta as TabbedChartsMeta;
+      return tabbedCharts.metas.find(c => c.title === this.currentTabTitle) ||
+        tabbedCharts.metas[0];
     } else {
-      return this.chart;
+      return this.meta;
     }
   }
 
   ngOnInit() {
     if (this.tabbed) {
-      this.setCurrentTabTitle((this.chart as TabbedChartsMeta).charts[0].title);
+      this.setCurrentTabTitle((this.meta as TabbedChartsMeta).metas[0].title);
     } else {
       this.setCurrentTabTitle('');
     }
