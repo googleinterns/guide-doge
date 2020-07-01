@@ -14,12 +14,10 @@ export class PreferenceService {
 
   dataTable$ = this.createPreference<DataTablePreference>({
     enabled: true,
-    placeholder: null,
   }, 'data_table');
 
   textSummary$ = this.createPreference<TextSummaryPreference>({
     enabled: true,
-    placeholder: null,
   }, 'text_summary');
 
   private createPreference<T extends Preference>(defaultPreference: T, cookieKeySuffix: string) {
@@ -30,8 +28,13 @@ export class PreferenceService {
     };
 
     // make sure the loaded preference object conforms to type T
-    const keys = Object.keys(defaultPreference) as (keyof T)[];
+    const keys = Object.keys(loadedPreference) as (keyof T)[];
     for (const key of keys) {
+      if (!(key in defaultPreference)) {
+        delete loadedPreference[key];
+        continue;
+      }
+
       const expectedType = typeof defaultPreference[key];
       const actualType = typeof loadedPreference[key];
 

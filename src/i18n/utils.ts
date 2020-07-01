@@ -1,7 +1,7 @@
 import { sprintf } from 'sprintf-js';
 import * as striptags from 'striptags';
 import * as dictionary from './languages';
-import { I18n } from './types';
+import { I18nKey } from './types';
 
 export type Language = keyof typeof dictionary;
 
@@ -21,7 +21,7 @@ export function getLanguage() {
  * @param key The key of an i18n string.
  * @param args The arguments to format the string with.
  */
-export function t(key: keyof I18n, ...args: any[]) {
+export function t(key: I18nKey, ...args: any[]) {
   return sprintf(dictionary[language][key], ...args);
 }
 
@@ -31,6 +31,6 @@ export function t(key: keyof I18n, ...args: any[]) {
  * @param key The key of an i18n string.
  * @param args The arguments to format the string with.
  */
-export function tA11y(key: keyof I18n, ...args: any[]) {
+export function tA11y(key: I18nKey, ...args: any[]) {
   return striptags(t(key, ...args));
 }

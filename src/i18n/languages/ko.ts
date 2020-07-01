@@ -1,6 +1,8 @@
 import { AUDIFICATION, GUIDE_DOGE, I18n, VISUALIZATION } from '../types';
+import { en } from './en';
 
 export const ko: I18n = {
+  ...en,
   [GUIDE_DOGE.TITLE]: 'Guide-Doge',
   [GUIDE_DOGE.VISUALIZATION]: '데이터 시각화',
   [GUIDE_DOGE.AUDIFICATION]: '데이터 청각화',

@@ -1,4 +1,12 @@
-import { AUDIFICATION, GUIDE_DOGE, I18n, VISUALIZATION } from '../types';
+import {
+  AUDIFICATION,
+  AUDIFICATION_PREFERENCE,
+  DATA_TABLE_PREFERENCE,
+  GUIDE_DOGE,
+  I18n,
+  TEXT_SUMMARY_PREFERENCE,
+  VISUALIZATION,
+} from '../types';
 
 export const en: I18n = {
   [GUIDE_DOGE.TITLE]: 'Guide-Doge',
@@ -16,4 +24,15 @@ export const en: I18n = {
   [AUDIFICATION.DOMAIN]: 'Domain from %(min)s to %(max)s',
   [AUDIFICATION.RANGE]: 'Range from %(min)s to %(max)s',
   [AUDIFICATION.ACTIVE_DATUM]: '%(y)s on %(x)s',
+
+  [AUDIFICATION_PREFERENCE.enabled]: 'Audification',
+  [AUDIFICATION_PREFERENCE.lowestPitch]: 'Lowest note (Hz)',
+  [AUDIFICATION_PREFERENCE.highestPitch]: 'Highest note (Hz)',
+  [AUDIFICATION_PREFERENCE.noteDuration]: 'Note duration (ms)',
+  [AUDIFICATION_PREFERENCE.readAfter]: 'Read out before playing',
+  [AUDIFICATION_PREFERENCE.readBefore]: 'Read out after playing',
+
+  [DATA_TABLE_PREFERENCE.enabled]: 'Data Table',
+
+  [TEXT_SUMMARY_PREFERENCE.enabled]: 'Text Summary',
 };
