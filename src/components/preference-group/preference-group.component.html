@@ -1,7 +1,12 @@
 <label class="header" [class.enabled]="enabled" [class.always-enabled]="alwaysEnabled">
   <span class="title">
-    {{name}}
+    {{name || getI18nValue('enabled')}}
   </span>
-  <app-switch [(value)]="value" *ngIf="!alwaysEnabled"></app-switch>
+  <app-switch [(value)]="enabled" *ngIf="!alwaysEnabled"></app-switch>
 </label>
-<ng-content *ngIf="enabled"></ng-content>
+<ng-container *ngIf="enabled">
+  <app-preference-item *ngFor="let property of childProperties"
+                       [name]="getI18nValue(property)"
+                       [property]="property"></app-preference-item>
+  <ng-content></ng-content>
+</ng-container>

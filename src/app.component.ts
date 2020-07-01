@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { GUIDE_DOGE, t } from './assets/i18n';
+import { GUIDE_DOGE, t } from './i18n';
 
 @Component({
   selector: 'app-root',

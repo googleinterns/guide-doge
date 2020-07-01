@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { GUIDE_DOGE, t } from '../../assets/i18n';
 import { humanizeMeasureName } from '../../utils/formatters';
 
 export type CardType = 'line' | 'bar';
@@ -16,10 +15,6 @@ export class CardComponent implements OnInit {
   @Input() measureNames: string[];
   humanizeMeasureName = humanizeMeasureName;
   currentMeasureName: string;
-
-  get VISUALIZATION() {
-    return t(GUIDE_DOGE.VISUALIZATION);
-  }
 
   ngOnInit() {
     this.setMeasureName(this.measureNames[0]);

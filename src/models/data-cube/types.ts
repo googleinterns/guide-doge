@@ -97,6 +97,11 @@ export type Filter = (
   measures: Measure[],
 ) => (row: Row) => boolean;
 
+export interface RangeOptions {
+  excludeStart?: boolean;
+  excludeEnd?: boolean;
+}
+
 /**
  * The internal storage of the cube. Although the cube is conceptually an
  * n-dimensional cube of data, in actuality it is a list of rows, to make for
