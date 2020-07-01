@@ -15,6 +15,27 @@ export enum AUDIFICATION {
   ACTIVE_DATUM,
 }
 
+export enum AUDIFICATION_PREFERENCE {
+  enabled = 0x300,
+  lowestPitch,
+  highestPitch,
+  noteDuration,
+  readBefore,
+  readAfter,
+}
+
+export enum DATA_TABLE_PREFERENCE {
+  enabled = 0x400,
+}
+
+export enum TEXT_SUMMARY_PREFERENCE {
+  enabled = 0x500,
+}
+
+export type I18nKey =
+  GUIDE_DOGE | VISUALIZATION | AUDIFICATION |
+  AUDIFICATION_PREFERENCE | DATA_TABLE_PREFERENCE | TEXT_SUMMARY_PREFERENCE;
+
 export type I18n = {
-  [key in GUIDE_DOGE | VISUALIZATION | AUDIFICATION]: string;
+  [key in I18nKey]: string;
 };

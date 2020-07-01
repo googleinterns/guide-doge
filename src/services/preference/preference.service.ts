@@ -1,54 +1,71 @@
-import { BehaviorSubject, combineLatest, Observable, ObservedValueOf } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { AudificationPreference, DataTablePreference, TextSummaryPreference } from './types';
-
-type ObservableDictionary = { [key: string]: Observable<any> };
-type ObservedDictionaryOf<T extends ObservableDictionary> = { [key in keyof T]: ObservedValueOf<T[key]> };
+import { BehaviorSubject } from 'rxjs';
+import * as Cookies from 'js-cookie';
+import { AudificationPreference, DataTablePreference, Preference, TextSummaryPreference } from './types';
 
 export class PreferenceService {
-  audification = { // mimic namespace
-    enabled: new BehaviorSubject(true),
-    lowestPitch: new BehaviorSubject(256),
-    highestPitch: new BehaviorSubject(1024),
-    noteDuration: new BehaviorSubject(167),
-    readBefore: new BehaviorSubject(false),
-    readAfter: new BehaviorSubject(true),
-  };
-  audification$: Observable<AudificationPreference> = this.combineObservableDictionary(this.audification);
+  audification$ = this.createPreference<AudificationPreference>({
+    enabled: true,
+    lowestPitch: 256,
+    highestPitch: 1024,
+    noteDuration: 167,
+    readBefore: false,
+    readAfter: true,
+  }, 'audification');
 
-  dataTable = {
-    enabled: new BehaviorSubject(false),
-    placeholder: new BehaviorSubject(null),
-  };
-  dataTable$: Observable<DataTablePreference> = this.combineObservableDictionary(this.dataTable);
+  dataTable$ = this.createPreference<DataTablePreference>({
+    enabled: true,
+  }, 'data_table');
 
-  textSummary = {
-    enabled: new BehaviorSubject(false),
-    placeholder: new BehaviorSubject(null),
-  };
-  textSummary$: Observable<TextSummaryPreference> = this.combineObservableDictionary(this.textSummary);
+  textSummary$ = this.createPreference<TextSummaryPreference>({
+    enabled: true,
+  }, 'text_summary');
 
-  /**
-   * Creates a combined Observable that emits a dictionary of observed values.
-   *
-   * @param observableDictionary a dictionary of observable values
-   * @return a combined Observable
-   *
-   * @example
-   * // returns an observable of type Observable<{a: boolean, b: number}>
-   * const combined$ = this.combineObservableDictionary({a: new Subject<boolean>(), b: new Subject<number>>});
-   */
-  private combineObservableDictionary<T extends ObservableDictionary>(observableDictionary: T): Observable<ObservedDictionaryOf<T>> {
-    const keys = Object.keys(observableDictionary);
-    const subjects = Object.values(observableDictionary);
-    return combineLatest(subjects)
-      .pipe(map(values => {
-        const observedDictionary: any = {}; // will be of type ObservedDictionaryOf<T> after the iteration below
-        values.forEach((value, i) => {
-          const key = keys[i];
-          observedDictionary[key] = value;
-        });
-        return observedDictionary;
-      }));
+  private createPreference<T extends Preference>(defaultPreference: T, cookieKeySuffix: string) {
+    const cookieKey = `a11y-preference-${cookieKeySuffix}`;
+    const loadedPreference = {
+      ...defaultPreference,
+      ...this.loadPreference<T>(cookieKey),
+    };
+
+    // make sure the loaded preference object conforms to type T
+    const keys = Object.keys(loadedPreference) as (keyof T)[];
+    for (const key of keys) {
+      if (!(key in defaultPreference)) {
+        delete loadedPreference[key];
+        continue;
+      }
+
+      const expectedType = typeof defaultPreference[key];
+      const actualType = typeof loadedPreference[key];
+
+      // in case of type mismatch, override with the default value
+      if (actualType !== expectedType) {
+        loadedPreference[key] = defaultPreference[key];
+      }
+    }
+
+    const preference$ = new BehaviorSubject<T>(loadedPreference);
+    preference$.subscribe(preference => {
+      this.savePreference(cookieKey, preference);
+    });
+    return preference$;
+  }
+
+  // later in the production, it should be loaded from the server
+  private loadPreference<T extends Preference>(cookieKey: string): Partial<T> {
+    const cookie = Cookies.get(cookieKey);
+    if (!cookie) {
+      return {};
+    }
+    try {
+      return JSON.parse(cookie);
+    } catch (e) {
+      console.error('Error occurred while parsing the cookie:', e);
+    }
+    return {};
+  }
+
+  private savePreference<T extends Preference>(cookieKey: string, preference: T) {
+    Cookies.set(cookieKey, preference);
   }
 }
