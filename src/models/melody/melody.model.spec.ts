@@ -30,7 +30,7 @@ describe('Melody', () => {
     expect(melody.duration).toBe(noteDuration * values.length);
   });
 
-  it('should have playhead at the very beginning of the sequence', () => {
+  it('should have playhead at the very beginning of the sequence.', () => {
     expect(melody.currentDatumIndex).toBe(0);
   });
 

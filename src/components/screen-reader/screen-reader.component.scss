@@ -1,0 +1,12 @@
+@import "../../utils/constants";
+
+:host {
+  .live-text {
+    color: $color-highlight;
+    font-weight: 500;
+
+    &:before {
+      content: '🔊 ';
+    }
+  }
+}

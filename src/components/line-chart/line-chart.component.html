@@ -1,7 +1,8 @@
-<div class="svg-wrapper">
+<div class="svg-wrapper"
+     role="img" [attr.aria-label]="VISUALIZATION">
   <svg></svg>
   <div class="active-indicator">
-    {{formattedActiveDatum}}
+    {{ACTIVE_DATUM}}
   </div>
 </div>
 <ng-template appA11yPlaceholder></ng-template>

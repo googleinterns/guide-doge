@@ -116,3 +116,13 @@ export interface ResultRow {
   categories: Map<string, string | number>;
   values: Map<string, number>;
 }
+
+/**
+ * The options used to filter rows.
+ */
+export interface FilterOptions {
+  /** Exclude start date */
+  excludeStartDate: boolean;
+  /** Exclude end date */
+  excludeEndDate: boolean;
+}
