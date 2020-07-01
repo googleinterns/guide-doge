@@ -12,7 +12,7 @@ import { VRScatterPlotComponent } from './vr-scatter-plot.component';
   exports: [
     VRScatterPlotComponent,
   ],
-  schemas:[
+  schemas: [
     CUSTOM_ELEMENTS_SCHEMA
   ]
 })

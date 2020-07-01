@@ -7,18 +7,15 @@ import { Scatterplot } from '../../d3/scatterplot.d3';
   selector: 'app-vr-scatter-plot',
   templateUrl: './vr-scatter-plot.component.html'
 })
-export class VRScatterPlotComponent{
+export class VRScatterPlotComponent implements OnDestroy, OnChanges, OnInit{
   private vrScatterPlot: Scatterplot;
   private shape: string;
   private color: string;
 
   constructor(
   ) {
-    //this.shape = shape;
-    this.vrScatterPlot = new Scatterplot("a-sphere");
+    this.vrScatterPlot = new Scatterplot('a-sphere');
   }
-
-  
 
   ngOnInit() {
    this.vrScatterPlot.init(document.querySelector('a-scene'), [5, 10, 15, 20]);

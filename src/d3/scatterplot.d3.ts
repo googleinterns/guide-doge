@@ -55,8 +55,8 @@ export class Scatterplot{
     // d is data at index, i within
     // select all shapes within given container
     d3.select(this.container).selectAll(this.shape).attr('position', (d, i) => {
-      const x = 0;
-      const y = 0;
+      const x = i * 5;
+      const y = i * 10;
       const z = (-this.data[i] * 2);
       return `${x} ${y} ${z}`;
     });
@@ -134,8 +134,6 @@ export class Scatterplot{
     d3.select(this.container).select('#yGrid').attr('rotation', '0 0 -90');
     d3.select(this.container).select('#yGrid').attr('color', 'blue');
 
-
-    
     const zGrid = document.createElement('a-entity');
     zGrid.id = 'zGrid';
     this.container!.appendChild(zGrid);
@@ -146,8 +144,5 @@ export class Scatterplot{
     .attr('transparent', true)
     .attr('opacity', .02);
     console.log(zGrid.getObject3D('gridd'));
-  
   }
-    
-  
 }
