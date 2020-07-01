@@ -75,7 +75,7 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
       .pipe(takeUntil(this.destroy$))
       .pipe(map(queryOption => {
         this.activeDatum$.next(null);
-        return this.meta[0].query(queryOption)[0];
+        return this.meta.query(queryOption)[0];
       }))
       .subscribe(this.data$);
     this.lineChartD3.render();

@@ -9,7 +9,6 @@
   </div>
   <ng-container [ngSwitch]="currentChart.type">
     <app-line-chart *ngSwitchCase="'line'"
-                    role="img" appAudification
-                    [meta]="[currentChart]"></app-line-chart>
+                    [meta]="currentChart" appAudification></app-line-chart>
   </ng-container>
 </mat-card>
