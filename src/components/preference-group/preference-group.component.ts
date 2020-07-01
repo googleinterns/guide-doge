@@ -11,11 +11,11 @@ export class PreferenceGroupComponent<T extends Preference> {
   @Input() name: string;
   @Input() preference$: BehaviorSubject<T>;
 
-  get value() {
+  get enabled() {
     return this.preference$.value.enabled;
   }
 
-  set value(value) {
+  set enabled(value) {
     this.preference$.next({
       ...this.preference$.value,
       enabled: value,
