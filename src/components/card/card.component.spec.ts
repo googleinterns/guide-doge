@@ -25,8 +25,4 @@ describe('CardComponent', () => {
     component.ngOnInit();
     expect(measureNames.includes(component.currentMeasureName)).toBeTrue();
   });
-
-  it('should have truthy i18n values.', () => {
-    expect(component.VISUALIZATION).toBeTruthy();
-  });
 });

@@ -2,7 +2,7 @@ import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChang
 import { LineChartD3 } from '../../d3/line-chart.d3';
 import { BehaviorSubject } from 'rxjs';
 import { Datum, RenderOptions } from '../../d3/xy-chart.d3';
-import { AUDIFICATION, t } from '../../i18n';
+import { AUDIFICATION, GUIDE_DOGE, t } from '../../i18n';
 import { formatX, formatY } from '../../utils/formatters';
 import { A11yPlaceholderDirective } from '../../directives/a11y-placeholder/a11y-placeholder.directive';
 import { DataService } from '../../services/data/data.service';
@@ -59,6 +59,10 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
       x: formatX(date),
       y: formatY(value),
     });
+  }
+
+  get VISUALIZATION() {
+    return t(GUIDE_DOGE.VISUALIZATION);
   }
 
   ngOnInit() {

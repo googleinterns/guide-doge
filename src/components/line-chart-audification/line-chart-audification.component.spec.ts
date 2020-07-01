@@ -4,6 +4,7 @@ import { DataModule } from '../../services/data/data.module';
 import { LineChartComponent } from '../line-chart/line-chart.component';
 import { Melody } from '../../models/melody/melody.model';
 import { SimpleChange } from '@angular/core';
+import { ScreenReaderModule } from '../screen-reader/screen-reader.module';
 
 describe('LineChartAudificationComponent', () => {
   let fixture: ComponentFixture<LineChartAudificationComponent>;
@@ -33,6 +34,9 @@ describe('LineChartAudificationComponent', () => {
 
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
+      imports: [
+        ScreenReaderModule,
+      ],
       providers: [{
         provide: 'host',
         useValue: host,
@@ -75,10 +79,10 @@ describe('LineChartAudificationComponent', () => {
 
   it(`should read out upon pressing 'x', 'y', or 'l'.`, () => {
     component.ngOnInit();
-    spyOn(component, 'readOut');
+    spyOn(component.screenReaderComponent, 'readOut');
     ['x', 'y', 'l'].forEach((key, i) => {
       triggerKeyDown(key);
-      expect(component.readOut).toHaveBeenCalledTimes(i + 1);
+      expect(component.screenReaderComponent.readOut).toHaveBeenCalledTimes(i + 1);
     });
   });
 
@@ -97,15 +101,5 @@ describe('LineChartAudificationComponent', () => {
     expect(component.melody?.isPlaying).toBeTrue();
     component.handleBlur();
     expect(component.melody?.isPlaying).toBeFalse();
-  });
-
-  it('should empty the live text for a short period of time when the same text needs to be read out consequently.', async () => {
-    const sameText = 'gUiDe-DoGe';
-    component.readOut(sameText);
-    expect(component.liveText).toBe(sameText);
-    component.readOut(sameText);
-    expect(component.liveText).toBe(null);
-    await new Promise(resolve => window.setTimeout(resolve, 550));
-    expect(component.liveText).toBe(sameText);
   });
 });

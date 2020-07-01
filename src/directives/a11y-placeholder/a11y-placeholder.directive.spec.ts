@@ -1,9 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { A11yPlaceholderDirective } from './a11y-placeholder.directive';
-import { Component, ViewChild } from '@angular/core';
+import { Component, NgModule, ViewChild } from '@angular/core';
 import { LineChartComponent } from '../../components/line-chart/line-chart.component';
 import { A11yPlaceholderModule } from './a11y-placeholder.module';
 import { mockPreference } from '../../utils/mocks.spec';
+import { LazyA11yModule } from './types';
 import createSpy = jasmine.createSpy;
 
 describe('A11yPlaceholderDirective', () => {
@@ -22,6 +23,18 @@ describe('A11yPlaceholderDirective', () => {
     template: '',
   })
   class A11yComponent {
+  }
+
+  @NgModule({
+    declarations: [
+      A11yComponent,
+    ],
+    exports: [
+      A11yComponent,
+    ],
+  })
+  class A11yModule implements LazyA11yModule<A11yComponent> {
+    A11yComponent = A11yComponent;
   }
 
   let fixture: ComponentFixture<WrapperComponent>;
@@ -46,13 +59,13 @@ describe('A11yPlaceholderDirective', () => {
     expect(directive).toBeInstanceOf(A11yPlaceholderDirective);
   });
 
-  it('should add a component.', () => {
-    const componentRef = directive.addComponent(A11yComponent, wrapperComponent, mockPreference);
+  it('should add a component.', async () => {
+    const componentRef = await directive.addComponent(A11yModule, wrapperComponent, mockPreference);
     expect(componentRef.instance).toBeInstanceOf(A11yComponent);
   });
 
-  it('should remove a component.', () => {
-    const componentRef = directive.addComponent(A11yComponent, wrapperComponent, mockPreference);
+  it('should remove a component.', async () => {
+    const componentRef = await directive.addComponent(A11yModule, wrapperComponent, mockPreference);
     const destroyCallback = createSpy();
     componentRef.onDestroy(destroyCallback);
     directive.removeComponent(componentRef);

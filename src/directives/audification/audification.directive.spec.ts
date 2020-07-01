@@ -66,14 +66,14 @@ describe('AudificationDirective', () => {
     expect(directive.detach).toHaveBeenCalled();
   });
 
-  it('should add a component to the a11y placeholder when attaching audification.', () => {
+  it('should add a component to the a11y placeholder when attaching audification.', async () => {
     spyOn(hostComponent.a11yPlaceholder, 'addComponent');
-    directive.attach(mockAudificationPreference);
+    await directive.attach(mockAudificationPreference);
     expect(hostComponent.a11yPlaceholder.addComponent).toHaveBeenCalled();
   });
 
-  it('should remove a component from the a11y placeholder when detaching audification.', () => {
-    directive.attach(mockAudificationPreference);
+  it('should remove a component from the a11y placeholder when detaching audification.', async () => {
+    await directive.attach(mockAudificationPreference);
     spyOn(hostComponent.a11yPlaceholder, 'removeComponent');
     directive.detach();
     expect(hostComponent.a11yPlaceholder.removeComponent).toHaveBeenCalled();
