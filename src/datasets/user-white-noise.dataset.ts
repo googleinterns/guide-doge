@@ -23,8 +23,7 @@ import {
   RollingMeasure,
 } from '../utils/compoundMeasures';
 
-
-export interface UserWGNDatasetConfig {
+export interface Config {
   avgHits: number;
   hitStdDev: number;
   avgUsers: number;
@@ -33,7 +32,7 @@ export interface UserWGNDatasetConfig {
   sessionsPerUserStdDev: number;
 }
 
-export const UserWGNDatasetDefaultConfig: UserWGNDatasetConfig = {
+export const defaultConfig: Config = {
   avgHits: 10000,
   hitStdDev: 100,
   avgUsers: 100,
@@ -43,7 +42,7 @@ export const UserWGNDatasetDefaultConfig: UserWGNDatasetConfig = {
 };
 
 // TODO: Refactoring
-export function UserWGNDataset(config: UserWGNDatasetConfig): Dataset {
+export function create(config: Config): Dataset {
   const categories = [countryCategory, browserCategory, sourceCategory];
   const measures = [activeUserMeasure, revenueMeasure, eventCountMeasure];
 
@@ -52,7 +51,7 @@ export function UserWGNDataset(config: UserWGNDatasetConfig): Dataset {
   const startDate = new Date(endDate.getTime() - 30 * DAY);
 
   const dataCube = generateCube(categories, measures, {
-    ...UserWGNDatasetDefaultConfig,
+    ...defaultConfig,
     ...config,
   });
 
@@ -100,7 +99,7 @@ export function UserWGNDataset(config: UserWGNDatasetConfig): Dataset {
     }
   }
 
-  const makeLineChartMeta = (measureName: string): LineChartMeta => {
+  const createLineChartMeta = (measureName: string): LineChartMeta => {
     const rows = data.map(row => ({
       x: row.categories.date,
       y: row.values[measureName],
@@ -121,10 +120,10 @@ export function UserWGNDataset(config: UserWGNDatasetConfig): Dataset {
   const metas = [
     {
       type: 'tabbed' as 'tabbed',
-      metas: measureNames.map(makeLineChartMeta),
+      metas: measureNames.map(createLineChartMeta),
       title: 'Tabbed Line Chart',
     },
-    makeLineChartMeta('activeUsers'),
+    createLineChartMeta('activeUsers'),
   ];
 
   return {

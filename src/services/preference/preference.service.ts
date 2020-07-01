@@ -1,7 +1,7 @@
 import { BehaviorSubject } from 'rxjs';
 import * as Cookies from 'js-cookie';
 import { AudificationPreference, DatasetPreference, DataTablePreference, Preference, TextSummaryPreference } from './types';
-import { UserWGNDatasetDefaultConfig } from '../../datasets/user-wgn.dataset';
+import * as UserWhiteNoiseDataset from '../../datasets/user-white-noise.dataset';
 
 export class PreferenceService {
   audification$ = this.createPreference<AudificationPreference>({
@@ -15,7 +15,7 @@ export class PreferenceService {
 
   dataset$ = this.createPreference<DatasetPreference>({
     enabled: true,
-    ...UserWGNDatasetDefaultConfig
+    ...UserWhiteNoiseDataset.defaultConfig,
   }, 'dataset');
 
   dataTable$ = this.createPreference<DataTablePreference>({

@@ -1,4 +1,4 @@
-import { UserWGNDatasetConfig } from '../../datasets/user-wgn.dataset';
+import * as UserWhiteNoiseDataset from '../../datasets/user-white-noise.dataset';
 
 export interface Preference {
   enabled: boolean;
@@ -20,6 +20,6 @@ export interface TextSummaryPreference extends Preference {
   placeholder: unknown;
 }
 
-type UserWGNDatasetPreference = UserWGNDatasetConfig & Preference;
+type UserWGNDatasetPreference = UserWhiteNoiseDataset.Config & Preference;
 
 export type DatasetPreference = UserWGNDatasetPreference;
