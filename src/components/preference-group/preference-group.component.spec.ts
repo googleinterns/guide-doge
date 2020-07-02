@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PreferenceGroupComponent } from './preference-group.component';
 import { Preference } from '../../services/preference/types';
 import { BehaviorSubject } from 'rxjs';
+import { MatCardModule } from '@angular/material/card';
 
 describe('PreferenceGroupComponent', () => {
   let fixture: ComponentFixture<PreferenceGroupComponent<Preference>>;
@@ -9,7 +10,9 @@ describe('PreferenceGroupComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [],
+      imports: [
+        MatCardModule,
+      ],
       declarations: [
         PreferenceGroupComponent,
       ],
