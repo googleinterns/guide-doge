@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PreferenceItemComponent } from './preference-item.component';
 import { BehaviorSubject } from 'rxjs';
-import { Preference } from '../../services/preference/types';
+import { Preference, PreferenceWithMeta } from '../../services/preference/types';
 import { MatCardModule } from '@angular/material/card';
 
 interface TestPreference extends Preference {
@@ -14,7 +14,7 @@ describe('PreferenceItemComponent', () => {
   let numFixture: ComponentFixture<PreferenceItemComponent<TestPreference, 'num'>>;
   let boolComponent: PreferenceItemComponent<TestPreference, 'bool'>;
   let numComponent: PreferenceItemComponent<TestPreference, 'num'>;
-  let preference$: BehaviorSubject<TestPreference>;
+  let preference$: BehaviorSubject<PreferenceWithMeta<TestPreference>>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -30,11 +30,26 @@ describe('PreferenceItemComponent', () => {
     boolComponent = boolFixture.componentInstance;
     numComponent = numFixture.componentInstance;
 
-    preference$ = new BehaviorSubject<TestPreference>({
+    preference$ = new BehaviorSubject<PreferenceWithMeta<TestPreference>>({
       enabled: true,
       num: 0,
-      bool: true
+      bool: true,
+      _meta: {
+        enabled: {
+          type: 'boolean',
+          defaultValue: true,
+        },
+        num: {
+          type: 'number',
+          defaultValue: 0,
+        },
+        bool: {
+          type: 'boolean',
+          defaultValue: true,
+        },
+      },
     });
+
     numComponent.preference$ = preference$;
     numComponent.property = 'num';
     boolComponent.preference$ = preference$;

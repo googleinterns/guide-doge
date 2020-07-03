@@ -10,8 +10,10 @@ import {
   sourceCategory,
 } from '../models/data-cube/presets';
 import { inOneOfDateRanges } from '../models/data-cube/filters';
-import { generateCube } from 'src/models/data-cube/generation';
+import { generateCube } from '../models/data-cube/generation';
+import { PreferenceMeta } from '../services/preference/types';
 import { DAY } from '../utils/timeUnits';
+import { createDefault } from '../utils/preferences';
 import {
   CompoundMeasure,
   CompoundMeasureType,
@@ -23,6 +25,7 @@ import {
   RollingMeasure,
 } from '../utils/compoundMeasures';
 
+
 export interface Config {
   avgHits: number;
   hitStdDev: number;
@@ -32,13 +35,31 @@ export interface Config {
   sessionsPerUserStdDev: number;
 }
 
-export const defaultConfig: Config = {
-  avgHits: 10000,
-  hitStdDev: 100,
-  avgUsers: 100,
-  userStdDev: 1,
-  avgSessionsPerUser: 5,
-  sessionsPerUserStdDev: 3,
+export const configMeta: PreferenceMeta<Config> = {
+  avgHits: {
+    type: 'number',
+    defaultValue: 10000,
+  },
+  hitStdDev: {
+    type: 'number',
+    defaultValue: 100,
+  },
+  avgUsers: {
+    type: 'number',
+    defaultValue: 100,
+  },
+  userStdDev: {
+    type: 'number',
+    defaultValue: 1,
+  },
+  avgSessionsPerUser: {
+    type: 'number',
+    defaultValue: 5,
+  },
+  sessionsPerUserStdDev: {
+    type: 'number',
+    defaultValue: 3,
+  },
 };
 
 // TODO: Refactoring
@@ -50,6 +71,7 @@ export function create(config: Config): Dataset {
   const endDate = new Date();
   const startDate = new Date(endDate.getTime() - 30 * DAY);
 
+  const defaultConfig = createDefault(configMeta);
   const dataCube = generateCube(categories, measures, {
     ...defaultConfig,
     ...config,
