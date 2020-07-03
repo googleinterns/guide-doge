@@ -2,6 +2,7 @@ import { XYPoint } from '../types';
 import { inOneOfDateRanges } from '../../models/data-cube/filters';
 import { DAY } from '../../utils/timeUnits';
 import { DataCube } from '../../models/data-cube/data-cube.model';
+import { ResultRow } from '../../models/data-cube/types';
 
 export interface TimeSeriesQueryOptions {
   range: [Date, Date];
@@ -26,8 +27,8 @@ export type LegendItem<S> = {
 };
 
 export function createTimeSeriesQuery<S>(dataCube: DataCube, legendItems: LegendItem<S>[]): TimeSeriesQuery<S> {
-  return options => {
-    const [startDate, endDate] = options.range;
+  return queryOptions => {
+    const [startDate, endDate] = queryOptions.range;
     const measureNames = [...new Set(legendItems.map(item => item.measureName))];
 
     const windowSizes = legendItems.map(item => item.windowSize).filter(((v): v is number => v !== undefined));
@@ -51,58 +52,58 @@ export function createTimeSeriesQuery<S>(dataCube: DataCube, legendItems: Legend
       sortBy: [dateCategoryName],
     });
 
-    return legendItems.map(item => {
-      const {
-        label,
-        measureName,
-        periodOffset = 0,
-        windowSize = DAY,
-        style,
-      } = item;
+    return legendItems.map(item => createTimeSeriesDatum(rows, startDate, endDate, item));
+  };
+}
 
-      const rawPoints: XYPoint<Date, number>[] = rows.map(row => ({
-        x: row.categories.date,
-        y: row.values[measureName],
-      }));
+function createTimeSeriesDatum<S>(rows: ResultRow[], startDate: Date, endDate: Date, item: LegendItem<S>): TimeSeriesDatum<S> {
+  const {
+    label,
+    measureName,
+    periodOffset = 0,
+    windowSize = DAY,
+    style,
+  } = item;
 
-      const periodStart = startDate.getTime() + periodOffset;
-      const periodEnd = endDate.getTime() + periodOffset;
-      const periodPoints = rawPoints.filter(point => {
-        const time = point.x.getTime();
-        return periodStart < time && time <= periodEnd;
-      });
+  const rawPoints: TimeSeriesPoint[] = rows.map(row => ({
+    x: row.categories.date,
+    y: row.values[measureName],
+  }));
 
-      const [headPoint, ...tailPoints] = periodPoints;
+  const periodStart = startDate.getTime() + periodOffset;
+  const periodEnd = endDate.getTime() + periodOffset;
+  const [headPoint, ...tailPoints] = rawPoints.filter(point => {
+    const time = point.x.getTime();
+    return periodStart < time && time <= periodEnd;
+  });
 
-      const points: XYPoint<Date, number>[] = [];
+  const points: TimeSeriesPoint[] = [];
 
-      // pre-calculate the sum of the window for the very first datum
-      const windowStart = headPoint.x.getTime() - windowSize;
-      let startIndex = rawPoints.findIndex(point => windowStart < point.x.getTime());
-      let endIndex = rawPoints.indexOf(headPoint);
-      let sum = rawPoints
-        .slice(startIndex, endIndex + 1)
-        .reduce((acc, point) => acc + point.y, 0);
-      points.push({
-        x: headPoint.x,
-        y: sum,
-      });
+  // pre-calculate the sum of the window for the very first point
+  const windowStart = headPoint.x.getTime() - windowSize;
+  let startIndex = rawPoints.findIndex(point => windowStart < point.x.getTime());
+  let endIndex = rawPoints.indexOf(headPoint);
+  let sum = rawPoints
+    .slice(startIndex, endIndex + 1)
+    .reduce((acc, point) => acc + point.y, 0);
+  points.push({
+    x: headPoint.x,
+    y: sum,
+  });
 
-      // slide the window for the rest of the data
-      for (const point of tailPoints) {
-        sum += rawPoints[++endIndex].y;
-        sum -= rawPoints[startIndex++].y;
-        points.push({
-          x: point.x,
-          y: sum,
-        });
-      }
-
-      return {
-        label,
-        style,
-        points,
-      };
+  // slide the window for the rest of the points
+  for (const point of tailPoints) {
+    sum += rawPoints[++endIndex].y;
+    sum -= rawPoints[startIndex++].y;
+    points.push({
+      x: point.x,
+      y: sum,
     });
+  }
+
+  return {
+    label,
+    style,
+    points,
   };
 }
