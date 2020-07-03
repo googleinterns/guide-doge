@@ -1,17 +1,31 @@
-import { LineChartQuery, LineChartStyle, XYPoint } from '../types';
+import { XYPoint } from '../types';
 import { inOneOfDateRanges } from '../../models/data-cube/filters';
 import { DAY } from '../../utils/timeUnits';
 import { DataCube } from '../../models/data-cube/data-cube.model';
 
-type LegendItem = {
+export interface TimeSeriesQueryOptions {
+  range: [Date, Date];
+}
+
+export type TimeSeriesPoint = XYPoint<Date, number>;
+
+export interface TimeSeriesDatum<S> {
   label: string;
+  style: Partial<S>;
+  points: TimeSeriesPoint[];
+}
+
+export type TimeSeriesQuery<S> = (options: TimeSeriesQueryOptions) => TimeSeriesDatum<S>[];
+
+export type LegendItem<S> = {
+  label: string;
+  style: Partial<S>;
   measureName: string;
   periodOffset?: number;
   windowSize?: number;
-  style: Partial<LineChartStyle>;
 };
 
-export function createTimeSeriesQuery(dataCube: DataCube, legendItems: LegendItem[]): LineChartQuery {
+export function createTimeSeriesQuery<S>(dataCube: DataCube, legendItems: LegendItem<S>[]): TimeSeriesQuery<S> {
   return options => {
     const [startDate, endDate] = options.range;
     const measureNames = [...new Set(legendItems.map(item => item.measureName))];
@@ -43,6 +57,7 @@ export function createTimeSeriesQuery(dataCube: DataCube, legendItems: LegendIte
         measureName,
         periodOffset = 0,
         windowSize = DAY,
+        style,
       } = item;
 
       const rawPoints: XYPoint<Date, number>[] = rows.map(row => ({
@@ -84,8 +99,9 @@ export function createTimeSeriesQuery(dataCube: DataCube, legendItems: LegendIte
       }
 
       return {
-        points,
         label,
+        style,
+        points,
       };
     });
   };

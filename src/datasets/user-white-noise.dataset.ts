@@ -29,7 +29,6 @@ export const defaultConfig: Config = {
   sessionsPerUserStdDev: 3,
 };
 
-// TODO: Refactoring
 export function create(config: Config): Dataset {
   const categories = [countryCategory, browserCategory, sourceCategory];
   const measures = [activeUserMeasure, revenueMeasure, eventCountMeasure];

@@ -1,5 +1,5 @@
 import { AudificationPreference, Preference } from '../services/preference/types';
-import { DNPoint } from '../d3/xy-chart.d3';
+import { TimeSeriesPoint } from '../datasets/queries/time-series.query';
 import { activeUserMeasure } from '../models/data-cube/presets';
 
 export const mockPreference: Preference = {
@@ -15,7 +15,7 @@ export const mockAudificationPreference: AudificationPreference = {
   readBefore: false,
 };
 
-export const mockDatum: DNPoint = {
+export const mockDatum: TimeSeriesPoint = {
   x: new Date(),
   y: 0,
 };

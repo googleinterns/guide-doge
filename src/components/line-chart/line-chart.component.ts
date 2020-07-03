@@ -1,13 +1,16 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { LineChartD3 } from '../../d3/line-chart.d3';
-import { DNPoint, RenderOptions } from '../../d3/xy-chart.d3';
+import { LineChartD3, LineChartStyle } from '../../d3/line-chart.d3';
+import { RenderOptions } from '../../d3/xy-chart.d3';
 import { AUDIFICATION, GUIDE_DOGE, t } from '../../i18n';
 import { formatX, formatY } from '../../utils/formatters';
 import { A11yPlaceholderDirective } from '../../directives/a11y-placeholder/a11y-placeholder.directive';
 import { DAY } from '../../utils/timeUnits';
 import { map, takeUntil } from 'rxjs/operators';
-import { LineChartData, LineChartMeta, LineChartQueryOptions } from '../../datasets/types';
+import { LineChartMeta } from '../../datasets/types';
+import { TimeSeriesDatum, TimeSeriesPoint, TimeSeriesQueryOptions } from '../../datasets/queries/time-series.query';
+
+export type LineChartDatum = TimeSeriesDatum<LineChartStyle>;
 
 @Component({
   selector: 'app-line-chart',
@@ -27,14 +30,15 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
   @Input() marginBottom = 30;
   @Input() marginLeft = 40;
 
-  queryOptions$ = new BehaviorSubject<LineChartQueryOptions>({
+  queryOptions$ = new BehaviorSubject<TimeSeriesQueryOptions>({
     range: [this.startDate, this.endDate],
   });
-  data$ = new BehaviorSubject<LineChartData>({
+  data$ = new BehaviorSubject<LineChartDatum>({
     label: '',
     points: [],
+    style: {},
   });
-  activeDatum$ = new BehaviorSubject<DNPoint | null>(null);
+  activeDatum$ = new BehaviorSubject<TimeSeriesPoint | null>(null);
   private destroy$ = new Subject();
   private lineChartD3: LineChartD3;
 

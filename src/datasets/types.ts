@@ -1,6 +1,8 @@
 import { DataCube } from 'src/models/data-cube/data-cube.model';
+import { TimeSeriesQuery } from './queries/time-series.query';
+import { LineChartStyle } from '../d3/line-chart.d3';
 
-export interface Dataset  {
+export interface Dataset {
   metas: Array<Meta>;
   dataCube: DataCube;
 }
@@ -32,25 +34,4 @@ export interface XYPoint<T, U> {
   y: U;
 }
 
-export type XYChartData = LineChartData;
-
-export type LineChartMeta = XYChartMeta<'line', LineChartQuery>;
-
-export type LineChartQuery = (options: LineChartQueryOptions) => LineChartData[];
-
-export interface LineChartQueryOptions {
-  range: [Date, Date];
-}
-
-export interface LineChartData {
-  points: XYPoint<Date, number>[];
-  label: string;
-  style?: LineChartStyle;
-}
-
-export interface LineChartStyle {
-  color: string;
-  width: number;
-  opacity: number;
-  dashes: number[];
-}
+export type LineChartMeta = XYChartMeta<'line', TimeSeriesQuery<LineChartStyle>>;
