@@ -7,7 +7,7 @@ import { formatX, formatY } from '../../utils/formatters';
 import { A11yPlaceholderDirective } from '../../directives/a11y-placeholder/a11y-placeholder.directive';
 import { DAY } from '../../utils/timeUnits';
 import { map, takeUntil } from 'rxjs/operators';
-import { LineChartMeta, LineChartQueryOptions, LineChartData } from '../../datasets/types';
+import { LineChartData, LineChartMeta, LineChartQueryOptions } from '../../datasets/types';
 
 @Component({
   selector: 'app-line-chart',
@@ -31,6 +31,7 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
     range: [this.startDate, this.endDate],
   });
   data$ = new BehaviorSubject<LineChartData>({
+    label: '',
     points: [],
   });
   activeDatum$ = new BehaviorSubject<DNPoint | null>(null);

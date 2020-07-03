@@ -23,8 +23,8 @@ export interface TabbedChartsMeta extends ComponentMeta<'tabbed'> {
 export type ChartMeta = LineChartMeta;
 
 export interface XYChartMeta<T extends string, QueryT> extends DataComponentMeta<T, QueryT> {
-  xlabel?: string;
-  ylabel?: string;
+  xLabel?: string;
+  yLabel?: string;
 }
 
 export interface XYPoint<T, U> {
@@ -44,7 +44,7 @@ export interface LineChartQueryOptions {
 
 export interface LineChartData {
   points: XYPoint<Date, number>[];
-  legend?: string;
+  label: string;
   style?: LineChartStyle;
 }
 
