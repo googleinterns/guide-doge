@@ -34,6 +34,6 @@ export class PreferenceGroupComponent<T extends Preference> {
   }
 
   getI18nValue(key: keyof T) {
-    return this.i18n && t(this.i18n[key]);
+    return (this.i18n && t(this.i18n[key])) || key;
   }
 }

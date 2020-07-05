@@ -2,7 +2,7 @@ import { DataCube } from 'src/models/data-cube/data-cube.model';
 
 export interface Dataset  {
   metas: Array<Meta>;
-  dataCube: DataCube;
+  dataCube?: DataCube;
 }
 
 export type Meta = TabbedChartsMeta | ChartMeta;

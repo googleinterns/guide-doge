@@ -1,4 +1,4 @@
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, fromEventPattern } from 'rxjs';
 import * as Cookies from 'js-cookie';
 import {
   AudificationPreference,
@@ -11,7 +11,7 @@ import {
   SelectPreferenceItemMeta,
 } from './types';
 import { createDefault } from '../../utils/preferences';
-import * as UserWhiteNoiseDataset from '../../datasets/user-white-noise.dataset';
+import { datasets } from '../../datasets';
 
 export class PreferenceService {
   dataset$ = this.createPreference<DatasetPreference>({
@@ -19,7 +19,11 @@ export class PreferenceService {
       type: 'boolean',
       defaultValue: true,
     },
-    ...UserWhiteNoiseDataset.configMeta,
+    name: {
+      type: 'select',
+      defaultValue: Object.keys(datasets)[0],
+      options: Object.keys(datasets),
+    }
   }, 'dataset');
 
   audification$ = this.createPreference<AudificationPreference>({
