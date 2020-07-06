@@ -7,7 +7,7 @@ import { formatX, formatY } from '../../utils/formatters';
 import { A11yPlaceholderDirective } from '../../directives/a11y-placeholder/a11y-placeholder.directive';
 import { DAY } from '../../utils/timeUnits';
 import { map, takeUntil } from 'rxjs/operators';
-import { LineChartMeta } from '../../datasets/types';
+import { LineChartMeta } from '../../datasets/metas/line-chart.meta';
 import { TimeSeriesDatum, TimeSeriesPoint, TimeSeriesQueryOptions } from '../../datasets/queries/time-series.query';
 
 export type LineChartDatum = TimeSeriesDatum<LineChartStyle>;
