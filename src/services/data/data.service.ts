@@ -43,7 +43,7 @@ export class DataService implements OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .pipe(distinctUntilChanged((prev, curr) => prev.name === curr.name))
       .pipe(pluck('name'))
-      .pipe(map(name => name || Object.keys(datasets)[0]))
+      .pipe(map(name => name ?? Object.keys(datasets)[0]))
       .subscribe(name => {
         const meta = {
           enabled: {
