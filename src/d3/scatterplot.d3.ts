@@ -11,11 +11,11 @@
 import * as d3 from 'd3';
 import * as THREE from 'three';
 
-
 export class Scatterplot{
     private data: number[];
     private shape: string;
     private container: HTMLElement | null;
+    private hscale: d3.ScaleLinear<number, number>;
 
   constructor(shape: string) {
     this.shape = shape;
@@ -23,16 +23,17 @@ export class Scatterplot{
   init(container: HTMLElement | null, data: number[]){
     this.data = data;
     this.container = container;
+    // create a scale so that there is correspondence between data set and screen render
+    this.hscale = d3.scaleLinear();
+    this.hscale.domain([0, d3.max(this.data) as number])       // max of dataset
+    .range([0, 100]);                                      // linear mapping of data set values to values from 0 to 10
+    this.createSky();
     this.generatePts();
     this.setColor('blue');
     this.createGridPlane();
   }
 
   private generatePts() {
-    // create a scale so that there is correspondence between data set and screen render
-    const hscale = d3.scaleLinear();
-    hscale.domain([0, d3.max(this.data) as number])       // max of dataset
-    .range([0, 10]);                                      // linear mapping of data set values to values from 0 to 10
      // enter identifies any DOM elements to be added when # array elements doesn't match
     d3.select(this.container).selectAll(this.shape).data(this.data).enter().append(this.shape);
     // d is data at index, i within
@@ -40,7 +41,7 @@ export class Scatterplot{
     d3.select(this.container).selectAll(this.shape).attr('position', (d, i) => {
       const x = i * 5;
       const y = i * 10;
-      const z = -this.data[i] * 2;
+      const z = (-this.data[i] * 2);
       return `${x} ${y} ${z}`;
     });
   }
@@ -48,7 +49,13 @@ export class Scatterplot{
     d3.select(this.container).selectAll(this.shape).attr('color', () => {
       return color;
     });
-
+  }
+  private createSky(){
+    const aSky = document.createElement('a-sky');
+    this.container!.appendChild(aSky);
+    d3.select(this.container).selectAll('a-sky').attr('color', () => {
+      return '#f2b9af';
+    });
   }
   private createGridPlane()
   {
