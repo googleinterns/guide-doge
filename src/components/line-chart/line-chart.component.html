@@ -1,8 +1,8 @@
-<button (click)="toggleMeasure()">Toggle Measure</button>
-<app-line-chart-visualization role="img"
-                              [attr.aria-label]="VISUALIZATION"
-                              [data]="data"
-                              [(activeDatum)]="activeDatum"></app-line-chart-visualization>
-<app-line-chart-audification tabindex="0"
-                             [data]="data"
-                             [(activeDatum)]="activeDatum"></app-line-chart-audification>
+<div class="svg-wrapper"
+     role="img" [attr.aria-label]="VISUALIZATION">
+  <svg></svg>
+  <div class="active-indicator">
+    {{ACTIVE_DATUM}}
+  </div>
+</div>
+<ng-template appA11yPlaceholder></ng-template>

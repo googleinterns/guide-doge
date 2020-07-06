@@ -1,0 +1,79 @@
+@import "./utils/constants";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  height: 100vh;
+  background-color: $color-background;
+
+  .header {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    background-color: white;
+    border-bottom: 1px solid $color-border;
+    padding: 0 2rem;
+    height: 4rem;
+    flex-shrink: 0;
+
+    &:hover {
+      background: linear-gradient(135deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3, #ff2400) repeat-x;
+      background-size: 800% 100%;
+      animation: rainbow 30s linear infinite;
+
+      @keyframes rainbow {
+        0% {
+          background-position: 0 0
+        }
+        100% {
+          background-position: 800% 0
+        }
+      }
+
+      .logo:after {
+        content: '';
+        display: block;
+        margin-left: .5rem;
+        width: 3rem;
+        height: 3rem;
+        background-image: url(./assets/sunglass-doge.png);
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+    }
+
+    .logo {
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 700;
+      font-size: $font-size-large;
+      display: flex;
+      align-items: center;
+    }
+
+    .links {
+      display: flex;
+      align-items: stretch;
+
+      a {
+        padding: 0 1rem;
+        display: flex;
+        align-items: center;
+
+        &.active {
+          font-weight: 500;
+          border-bottom: 4px solid $color-highlight;
+        }
+      }
+    }
+  }
+
+  .container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    overflow: hidden;
+  }
+}

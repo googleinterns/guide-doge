@@ -1,26 +1,39 @@
-import { Component, EventEmitter, HostListener, Input, NgZone, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import { Component, HostBinding, HostListener, Inject, Input, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Melody } from '../../models/melody/melody.model';
-import { AUDIFICATION, t, tA11y } from '../../assets/i18n';
-import { Datum } from '../../d3/xy-chart.d3';
-import { formatX, formatY } from '../../utils/formatters';
+import { AUDIFICATION, t, tA11y } from '../../i18n';
+import { formatX, formatY, humanizeMeasureName } from '../../utils/formatters';
+import { LineChartComponent } from '../line-chart/line-chart.component';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { AudificationPreference } from '../../services/preference/types';
+import { ascendingDate, ascendingNumber } from '../../utils/comparators';
+import { ScreenReaderComponent } from '../screen-reader/screen-reader.component';
 
 @Component({
   selector: 'app-line-chart-audification',
   templateUrl: './line-chart-audification.component.html',
   styleUrls: ['./line-chart-audification.component.scss'],
 })
-export class LineChartAudificationComponent implements OnDestroy, OnChanges {
-  @Input() data: Datum[];
-  @Input() activeDatum: Datum | null;
-  @Output() activeDatumChange = new EventEmitter<Datum | null>();
-  @Input() frequencyRange: [number, number] = [256, 2048];
-  @Input() duration = 5;
-  liveText: string | null = null;
-  private melody?: Melody;
+export class LineChartAudificationComponent implements AudificationPreference, OnInit, OnDestroy {
+  @ViewChild(ScreenReaderComponent, { static: true }) screenReaderComponent: ScreenReaderComponent;
+
+  // even though change detection doesn't work for dynamically loaded components, leave @Input() to indicate that they will be injected.
+  @Input() enabled: boolean;
+  @Input() lowestPitch: number;
+  @Input() highestPitch: number;
+  @Input() noteDuration: number;
+  @Input() readBefore: boolean;
+  @Input() readAfter: boolean;
+
+  melody?: Melody;
+  private destroy$ = new Subject();
   private domain: Date[];
   private range: number[];
+  @HostBinding('attr.tabindex') private readonly tabindex = 0;
+  private resumeTimeoutId: number | null = null;
 
   constructor(
+    @Inject('host') private host: LineChartComponent,
     private zone: NgZone,
   ) {
     this.handleSeek = this.handleSeek.bind(this);
@@ -34,83 +47,135 @@ export class LineChartAudificationComponent implements OnDestroy, OnChanges {
     return tA11y(AUDIFICATION.INSTRUCTIONS);
   }
 
+  get data() {
+    return this.host.data;
+  }
+
+  get measureName() {
+    return this.host.measureName;
+  }
+
+  set activeDatum(activeDatum) {
+    this.host.activeDatum = activeDatum;
+  }
+
+  ngOnInit() {
+    this.host.data$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(data => {
+        const values = data.map(datum => datum.value);
+        this.domain = data.map(d => d.date).sort(ascendingDate);
+        this.range = data.map(d => d.value).sort(ascendingNumber);
+        this.melody?.dispose();
+        this.melody = new Melody(values, [this.lowestPitch, this.highestPitch], this.noteDuration, this.handleSeek);
+      });
+  }
+
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.melody?.dispose();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if ('data' in changes) {
-      const values = this.data.map(datum => datum.value);
-      this.domain = this.data.map(d => d.date).sort((a, b) => a.getTime() - b.getTime());
-      this.range = this.data.map(d => d.value).sort();
-      this.melody?.dispose();
-      this.melody = new Melody(values, this.frequencyRange, this.duration, this.handleSeek);
-    }
-  }
-
-  handleSeek(index, playing) {
-    const datum = this.data[index];
-    const { date, value } = datum;
-
+  handleSeek(index) {
     // since Tone.js is running outside of the Angular zone, it needs to reenter the zone to trigger change detection.
     this.zone.run((() => {
-      this.activeDatumChange.emit(datum);
-      if (!playing) {
-        this.readOut(t(AUDIFICATION.ACTIVE_DATUM, {
-          x: formatX(date),
-          y: formatY(value),
-        }));
-      }
+      this.activeDatum = this.data[index];
     }));
   }
 
   @HostListener('keydown', ['$event'])
   async handleKeyDown($event: KeyboardEvent) {
+    $event.preventDefault();
+    $event.stopPropagation();
     const { key, shiftKey, repeat } = $event;
-    if (repeat) {
+    if (!this.melody || repeat) {
       return;
     }
     if (key === ' ') {
-      await this.melody?.resume(shiftKey);
+      this.resumeMelody(shiftKey);
     } else if (key === 'x') {
-      this.readOut(t(AUDIFICATION.DOMAIN, {
-        min: formatX(this.domain[0]),
-        max: formatX(this.domain[this.domain.length - 1]),
-      }));
+      this.readOutDomain();
     } else if (key === 'y') {
-      this.readOut(t(AUDIFICATION.RANGE, {
-        min: formatY(this.range[0]),
-        max: formatY(this.range[this.range.length - 1]),
-      }));
+      this.readOutRange();
+    } else if (key === 'l') {
+      this.readOutMeasure();
     } else if ('0' <= key && key <= '9') {
-      this.melody?.seekTo(this.duration * (+key / 10), true);
-    } else {
-      return;
+      const datumIndex = Math.floor(+key / 10 * this.data.length);
+      this.melody.seekTo(datumIndex, true);
+      this.readOutCurrentDatum();
     }
-    $event.preventDefault();
-    $event.stopPropagation();
   }
 
   @HostListener('keyup', ['$event'])
   handleKeyUp($event: KeyboardEvent) {
-    const { key } = $event;
-    if (key === ' ') {
-      this.melody?.pause();
-    } else {
+    if (!this.melody) {
       return;
     }
     $event.preventDefault();
     $event.stopPropagation();
+    const { key } = $event;
+    if (key === ' ') {
+      this.pauseMelody();
+    }
   }
 
-  private readOut(text: string) {
-    if (this.liveText === text) {
-      this.liveText = null; // empty the text for a short period of time when the same text needs to be read out consequently
-      window.setTimeout(() => {
-        this.readOut(text);
-      }, 500);
+  @HostListener('blur', ['$event'])
+  handleBlur() {
+    this.melody?.pause();
+  }
+
+  private resumeMelody(reversed: boolean) {
+    if (this.readBefore) {
+      const delay = this.readOutCurrentDatum();
+      const duration = 2000; // an estimated upper bound of how long it would take to read out
+      this.resumeTimeoutId = window.setTimeout(async () => {
+        this.resumeTimeoutId = null;
+        this.melody?.resume(reversed);
+      }, delay + duration);
     } else {
-      this.liveText = text;
+      this.melody?.resume(reversed);
     }
+  }
+
+  private pauseMelody() {
+    if (this.resumeTimeoutId !== null) {
+      window.clearTimeout(this.resumeTimeoutId);
+      this.resumeTimeoutId = null;
+    } else {
+      this.melody?.pause();
+      if (this.readAfter) {
+        this.readOutCurrentDatum();
+      }
+    }
+  }
+
+  private readOutDomain() {
+    return this.screenReaderComponent.readOut(t(AUDIFICATION.DOMAIN, {
+      min: formatX(this.domain[0]),
+      max: formatX(this.domain[this.domain.length - 1]),
+    }));
+  }
+
+  private readOutRange() {
+    return this.screenReaderComponent.readOut(t(AUDIFICATION.RANGE, {
+      min: formatY(this.range[0]),
+      max: formatY(this.range[this.range.length - 1]),
+    }));
+  }
+
+  private readOutMeasure() {
+    return this.screenReaderComponent.readOut(humanizeMeasureName(this.measureName));
+  }
+
+  private readOutCurrentDatum() {
+    if (!this.melody) {
+      return 0;
+    }
+    const { date, value } = this.data[this.melody.currentDatumIndex];
+    return this.screenReaderComponent.readOut(t(AUDIFICATION.ACTIVE_DATUM, {
+      x: formatX(date),
+      y: formatY(value),
+    }));
   }
 }

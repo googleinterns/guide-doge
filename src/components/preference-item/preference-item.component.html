@@ -1,0 +1,9 @@
+<label class="item">
+  <span class="title">
+    {{name}}
+  </span>
+  <ng-container [ngSwitch]="type">
+    <input *ngSwitchCase="'number'" type="number" [(ngModel)]="value"/>
+    <app-switch *ngSwitchCase="'boolean'" [(value)]="value"></app-switch>
+  </ng-container>
+</label>

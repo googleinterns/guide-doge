@@ -9,8 +9,8 @@ export interface Datum {
 }
 
 export interface RenderOptions extends BaseRenderOptions {
-  dataObservable: Observable<Datum[]>;
-  activeDatumObservable: Observable<Datum | null>;
+  data$: Observable<Datum[]>;
+  activeDatum$: Observable<Datum | null>;
 }
 
 export abstract class XYChartD3 extends BaseD3<RenderOptions> {
@@ -24,22 +24,20 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
   render() {
     super.render();
 
-    const {
-      dataObservable, activeDatumObservable,
-    } = this.renderOptions;
+    const { data$, activeDatum$ } = this.renderOptions;
 
     this.renderAxis();
     this.renderData();
     this.renderActiveDatum();
 
-    dataObservable
+    data$
       .pipe(this.takeUntilCleared())
       .subscribe(data => {
         this.updateAxis(data);
         this.updateData(data);
       });
 
-    activeDatumObservable
+    activeDatum$
       .pipe(this.takeUntilCleared())
       .subscribe(activeDatum => {
         this.updateActiveDatum(activeDatum);
@@ -62,9 +60,8 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
 
     this.xAxis = d3
       .axisBottom<Date>(this.scaleX)
-      .ticks(width / 80)
-      .tickFormat(formatX)
-      .tickSizeOuter(0);
+      .ticks(d3.timeWeek.every(1))
+      .tickFormat(formatX);
     this.yAxis = d3.axisLeft<number>(this.scaleY);
 
     this.xAxisG = this.svg
@@ -81,10 +78,12 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
 
     this.xAxisG
       .transition(this.transition)
-      .call(this.xAxis);
+      .call(this.xAxis)
+      .attr('font-size', 12);
     this.yAxisG
       .transition(this.transition)
-      .call(this.yAxis);
+      .call(this.yAxis)
+      .attr('font-size', 12);
   }
 
   protected abstract renderData();

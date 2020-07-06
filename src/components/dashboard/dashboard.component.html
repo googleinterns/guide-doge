@@ -1,0 +1,15 @@
+<aside class="sidebar">
+  <h2 class="sidebar-title">Customization</h2>
+  <app-preference-group [preference$]="audification$" [i18n]="AUDIFICATION_PREFERENCE">
+  </app-preference-group>
+  <app-preference-group [preference$]="dataTable$" [i18n]="DATA_TABLE_PREFERENCE">
+  </app-preference-group>
+  <app-preference-group [preference$]="textSummary$" [i18n]="TEXT_SUMMARY_PREFERENCE">
+  </app-preference-group>
+</aside>
+<div class="card-container">
+  <app-card title="Tabbed Line Chart" [tabbed]="true" type="line"
+            [measureNames]="['activeUsers', 'revenue', 'eventCount']"></app-card>
+  <app-card title="Line Chart" [tabbed]="false" type="line"
+            [measureNames]="['activeUsers', 'revenue', 'eventCount']"></app-card>
+</div>

@@ -19,6 +19,15 @@ module.exports = function (config) {
       dir: require('path').join(__dirname, './coverage/guide-doge'),
       reports: ['html', 'lcovonly', 'text-summary'],
       fixWebpackSourcePaths: true,
+      thresholds: {
+        emitWarning: false,
+        global: {
+          statements: 90,
+          branches: 75,
+          functions: 90,
+          lines: 90,
+        },
+      },
     },
     reporters: ['progress', 'kjhtml'],
     port: 9876,

@@ -4,33 +4,34 @@ import * as Tone from 'tone';
 describe('Melody', () => {
   const values = [1, 2, 3, 4, 5, 4, 3, 2, 1];
   const frequencyRange: [number, number] = [256, 2048];
-  const duration = 5; // duration (in seconds) of the melody to generate
+  const noteDuration = 100; // duration (in ms) of a note
   let melody: Melody;
-  const delay = 200; // delay (in ms) between playing the melody and evaluating playhead
+  const delay = noteDuration * 1.5; // delay (in ms) between playing the melody and evaluating playhead
+  const gracePeriod = 200; // grace period (in ms) before Tone.js can start without errors
 
   beforeAll(async () => {
+    await new Promise(resolve => window.setTimeout(resolve, gracePeriod));
     await Tone.start();
   });
 
   beforeEach(() => {
-    melody = new Melody(values, frequencyRange, duration);
+    melody = new Melody(values, frequencyRange, noteDuration);
   });
 
   afterEach(() => {
     melody.dispose();
-    Tone.Transport.stop();
   });
 
   it('should instantiate.', () => {
     expect(melody).toBeInstanceOf(Melody);
   });
 
-  it('should calculate the duration of a note correctly.', () => {
-    expect(melody.noteDuration).toBe(duration / values.length);
+  it('should calculate the duration correctly.', () => {
+    expect(melody.duration).toBe(noteDuration * values.length);
   });
 
-  it('should have playhead at the very beginning of the sequence', () => {
-    expect(melody.currentSeconds).toBeCloseTo(0, 1e-3);
+  it('should have playhead at the very beginning of the sequence.', () => {
+    expect(melody.currentDatumIndex).toBe(0);
   });
 
   it('should play the sequence forwards.', async () => {
@@ -38,7 +39,7 @@ describe('Melody', () => {
     expect(melody.isPlaying).toBeTrue();
     expect(melody.isEnded).toBeFalse();
     await new Promise(resolve => window.setTimeout(resolve, delay));
-    expect(melody.currentSeconds).toBeGreaterThan(0);
+    expect(melody.currentDatumIndex).toBeGreaterThan(0);
   });
 
   it('should play the sequence backwards.', async () => {
@@ -46,7 +47,7 @@ describe('Melody', () => {
     expect(melody.isPlaying).toBeTrue();
     expect(melody.isEnded).toBeFalse();
     await new Promise(resolve => window.setTimeout(resolve, delay));
-    expect(melody.currentSeconds).toBeLessThan(duration);
+    expect(melody.currentDatumIndex).toBeLessThan(values.length - 1);
   });
 
   it('should pause the sequence.', async () => {
@@ -56,10 +57,10 @@ describe('Melody', () => {
     expect(melody.isPlaying).toBeFalse();
   });
 
-  it('should seek to the closest note to the given second.', () => {
-    for (let index = 0; index < duration; index++) {
-      melody.seekTo(index * melody.noteDuration);
-      expect(melody.getCurrentDatumIndex()).toBe(index);
+  it('should seek to the given index.', () => {
+    for (let index = 0; index < values.length; index++) {
+      melody.seekTo(index);
+      expect(melody.currentDatumIndex).toBe(index);
     }
   });
 });

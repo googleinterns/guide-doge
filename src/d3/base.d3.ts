@@ -14,7 +14,7 @@ export interface RenderOptions {
 }
 
 export abstract class BaseD3<T extends RenderOptions> {
-  protected svg: d3.Selection<SVGSVGElement, unknown, null, undefined>;
+  protected colorHighlight = 'rgb(66, 133, 244)';
   private clear$?: Subject<undefined>;
 
   constructor(protected renderOptions: T) {
@@ -28,6 +28,10 @@ export abstract class BaseD3<T extends RenderOptions> {
     return d3.select(this.renderOptions.elementRef.nativeElement);
   }
 
+  protected get svg() {
+    return this.container.select('svg');
+  }
+
   config(renderOptions: T) {
     this.renderOptions = renderOptions;
     return this;
@@ -39,8 +43,9 @@ export abstract class BaseD3<T extends RenderOptions> {
     this.clear();
     this.clear$ = new Subject();
 
-    this.svg = this.container
-      .append('svg')
+    this.svg
+      .style('width', width)
+      .style('height', height)
       .attr('viewBox', [0, 0, width, height].join(' '));
   }
 
@@ -52,7 +57,7 @@ export abstract class BaseD3<T extends RenderOptions> {
     this.clear$.complete();
     this.clear$ = undefined;
 
-    this.svg.remove();
+    this.svg.html('');
   }
 
   protected takeUntilCleared<R>(): MonoTypeOperatorFunction<R> {

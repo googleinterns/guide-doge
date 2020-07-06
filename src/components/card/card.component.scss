@@ -1,0 +1,40 @@
+@import "../../utils/constants";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  .card-title {
+    font-size: $font-size-large;
+    margin: 1rem 0;
+  }
+
+  .card-content {
+    @include card-shadow;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    border-radius: 2px;
+    background-color: white;
+
+    .tabs {
+      display: flex;
+      align-items: stretch;
+      height: 4rem;
+
+      .tab {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+        &.active {
+          border-top: 4px solid $color-highlight;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+}
