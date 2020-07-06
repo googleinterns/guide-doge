@@ -1,22 +1,12 @@
 @import "../../utils/constants";
 
 :host {
+  @include card-section;
   display: block;
-  padding: 1.5rem;
-  border-top: 1px solid $color-border;
 
   .instructions {
     font-size: $font-size-small;
     line-height: 2em;
     margin-bottom: .5rem;
-  }
-
-  .live-text {
-    color: $color-highlight;
-    font-weight: 500;
-
-    &:before {
-      content: '🔊 ';
-    }
   }
 }

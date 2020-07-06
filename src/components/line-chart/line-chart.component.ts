@@ -1,11 +1,13 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { LineChartD3 } from '../../d3/line-chart.d3';
-import { BehaviorSubject } from 'rxjs';
-import { Datum, RenderOptions } from '../../d3/xy-chart.d3';
-import { AUDIFICATION, t } from '../../assets/i18n';
+import { DNPoint, RenderOptions } from '../../d3/xy-chart.d3';
+import { AUDIFICATION, GUIDE_DOGE, t } from '../../i18n';
 import { formatX, formatY } from '../../utils/formatters';
 import { A11yPlaceholderDirective } from '../../directives/a11y-placeholder/a11y-placeholder.directive';
-import { DataService } from '../../services/data/data.service';
+import { DAY } from '../../utils/timeUnits';
+import { map, takeUntil } from 'rxjs/operators';
+import { LineChartMeta, LineChartQueryOptions, LineChartData } from '../../datasets/types';
 
 @Component({
   selector: 'app-line-chart',
@@ -15,7 +17,9 @@ import { DataService } from '../../services/data/data.service';
 export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnDestroy {
   @ViewChild(A11yPlaceholderDirective, { static: true }) a11yPlaceholder: A11yPlaceholderDirective<LineChartComponent>;
 
-  @Input() measureName: string;
+  @Input() endDate = new Date();
+  @Input() startDate = new Date(this.endDate.getTime() - 30 * DAY);
+  @Input() meta: LineChartMeta;
   @Input() height = 500;
   @Input() width = 800;
   @Input() marginTop = 20;
@@ -23,12 +27,17 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
   @Input() marginBottom = 30;
   @Input() marginLeft = 40;
 
-  data$ = new BehaviorSubject<Datum[]>([]);
-  activeDatum$ = new BehaviorSubject<Datum | null>(null);
+  queryOptions$ = new BehaviorSubject<LineChartQueryOptions>({
+    range: [this.startDate, this.endDate],
+  });
+  data$ = new BehaviorSubject<LineChartData>({
+    points: [],
+  });
+  activeDatum$ = new BehaviorSubject<DNPoint | null>(null);
+  private destroy$ = new Subject();
   private lineChartD3: LineChartD3;
 
   constructor(
-    private dataService: DataService,
     public elementRef: ElementRef<HTMLElement>,
   ) {
     this.lineChartD3 = new LineChartD3(this);
@@ -36,10 +45,6 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
 
   get data() {
     return this.data$.value;
-  }
-
-  set data(data) {
-    this.data$.next(data);
   }
 
   get activeDatum() {
@@ -50,29 +55,44 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
     this.activeDatum$.next(activeDatum);
   }
 
-  get formattedActiveDatum() {
+  get ACTIVE_DATUM() {
     if (!this.activeDatum) {
       return null;
     }
-    const { date, value } = this.activeDatum;
+    const { x, y } = this.activeDatum;
     return t(AUDIFICATION.ACTIVE_DATUM, {
-      x: formatX(date),
-      y: formatY(value),
+      x: formatX(x),
+      y: formatY(y),
     });
   }
 
+  get VISUALIZATION() {
+    return t(GUIDE_DOGE.VISUALIZATION);
+  }
+
   ngOnInit() {
+    this.queryOptions$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(map(queryOption => {
+        this.activeDatum$.next(null);
+        return this.meta.query(queryOption)[0];
+      }))
+      .subscribe(this.data$);
     this.lineChartD3.render();
   }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.lineChartD3.clear();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if ('measureName' in changes) {
-      this.data = this.dataService.getMeasureOverDays(this.measureName);
-      this.activeDatum = null;
+    const changed = ['startDate', 'endDate', 'meta'].some(key => key in changes);
+    if (changed) {
+      this.queryOptions$.next({
+        range: [this.startDate, this.endDate],
+      });
     }
   }
 }

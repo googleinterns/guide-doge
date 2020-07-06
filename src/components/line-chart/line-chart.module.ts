@@ -3,6 +3,7 @@ import { LineChartComponent } from './line-chart.component';
 import { DataModule } from '../../services/data/data.module';
 import { CommonModule } from '@angular/common';
 import { A11yPlaceholderModule } from '../../directives/a11y-placeholder/a11y-placeholder.module';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [
@@ -12,6 +13,7 @@ import { A11yPlaceholderModule } from '../../directives/a11y-placeholder/a11y-pl
     DataModule,
     CommonModule,
     A11yPlaceholderModule,
+    MatCardModule,
   ],
   exports: [
     LineChartComponent,

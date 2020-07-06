@@ -53,7 +53,7 @@ export enum Scope {
  */
 export type ModelSettings = HitGenerationSettings &
   SessionGenerationSettings &
-  NthDayGenerationSettings;
+  DateGenerationSettings;
 
 export interface HitGenerationSettings {
   /** The average number of hits over the lifetime of the data generation. */
@@ -73,11 +73,13 @@ export interface SessionGenerationSettings {
   sessionsPerUserStdDev: number;
 }
 
-export interface NthDayGenerationSettings {
-  /** Whether to generate nth day category or not */
-  nthDay: boolean;
-  /** The number of days worth of data to generate. */
-  days: number;
+export interface DateGenerationSettings {
+  /** Whether to generate date category or not */
+  timeSeries: boolean;
+  /** The start date to generate from  */
+  startDate: Date;
+  /** The end date to generate until. */
+  endDate: Date;
   /** How much the number of hits can vary from day to day. */
   dailyStdDev: number;
 }
@@ -94,6 +96,11 @@ export type Filter = (
   categories: Category[],
   measures: Measure[],
 ) => (row: Row) => boolean;
+
+export interface RangeOptions {
+  excludeStart?: boolean;
+  excludeEnd?: boolean;
+}
 
 /**
  * The internal storage of the cube. Although the cube is conceptually an
@@ -113,6 +120,13 @@ export interface Row {
  * dimension.
  */
 export interface ResultRow {
-  categories: Map<string, string | number>;
-  values: Map<string, number>;
+  categories: Record<string, string | number | Date> & { date: Date };
+  values: Record<string, number>;
+}
+
+export interface QueryOptions {
+  categoryNames?: string[];
+  measureNames?: string[];
+  filters?: Filter[];
+  sortBy?: string[];
 }

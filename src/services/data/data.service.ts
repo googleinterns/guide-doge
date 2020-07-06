@@ -1,45 +1,72 @@
-import { DateTime } from 'luxon';
-import {
-  activeUserMeasure,
-  browserCategory,
-  countryCategory,
-  eventCountMeasure,
-  revenueMeasure,
-  sourceCategory,
-} from '../../models/data-cube/presets';
-import { betweenDates } from '../../models/data-cube/filters';
-import { generateCube } from 'src/models/data-cube/generation';
+import { OnDestroy } from '@angular/core';
+import { takeUntil, throttleTime, distinctUntilChanged, pluck, filter, map } from 'rxjs/operators';
+import { asyncScheduler, ReplaySubject, Subject } from 'rxjs';
+import { PreferenceService } from '../preference/preference.service';
+import { datasets } from '../../datasets';
+import { Dataset } from '../../datasets/types';
+import { createDefault } from '../../utils/preferences';
+import { PreferenceItemMeta } from '../preference/types';
 
-export class DataService {
-  private dataCube = generateCube(
-    [countryCategory, browserCategory, sourceCategory],
-    [activeUserMeasure, revenueMeasure, eventCountMeasure],
-    {
-      avgHits: 10000,
-      hitStdDev: 100,
-      avgUsers: 100,
-      userStdDev: 1,
-      avgSessionsPerUser: 5,
-      sessionsPerUserStdDev: 3,
-    },
-  );
+export class DataService implements OnDestroy {
+  public dataset$ = new ReplaySubject<Dataset>(1);
+  private destroy$ = new Subject();
 
-  getMeasureOverDays(measureName: string, days = 30) {
-    const categoryName = 'nthDay';
-    const endDate = DateTime.local();
-    const startDate = endDate.minus({ day: days });
 
-    return this.dataCube
-      .getDataFor(
-        [categoryName],
-        [measureName],
-        [betweenDates(startDate.toJSDate(), endDate.toJSDate())],
-      )
-      .map(row => ({
-        date: startDate
-          .plus({ days: row.categories.get(categoryName) as number })
-          .toJSDate(),
-        value: row.values.get(measureName)!,
-      }));
+  constructor(private preferenceService: PreferenceService) {
+    this.preferenceService.dataset$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(throttleTime(500, asyncScheduler, { leading: true, trailing: true }))
+      .pipe(filter(preference => {
+        if (!(preference.name in datasets)) {
+          return false;
+        } else {
+          const dataset = datasets[preference.name];
+          return (Object.entries(dataset.configMeta) as [string, PreferenceItemMeta][])
+          .every(([key, meta]) => {
+            if (!(key in preference)) {
+              return false;
+            } else if (meta.type === 'select') {
+              return dataset.configMeta[key].options.includes(preference[key]);
+            } else {
+              return typeof preference[key] === meta.type;
+            }
+          });
+        }
+      }))
+      // TODO: Deep object comparison
+      .pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)))
+      .subscribe(preference => {
+        this.dataset$.next(datasets[preference.name].create(preference));
+      });
+
+    this.preferenceService.dataset$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(distinctUntilChanged((prev, curr) => prev.name === curr.name))
+      .pipe(pluck('name'))
+      .pipe(map(name => name || Object.keys(datasets)[0]))
+      .subscribe(name => {
+        const meta = {
+          enabled: {
+            type: 'boolean',
+            defaultValue: true,
+          },
+          name: {
+            type: 'select',
+            defaultValue: name,
+            options: Object.keys(datasets),
+          },
+          ...datasets[name].configMeta,
+        };
+
+        this.preferenceService.dataset$.next({
+          ...createDefault(meta),
+          _meta: meta,
+        });
+      });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

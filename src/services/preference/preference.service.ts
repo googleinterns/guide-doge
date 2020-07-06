@@ -1,54 +1,132 @@
-import { BehaviorSubject, combineLatest, Observable, ObservedValueOf } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { AudificationPreference, DataTablePreference, TextSummaryPreference } from './types';
-
-type ObservableDictionary = { [key: string]: Observable<any> };
-type ObservedDictionaryOf<T extends ObservableDictionary> = { [key in keyof T]: ObservedValueOf<T[key]> };
+import { BehaviorSubject, fromEventPattern } from 'rxjs';
+import * as Cookies from 'js-cookie';
+import {
+  AudificationPreference,
+  DatasetPreference,
+  DataTablePreference,
+  Preference,
+  TextSummaryPreference,
+  PreferenceMeta,
+  PreferenceWithMeta,
+  SelectPreferenceItemMeta,
+} from './types';
+import { createDefault } from '../../utils/preferences';
+import { datasets } from '../../datasets';
 
 export class PreferenceService {
-  audification = { // mimic namespace
-    enabled: new BehaviorSubject(true),
-    lowestPitch: new BehaviorSubject(256),
-    highestPitch: new BehaviorSubject(1024),
-    noteDuration: new BehaviorSubject(167),
-    readBefore: new BehaviorSubject(false),
-    readAfter: new BehaviorSubject(true),
-  };
-  audification$: Observable<AudificationPreference> = this.combineObservableDictionary(this.audification);
+  dataset$ = this.createPreference<DatasetPreference>({
+    enabled: {
+      type: 'boolean',
+      defaultValue: true,
+    },
+    name: {
+      type: 'select',
+      defaultValue: Object.keys(datasets)[0],
+      options: Object.keys(datasets),
+    }
+  }, 'dataset');
 
-  dataTable = {
-    enabled: new BehaviorSubject(false),
-    placeholder: new BehaviorSubject(null),
-  };
-  datatable$: Observable<DataTablePreference> = this.combineObservableDictionary(this.dataTable);
+  audification$ = this.createPreference<AudificationPreference>({
+    enabled: {
+      type: 'boolean',
+      defaultValue: true,
+    },
+    lowestPitch: {
+      type: 'number',
+      defaultValue: 256,
+    },
+    highestPitch: {
+      type: 'number',
+      defaultValue: 1024,
+    },
+    noteDuration: {
+      type: 'number',
+      defaultValue: 167,
+    },
+    readBefore: {
+      type: 'boolean',
+      defaultValue: false,
+    },
+    readAfter: {
+      type: 'boolean',
+      defaultValue: true,
+    },
+  }, 'audification');
 
-  textSummary = {
-    enabled: new BehaviorSubject(false),
-    placeholder: new BehaviorSubject(null),
-  };
-  textSummary$: Observable<TextSummaryPreference> = this.combineObservableDictionary(this.textSummary);
+  dataTable$ = this.createPreference<DataTablePreference>({
+    enabled: {
+      type: 'boolean',
+      defaultValue: true,
+    },
+  }, 'data_table');
 
-  /**
-   * Creates a combined Observable that emits a dictionary of observed values.
-   *
-   * @param observableDictionary a dictionary of observable values
-   * @return a combined Observable
-   *
-   * @example
-   * // returns an observable of type Observable<{a: boolean, b: number}>
-   * const combined$ = this.combineObservableDictionary({a: new Subject<boolean>(), b: new Subject<number>>});
-   */
-  private combineObservableDictionary<T extends ObservableDictionary>(observableDictionary: T): Observable<ObservedDictionaryOf<T>> {
-    const keys = Object.keys(observableDictionary);
-    const subjects = Object.values(observableDictionary);
-    return combineLatest(subjects)
-      .pipe(map(values => {
-        const observedDictionary: any = {}; // will be of type ObservedDictionaryOf<T> after the iteration below
-        values.forEach((value, i) => {
-          const key = keys[i];
-          observedDictionary[key] = value;
-        });
-        return observedDictionary;
-      }));
+  textSummary$ = this.createPreference<TextSummaryPreference>({
+    enabled: {
+      type: 'boolean',
+      defaultValue: true,
+    },
+  }, 'text_summary');
+
+  private createPreference<T extends Preference>(preferenceMeta: PreferenceMeta<T>, cookieKeySuffix: string) {
+    const defaultPreference = createDefault(preferenceMeta);
+
+    const cookieKey = `a11y-preference-${cookieKeySuffix}`;
+    const loadedPreference = {
+      ...defaultPreference,
+      ...this.loadPreference<T>(cookieKey),
+    };
+
+    // make sure the loaded preference object conforms to type T
+    const keys = Object.keys(loadedPreference) as (keyof T)[];
+    for (const key of keys) {
+      if (!(key in preferenceMeta)) {
+        delete loadedPreference[key];
+        continue;
+      }
+
+      const expectedMeta = preferenceMeta[key];
+      const actualType = typeof loadedPreference[key];
+
+      // in case of type mismatch, override with the default value
+      if (expectedMeta.type === 'select') {
+        const loadedValue = loadedPreference[key];
+        const expectedOptions = (expectedMeta as SelectPreferenceItemMeta).options;
+
+        if (actualType !== 'string' || !expectedOptions.includes(loadedValue as any)) {
+          loadedPreference[key] = defaultPreference[key];
+        }
+      } else if (actualType !== expectedMeta.type) {
+        loadedPreference[key] = defaultPreference[key];
+      }
+    }
+
+    const preferenceWithMeta = {
+      ...loadedPreference,
+      _meta: preferenceMeta,
+    };
+
+    const preference$ = new BehaviorSubject<PreferenceWithMeta<T>>(preferenceWithMeta);
+    preference$.subscribe(({ _meta, ...preference }) => {
+      this.savePreference(cookieKey, preference);
+    });
+    return preference$;
+  }
+
+  // later in the production, it should be loaded from the server
+  private loadPreference<T extends Preference>(cookieKey: string): Partial<T> {
+    const cookie = Cookies.get(cookieKey);
+    if (!cookie) {
+      return {};
+    }
+    try {
+      return JSON.parse(cookie);
+    } catch (e) {
+      console.error('Error occurred while parsing the cookie:', e);
+    }
+    return {};
+  }
+
+  private savePreference<T extends Preference>(cookieKey: string, preference: T) {
+    Cookies.set(cookieKey, preference);
   }
 }
