@@ -14,11 +14,11 @@ describe('UserWhiteNoiseDataset', () => {
     currentTime = new Date();
   });
 
-  it('should contain dataCube', () => {
+  it('should contain dataCube.', () => {
     expect(dataset.dataCube).toBeInstanceOf(DataCube);
   });
 
-  it('should query data points in date range', () => {
+  it('should query data points in date range.', () => {
     const testMeta = (meta: Meta) => {
       if (meta.type === 'tabbed') {
         meta.metas.map(testMeta);

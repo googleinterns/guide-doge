@@ -2,11 +2,11 @@ import { xBetweenDates } from './utils';
 
 describe('DatasetUtils', () => {
   describe('xBetweenDates', () => {
-    it('should create function', () => {
+    it('should create function.', () => {
       expect(xBetweenDates(new Date(), new Date())).toBeInstanceOf(Function);
     });
 
-    it('should return whether input date in range or not', () => {
+    it('should return whether input date in range or not.', () => {
       const time = new Date();
       const f = xBetweenDates(new Date(time.getTime() - 10), new Date(time.getTime() + 10));
       expect(f({ x: new Date(time.getTime() - 20), y: 0 })).toBeFalse();
