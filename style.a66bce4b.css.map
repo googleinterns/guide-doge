@@ -1,1 +1,0 @@
-{"version":3,"sources":["style.scss"],"names":[],"mappings":"AAAA,UACE,QAAA,CACA,SAAA,CACA,8BAGF,WACE,YAGF,kBACE","file":"style.a66bce4b.css","sourceRoot":"../src","sourcesContent":["html, body {\n  margin: 0;\n  padding: 0;\n  font-family: 'Roboto Slab', serif;\n}\n\n.container {\n  margin: 25px;\n}\n\nh1,h2,h3,h4,h5,h6 {\n  font-family: 'Quicksand', sans-serif;\n}\n"]}
