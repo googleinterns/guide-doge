@@ -9,36 +9,31 @@ export type CardType = 'line' | 'bar';
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.scss'],
 })
-export class CardComponent implements OnInit {
-  @Input() meta: Meta;
+export class CardComponent<T extends Meta> implements OnInit {
+  @Input() meta: T;
   humanizeMeasureName = humanizeMeasureName;
   currentTabTitle: string;
 
-  get tabbed() {
-    return this.meta.type === 'tabbed';
-  }
-
   get titles() {
-    if (this.tabbed) {
-      return (this.meta as TabbedChartsMeta).metas.map(c => c.title);
+    if (this.isTabbed()) {
+      return this.meta.metas.map(c => c.title);
     } else {
       return [this.meta.title];
     }
   }
 
   get currentChart(): Meta {
-    if (this.tabbed) {
-      const tabbedCharts = this.meta as TabbedChartsMeta;
-      return tabbedCharts.metas.find(c => c.title === this.currentTabTitle) ||
-        tabbedCharts.metas[0];
+    if (this.isTabbed()) {
+      const { metas } = this.meta;
+      return metas.find(c => c.title === this.currentTabTitle) ?? metas[0];
     } else {
       return this.meta;
     }
   }
 
   ngOnInit() {
-    if (this.tabbed) {
-      this.setCurrentTabTitle((this.meta as TabbedChartsMeta).metas[0].title);
+    if (this.isTabbed()) {
+      this.setCurrentTabTitle(this.meta.metas[0].title);
     } else {
       this.setCurrentTabTitle('');
     }
@@ -46,5 +41,9 @@ export class CardComponent implements OnInit {
 
   setCurrentTabTitle(title) {
     this.currentTabTitle = title;
+  }
+
+  isTabbed(): this is CardComponent<TabbedChartsMeta> {
+    return this.meta.type === 'tabbed';
   }
 }
