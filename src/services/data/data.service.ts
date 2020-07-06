@@ -8,8 +8,6 @@ import { createDefault } from '../../utils/preferences';
 import { PreferenceItemMeta } from '../preference/types';
 
 export class DataService implements OnDestroy {
-  static;
-
   public dataset$ = new ReplaySubject<Dataset>(1);
   private destroy$ = new Subject();
 
