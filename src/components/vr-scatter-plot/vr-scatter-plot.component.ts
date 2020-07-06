@@ -1,5 +1,6 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { Scatterplot } from '../../d3/scatterplot.d3';
+import 'aframe';
 
 
 
