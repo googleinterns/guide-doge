@@ -1,5 +1,4 @@
 import { ComponentRef, Directive, Host, OnDestroy, OnInit, Optional, Self } from '@angular/core';
-import { LineChartAudificationComponent } from '../../components/line-chart-audification/line-chart-audification.component';
 import { LineChartComponent } from '../../components/line-chart/line-chart.component';
 import { PreferenceService } from '../../services/preference/preference.service';
 import { AudificationPreference } from '../../services/preference/types';
@@ -33,9 +32,9 @@ export class AudificationDirective implements OnInit, OnDestroy {
   ngOnInit() {
     this.preferenceService.audification$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(preference => {
+      .subscribe(async preference => {
         if (preference.enabled) {
-          this.attach(preference);
+          await this.attach(preference);
         } else {
           this.detach();
         }
@@ -48,11 +47,12 @@ export class AudificationDirective implements OnInit, OnDestroy {
     this.detach();
   }
 
-  attach(preference: AudificationPreference) {
+  async attach(preference: AudificationPreference) {
     this.detach();
 
     const { host } = this;
-    this.audificationComponentRef = host.a11yPlaceholder.addComponent(LineChartAudificationComponent, host, preference);
+    const { LineChartAudificationModule } = await import('../../components/line-chart-audification/line-chart-audification.module');
+    this.audificationComponentRef = await host.a11yPlaceholder.addComponent(LineChartAudificationModule, host, preference);
   }
 
   detach() {

@@ -10,13 +10,4 @@
     line-height: 2em;
     margin-bottom: .5rem;
   }
-
-  .live-text {
-    color: $color-highlight;
-    font-weight: 500;
-
-    &:before {
-      content: '🔊 ';
-    }
-  }
 }
