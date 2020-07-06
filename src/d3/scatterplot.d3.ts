@@ -25,6 +25,7 @@ export class Scatterplot{
     this.container = container;
     this.generatePts();
     this.setColor('blue');
+    this.createGridPlane();
   }
 
   private generatePts() {
@@ -48,5 +49,28 @@ export class Scatterplot{
       return color;
     });
 
+  }
+  private createGridPlane()
+  {
+    const xGrid = document.createElement('a-entity');
+    xGrid.id = 'xGrid';
+    this.container!.appendChild(xGrid);
+    xGrid.object3D.add(new THREE.GridHelper(50, 50, 0xffffff, 0xffffff));
+    d3.select(this.container).select('#xGrid').attr('position', '0 0 0');
+    d3.select(this.container).select('#xGrid').attr('rotation', '0 0 0');
+
+    const yGrid = document.createElement('a-entity');
+    yGrid.id = 'yGrid';
+    this.container!.appendChild(yGrid);
+    yGrid.object3D.add(new THREE.GridHelper(50, 50, 0xffffff, 0xffffff));
+    d3.select(this.container).select('#yGrid').attr('position', '0 0 0');
+    d3.select(this.container).select('#yGrid').attr('rotation', '0 0 -90');
+
+    const zGrid = document.createElement('a-entity');
+    zGrid.id = 'zGrid';
+    this.container!.appendChild(zGrid);
+    zGrid.object3D.add(new THREE.GridHelper(50, 50, 0xffffff, 0xffffff));
+    d3.select(this.container).select('#zGrid').attr('position', '0 0 0');
+    d3.select(this.container).select('#zGrid').attr('rotation', '-90 0 0');
   }
 }
