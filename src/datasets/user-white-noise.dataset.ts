@@ -1,4 +1,4 @@
-import { Dataset, LineChartMeta, TabbedChartsMeta } from './types';
+import { Dataset } from './types';
 import {
   activeUserMeasure,
   browserCategory,
@@ -7,9 +7,11 @@ import {
   revenueMeasure,
   sourceCategory,
 } from '../models/data-cube/presets';
-import { generateCube } from 'src/models/data-cube/generation';
+import { generateCube } from '../models/data-cube/generation';
 import { humanizeMeasureName } from '../utils/formatters';
 import { createTimeSeriesQuery } from './queries/time-series.query';
+import { createLineChartMeta } from './metas/line-chart.meta';
+import { createTabbedChartsMeta } from './metas/tabbed-charts.meta';
 
 export interface Config {
   avgHits: number;
@@ -38,32 +40,34 @@ export function create(config: Config): Dataset {
     ...config,
   });
 
+  const tabbedChartsMeta = createTabbedChartsMeta(
+    'Tabbed Line Chart',
+    measures.map(measure => {
+      const label = humanizeMeasureName(measure.name);
+      return {
+        type: 'line',
+        title: label,
+        query: createTimeSeriesQuery(dataCube, [{
+          label,
+          measureName: measure.name,
+          style: {},
+        }]),
+      };
+    }),
+  );
+
+  const lineChartMeta = createLineChartMeta(
+    'Line Chart',
+    createTimeSeriesQuery(dataCube, [{
+      label: 'Active User',
+      measureName: 'activeUsers',
+      style: {},
+    }]),
+  );
+
   const metas = [
-    {
-      type: 'tabbed' as 'tabbed',
-      metas: measures.map(measure => {
-        const label = humanizeMeasureName(measure.name);
-        return {
-          type: 'line',
-          title: label,
-          query: createTimeSeriesQuery(dataCube, [{
-            label,
-            measureName: measure.name,
-            style: {},
-          }]),
-        };
-      }),
-      title: 'Tabbed Line Chart',
-    } as TabbedChartsMeta,
-    {
-      type: 'line',
-      title: 'Line Chart',
-      query: createTimeSeriesQuery(dataCube, [{
-        label: 'Active User',
-        measureName: 'activeUsers',
-        style: {},
-      }]),
-    } as LineChartMeta,
+    tabbedChartsMeta,
+    lineChartMeta,
   ];
 
   return {

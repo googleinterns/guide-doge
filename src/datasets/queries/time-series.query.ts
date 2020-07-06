@@ -1,8 +1,9 @@
-import { XYPoint } from '../types';
+import { XYPoint } from '../metas/types';
 import { inOneOfDateRanges } from '../../models/data-cube/filters';
 import { DAY } from '../../utils/timeUnits';
 import { DataCube } from '../../models/data-cube/data-cube.model';
 import { ResultRow } from '../../models/data-cube/types';
+import { unique } from '../../utils/misc';
 
 export interface TimeSeriesQueryOptions {
   range: [Date, Date];
@@ -29,10 +30,14 @@ export type LegendItem<S> = {
 export function createTimeSeriesQuery<S>(dataCube: DataCube, legendItems: LegendItem<S>[]): TimeSeriesQuery<S> {
   return queryOptions => {
     const [startDate, endDate] = queryOptions.range;
-    const measureNames = [...new Set(legendItems.map(item => item.measureName))];
+    const measureNames = unique(legendItems.map(item => item.measureName));
 
-    const windowSizes = legendItems.map(item => item.windowSize).filter(((v): v is number => v !== undefined));
-    const periodOffsets = legendItems.map(item => item.periodOffset).filter(((v): v is number => v !== undefined));
+    const windowSizes = legendItems
+      .map(item => item.windowSize)
+      .filter(((v): v is number => v !== undefined));
+    const periodOffsets = legendItems
+      .map(item => item.periodOffset)
+      .filter(((v): v is number => v !== undefined));
 
     const dateCategoryName = 'date';
     const duration = endDate.getTime() - startDate.getTime();
@@ -65,25 +70,21 @@ function createTimeSeriesDatum<S>(rows: ResultRow[], startDate: Date, endDate: D
     style,
   } = item;
 
-  const rawPoints: TimeSeriesPoint[] = rows.map(row => ({
-    x: row.categories.date,
+  // shift the datum points reversely by `periodOffset`
+  const shiftedPoints: TimeSeriesPoint[] = rows.map(row => ({
+    x: new Date(row.categories.date.getTime() - periodOffset),
     y: row.values[measureName],
   }));
 
-  const periodStart = startDate.getTime() + periodOffset;
-  const periodEnd = endDate.getTime() + periodOffset;
-  const [headPoint, ...tailPoints] = rawPoints.filter(point => {
-    const time = point.x.getTime();
-    return periodStart < time && time <= periodEnd;
-  });
-
+  // get the head point and tail points of which lie between (`startDate`, `endDate`]
+  const [headPoint, ...tailPoints] = shiftedPoints.filter(point => startDate < point.x && point.x <= endDate);
   const points: TimeSeriesPoint[] = [];
 
   // pre-calculate the sum of the window for the very first point
   const windowStart = headPoint.x.getTime() - windowSize;
-  let startIndex = rawPoints.findIndex(point => windowStart < point.x.getTime());
-  let endIndex = rawPoints.indexOf(headPoint);
-  let sum = rawPoints
+  let startIndex = shiftedPoints.findIndex(point => windowStart < point.x.getTime());
+  let endIndex = shiftedPoints.indexOf(headPoint);
+  let sum = shiftedPoints
     .slice(startIndex, endIndex + 1)
     .reduce((acc, point) => acc + point.y, 0);
   points.push({
@@ -93,8 +94,8 @@ function createTimeSeriesDatum<S>(rows: ResultRow[], startDate: Date, endDate: D
 
   // slide the window for the rest of the points
   for (const point of tailPoints) {
-    sum += rawPoints[++endIndex].y;
-    sum -= rawPoints[startIndex++].y;
+    sum += shiftedPoints[++endIndex].y;
+    sum -= shiftedPoints[startIndex++].y;
     points.push({
       x: point.x,
       y: sum,
