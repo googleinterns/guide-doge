@@ -5,6 +5,7 @@ import { Melody } from '../../models/melody/melody.model';
 import { SimpleChange } from '@angular/core';
 import { ScreenReaderModule } from '../screen-reader/screen-reader.module';
 import { MatCardModule } from '@angular/material/card';
+import { createLineChartMeta } from '../../datasets/metas/line-chart.meta';
 
 describe('LineChartAudificationComponent', () => {
   let fixture: ComponentFixture<LineChartAudificationComponent>;
@@ -21,7 +22,7 @@ describe('LineChartAudificationComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        MatCardModule
+        MatCardModule,
       ],
       declarations: [
         LineChartComponent,
@@ -30,13 +31,13 @@ describe('LineChartAudificationComponent', () => {
     const hostFixture = TestBed.createComponent(LineChartComponent);
     const host = hostFixture.componentInstance;
     const time = new Date();
-    host.meta = {
-      type: 'line',
-      title: 'title',
-      query: () => [{
-        points: [{ x: time, y: 0 }, { x: new Date(time.getTime() + 10), y: 1 }]
+    host.meta = createLineChartMeta(
+      'Title',
+      () => [{
+        label: '',
+        points: [{ x: time, y: 0 }, { x: new Date(time.getTime() + 10), y: 1 }],
       }],
-    };
+    );
 
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
@@ -44,7 +45,7 @@ describe('LineChartAudificationComponent', () => {
         ScreenReaderModule,
       ],
       providers: [
-        { provide: 'host', useValue: host }
+        { provide: 'host', useValue: host },
       ],
       declarations: [
         LineChartAudificationComponent,

@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CardComponent } from './card.component';
 import { MatCardModule } from '@angular/material/card';
-import { LineChartMeta, TabbedChartsMeta } from '../../datasets/types';
+import { TabbedChartsMeta } from '../../datasets/metas/tabbed-charts.meta';
+import { LineChartMeta } from '../../datasets/metas/line-chart.meta';
 
 describe('CardComponent', () => {
   let tabbedFixture: ComponentFixture<CardComponent<TabbedChartsMeta>>;

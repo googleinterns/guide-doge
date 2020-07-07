@@ -1,8 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { humanizeMeasureName } from '../../utils/formatters';
-import { Meta, TabbedChartsMeta } from '../../datasets/types';
-
-export type CardType = 'line' | 'bar';
+import { Meta } from '../../datasets/metas/types';
+import { TabbedChartsMeta } from '../../datasets/metas/tabbed-charts.meta';
 
 @Component({
   selector: 'app-card',

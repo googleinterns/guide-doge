@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LineChartComponent } from './line-chart.component';
-import { mockDatum } from '../../utils/mocks.spec';
+import { mockPoint } from '../../utils/mocks.spec';
 import { MatCardModule } from '@angular/material/card';
 import { LineChartD3 } from '../../d3/line-chart.d3';
 
@@ -12,7 +12,7 @@ describe('LineChartComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        MatCardModule
+        MatCardModule,
       ],
       declarations: [
         LineChartComponent,
@@ -29,17 +29,17 @@ describe('LineChartComponent', () => {
   });
 
   it('should have truthy i18n values.', () => {
-    component.activeDatum = mockDatum;
+    component.activePoint = mockPoint;
     expect(component.ACTIVE_DATUM).toBeTruthy();
   });
 
-  it('should synchronize activeActiveDatum with activeDatum$.', () => {
-    const activeDatum = mockDatum;
+  it('should synchronize activePoint with activePoint$.', () => {
+    const activePoint = mockPoint;
 
-    component.activeDatum = activeDatum;
+    component.activePoint = activePoint;
 
-    expect(component.activeDatum$.value).toBe(activeDatum);
-    expect(component.activeDatum).toBe(activeDatum);
+    expect(component.activePoint$.value).toBe(activePoint);
+    expect(component.activePoint).toBe(activePoint);
   });
 
   it('should render d3 on init.', () => {

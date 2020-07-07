@@ -1,13 +1,16 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { LineChartD3 } from '../../d3/line-chart.d3';
-import { DNPoint, RenderOptions } from '../../d3/xy-chart.d3';
+import { LineChartD3, LineChartStyle } from '../../d3/line-chart.d3';
+import { RenderOptions } from '../../d3/xy-chart.d3';
 import { AUDIFICATION, GUIDE_DOGE, t } from '../../i18n';
 import { formatX, formatY } from '../../utils/formatters';
 import { A11yPlaceholderDirective } from '../../directives/a11y-placeholder/a11y-placeholder.directive';
 import { DAY } from '../../utils/timeUnits';
 import { map, takeUntil } from 'rxjs/operators';
-import { LineChartMeta, LineChartQueryOptions, LineChartData } from '../../datasets/types';
+import { LineChartMeta } from '../../datasets/metas/line-chart.meta';
+import { TimeSeriesDatum, TimeSeriesPoint, TimeSeriesQueryOptions } from '../../datasets/queries/time-series.query';
+
+export type LineChartDatum = TimeSeriesDatum<LineChartStyle>;
 
 @Component({
   selector: 'app-line-chart',
@@ -27,13 +30,14 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
   @Input() marginBottom = 30;
   @Input() marginLeft = 40;
 
-  queryOptions$ = new BehaviorSubject<LineChartQueryOptions>({
+  queryOptions$ = new BehaviorSubject<TimeSeriesQueryOptions>({
     range: [this.startDate, this.endDate],
   });
-  data$ = new BehaviorSubject<LineChartData>({
+  datum$ = new BehaviorSubject<LineChartDatum>({
+    label: '',
     points: [],
   });
-  activeDatum$ = new BehaviorSubject<DNPoint | null>(null);
+  activePoint$ = new BehaviorSubject<TimeSeriesPoint | null>(null);
   private destroy$ = new Subject();
   private lineChartD3: LineChartD3;
 
@@ -43,23 +47,23 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
     this.lineChartD3 = new LineChartD3(this);
   }
 
-  get data() {
-    return this.data$.value;
+  get datum() {
+    return this.datum$.value;
   }
 
-  get activeDatum() {
-    return this.activeDatum$.value;
+  get activePoint() {
+    return this.activePoint$.value;
   }
 
-  set activeDatum(activeDatum) {
-    this.activeDatum$.next(activeDatum);
+  set activePoint(activePoint) {
+    this.activePoint$.next(activePoint);
   }
 
   get ACTIVE_DATUM() {
-    if (!this.activeDatum) {
+    if (!this.activePoint) {
       return null;
     }
-    const { x, y } = this.activeDatum;
+    const { x, y } = this.activePoint;
     return t(AUDIFICATION.ACTIVE_DATUM, {
       x: formatX(x),
       y: formatY(y),
@@ -74,10 +78,10 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
     this.queryOptions$
       .pipe(takeUntil(this.destroy$))
       .pipe(map(queryOption => {
-        this.activeDatum$.next(null);
+        this.activePoint$.next(null);
         return this.meta.query(queryOption)[0];
       }))
-      .subscribe(this.data$);
+      .subscribe(this.datum$);
     this.lineChartD3.render();
   }
 

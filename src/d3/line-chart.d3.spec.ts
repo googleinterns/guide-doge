@@ -1,9 +1,10 @@
 import { ElementRef } from '@angular/core';
-import { DNPoint } from './xy-chart.d3';
 import { Subject } from 'rxjs';
 import { LineChartD3 } from './line-chart.d3';
-import { mockDatum } from '../utils/mocks.spec';
-import { XYChartData } from '../datasets/types';
+import { mockDatum, mockPoint } from '../utils/mocks.spec';
+import { TimeSeriesPoint } from '../datasets/queries/time-series.query';
+import { LineChartDatum } from '../components/line-chart/line-chart.component';
+import { RenderOptions } from './xy-chart.d3';
 
 describe('LineChartD3', () => {
   const svgElement = document.createElement('svg');
@@ -17,8 +18,8 @@ describe('LineChartD3', () => {
     marginRight: 8,
     marginBottom: 8,
     marginLeft: 8,
-    data$: new Subject<XYChartData>(),
-    activeDatum$: new Subject<DNPoint | null>(),
+    datum$: new Subject<LineChartDatum>(),
+    activePoint$: new Subject<TimeSeriesPoint | null>(),
   };
   let lineChartD3: LineChartD3;
   const transitionDelay = 350;
@@ -45,9 +46,7 @@ describe('LineChartD3', () => {
     lineChartD3.render();
     const pathElement = svgElement.querySelector('path')!;
     const dAttribute = pathElement.getAttribute('d');
-    renderOptions.data$.next({
-      points: [mockDatum]
-    });
+    renderOptions.datum$.next(mockDatum);
     await new Promise(resolve => setTimeout(resolve, transitionDelay));
     const newDAttribute = pathElement.getAttribute('d');
     expect(newDAttribute).not.toBe(dAttribute);
@@ -63,7 +62,7 @@ describe('LineChartD3', () => {
     lineChartD3.render();
     const circleElement = svgElement.querySelector('circle')!;
     const transformAttribute = circleElement.getAttribute('transform');
-    renderOptions.activeDatum$.next(mockDatum);
+    renderOptions.activePoint$.next(mockPoint);
     await new Promise(resolve => setTimeout(resolve, transitionDelay));
     const newTransformAttribute = circleElement.getAttribute('transform');
     expect(newTransformAttribute).not.toBe(transformAttribute);
@@ -73,11 +72,11 @@ describe('LineChartD3', () => {
     lineChartD3.render();
     const circleElement = svgElement.querySelector('circle')!;
 
-    renderOptions.activeDatum$.next(mockDatum);
+    renderOptions.activePoint$.next(mockPoint);
     await new Promise(resolve => setTimeout(resolve, transitionDelay));
     expect(circleElement.getAttribute('display')).toBe('inherit');
 
-    renderOptions.activeDatum$.next(null);
+    renderOptions.activePoint$.next(null);
     await new Promise(resolve => setTimeout(resolve, transitionDelay));
     expect(circleElement.getAttribute('display')).toBe('none');
   });
