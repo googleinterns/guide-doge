@@ -7,7 +7,7 @@ describe('XYChartD3', () => {
   // since XYChartD3 is an abstract class, make a concrete child class
   class TestXYChartD3 extends XYChartD3 {
     // the flags below will be used to check if the methods have been called at the right time
-    activeDatumFlag = 0;
+    activePointFlag = 0;
     dataFlag = 0;
 
     protected renderData() {
@@ -18,12 +18,12 @@ describe('XYChartD3', () => {
       this.dataFlag = 2;
     }
 
-    protected renderActiveDatum() {
-      this.activeDatumFlag = 1;
+    protected renderActivePoint() {
+      this.activePointFlag = 1;
     }
 
-    protected updateActiveDatum(activeDatum: DNPoint | null) {
-      this.activeDatumFlag = 2;
+    protected updateActivePoint(activePoint: DNPoint | null) {
+      this.activePointFlag = 2;
     }
   }
 
@@ -39,7 +39,7 @@ describe('XYChartD3', () => {
     marginBottom: 8,
     marginLeft: 8,
     data$: new Subject<XYChartData>(),
-    activeDatum$: new Subject<DNPoint | null>(),
+    activePoint$: new Subject<DNPoint | null>(),
   };
   let xyChartD3: TestXYChartD3;
 
@@ -66,11 +66,11 @@ describe('XYChartD3', () => {
   });
 
   it('should render the active datum and update upon changes.', () => {
-    expect(xyChartD3.activeDatumFlag).toBe(0);
+    expect(xyChartD3.activePointFlag).toBe(0);
     xyChartD3.render();
-    expect(xyChartD3.activeDatumFlag).toBe(1);
-    renderOptions.activeDatum$.next(null);
-    expect(xyChartD3.activeDatumFlag).toBe(2);
+    expect(xyChartD3.activePointFlag).toBe(1);
+    renderOptions.activePoint$.next(null);
+    expect(xyChartD3.activePointFlag).toBe(2);
   });
 
   it('should render two g elements for the axis.', () => {

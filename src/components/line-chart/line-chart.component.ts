@@ -33,12 +33,11 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
   queryOptions$ = new BehaviorSubject<TimeSeriesQueryOptions>({
     range: [this.startDate, this.endDate],
   });
-  data$ = new BehaviorSubject<LineChartDatum>({
+  datum$ = new BehaviorSubject<LineChartDatum>({
     label: '',
     points: [],
-    style: {},
   });
-  activeDatum$ = new BehaviorSubject<TimeSeriesPoint | null>(null);
+  activePoint$ = new BehaviorSubject<TimeSeriesPoint | null>(null);
   private destroy$ = new Subject();
   private lineChartD3: LineChartD3;
 
@@ -48,23 +47,23 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
     this.lineChartD3 = new LineChartD3(this);
   }
 
-  get data() {
-    return this.data$.value;
+  get datum() {
+    return this.datum$.value;
   }
 
-  get activeDatum() {
-    return this.activeDatum$.value;
+  get activePoint() {
+    return this.activePoint$.value;
   }
 
-  set activeDatum(activeDatum) {
-    this.activeDatum$.next(activeDatum);
+  set activePoint(activePoint) {
+    this.activePoint$.next(activePoint);
   }
 
   get ACTIVE_DATUM() {
-    if (!this.activeDatum) {
+    if (!this.activePoint) {
       return null;
     }
-    const { x, y } = this.activeDatum;
+    const { x, y } = this.activePoint;
     return t(AUDIFICATION.ACTIVE_DATUM, {
       x: formatX(x),
       y: formatY(y),
@@ -79,10 +78,10 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
     this.queryOptions$
       .pipe(takeUntil(this.destroy$))
       .pipe(map(queryOption => {
-        this.activeDatum$.next(null);
+        this.activePoint$.next(null);
         return this.meta.query(queryOption)[0];
       }))
-      .subscribe(this.data$);
+      .subscribe(this.datum$);
     this.lineChartD3.render();
   }
 

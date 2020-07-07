@@ -18,7 +18,7 @@ describe('LineChartD3', () => {
     marginBottom: 8,
     marginLeft: 8,
     data$: new Subject<XYChartData>(),
-    activeDatum$: new Subject<DNPoint | null>(),
+    activePoint$: new Subject<DNPoint | null>(),
   };
   let lineChartD3: LineChartD3;
   const transitionDelay = 350;
@@ -63,7 +63,7 @@ describe('LineChartD3', () => {
     lineChartD3.render();
     const circleElement = svgElement.querySelector('circle')!;
     const transformAttribute = circleElement.getAttribute('transform');
-    renderOptions.activeDatum$.next(mockDatum);
+    renderOptions.activePoint$.next(mockDatum);
     await new Promise(resolve => setTimeout(resolve, transitionDelay));
     const newTransformAttribute = circleElement.getAttribute('transform');
     expect(newTransformAttribute).not.toBe(transformAttribute);
@@ -73,11 +73,11 @@ describe('LineChartD3', () => {
     lineChartD3.render();
     const circleElement = svgElement.querySelector('circle')!;
 
-    renderOptions.activeDatum$.next(mockDatum);
+    renderOptions.activePoint$.next(mockDatum);
     await new Promise(resolve => setTimeout(resolve, transitionDelay));
     expect(circleElement.getAttribute('display')).toBe('inherit');
 
-    renderOptions.activeDatum$.next(null);
+    renderOptions.activePoint$.next(null);
     await new Promise(resolve => setTimeout(resolve, transitionDelay));
     expect(circleElement.getAttribute('display')).toBe('none');
   });

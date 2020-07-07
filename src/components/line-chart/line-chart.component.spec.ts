@@ -26,7 +26,7 @@ describe('LineChartComponent', () => {
   });
 
   it('should have truthy i18n values.', () => {
-    component.activeDatum = mockDatum;
+    component.activePoint = mockDatum;
     expect(component.ACTIVE_DATUM).toBeTruthy();
   });
 
@@ -39,13 +39,13 @@ describe('LineChartComponent', () => {
   //   expect(component.data).toBe(data);
   // });
 
-  it('should synchronize activeActiveDatum with activeDatum$.', () => {
-    const activeDatum = mockDatum;
+  it('should synchronize activeActivePoint with activePoint$.', () => {
+    const activePoint = mockDatum;
 
-    component.activeDatum = activeDatum;
+    component.activePoint = activePoint;
 
-    expect(component.activeDatum$.value).toBe(activeDatum);
-    expect(component.activeDatum).toBe(activeDatum);
+    expect(component.activePoint$.value).toBe(activePoint);
+    expect(component.activePoint).toBe(activePoint);
   });
 
   it('should render d3 on init.', () => {

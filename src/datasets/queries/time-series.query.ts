@@ -13,7 +13,7 @@ export type TimeSeriesPoint = XYPoint<Date, number>;
 
 export interface TimeSeriesDatum<S> {
   label: string;
-  style: Partial<S>;
+  style?: Partial<S>;
   points: TimeSeriesPoint[];
 }
 
@@ -21,7 +21,7 @@ export type TimeSeriesQuery<S> = (options: TimeSeriesQueryOptions) => TimeSeries
 
 export type LegendItem<S> = {
   label: string;
-  style: Partial<S>;
+  style?: Partial<S>;
   measureName: string;
   periodOffset?: number;
   windowSize?: number;

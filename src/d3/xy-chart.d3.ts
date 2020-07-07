@@ -6,8 +6,8 @@ import { TimeSeriesPoint } from '../datasets/queries/time-series.query';
 import { LineChartDatum } from '../components/line-chart/line-chart.component';
 
 export interface RenderOptions extends BaseRenderOptions {
-  data$: Observable<LineChartDatum>;
-  activeDatum$: Observable<TimeSeriesPoint | null>;
+  datum$: Observable<LineChartDatum>;
+  activePoint$: Observable<TimeSeriesPoint | null>;
 }
 
 export abstract class XYChartD3 extends BaseD3<RenderOptions> {
@@ -21,13 +21,13 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
   render() {
     super.render();
 
-    const { data$, activeDatum$ } = this.renderOptions;
+    const { datum$, activePoint$ } = this.renderOptions;
 
     this.renderAxis();
     this.renderData();
-    this.renderActiveDatum();
+    this.renderActivePoint();
 
-    data$
+    datum$
       .pipe(this.takeUntilCleared())
       .subscribe(data => {
         const points = data.points;
@@ -35,10 +35,10 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
         this.updateData(points);
       });
 
-    activeDatum$
+    activePoint$
       .pipe(this.takeUntilCleared())
-      .subscribe(activeDatum => {
-        this.updateActiveDatum(activeDatum);
+      .subscribe(activePoint => {
+        this.updateActivePoint(activePoint);
       });
   }
 
@@ -88,7 +88,7 @@ export abstract class XYChartD3 extends BaseD3<RenderOptions> {
 
   protected abstract updateData(data: TimeSeriesPoint[]);
 
-  protected abstract renderActiveDatum();
+  protected abstract renderActivePoint();
 
-  protected abstract updateActiveDatum(activeDatum: TimeSeriesPoint | null);
+  protected abstract updateActivePoint(activePoint: TimeSeriesPoint | null);
 }

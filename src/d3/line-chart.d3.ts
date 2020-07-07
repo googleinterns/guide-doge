@@ -12,8 +12,8 @@ export interface LineChartStyle {
 export class LineChartD3 extends XYChartD3 {
   protected line: d3.Line<TimeSeriesPoint>;
   protected path: d3.Selection<SVGPathElement, unknown, null, undefined>;
-  protected activeDatumCircle: d3.Selection<SVGCircleElement, unknown, null, undefined>;
-  protected activeDatumToast: d3.Selection<d3.BaseType, unknown, null, undefined>;
+  protected activePointCircle: d3.Selection<SVGCircleElement, unknown, null, undefined>;
+  protected activePointToast: d3.Selection<d3.BaseType, unknown, null, undefined>;
 
   protected renderData() {
     this.line = d3
@@ -38,26 +38,26 @@ export class LineChartD3 extends XYChartD3 {
       .attr('d', this.line);
   }
 
-  protected renderActiveDatum() {
-    this.activeDatumCircle = this.svg
+  protected renderActivePoint() {
+    this.activePointCircle = this.svg
       .append('circle')
       .attr('r', 4)
       .attr('fill', this.colorHighlight);
-    this.activeDatumToast = this.container.select('.active-indicator');
+    this.activePointToast = this.container.select('.active-indicator');
   }
 
-  protected updateActiveDatum(activeDatum: TimeSeriesPoint | null) {
-    if (!activeDatum) {
-      this.activeDatumCircle.attr('display', 'none');
-      this.activeDatumToast.style('opacity', 0);
+  protected updateActivePoint(activePoint: TimeSeriesPoint | null) {
+    if (!activePoint) {
+      this.activePointCircle.attr('display', 'none');
+      this.activePointToast.style('opacity', 0);
       return;
     }
-    const { x, y } = activeDatum;
-    this.activeDatumCircle
+    const { x, y } = activePoint;
+    this.activePointCircle
       .transition(this.createTransition(50))
       .attr('display', 'inherit')
       .attr('transform', `translate(${this.scaleX(x)},${this.scaleY(y)})`);
-    this.activeDatumToast
+    this.activePointToast
       .transition(this.createTransition(50))
       .style('opacity', .8)
       .style('top', `${this.scaleY(y) + 16}px`)

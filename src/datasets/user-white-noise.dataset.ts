@@ -44,15 +44,13 @@ export function create(config: Config): Dataset {
     'Tabbed Line Chart',
     measures.map(measure => {
       const label = humanizeMeasureName(measure.name);
-      return {
-        type: 'line',
-        title: label,
-        query: createTimeSeriesQuery(dataCube, [{
+      return createLineChartMeta(
+        label,
+        createTimeSeriesQuery(dataCube, [{
           label,
           measureName: measure.name,
-          style: {},
         }]),
-      };
+      );
     }),
   );
 
@@ -61,7 +59,6 @@ export function create(config: Config): Dataset {
     createTimeSeriesQuery(dataCube, [{
       label: 'Active User',
       measureName: 'activeUsers',
-      style: {},
     }]),
   );
 
