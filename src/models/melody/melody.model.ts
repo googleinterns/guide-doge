@@ -22,8 +22,12 @@ export class Melody {
     const minKeyNumber = Melody.getKeyNumber(minFrequency);
     const maxKeyNumber = Melody.getKeyNumber(maxFrequency);
     this.frequencies = values.map(value => {
-      const keyNumber = (value - minValue) / (maxValue - minValue) * (maxKeyNumber - minKeyNumber) + minKeyNumber;
-      return Melody.getFrequency(keyNumber);
+      if (maxValue === minValue) {
+        return Melody.getFrequency(minKeyNumber);
+      } else {
+        const keyNumber = (value - minValue) / (maxValue - minValue) * (maxKeyNumber - minKeyNumber) + minKeyNumber;
+        return Melody.getFrequency(keyNumber);
+      }
     });
   }
 

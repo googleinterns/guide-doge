@@ -1,31 +1,48 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { GUIDE_DOGE, t } from '../../assets/i18n';
 import { humanizeMeasureName } from '../../utils/formatters';
-
-export type CardType = 'line' | 'bar';
+import { Meta } from '../../datasets/metas/types';
+import { TabbedChartsMeta } from '../../datasets/metas/tabbed-charts.meta';
 
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.scss'],
 })
-export class CardComponent implements OnInit {
-  @Input() title: string;
-  @Input() tabbed = false;
-  @Input() type: CardType;
-  @Input() measureNames: string[];
+export class CardComponent<T extends Meta> implements OnInit {
+  @Input() meta: T;
   humanizeMeasureName = humanizeMeasureName;
-  currentMeasureName: string;
+  currentTabTitle: string;
 
-  get VISUALIZATION() {
-    return t(GUIDE_DOGE.VISUALIZATION);
+  get titles() {
+    if (this.isTabbed()) {
+      return this.meta.metas.map(c => c.title);
+    } else {
+      return [this.meta.title];
+    }
+  }
+
+  get currentChart(): Meta {
+    if (this.isTabbed()) {
+      const { metas } = this.meta;
+      return metas.find(c => c.title === this.currentTabTitle) ?? metas[0];
+    } else {
+      return this.meta;
+    }
   }
 
   ngOnInit() {
-    this.setMeasureName(this.measureNames[0]);
+    if (this.isTabbed()) {
+      this.setCurrentTabTitle(this.meta.metas[0].title);
+    } else {
+      this.setCurrentTabTitle('');
+    }
   }
 
-  setMeasureName(measureName) {
-    this.currentMeasureName = measureName;
+  setCurrentTabTitle(title) {
+    this.currentTabTitle = title;
+  }
+
+  isTabbed(): this is CardComponent<TabbedChartsMeta> {
+    return this.meta.type === 'tabbed';
   }
 }

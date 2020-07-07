@@ -1,23 +1,30 @@
 import { XYChartD3 } from './xy-chart.d3';
 import * as d3 from 'd3';
-import { ResultRow } from '../models/data-cube/types';
-import { LegendItem } from '../components/line-chart/line-chart.component';
+import { LineChartDatum } from '../components/line-chart/line-chart.component';
+import { TimeSeriesPoint } from '../datasets/queries/time-series.query';
+
+export interface LineChartStyle {
+  color: string;
+  width: number;
+  opacity: number;
+  dashes: number[];
+}
 
 interface LinePath {
-  line: d3.Line<ResultRow>;
+  line: d3.Line<TimeSeriesPoint>;
   path: d3.Selection<SVGPathElement, unknown, null, undefined>;
 }
 
 export class LineChartD3 extends XYChartD3 {
   protected linePaths: LinePath[];
-  protected activeDatumCircle: d3.Selection<SVGCircleElement, unknown, null, undefined>;
+  protected activePointCircle: d3.Selection<SVGCircleElement, unknown, null, undefined>;
 
   protected renderData() {
     this.linePaths = [];
   }
 
-  protected updateData(legendItems: LegendItem[], data: ResultRow[]) {
-    const itemCount = legendItems.length;
+  protected updateData(data: LineChartDatum[]) {
+    const itemCount = data.length;
     const oldItemCount = this.linePaths.length;
 
     if (oldItemCount > itemCount) {
@@ -28,7 +35,7 @@ export class LineChartD3 extends XYChartD3 {
     } else {
       for (let i = 0; i < itemCount - oldItemCount; i++) {
         this.linePaths.push({
-          line: d3.line<ResultRow>(),
+          line: d3.line<TimeSeriesPoint>(),
           path: this.svg
             .append('path')
             .attr('fill', 'none')
@@ -39,36 +46,37 @@ export class LineChartD3 extends XYChartD3 {
     }
 
     this.linePaths.forEach(({ line, path }, i) => {
-      const { measureName, style } = legendItems[i];
+      const { style, points } = data[i];
       line
-        .defined(d => !isNaN(d.values[measureName]))
-        .x(d => this.x(d.categories.date))
-        .y(d => this.y(d.values[measureName]));
+        .defined(point => !isNaN(point.y))
+        .x(point => this.x(point.x))
+        .y(point => this.y(point.y));
       path.call(this.getLegendItemStyler(style));
       path
-        .datum(data)
+        .datum(points)
         .transition(this.transition)
         .attr('d', line);
     });
+
   }
 
-  protected renderActiveDatum() {
-    this.activeDatumCircle = this.svg
+  protected renderActivePoint() {
+    this.activePointCircle = this.svg
       .append('circle')
       .attr('r', 4)
       .attr('fill', LineChartD3.colorPrimary);
   }
 
-  protected updateActiveDatum(activeDatum: ResultRow | null) {
-    if (!activeDatum) {
-      this.activeDatumCircle.attr('display', 'none');
+  protected updateActivePoint(activePoint: TimeSeriesPoint | null) {
+    if (!activePoint) {
+      this.activePointCircle.attr('display', 'none');
       return;
     }
-    const { date } = activeDatum.categories;
-    const value = activeDatum.values[Object.keys(activeDatum.values)[0]];
-    this.activeDatumCircle
+    const translateX = this.x(activePoint.x);
+    const translateY = this.y(activePoint.y);
+    this.activePointCircle
       .transition(this.createTransition(50))
       .attr('display', 'inherit')
-      .attr('transform', `translate(${this.x(date)},${this.y(value)})`);
+      .attr('transform', `translate(${translateX},${translateY})`);
   }
 }

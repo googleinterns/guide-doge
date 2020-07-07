@@ -5,5 +5,10 @@
   <ng-container [ngSwitch]="type">
     <input *ngSwitchCase="'number'" type="number" [(ngModel)]="value"/>
     <mat-slide-toggle *ngSwitchCase="'boolean'" [(ngModel)]="value"></mat-slide-toggle>
+    <mat-select *ngSwitchCase="'select'" [(ngModel)]="value">
+      <mat-option *ngFor="let option of options" [value]="option">
+        {{option}}
+      </mat-option>
+    </mat-select>
   </ng-container>
 </label>

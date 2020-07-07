@@ -1,28 +1,16 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { LineChartD3 } from '../../d3/line-chart.d3';
+import { LineChartD3, LineChartStyle } from '../../d3/line-chart.d3';
 import { RenderOptions } from '../../d3/xy-chart.d3';
+import { GUIDE_DOGE, t } from '../../i18n';
 import { formatX, formatY } from '../../utils/formatters';
 import { A11yPlaceholderDirective } from '../../directives/a11y-placeholder/a11y-placeholder.directive';
-import { DataService } from '../../services/data/data.service';
-import { DAY, MONTH, WEEK } from '../../utils/timeUnits';
-import { takeUntil } from 'rxjs/operators';
-import { ResultRow } from '../../models/data-cube/types';
-import { TimeSeriesQueryOptions } from '../../services/data/types';
-import { nameRollingMeasure } from '../../utils/compoundMeasures';
+import { DAY } from '../../utils/timeUnits';
+import { map, takeUntil } from 'rxjs/operators';
+import { LineChartMeta } from '../../datasets/metas/line-chart.meta';
+import { TimeSeriesDatum, TimeSeriesPoint, TimeSeriesQueryOptions } from '../../datasets/queries/time-series.query';
 
-export interface LegendItemStyle {
-  color: string;
-  width: number;
-  opacity: number;
-  dashes: number[];
-}
-
-export interface LegendItem {
-  label: string;
-  measureName: string;
-  style: Partial<LegendItemStyle>;
-}
+export type LineChartDatum = TimeSeriesDatum<LineChartStyle>;
 
 @Component({
   selector: 'app-line-chart',
@@ -32,37 +20,22 @@ export interface LegendItem {
 export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnDestroy {
   @ViewChild(A11yPlaceholderDirective, { static: true }) a11yPlaceholder: A11yPlaceholderDirective<LineChartComponent>;
 
-  // hard-coded default values below will be removed once we implement dataset
   @Input() endDate = new Date();
   @Input() startDate = new Date(this.endDate.getTime() - 30 * DAY);
-  @Input() legendItems: LegendItem[] = [{
-    label: '1 Day',
-    measureName: 'activeUsers',
-    style: { opacity: 1 },
-  }, {
-    label: '7 Day',
-    measureName: nameRollingMeasure('activeUsers', WEEK),
-    style: { opacity: .7 },
-  }, {
-    label: '30 Day',
-    measureName: nameRollingMeasure('activeUsers', MONTH),
-    style: { opacity: .4 },
-  }];
+  @Input() meta: LineChartMeta;
   @Input() height = 500;
   @Input() width = 800;
 
   formatX = formatX;
   formatY = formatY;
 
-  queryOptions$ = new BehaviorSubject(this.queryOptions);
-  legendItems$ = new BehaviorSubject(this.legendItems);
-  data$ = new BehaviorSubject<ResultRow[]>([]);
-  activeDatum$ = new BehaviorSubject<ResultRow | null>(null);
+  queryOptions$ = new BehaviorSubject<TimeSeriesQueryOptions>(this.queryOptions);
+  data$ = new BehaviorSubject<LineChartDatum[]>([]);
+  activePoint$ = new BehaviorSubject<TimeSeriesPoint | null>(null);
   lineChartD3: LineChartD3;
   private destroy$ = new Subject();
 
   constructor(
-    private dataService: DataService,
     public elementRef: ElementRef<HTMLElement>,
   ) {
     this.lineChartD3 = new LineChartD3(this);
@@ -72,29 +45,32 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
     return this.data$.value;
   }
 
-  get activeDatum() {
-    return this.activeDatum$.value;
+  get activePoint() {
+    return this.activePoint$.value;
   }
 
-  set activeDatum(activeDatum) {
-    this.activeDatum$.next(activeDatum);
+  set activePoint(activePoint) {
+    this.activePoint$.next(activePoint);
   }
 
   get queryOptions(): TimeSeriesQueryOptions {
     return {
-      startDate: this.startDate,
-      endDate: this.endDate,
-      measureNames: this.legendItems.map(item => item.measureName),
+      range: [this.startDate, this.endDate],
     };
   }
 
+  get VISUALIZATION() {
+    return t(GUIDE_DOGE.VISUALIZATION);
+  }
+
   ngOnInit() {
-    this.dataService.observeTimeSeries(this.queryOptions$)
+    this.queryOptions$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(data => {
-        this.data$.next(data);
-        this.activeDatum$.next(null);
-      });
+      .pipe(map(queryOption => {
+        this.activePoint$.next(null);
+        return this.meta.query(queryOption);
+      }))
+      .subscribe(this.data$);
     this.lineChartD3.render();
   }
 
@@ -105,10 +81,7 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if ('legendItems' in changes) {
-      this.legendItems$.next(this.legendItems);
-    }
-    if (['startDate', 'endDate', 'legendItems'].some(key => key in changes)) {
+    if (['startDate', 'endDate', 'meta'].some(key => key in changes)) {
       this.queryOptions$.next(this.queryOptions);
     }
   }

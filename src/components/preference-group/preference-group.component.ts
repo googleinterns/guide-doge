@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { Preference } from '../../services/preference/types';
+import { Preference, PreferenceWithMeta } from '../../services/preference/types';
 import { BehaviorSubject } from 'rxjs';
+import { I18nKey, t } from '../../i18n';
 
 @Component({
   selector: 'app-preference-group',
@@ -8,22 +9,31 @@ import { BehaviorSubject } from 'rxjs';
   styleUrls: ['./preference-group.component.scss'],
 })
 export class PreferenceGroupComponent<T extends Preference> {
-  @Input() name: string;
+  @Input() name?: string;
+  @Input() i18n?: { [key in keyof T]: I18nKey };
   @Input() alwaysEnabled = false;
-  @Input() preference$: BehaviorSubject<T>;
+  @Input() preference$: BehaviorSubject<PreferenceWithMeta<T>>;
 
-  get value() {
-    return this.preference$.value.enabled;
+  get enabled() {
+    return this.preference$.value.enabled || this.alwaysEnabled;
   }
 
-  set value(value) {
+  set enabled(value) {
     this.preference$.next({
       ...this.preference$.value,
       enabled: value,
     });
   }
 
-  get enabled() {
-    return this.value || this.alwaysEnabled;
+  get childProperties() {
+    if (!this.i18n) {
+      return [];
+    }
+    const properties = Object.keys(this.preference$.value) as (keyof T)[];
+    return properties.filter(property => property !== 'enabled' && property !== '_meta');
+  }
+
+  getI18nValue(key: keyof T) {
+    return (this.i18n && t(this.i18n[key])) || key;
   }
 }

@@ -1,39 +1,14 @@
 <aside class="sidebar">
   <h2 class="sidebar-title">Customization</h2>
-  <app-preference-group name="Data Generator" [preference$]="data$" alwaysEnabled="true">
-    <app-preference-item name="Average Hits" property="avgHits">
-    </app-preference-item>
-    <app-preference-item name="Hit Std" property="hitStdDev">
-    </app-preference-item>
-    <app-preference-item name="Average Users" property="avgUsers">
-    </app-preference-item>
-    <app-preference-item name="User Std" property="userStdDev">
-    </app-preference-item>
-    <app-preference-item name="Average Sessions Per User" property="avgSessionsPerUser">
-    </app-preference-item>
-    <app-preference-item name="Sessions Per User Std" property="sessionsPerUserStdDev">
-    </app-preference-item>
+  <app-preference-group [preference$]="dataset$" [i18n]="DATA_PREFERENCE" alwaysEnabled="true">
   </app-preference-group>
-  <app-preference-group name="Audification" [preference$]="audification$">
-    <app-preference-item name="Lowest note (Hz)" property="lowestPitch">
-    </app-preference-item>
-    <app-preference-item name="Highest note (Hz)" property="highestPitch">
-    </app-preference-item>
-    <app-preference-item name="Note duration (ms)" property="noteDuration">
-    </app-preference-item>
-    <app-preference-item name="Read out before playing" property="readBefore">
-    </app-preference-item>
-    <app-preference-item name="Read out after playing" property="readAfter">
-    </app-preference-item>
+  <app-preference-group [preference$]="audification$" [i18n]="AUDIFICATION_PREFERENCE">
   </app-preference-group>
-  <app-preference-group name="Data Table" [preference$]="dataTable$">
+  <app-preference-group [preference$]="dataTable$" [i18n]="DATA_TABLE_PREFERENCE">
   </app-preference-group>
-  <app-preference-group name="Text Summary" [preference$]="textSummary$">
+  <app-preference-group [preference$]="textSummary$" [i18n]="TEXT_SUMMARY_PREFERENCE">
   </app-preference-group>
 </aside>
 <div class="card-container">
-  <app-card title="Tabbed Line Chart" [tabbed]="true" type="line"
-            [measureNames]="['activeUsers', 'revenue', 'eventCount']"></app-card>
-  <app-card title="Line Chart" [tabbed]="false" type="line"
-            [measureNames]="['activeUsers', 'revenue', 'eventCount']"></app-card>
+  <app-card *ngFor="let meta of componentMetas" [meta]="meta"></app-card>
 </div>
