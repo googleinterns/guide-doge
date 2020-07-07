@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import { LineChartDatum } from '../components/line-chart/line-chart.component';
 import { TimeSeriesPoint } from '../datasets/queries/time-series.query';
 
-export interface LineChartStyle {
+export interface LegendItemStyle {
   color: string;
   width: number;
   opacity: number;
@@ -15,7 +15,14 @@ interface LinePath {
   path: d3.Selection<SVGPathElement, unknown, null, undefined>;
 }
 
-export class LineChartD3 extends XYChartD3 {
+export class LineChartD3 extends XYChartD3<LegendItemStyle> {
+  static defaultLegendItemStyle: LegendItemStyle = {
+    color: LineChartD3.colorPrimary,
+    width: 2,
+    opacity: 1,
+    dashes: [],
+  };
+
   protected linePaths: LinePath[];
   protected activePointCircle: d3.Selection<SVGCircleElement, unknown, null, undefined>;
 
@@ -51,7 +58,7 @@ export class LineChartD3 extends XYChartD3 {
         .defined(point => !isNaN(point.y))
         .x(point => this.x(point.x))
         .y(point => this.y(point.y));
-      path.call(this.getLegendItemStyler(style));
+      path.call(this.styleLegendItem(style));
       path
         .datum(points)
         .transition(this.transition)
@@ -78,5 +85,30 @@ export class LineChartD3 extends XYChartD3 {
       .transition(this.createTransition(50))
       .attr('display', 'inherit')
       .attr('transform', `translate(${translateX},${translateY})`);
+  }
+
+  protected appendLegendItemIcon(container: d3.Selection<SVGGElement, unknown, null, undefined>, datum: LineChartDatum) {
+    const { legendIconWidth, legendHeight } = XYChartD3;
+    container
+      .append('line')
+      .attr('x1', 0)
+      .attr('x2', legendIconWidth)
+      .attr('y1', legendHeight / 2)
+      .attr('y2', legendHeight / 2)
+      .call(this.styleLegendItem(datum.style));
+  }
+
+  protected styleLegendItem<T extends SVGGraphicsElement>(style?: Partial<LegendItemStyle>) {
+    const { color, width, opacity, dashes } = {
+      ...LineChartD3.defaultLegendItemStyle,
+      ...style ?? {},
+    };
+    return (stylePath: d3.Selection<T, unknown, null, undefined>) => {
+      stylePath
+        .attr('stroke', color)
+        .attr('stroke-width', width)
+        .attr('opacity', opacity)
+        .attr('stroke-dasharray', dashes.join(' '));
+    };
   }
 }

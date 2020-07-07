@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { LineChartD3, LineChartStyle } from '../../d3/line-chart.d3';
+import { LineChartD3, LegendItemStyle } from '../../d3/line-chart.d3';
 import { RenderOptions } from '../../d3/xy-chart.d3';
 import { GUIDE_DOGE, t } from '../../i18n';
 import { formatX, formatY } from '../../utils/formatters';
@@ -10,14 +10,14 @@ import { map, takeUntil } from 'rxjs/operators';
 import { LineChartMeta } from '../../datasets/metas/line-chart.meta';
 import { TimeSeriesDatum, TimeSeriesPoint, TimeSeriesQueryOptions } from '../../datasets/queries/time-series.query';
 
-export type LineChartDatum = TimeSeriesDatum<LineChartStyle>;
+export type LineChartDatum = TimeSeriesDatum<LegendItemStyle>;
 
 @Component({
   selector: 'app-line-chart',
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.scss'],
 })
-export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnDestroy {
+export class LineChartComponent implements RenderOptions<LineChartDatum>, OnChanges, OnInit, OnDestroy {
   @ViewChild(A11yPlaceholderDirective, { static: true }) a11yPlaceholder: A11yPlaceholderDirective<LineChartComponent>;
 
   @Input() endDate = new Date();
