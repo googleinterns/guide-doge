@@ -1,14 +1,13 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { LineChartD3, LegendItemStyle } from '../../d3/line-chart.d3';
+import { LegendItemStyle, LineChartD3 } from '../../d3/line-chart.d3';
 import { RenderOptions } from '../../d3/xy-chart.d3';
 import { GUIDE_DOGE, t } from '../../i18n';
 import { formatX, formatY } from '../../utils/formatters';
 import { A11yPlaceholderDirective } from '../../directives/a11y-placeholder/a11y-placeholder.directive';
 import { DAY } from '../../utils/timeUnits';
-import { map, takeUntil } from 'rxjs/operators';
 import { LineChartMeta } from '../../datasets/metas/line-chart.meta';
-import { TimeSeriesDatum, TimeSeriesPoint, TimeSeriesQueryOptions } from '../../datasets/queries/time-series.query';
+import { TimeSeriesDatum, TimeSeriesPoint } from '../../datasets/queries/time-series.query';
 
 export type LineChartDatum = TimeSeriesDatum<LegendItemStyle>;
 
@@ -29,7 +28,6 @@ export class LineChartComponent implements RenderOptions<LineChartDatum>, OnChan
   formatX = formatX;
   formatY = formatY;
 
-  queryOptions$ = new BehaviorSubject<TimeSeriesQueryOptions>(this.queryOptions);
   data$ = new BehaviorSubject<LineChartDatum[]>([]);
   activePoint$ = new BehaviorSubject<TimeSeriesPoint | null>(null);
   lineChartD3: LineChartD3;
@@ -53,24 +51,11 @@ export class LineChartComponent implements RenderOptions<LineChartDatum>, OnChan
     this.activePoint$.next(activePoint);
   }
 
-  get queryOptions(): TimeSeriesQueryOptions {
-    return {
-      range: [this.startDate, this.endDate],
-    };
-  }
-
   get VISUALIZATION() {
     return t(GUIDE_DOGE.VISUALIZATION);
   }
 
   ngOnInit() {
-    this.queryOptions$
-      .pipe(takeUntil(this.destroy$))
-      .pipe(map(queryOption => {
-        this.activePoint$.next(null);
-        return this.meta.query(queryOption);
-      }))
-      .subscribe(this.data$);
     this.lineChartD3.render();
   }
 
@@ -82,7 +67,11 @@ export class LineChartComponent implements RenderOptions<LineChartDatum>, OnChan
 
   ngOnChanges(changes: SimpleChanges): void {
     if (['startDate', 'endDate', 'meta'].some(key => key in changes)) {
-      this.queryOptions$.next(this.queryOptions);
+      const data = this.meta.query({
+        range: [this.startDate, this.endDate],
+      });
+      this.data$.next(data);
+      this.activePoint$.next(null);
     }
   }
 
