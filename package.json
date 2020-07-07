@@ -15,6 +15,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build-ci": "npm run build -- --prod --base-href=/guide-doge/",
     "test": "ng test --codeCoverage=true",
     "test-ci": "npm test -- --watch=false",
     "lint": "ng lint",
