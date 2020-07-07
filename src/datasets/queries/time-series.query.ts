@@ -80,6 +80,14 @@ function createTimeSeriesDatum<S>(rows: ResultRow[], startDate: Date, endDate: D
   const [headPoint, ...tailPoints] = shiftedPoints.filter(point => startDate < point.x && point.x <= endDate);
   const points: TimeSeriesPoint[] = [];
 
+  if (!headPoint) {
+    return {
+      label,
+      style,
+      points,
+    };
+  }
+
   // pre-calculate the sum of the window for the very first point
   const windowStart = headPoint.x.getTime() - windowSize;
   let startIndex = shiftedPoints.findIndex(point => windowStart < point.x.getTime());

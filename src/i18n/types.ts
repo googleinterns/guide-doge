@@ -17,12 +17,14 @@ export enum AUDIFICATION {
 
 export enum DATA_PREFERENCE {
   enabled = 0x300,
+  name,
   avgHits,
   hitStdDev,
   avgUsers,
   userStdDev,
   avgSessionsPerUser,
   sessionsPerUserStdDev,
+  offset,
 }
 
 export enum AUDIFICATION_PREFERENCE {

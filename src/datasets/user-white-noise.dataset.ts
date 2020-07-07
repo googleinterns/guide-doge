@@ -12,6 +12,8 @@ import { humanizeMeasureName } from '../utils/formatters';
 import { createTimeSeriesQuery } from './queries/time-series.query';
 import { createLineChartMeta } from './metas/line-chart.meta';
 import { createTabbedChartsMeta } from './metas/tabbed-charts.meta';
+import { PreferenceMeta } from '../services/preference/types';
+import { createDefault } from '../utils/preferences';
 
 export interface Config {
   avgHits: number;
@@ -22,19 +24,38 @@ export interface Config {
   sessionsPerUserStdDev: number;
 }
 
-export const defaultConfig: Config = {
-  avgHits: 10000,
-  hitStdDev: 100,
-  avgUsers: 100,
-  userStdDev: 1,
-  avgSessionsPerUser: 5,
-  sessionsPerUserStdDev: 3,
+export const configMeta: PreferenceMeta<Config> = {
+  avgHits: {
+    type: 'number',
+    defaultValue: 10000,
+  },
+  hitStdDev: {
+    type: 'number',
+    defaultValue: 100,
+  },
+  avgUsers: {
+    type: 'number',
+    defaultValue: 100,
+  },
+  userStdDev: {
+    type: 'number',
+    defaultValue: 1,
+  },
+  avgSessionsPerUser: {
+    type: 'number',
+    defaultValue: 5,
+  },
+  sessionsPerUserStdDev: {
+    type: 'number',
+    defaultValue: 3,
+  },
 };
 
 export function create(config: Config): Dataset {
   const categories = [countryCategory, browserCategory, sourceCategory];
   const measures = [activeUserMeasure, revenueMeasure, eventCountMeasure];
 
+  const defaultConfig = createDefault(configMeta);
   const dataCube = generateCube(categories, measures, {
     ...defaultConfig,
     ...config,

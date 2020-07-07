@@ -1,11 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AudificationDirective } from './audification.directive';
 import { Component, ViewChild } from '@angular/core';
-import { LineChartModule } from '../../components/line-chart/line-chart.module';
 import { AudificationModule } from './audification.module';
 import { LineChartComponent } from '../../components/line-chart/line-chart.component';
 import { mockAudificationPreference } from '../../utils/mocks.spec';
 import { PreferenceService } from '../../services/preference/preference.service';
+import { A11yPlaceholderModule } from '../a11y-placeholder/a11y-placeholder.module';
+import { MatCardModule } from '@angular/material/card';
 
 describe('AudificationDirective', () => {
   @Component({
@@ -29,14 +30,15 @@ describe('AudificationDirective', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        LineChartModule,
         AudificationModule,
+        A11yPlaceholderModule,
+        MatCardModule,
       ],
-      providers: [{
-        provide: PreferenceService,
-        useValue: preferenceService,
-      }],
+      providers: [
+        { provide: PreferenceService, useValue: preferenceService }
+      ],
       declarations: [
+        LineChartComponent,
         WrapperComponent,
       ],
     });

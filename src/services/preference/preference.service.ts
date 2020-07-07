@@ -1,32 +1,75 @@
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, fromEventPattern } from 'rxjs';
 import * as Cookies from 'js-cookie';
-import { AudificationPreference, DatasetPreference, DataTablePreference, Preference, TextSummaryPreference } from './types';
-import * as UserWhiteNoiseDataset from '../../datasets/user-white-noise.dataset';
+import {
+  AudificationPreference,
+  DatasetPreference,
+  DataTablePreference,
+  Preference,
+  TextSummaryPreference,
+  PreferenceMeta,
+  PreferenceWithMeta,
+  SelectPreferenceItemMeta,
+} from './types';
+import { createDefault } from '../../utils/preferences';
+import { datasets } from '../../datasets';
 
 export class PreferenceService {
   dataset$ = this.createPreference<DatasetPreference>({
-    enabled: true,
-    ...UserWhiteNoiseDataset.defaultConfig,
+    enabled: {
+      type: 'boolean',
+      defaultValue: true,
+    },
+    name: {
+      type: 'select',
+      defaultValue: Object.keys(datasets)[0],
+      options: Object.keys(datasets),
+    }
   }, 'dataset');
 
   audification$ = this.createPreference<AudificationPreference>({
-    enabled: true,
-    lowestPitch: 256,
-    highestPitch: 1024,
-    noteDuration: 167,
-    readBefore: false,
-    readAfter: true,
+    enabled: {
+      type: 'boolean',
+      defaultValue: true,
+    },
+    lowestPitch: {
+      type: 'number',
+      defaultValue: 256,
+    },
+    highestPitch: {
+      type: 'number',
+      defaultValue: 1024,
+    },
+    noteDuration: {
+      type: 'number',
+      defaultValue: 167,
+    },
+    readBefore: {
+      type: 'boolean',
+      defaultValue: false,
+    },
+    readAfter: {
+      type: 'boolean',
+      defaultValue: true,
+    },
   }, 'audification');
 
   dataTable$ = this.createPreference<DataTablePreference>({
-    enabled: true,
+    enabled: {
+      type: 'boolean',
+      defaultValue: true,
+    },
   }, 'data_table');
 
   textSummary$ = this.createPreference<TextSummaryPreference>({
-    enabled: true,
+    enabled: {
+      type: 'boolean',
+      defaultValue: true,
+    },
   }, 'text_summary');
 
-  private createPreference<T extends Preference>(defaultPreference: T, cookieKeySuffix: string) {
+  private createPreference<T extends Preference>(preferenceMeta: PreferenceMeta<T>, cookieKeySuffix: string) {
+    const defaultPreference = createDefault(preferenceMeta);
+
     const cookieKey = `a11y-preference-${cookieKeySuffix}`;
     const loadedPreference = {
       ...defaultPreference,
@@ -36,22 +79,34 @@ export class PreferenceService {
     // make sure the loaded preference object conforms to type T
     const keys = Object.keys(loadedPreference) as (keyof T)[];
     for (const key of keys) {
-      if (!(key in defaultPreference)) {
+      if (!(key in preferenceMeta)) {
         delete loadedPreference[key];
         continue;
       }
 
-      const expectedType = typeof defaultPreference[key];
+      const expectedMeta = preferenceMeta[key];
       const actualType = typeof loadedPreference[key];
 
       // in case of type mismatch, override with the default value
-      if (actualType !== expectedType) {
+      if (expectedMeta.type === 'select') {
+        const loadedValue = loadedPreference[key];
+        const expectedOptions = (expectedMeta as SelectPreferenceItemMeta).options;
+
+        if (actualType !== 'string' || !expectedOptions.includes(loadedValue as any)) {
+          loadedPreference[key] = defaultPreference[key];
+        }
+      } else if (actualType !== expectedMeta.type) {
         loadedPreference[key] = defaultPreference[key];
       }
     }
 
-    const preference$ = new BehaviorSubject<T>(loadedPreference);
-    preference$.subscribe(preference => {
+    const preferenceWithMeta = {
+      ...loadedPreference,
+      _meta: preferenceMeta,
+    };
+
+    const preference$ = new BehaviorSubject<PreferenceWithMeta<T>>(preferenceWithMeta);
+    preference$.subscribe(({ _meta, ...preference }) => {
       this.savePreference(cookieKey, preference);
     });
     return preference$;

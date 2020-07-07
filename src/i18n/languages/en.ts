@@ -27,12 +27,14 @@ export const en: I18n = {
   [AUDIFICATION.ACTIVE_DATUM]: '%(y)s on %(x)s',
 
   [DATA_PREFERENCE.enabled]: 'Data Generator',
+  [DATA_PREFERENCE.name]: 'Dataset',
   [DATA_PREFERENCE.avgHits]: 'Average Hits',
   [DATA_PREFERENCE.hitStdDev]: 'Hit Std',
   [DATA_PREFERENCE.avgUsers]: 'Average Users',
   [DATA_PREFERENCE.userStdDev]: 'User Std',
   [DATA_PREFERENCE.avgSessionsPerUser]: 'Average Sessions Per User',
   [DATA_PREFERENCE.sessionsPerUserStdDev]: 'Sessions Per User Std',
+  [DATA_PREFERENCE.offset]: 'Offset',
 
   [AUDIFICATION_PREFERENCE.enabled]: 'Audification',
   [AUDIFICATION_PREFERENCE.lowestPitch]: 'Lowest note (Hz)',

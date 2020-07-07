@@ -1,7 +1,9 @@
 import { ElementRef } from '@angular/core';
-import { DNPoint, XYChartD3 } from './xy-chart.d3';
+import { XYChartD3 } from './xy-chart.d3';
 import { Subject } from 'rxjs';
-import { XYChartData } from '../datasets/types';
+import { TimeSeriesPoint } from '../datasets/queries/time-series.query';
+import { LineChartDatum } from '../components/line-chart/line-chart.component';
+import { mockDatum } from '../utils/mocks.spec';
 
 describe('XYChartD3', () => {
   // since XYChartD3 is an abstract class, make a concrete child class
@@ -14,7 +16,7 @@ describe('XYChartD3', () => {
       this.dataFlag = 1;
     }
 
-    protected updateData(data: DNPoint[]) {
+    protected updateData(data: TimeSeriesPoint[]) {
       this.dataFlag = 2;
     }
 
@@ -22,7 +24,7 @@ describe('XYChartD3', () => {
       this.activePointFlag = 1;
     }
 
-    protected updateActivePoint(activePoint: DNPoint | null) {
+    protected updateActivePoint(activePoint: TimeSeriesPoint | null) {
       this.activePointFlag = 2;
     }
   }
@@ -38,8 +40,8 @@ describe('XYChartD3', () => {
     marginRight: 8,
     marginBottom: 8,
     marginLeft: 8,
-    data$: new Subject<XYChartData>(),
-    activePoint$: new Subject<DNPoint | null>(),
+    datum$: new Subject<LineChartDatum>(),
+    activePoint$: new Subject<TimeSeriesPoint | null>(),
   };
   let xyChartD3: TestXYChartD3;
 
@@ -59,9 +61,7 @@ describe('XYChartD3', () => {
     expect(xyChartD3.dataFlag).toBe(0);
     xyChartD3.render();
     expect(xyChartD3.dataFlag).toBe(1);
-    renderOptions.data$.next({
-      points: []
-    });
+    renderOptions.datum$.next(mockDatum);
     expect(xyChartD3.dataFlag).toBe(2);
   });
 
