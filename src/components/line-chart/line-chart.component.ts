@@ -85,4 +85,8 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
       this.queryOptions$.next(this.queryOptions);
     }
   }
+
+  getCorrespondingPoint(datum: LineChartDatum, point: TimeSeriesPoint) {
+    return datum.points.find(p => p.x.getTime() === point.x.getTime());
+  }
 }
