@@ -1,5 +1,7 @@
 <aside class="sidebar">
   <h2 class="sidebar-title">Customization</h2>
+  <app-preference-group [preference$]="data$" [i18n]="DATA_PREFERENCE" alwaysEnabled="true">
+  </app-preference-group>
   <app-preference-group [preference$]="audification$" [i18n]="AUDIFICATION_PREFERENCE">
   </app-preference-group>
   <app-preference-group [preference$]="dataTable$" [i18n]="DATA_TABLE_PREFERENCE">

@@ -1,6 +1,7 @@
 import {
   AUDIFICATION,
   AUDIFICATION_PREFERENCE,
+  DATA_PREFERENCE,
   DATA_TABLE_PREFERENCE,
   GUIDE_DOGE,
   I18n,
@@ -24,6 +25,14 @@ export const en: I18n = {
   [AUDIFICATION.DOMAIN]: 'Domain from %(min)s to %(max)s',
   [AUDIFICATION.RANGE]: 'Range from %(min)s to %(max)s',
   [AUDIFICATION.ACTIVE_DATUM]: '%(y)s on %(x)s',
+
+  [DATA_PREFERENCE.enabled]: 'Data Generator',
+  [DATA_PREFERENCE.avgHits]: 'Average Hits',
+  [DATA_PREFERENCE.hitStdDev]: 'Hit Std',
+  [DATA_PREFERENCE.avgUsers]: 'Average Users',
+  [DATA_PREFERENCE.userStdDev]: 'User Std',
+  [DATA_PREFERENCE.avgSessionsPerUser]: 'Average Sessions Per User',
+  [DATA_PREFERENCE.sessionsPerUserStdDev]: 'Sessions Per User Std',
 
   [AUDIFICATION_PREFERENCE.enabled]: 'Audification',
   [AUDIFICATION_PREFERENCE.lowestPitch]: 'Lowest note (Hz)',

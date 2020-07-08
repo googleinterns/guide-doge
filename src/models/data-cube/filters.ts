@@ -1,35 +1,27 @@
-import { Category, Filter, FilterOptions, Row } from './types';
+import { Category, Filter, RangeOptions, Row } from './types';
 
-const millisecondsPerDay = 24 * 60 * 60 * 1000;
+export function betweenDates(startDate: Date, endDate: Date, rangeOptions?: RangeOptions): Filter {
+  const dateRange: [Date, Date] = [startDate, endDate];
+  return inOneOfDateRanges([dateRange], rangeOptions);
+}
 
-const defaultOptions: FilterOptions = {
-  excludeStartDate: false,
-  excludeEndDate: false,
-};
-
-export function betweenDates(startDate: Date, endDate: Date, options: Partial<FilterOptions> = {}): Filter {
-  const { excludeStartDate, excludeEndDate } = {
-    ...defaultOptions,
-    ...options,
-  };
+export function inOneOfDateRanges(dateRanges: [Date, Date][], rangeOptions: RangeOptions = {}): Filter {
+  const {
+    excludeStart = false,
+    excludeEnd = false,
+  } = rangeOptions;
+  const startOffset = excludeStart ? 1 : 0;
+  const endOffset = excludeEnd ? -1 : 0;
   return (categories: Category[]) => {
-    const nThDayIndex = categories.findIndex(
-      category => category.name === 'nthDay',
+    const dateIndex = categories.findIndex(
+      category => category.name === 'date',
     );
-    let startIndex = Math.round(
-      (Date.now() - startDate.getTime()) / millisecondsPerDay,
-    );
-    if (excludeStartDate) {
-      startIndex--;
-    }
-    let endIndex = Math.round(
-      (Date.now() - endDate.getTime()) / millisecondsPerDay,
-    );
-    if (excludeEndDate) {
-      endIndex++;
-    }
     return (row: Row) =>
-      row.header[nThDayIndex] <= startIndex &&
-      row.header[nThDayIndex] >= endIndex;
+      dateRanges.some(([startDate, endDate]) => {
+        const time = row.header[dateIndex];
+        const start = startDate.getTime() + startOffset;
+        const end = endDate.getTime() + endOffset;
+        return start <= time && time <= end;
+      });
   };
 }

@@ -51,8 +51,8 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     return this.host.data;
   }
 
-  get measureName() {
-    return this.host.measureName;
+  get measureNames() {
+    return this.host.measureNames;
   }
 
   set activeDatum(activeDatum) {
@@ -165,7 +165,8 @@ export class LineChartAudificationComponent implements AudificationPreference, O
   }
 
   private readOutMeasure() {
-    return this.screenReaderComponent.readOut(humanizeMeasureName(this.measureName));
+    // TODO: read the entire measureNames
+    return this.screenReaderComponent.readOut(humanizeMeasureName(this.measureNames[0]));
   }
 
   private readOutCurrentDatum() {

@@ -9,7 +9,7 @@
   </div>
   <ng-container [ngSwitch]="type">
     <app-line-chart *ngSwitchCase="'line'"
-                    [measureName]="currentMeasureName"
+                    [measureNames]="[currentMeasureName]"
                     appAudification></app-line-chart>
   </ng-container>
 </div>
