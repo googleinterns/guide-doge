@@ -5,7 +5,7 @@ import {
   DATA_TABLE_PREFERENCE,
   GUIDE_DOGE,
   I18n,
-  TEXT_SUMMARY_PREFERENCE,
+  SUMMARIZATION_PREFERENCE,
   VISUALIZATION,
 } from '../types';
 
@@ -45,5 +45,5 @@ export const en: I18n = {
 
   [DATA_TABLE_PREFERENCE.enabled]: 'Data Table',
 
-  [TEXT_SUMMARY_PREFERENCE.enabled]: 'Text Summary',
+  [SUMMARIZATION_PREFERENCE.enabled]: 'Text Summarization',
 };

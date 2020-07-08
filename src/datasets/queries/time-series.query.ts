@@ -4,6 +4,7 @@ import { DAY } from '../../utils/timeUnits';
 import { DataCube } from '../../models/data-cube/data-cube.model';
 import { ResultRow } from '../../models/data-cube/types';
 import { unique } from '../../utils/misc';
+import { SummarizationQuery } from '../summarizations/types';
 
 export interface TimeSeriesQueryOptions {
   range: [Date, Date];
@@ -15,6 +16,7 @@ export interface TimeSeriesDatum<S> {
   label: string;
   style?: Partial<S>;
   points: TimeSeriesPoint[];
+  summarizationQuery?: SummarizationQuery;
 }
 
 export type TimeSeriesQuery<S> = (options: TimeSeriesQueryOptions) => TimeSeriesDatum<S>[];
@@ -25,6 +27,7 @@ export type LegendItem<S> = {
   measureName: string;
   periodOffset?: number;
   windowSize?: number;
+  summarizationQueryFactory?: (points: TimeSeriesPoint[]) => SummarizationQuery;
 };
 
 export function createTimeSeriesQuery<S>(dataCube: DataCube, legendItems: LegendItem<S>[]): TimeSeriesQuery<S> {
@@ -67,6 +70,7 @@ function createTimeSeriesDatum<S>(rows: ResultRow[], startDate: Date, endDate: D
     measureName,
     periodOffset = 0,
     windowSize = DAY,
+    summarizationQueryFactory = null,
     style,
   } = item;
 
@@ -110,9 +114,15 @@ function createTimeSeriesDatum<S>(rows: ResultRow[], startDate: Date, endDate: D
     });
   }
 
-  return {
+  const datum: TimeSeriesDatum<S> = {
     label,
     style,
     points,
   };
+
+  if (summarizationQueryFactory) {
+    datum.summarizationQuery = summarizationQueryFactory(points);
+  }
+
+  return datum;
 }

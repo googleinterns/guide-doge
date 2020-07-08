@@ -17,7 +17,7 @@ export interface AudificationPreference extends Preference {
 
 export type DataTablePreference = Preference;
 
-export type TextSummaryPreference = Preference;
+export type SummarizationPreference = Preference;
 
 export type PreferenceMeta<T> = {
   [K in keyof T]: PreferenceItemMeta;
