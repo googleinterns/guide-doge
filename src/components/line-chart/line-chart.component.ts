@@ -77,10 +77,10 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
         if (!rows.length) {
           return [];
         }
-        const firstMeasureName = rows[0].values.keys().next().value;
+        const [firstMeasureName] = Object.keys(rows[0].values);
         return rows.map(row => ({
-          date: row.categories.get('date') as Date,
-          value: row.values.get(firstMeasureName)!,
+          date: row.categories.date,
+          value: row.values[firstMeasureName],
         }));
       }))
       .subscribe(this.data$);

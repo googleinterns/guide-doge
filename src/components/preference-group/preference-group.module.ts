@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
 import { PreferenceGroupComponent } from './preference-group.component';
 import { CommonModule } from '@angular/common';
-import { SwitchModule } from '../switch/switch.module';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { FormsModule } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
 import { PreferenceItemModule } from '../preference-item/preference-item.module';
 
 @NgModule({
@@ -10,7 +12,9 @@ import { PreferenceItemModule } from '../preference-item/preference-item.module'
   ],
   imports: [
     CommonModule,
-    SwitchModule,
+    MatSlideToggleModule,
+    FormsModule,
+    MatCardModule,
     PreferenceItemModule,
   ],
   exports: [

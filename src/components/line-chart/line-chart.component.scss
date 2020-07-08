@@ -10,13 +10,11 @@
     margin: 1.5rem;
 
     .active-indicator {
-      @include card-shadow;
       position: absolute;
       font-weight: 500;
-      padding: 1rem;
       background-color: white;
       white-space: nowrap;
-      color: $color-highlight;
+      color: mat-color($guide-doge-primary);
       opacity: 0;
     }
   }
