@@ -1,17 +1,18 @@
 import * as UserWhiteNoiseDataset from './user-white-noise.dataset';
-import { Dataset, Meta } from './types';
+import { Dataset } from './types';
 import { createDefault } from '../utils/preferences';
 import { DAY } from '../utils/timeUnits';
 import { DataCube } from '../models/data-cube/data-cube.model';
+import { Meta } from './metas/types';
 
 describe('UserWhiteNoiseDataset', () => {
   let dataset: Dataset;
-  let currentTime: Date;
+  let currentTime: number;
 
   beforeEach(() => {
     const config = createDefault(UserWhiteNoiseDataset.configMeta);
     dataset = UserWhiteNoiseDataset.create(config);
-    currentTime = new Date();
+    currentTime = Date.now();
   });
 
   it('should contain dataCube.', () => {
@@ -24,16 +25,16 @@ describe('UserWhiteNoiseDataset', () => {
         meta.metas.map(testMeta);
       } else {
         const testRanges: [Date, Date][] = [
-          [new Date(currentTime.getTime() - 10 * DAY), new Date(currentTime.getTime() - 5 * DAY)],
-          [new Date(currentTime.getTime() + 5 * DAY), new Date(currentTime.getTime() + 10 * DAY)],
-          [new Date(currentTime.getTime()), new Date(currentTime.getTime())],
-          [new Date(currentTime.getTime() + 1), new Date(currentTime.getTime() - 1)]
+          [new Date(currentTime - 10 * DAY), new Date(currentTime - 5 * DAY)],
+          [new Date(currentTime + 5 * DAY), new Date(currentTime + 10 * DAY)],
+          [new Date(currentTime), new Date(currentTime)],
+          [new Date(currentTime + 1), new Date(currentTime - 1)]
         ];
 
         for (const range of testRanges) {
           const data = meta.query({ range });
-          for (const chart of data) {
-            for (const point of chart.points) {
+          for (const datum of data) {
+            for (const point of datum.points) {
               expect(point.x > range[0]).toBeTrue();
               expect(point.x <= range[1]).toBeTrue();
             }

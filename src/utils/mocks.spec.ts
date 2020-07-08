@@ -1,6 +1,7 @@
 import { AudificationPreference, Preference } from '../services/preference/types';
-import { DNPoint } from '../d3/xy-chart.d3';
+import { TimeSeriesPoint } from '../datasets/queries/time-series.query';
 import { activeUserMeasure } from '../models/data-cube/presets';
+import { LineChartDatum } from '../components/line-chart/line-chart.component';
 
 export const mockPreference: Preference = {
   enabled: false,
@@ -15,9 +16,14 @@ export const mockAudificationPreference: AudificationPreference = {
   readBefore: false,
 };
 
-export const mockDatum: DNPoint = {
+export const mockPoint: TimeSeriesPoint = {
   x: new Date(),
   y: 0,
+};
+
+export const mockDatum: LineChartDatum = {
+  label: '',
+  points: [mockPoint],
 };
 
 export const mockMeasureName = activeUserMeasure.name;

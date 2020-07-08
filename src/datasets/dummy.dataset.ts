@@ -1,8 +1,10 @@
 import * as random from 'random';
-import { Dataset, XYPoint, LineChartQueryOptions } from './types';
+import { Dataset } from './types';
 import { PreferenceMeta } from '../services/preference/types';
-import { xBetweenDates } from './utils';
 import { DAY } from '../utils/timeUnits';
+import { XYPoint } from './metas/types';
+import { createLineChartMeta } from './metas/line-chart.meta';
+import { TimeSeriesQueryOptions } from './queries/time-series.query';
 
 export interface Config {
   offset: number;
@@ -26,18 +28,19 @@ export function create(config: Config): Dataset {
     });
   }
 
+  const lineChartMeta = createLineChartMeta(
+    'Line Chart',
+    (options: TimeSeriesQueryOptions) => [{
+      label: 'Dummy Data',
+      points: data,
+    }],
+  );
+
   const metas = [
-    {
-      type: 'line' as 'line',
-      title: 'activeUser',
-      xlabel: 'time',
-      query: (options: LineChartQueryOptions) => [{
-        points: data,
-      }]
-    }
+    lineChartMeta,
   ];
 
   return {
-    metas
+    metas,
   };
 }

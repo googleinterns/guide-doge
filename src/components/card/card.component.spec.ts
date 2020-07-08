@@ -1,11 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CardComponent } from './card.component';
 import { MatCardModule } from '@angular/material/card';
-import { LineChartMeta, TabbedChartsMeta } from '../../datasets/types';
+import { TabbedChartsMeta } from '../../datasets/metas/tabbed-charts.meta';
+import { LineChartMeta } from '../../datasets/metas/line-chart.meta';
 
 describe('CardComponent', () => {
-  let fixture: ComponentFixture<CardComponent>;
-  let component: CardComponent;
+  let tabbedFixture: ComponentFixture<CardComponent<TabbedChartsMeta>>;
+  let tabbedComponent: CardComponent<TabbedChartsMeta>;
+  let lineFixture: ComponentFixture<CardComponent<LineChartMeta>>;
+  let lineComponent: CardComponent<LineChartMeta>;
+
   const testChartMeta1: LineChartMeta = {
     type: 'line',
     title: 'testChart1',
@@ -31,47 +35,50 @@ describe('CardComponent', () => {
         MatCardModule
       ]
     });
-    fixture = TestBed.createComponent(CardComponent);
-    component = fixture.componentInstance;
+    tabbedFixture = TestBed.createComponent<CardComponent<TabbedChartsMeta>>(CardComponent);
+    tabbedComponent = tabbedFixture.componentInstance;
+    lineFixture = TestBed.createComponent<CardComponent<LineChartMeta>>(CardComponent);
+    lineComponent = lineFixture.componentInstance;
   });
 
   it('should instantiate.', () => {
-    expect(component).toBeInstanceOf(CardComponent);
+    expect(tabbedComponent).toBeInstanceOf(CardComponent);
+    expect(lineComponent).toBeInstanceOf(CardComponent);
   });
 
   it('should set current chart title when init.', () => {
-    component.meta = testChartMeta1;
-    component.ngOnInit();
-    expect(component.currentChart.title).toBe(testChartMeta1.title);
+    lineComponent.meta = testChartMeta1;
+    lineComponent.ngOnInit();
+    expect(lineComponent.currentChart.title).toBe(testChartMeta1.title);
 
-    component.meta = testTabbedChartsMeta;
-    component.ngOnInit();
-    expect(component.currentChart.title).toBe(testChartMeta1.title);
+    tabbedComponent.meta = testTabbedChartsMeta;
+    tabbedComponent.ngOnInit();
+    expect(tabbedComponent.currentChart.title).toBe(testChartMeta1.title);
   });
 
   it('should return whether input meta is tabbed charts or not.', () => {
-    component.meta = testChartMeta1;
-    expect(component.tabbed).toBeFalse();
-    component.meta = testTabbedChartsMeta;
-    expect(component.tabbed).toBeTrue();
+    lineComponent.meta = testChartMeta1;
+    expect(lineComponent.isTabbed()).toBeFalse();
+    tabbedComponent.meta = testTabbedChartsMeta;
+    expect(tabbedComponent.isTabbed()).toBeTrue();
   });
 
   it('should return input meta titles.', () => {
-    component.meta = testChartMeta1;
-    expect(component.titles).toEqual([testChartMeta1.title]);
-    component.meta = testTabbedChartsMeta;
-    expect(component.titles).toEqual([testChartMeta1.title, testChartMeta2.title]);
+    lineComponent.meta = testChartMeta1;
+    expect(lineComponent.titles).toEqual([testChartMeta1.title]);
+    tabbedComponent.meta = testTabbedChartsMeta;
+    expect(tabbedComponent.titles).toEqual([testChartMeta1.title, testChartMeta2.title]);
   });
 
   it('should set current chart.', () => {
-    component.meta = testChartMeta1;
-    expect(component.currentChart.title).toBe(testChartMeta1.title);
-    component.setCurrentTabTitle('REDUNDANT SET TITLE');
-    expect(component.currentChart.title).toBe(testChartMeta1.title);
+    lineComponent.meta = testChartMeta1;
+    expect(lineComponent.currentChart.title).toBe(testChartMeta1.title);
+    lineComponent.setCurrentTabTitle('REDUNDANT SET TITLE');
+    expect(lineComponent.currentChart.title).toBe(testChartMeta1.title);
 
-    component.meta = testTabbedChartsMeta;
-    expect(component.currentChart.title).toBe(testChartMeta1.title);
-    component.setCurrentTabTitle(testChartMeta2.title);
-    expect(component.currentChart.title).toBe(testChartMeta2.title);
+    tabbedComponent.meta = testTabbedChartsMeta;
+    expect(tabbedComponent.currentChart.title).toBe(testChartMeta1.title);
+    tabbedComponent.setCurrentTabTitle(testChartMeta2.title);
+    expect(tabbedComponent.currentChart.title).toBe(testChartMeta2.title);
   });
 });
