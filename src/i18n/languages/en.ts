@@ -20,6 +20,7 @@ export const en: I18n = {
     'Hold down <kbd>SPACE</kbd> to play the audified melody and <kbd>SHIFT</kbd> + <kbd>SPACE</kbd> to play it backward.',
     'Press <kbd>X</kbd> or <kbd>Y</kbd> to read out the domain or range respectively.',
     'Press <kbd>L</kbd> to read out the legend items.',
+    'Press <kbd>UP</kbd> or <kbd>DOWN</kbd> to switch among the legend items.',
     'Press <kbd>0</kbd> ... <kbd>9</kbd> to move playhead.',
   ].join(' <br/>'),
   [AUDIFICATION.DOMAIN]: 'Domain from %(min)s to %(max)s',

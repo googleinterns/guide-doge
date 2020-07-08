@@ -4,10 +4,11 @@ import { formatX, formatY } from '../../utils/formatters';
 import { AUDIFICATION, t, tA11y } from '../../i18n';
 import { LineChartComponent } from '../line-chart/line-chart.component';
 import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
 import { AudificationPreference } from '../../services/preference/types';
 import { ascendingDate, ascendingNumber } from '../../utils/comparators';
 import { ScreenReaderComponent } from '../screen-reader/screen-reader.component';
+import { mod } from '../../utils/misc';
 
 @Component({
   selector: 'app-line-chart-audification',
@@ -27,6 +28,7 @@ export class LineChartAudificationComponent implements AudificationPreference, O
 
   melody?: Melody;
   private destroy$ = new Subject();
+  private datumIndex$ = new BehaviorSubject(0);
   private domain: Date[];
   private range: number[];
   @HostBinding('attr.tabindex') private readonly tabindex = 0;
@@ -51,8 +53,16 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     return this.host.data;
   }
 
+  get datumIndex() {
+    return this.datumIndex$.value;
+  }
+
+  set datumIndex(datumIndex) {
+    this.datumIndex$.next(datumIndex);
+  }
+
   get points() {
-    return this.data[0].points;
+    return this.data[this.datumIndex].points;
   }
 
   get meta() {
@@ -64,10 +74,12 @@ export class LineChartAudificationComponent implements AudificationPreference, O
   }
 
   ngOnInit() {
-    this.host.data$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(data => {
-        const { points } = data[0];
+    combineLatest([
+      this.host.data$,
+      this.datumIndex$,
+    ]).pipe(takeUntil(this.destroy$))
+      .subscribe(([data, datumIndex]) => {
+        const { points } = data[datumIndex];
         const values = points.map(datum => datum.y);
         this.domain = points.map(d => d.x).sort(ascendingDate);
         this.range = [...values].sort(ascendingNumber);
@@ -106,9 +118,13 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     } else if (key === 'l') {
       this.readOutMeasure();
     } else if ('0' <= key && key <= '9') {
-      const datumIndex = Math.floor(+key / 10 * this.points.length);
-      this.melody.seekTo(datumIndex, true);
+      const pointIndex = Math.floor(+key / 10 * this.points.length);
+      this.melody.seekTo(pointIndex, true);
       this.readOutCurrentDatum();
+    } else if (key === 'ArrowUp') {
+      this.datumIndex = mod(this.datumIndex + 1, this.data.length);
+    } else if (key === 'ArrowDown') {
+      this.datumIndex = mod(this.datumIndex - 1, this.data.length);
     }
   }
 
