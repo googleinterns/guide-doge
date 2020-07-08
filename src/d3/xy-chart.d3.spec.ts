@@ -22,6 +22,7 @@ describe('XYChartD3', () => {
     activePointFlag = 0;
 
     protected renderData() {
+      super.renderData();
       this.dataFlag = 1;
     }
 
