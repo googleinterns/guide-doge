@@ -9,6 +9,7 @@ import { createTabbedChartsMeta } from './metas/tabbed-charts.meta';
 import { PreferenceMeta } from '../services/preference/types';
 import { createDefault } from '../utils/preferences';
 import { DAY } from '../utils/timeUnits';
+import { TimeSeriesPoint } from './queries/time-series.query';
 
 export interface Config {
   dailyWeightStd: number;
@@ -68,11 +69,19 @@ export function create(config: Config): Dataset {
 
   const dataCube = generateCube(categories, measures, generateCubeConfig);
 
+  const visitCountSummarizationQueryFactory = (points: TimeSeriesPoint[]) => {
+    return () => [{
+      text: 'Helloworld',
+      validity: 1.0,
+    }];
+  };
+
   const lineChartMeta = createLineChartMeta(
-    'User Visit Count',
+    'Visit Count',
     createTimeSeriesQuery(dataCube, [{
       label: 'Visit Count',
       measureName: 'visitCount',
+      summarizationQueryFactory: visitCountSummarizationQueryFactory,
     }]),
   );
 
