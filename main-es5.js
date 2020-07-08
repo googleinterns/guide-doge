@@ -1,11 +1,3 @@
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -16,7 +8,15 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function (_e2) { function e(_x2) { return _e2.apply(this, arguments); } e.toString = function () { return _e2.toString(); }; return e; }(function (e) { throw e; }), f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function (_e3) { function e(_x3) { return _e3.apply(this, arguments); } e.toString = function () { return _e3.toString(); }; return e; }(function (e) { didErr = true; err = e; }), f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
@@ -77542,6 +77542,10 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
       }
     }
 
+    var _c0 = function _c0(a0) {
+      return [a0];
+    };
+
     function CardComponent_app_line_chart_5_Template(rf, ctx) {
       if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](0, "app-line-chart", 8);
@@ -77550,7 +77554,7 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
       if (rf & 2) {
         var ctx_r1 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("measureName", ctx_r1.currentMeasureName);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("measureNames", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](1, _c0, ctx_r1.currentMeasureName));
       }
     }
 
@@ -77592,7 +77596,7 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
       },
       decls: 6,
       vars: 4,
-      consts: [[1, "card-title"], [1, "card-content"], ["class", "tabs", 4, "ngIf"], [3, "ngSwitch"], ["appAudification", "", 3, "measureName", 4, "ngSwitchCase"], [1, "tabs"], ["class", "tab", "role", "button", 3, "active", "click", 4, "ngFor", "ngForOf"], ["role", "button", 1, "tab", 3, "click"], ["appAudification", "", 3, "measureName"]],
+      consts: [[1, "card-title"], [1, "card-content"], ["class", "tabs", 4, "ngIf"], [3, "ngSwitch"], ["appAudification", "", 3, "measureNames", 4, "ngSwitchCase"], [1, "tabs"], ["class", "tab", "role", "button", 3, "active", "click", 4, "ngFor", "ngForOf"], ["role", "button", 1, "tab", 3, "click"], ["appAudification", "", 3, "measureNames"]],
       template: function CardComponent_Template(rf, ctx) {
         if (rf & 1) {
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "h2", 0);
@@ -77607,7 +77611,7 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerStart"](4, 3);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](5, CardComponent_app_line_chart_5_Template, 1, 1, "app-line-chart", 4);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](5, CardComponent_app_line_chart_5_Template, 1, 3, "app-line-chart", 4);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerEnd"]();
 
@@ -77807,9 +77811,11 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
       _classCallCheck2(this, DashboardComponent);
 
       this.preferenceService = preferenceService;
+      this.data$ = this.preferenceService.data$;
       this.audification$ = this.preferenceService.audification$;
       this.dataTable$ = this.preferenceService.dataTable$;
       this.textSummary$ = this.preferenceService.textSummary$;
+      this.DATA_PREFERENCE = _i18n__WEBPACK_IMPORTED_MODULE_1__["DATA_PREFERENCE"];
       this.AUDIFICATION_PREFERENCE = _i18n__WEBPACK_IMPORTED_MODULE_1__["AUDIFICATION_PREFERENCE"];
       this.DATA_TABLE_PREFERENCE = _i18n__WEBPACK_IMPORTED_MODULE_1__["DATA_TABLE_PREFERENCE"];
       this.TEXT_SUMMARY_PREFERENCE = _i18n__WEBPACK_IMPORTED_MODULE_1__["TEXT_SUMMARY_PREFERENCE"];
@@ -77822,9 +77828,9 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
     DashboardComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({
       type: DashboardComponent,
       selectors: [["app-dashboard"]],
-      decls: 9,
-      vars: 12,
-      consts: [[1, "sidebar"], [1, "sidebar-title"], [3, "preference$", "i18n"], [1, "card-container"], ["title", "Tabbed Line Chart", "type", "line", 3, "tabbed", "measureNames"], ["title", "Line Chart", "type", "line", 3, "tabbed", "measureNames"]],
+      decls: 10,
+      vars: 14,
+      consts: [[1, "sidebar"], [1, "sidebar-title"], ["alwaysEnabled", "true", 3, "preference$", "i18n"], [3, "preference$", "i18n"], [1, "card-container"], ["title", "Tabbed Line Chart", "type", "line", 3, "tabbed", "measureNames"], ["title", "Line Chart", "type", "line", 3, "tabbed", "measureNames"]],
       template: function DashboardComponent_Template(rf, ctx) {
         if (rf & 1) {
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "aside", 0);
@@ -77837,23 +77843,29 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](3, "app-preference-group", 2);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](4, "app-preference-group", 2);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](4, "app-preference-group", 3);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](5, "app-preference-group", 2);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](5, "app-preference-group", 3);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](6, "app-preference-group", 3);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](6, "div", 3);
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](7, "app-card", 4);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](7, "div", 4);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](8, "app-card", 5);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](9, "app-card", 6);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         }
 
         if (rf & 2) {
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](3);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("preference$", ctx.data$)("i18n", ctx.DATA_PREFERENCE);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("preference$", ctx.audification$)("i18n", ctx.AUDIFICATION_PREFERENCE);
 
@@ -77867,11 +77879,11 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("tabbed", true)("measureNames", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction0"](10, _c0));
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("tabbed", true)("measureNames", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction0"](12, _c0));
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("tabbed", false)("measureNames", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction0"](11, _c0));
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("tabbed", false)("measureNames", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction0"](13, _c0));
         }
       },
       directives: [_preference_group_preference_group_component__WEBPACK_IMPORTED_MODULE_3__["PreferenceGroupComponent"], _card_card_component__WEBPACK_IMPORTED_MODULE_4__["CardComponent"]],
@@ -78028,15 +78040,15 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
     /* harmony import */
 
 
-    var _d3_line_chart_d3__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
-    /*! ../../d3/line-chart.d3 */
-    "./src/d3/line-chart.d3.ts");
+    var rxjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
+    /*! rxjs */
+    "./node_modules/rxjs/_esm2015/index.js");
     /* harmony import */
 
 
-    var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
-    /*! rxjs */
-    "./node_modules/rxjs/_esm2015/index.js");
+    var _d3_line_chart_d3__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
+    /*! ../../d3/line-chart.d3 */
+    "./src/d3/line-chart.d3.ts");
     /* harmony import */
 
 
@@ -78058,7 +78070,19 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
     /* harmony import */
 
 
-    var _services_data_data_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+    var _utils_timeUnits__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+    /*! ../../utils/timeUnits */
+    "./src/utils/timeUnits.ts");
+    /* harmony import */
+
+
+    var rxjs_operators__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
+    /*! rxjs/operators */
+    "./node_modules/rxjs/_esm2015/operators/index.js");
+    /* harmony import */
+
+
+    var _services_data_data_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(
     /*! ../../services/data/data.service */
     "./src/services/data/data.service.ts");
 
@@ -78070,42 +78094,71 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
 
         this.dataService = dataService;
         this.elementRef = elementRef;
+        this.endDate = new Date();
+        this.startDate = new Date(this.endDate.getTime() - 30 * _utils_timeUnits__WEBPACK_IMPORTED_MODULE_6__["DAY"]);
+        this.measureNames = [];
         this.height = 500;
         this.width = 800;
         this.marginTop = 20;
         this.marginRight = 30;
         this.marginBottom = 30;
         this.marginLeft = 40;
-        this.data$ = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"]([]);
-        this.activeDatum$ = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
-        this.lineChartD3 = new _d3_line_chart_d3__WEBPACK_IMPORTED_MODULE_1__["LineChartD3"](this);
+        this.queryOptions$ = new rxjs__WEBPACK_IMPORTED_MODULE_1__["ReplaySubject"](1);
+        this.data$ = new rxjs__WEBPACK_IMPORTED_MODULE_1__["BehaviorSubject"]([]);
+        this.activeDatum$ = new rxjs__WEBPACK_IMPORTED_MODULE_1__["BehaviorSubject"](null);
+        this.destroy$ = new rxjs__WEBPACK_IMPORTED_MODULE_1__["Subject"]();
+        this.lineChartD3 = new _d3_line_chart_d3__WEBPACK_IMPORTED_MODULE_2__["LineChartD3"](this);
       }
 
       _createClass2(LineChartComponent, [{
         key: "ngOnInit",
         value: function ngOnInit() {
+          var _this6 = this;
+
+          this.dataService.observeTimeSeries(this.queryOptions$).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["takeUntil"])(this.destroy$)).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["map"])(function (rows) {
+            _this6.activeDatum$.next(null);
+
+            if (!rows.length) {
+              return [];
+            }
+
+            var firstMeasureName = rows[0].values.keys().next().value;
+            return rows.map(function (row) {
+              return {
+                date: row.categories.get('date'),
+                value: row.values.get(firstMeasureName)
+              };
+            });
+          })).subscribe(this.data$);
           this.lineChartD3.render();
         }
       }, {
         key: "ngOnDestroy",
         value: function ngOnDestroy() {
+          this.destroy$.next();
+          this.destroy$.complete();
           this.lineChartD3.clear();
         }
       }, {
         key: "ngOnChanges",
         value: function ngOnChanges(changes) {
-          if ('measureName' in changes) {
-            this.data = this.dataService.getMeasureOverDays(this.measureName);
-            this.activeDatum = null;
+          var queryOptions = {
+            startDate: this.startDate,
+            endDate: this.endDate,
+            measureNames: this.measureNames
+          };
+          var changed = Object.keys(queryOptions).some(function (key) {
+            return key in changes;
+          });
+
+          if (changed) {
+            this.queryOptions$.next(queryOptions);
           }
         }
       }, {
         key: "data",
         get: function get() {
           return this.data$.value;
-        },
-        set: function set(data) {
-          this.data$.next(data);
         }
       }, {
         key: "activeDatum",
@@ -78141,7 +78194,7 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
     }();
 
     LineChartComponent.ɵfac = function LineChartComponent_Factory(t) {
-      return new (t || LineChartComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_data_data_service__WEBPACK_IMPORTED_MODULE_6__["DataService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["ElementRef"]));
+      return new (t || LineChartComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_data_data_service__WEBPACK_IMPORTED_MODULE_8__["DataService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["ElementRef"]));
     };
 
     LineChartComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({
@@ -78159,7 +78212,9 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
         }
       },
       inputs: {
-        measureName: "measureName",
+        endDate: "endDate",
+        startDate: "startDate",
+        measureNames: "measureNames",
         height: "height",
         width: "width",
         marginTop: "marginTop",
@@ -78214,7 +78269,7 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
         }]
       }], function () {
         return [{
-          type: _services_data_data_service__WEBPACK_IMPORTED_MODULE_6__["DataService"]
+          type: _services_data_data_service__WEBPACK_IMPORTED_MODULE_8__["DataService"]
         }, {
           type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ElementRef"]
         }];
@@ -78225,7 +78280,13 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
             "static": true
           }]
         }],
-        measureName: [{
+        endDate: [{
+          type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
+        }],
+        startDate: [{
+          type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
+        }],
+        measureNames: [{
           type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
         }],
         height: [{
@@ -78370,17 +78431,41 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
     /*! ../../i18n */
     "./src/i18n/index.ts");
 
-    function PreferenceGroupComponent_ng_container_4_app_preference_item_1_Template(rf, ctx) {
+    function PreferenceGroupComponent_app_switch_3_Template(rf, ctx) {
       if (rf & 1) {
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](0, "app-preference-item", 5);
+        var _r3 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "app-switch", 4);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("valueChange", function PreferenceGroupComponent_app_switch_3_Template_app_switch_valueChange_0_listener($event) {
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r3);
+
+          var ctx_r2 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+
+          return ctx_r2.enabled = $event;
+        });
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
       }
 
       if (rf & 2) {
-        var property_r2 = ctx.$implicit;
+        var ctx_r0 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
 
-        var ctx_r1 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](2);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("value", ctx_r0.enabled);
+      }
+    }
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("name", ctx_r1.getI18nValue(property_r2))("property", property_r2);
+    function PreferenceGroupComponent_ng_container_4_app_preference_item_1_Template(rf, ctx) {
+      if (rf & 1) {
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](0, "app-preference-item", 6);
+      }
+
+      if (rf & 2) {
+        var property_r5 = ctx.$implicit;
+
+        var ctx_r4 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](2);
+
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("name", ctx_r4.getI18nValue(property_r5))("property", property_r5);
       }
     }
 
@@ -78388,7 +78473,7 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
       if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerStart"](0);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](1, PreferenceGroupComponent_ng_container_4_app_preference_item_1_Template, 1, 2, "app-preference-item", 4);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](1, PreferenceGroupComponent_ng_container_4_app_preference_item_1_Template, 1, 2, "app-preference-item", 5);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵprojection"](2);
 
@@ -78396,11 +78481,11 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
       }
 
       if (rf & 2) {
-        var ctx_r0 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+        var ctx_r1 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx_r0.childProperties);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx_r1.childProperties);
       }
     }
 
@@ -78409,6 +78494,8 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
     var PreferenceGroupComponent = /*#__PURE__*/function () {
       function PreferenceGroupComponent() {
         _classCallCheck2(this, PreferenceGroupComponent);
+
+        this.alwaysEnabled = false;
       }
 
       _createClass2(PreferenceGroupComponent, [{
@@ -78419,7 +78506,7 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
       }, {
         key: "enabled",
         get: function get() {
-          return this.preference$.value.enabled;
+          return this.preference$.value.enabled || this.alwaysEnabled;
         },
         set: function set(value) {
           this.preference$.next(Object.assign(Object.assign({}, this.preference$.value), {
@@ -78429,6 +78516,10 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
       }, {
         key: "childProperties",
         get: function get() {
+          if (!this.i18n) {
+            return [];
+          }
+
           var properties = Object.keys(this.preference$.value);
           return properties.filter(function (property) {
             return property !== 'enabled';
@@ -78449,12 +78540,13 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
       inputs: {
         name: "name",
         i18n: "i18n",
+        alwaysEnabled: "alwaysEnabled",
         preference$: "preference$"
       },
       ngContentSelectors: _c0,
       decls: 5,
-      vars: 5,
-      consts: [[1, "header"], [1, "title"], [3, "value", "valueChange"], [4, "ngIf"], [3, "name", "property", 4, "ngFor", "ngForOf"], [3, "name", "property"]],
+      vars: 7,
+      consts: [[1, "header"], [1, "title"], [3, "value", "valueChange", 4, "ngIf"], [4, "ngIf"], [3, "value", "valueChange"], [3, "name", "property", 4, "ngFor", "ngForOf"], [3, "name", "property"]],
       template: function PreferenceGroupComponent_Template(rf, ctx) {
         if (rf & 1) {
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵprojectionDef"]();
@@ -78467,13 +78559,7 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](3, "app-switch", 2);
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("valueChange", function PreferenceGroupComponent_Template_app_switch_valueChange_3_listener($event) {
-            return ctx.enabled = $event;
-          });
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](3, PreferenceGroupComponent_app_switch_3_Template, 1, 1, "app-switch", 2);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
@@ -78481,7 +78567,7 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
         }
 
         if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵclassProp"]("enabled", ctx.enabled);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵclassProp"]("enabled", ctx.enabled)("always-enabled", ctx.alwaysEnabled);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
 
@@ -78489,14 +78575,14 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("value", ctx.enabled);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", !ctx.alwaysEnabled);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx.enabled);
         }
       },
-      styles: ["[_nghost-%COMP%] {\n  box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px 0, rgba(0, 0, 0, 0.14) 0 1px 1px 0, rgba(0, 0, 0, 0.12) 0 2px 1px -1px;\n  display: flex;\n  flex-direction: column;\n  align-items: stretch;\n  background-color: white;\n}\n[_nghost-%COMP%]   .header[_ngcontent-%COMP%] {\n  cursor: pointer;\n  padding: 1rem;\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n[_nghost-%COMP%]   .header[_ngcontent-%COMP%]   .switch[_ngcontent-%COMP%] {\n  background-color: white;\n  width: 2.8rem;\n  height: 1.5rem;\n  border-radius: 1.5rem;\n  border: 1px solid #dadce0;\n  box-sizing: content-box;\n}\n[_nghost-%COMP%]   .header[_ngcontent-%COMP%]   .switch[_ngcontent-%COMP%], [_nghost-%COMP%]   .header[_ngcontent-%COMP%]   .switch[_ngcontent-%COMP%]   .handle[_ngcontent-%COMP%] {\n  transition: 0.2s;\n}\n[_nghost-%COMP%]   .header[_ngcontent-%COMP%]   .switch[_ngcontent-%COMP%]   .handle[_ngcontent-%COMP%] {\n  box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px 0, rgba(0, 0, 0, 0.14) 0 1px 1px 0, rgba(0, 0, 0, 0.12) 0 2px 1px -1px;\n  width: 1.5rem;\n  height: 1.5rem;\n  border-radius: 1.5rem;\n  border: 1px solid #dadce0;\n  background-color: white;\n}\n[_nghost-%COMP%]   .header[_ngcontent-%COMP%]   .switch.active[_ngcontent-%COMP%] {\n  background-color: #4285f4;\n}\n[_nghost-%COMP%]   .header[_ngcontent-%COMP%]   .switch.active[_ngcontent-%COMP%]   .handle[_ngcontent-%COMP%] {\n  margin-left: 1.3rem;\n  border-color: #4285f4;\n}\n[_nghost-%COMP%]   .header.enabled[_ngcontent-%COMP%] {\n  border-bottom: 1px solid #dadce0;\n}\n[_nghost-%COMP%]   .header.enabled[_ngcontent-%COMP%]   .title[_ngcontent-%COMP%] {\n  font-weight: 500;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL3J1bm5lci93b3JrL2d1aWRlLWRvZ2UvZ3VpZGUtZG9nZS9zcmMvY29tcG9uZW50cy9wcmVmZXJlbmNlLWdyb3VwL3ByZWZlcmVuY2UtZ3JvdXAuY29tcG9uZW50LnNjc3MiLCIvaG9tZS9ydW5uZXIvd29yay9ndWlkZS1kb2dlL2d1aWRlLWRvZ2Uvc3JjL3V0aWxzL2NvbnN0YW50cy5zY3NzIiwic3JjL2NvbXBvbmVudHMvcHJlZmVyZW5jZS1ncm91cC9wcmVmZXJlbmNlLWdyb3VwLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUVBO0VDVUUsK0dBQUE7RURSQSxhQUFBO0VBQ0Esc0JBQUE7RUFDQSxvQkFBQTtFQUNBLHVCQUFBO0FFREY7QUZHRTtFQUNFLGVBQUE7RUFDQSxhQUFBO0VBQ0EsYUFBQTtFQUNBLG1CQUFBO0VBQ0EsOEJBQUE7QUVESjtBRkdJO0VBRUUsdUJBQUE7RUFDQSxhQUFBO0VBQ0EsY0FITztFQUlQLHFCQUpPO0VBS1AseUJBQUE7RUFDQSx1QkFBQTtBRUZOO0FGSU07RUFDRSxnQkFBQTtBRUZSO0FGS007RUNqQkosK0dBQUE7RURtQk0sYUFkSztFQWVMLGNBZks7RUFnQkwscUJBaEJLO0VBaUJMLHlCQUFBO0VBQ0EsdUJBQUE7QUVIUjtBRk1NO0VBQ0UseUJDcENVO0FDZ0NsQjtBRk1RO0VBQ0UsbUJBQUE7RUFDQSxxQkN4Q1E7QUNvQ2xCO0FGU0k7RUFDRSxnQ0FBQTtBRVBOO0FGU007RUFDRSxnQkFBQTtBRVBSIiwiZmlsZSI6InNyYy9jb21wb25lbnRzL3ByZWZlcmVuY2UtZ3JvdXAvcHJlZmVyZW5jZS1ncm91cC5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIkBpbXBvcnQgXCIuLi8uLi91dGlscy9jb25zdGFudHNcIjtcblxuOmhvc3Qge1xuICBAaW5jbHVkZSBjYXJkLXNoYWRvdztcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcbiAgYWxpZ24taXRlbXM6IHN0cmV0Y2g7XG4gIGJhY2tncm91bmQtY29sb3I6IHdoaXRlO1xuXG4gIC5oZWFkZXIge1xuICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICBwYWRkaW5nOiAxcmVtO1xuICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICBqdXN0aWZ5LWNvbnRlbnQ6IHNwYWNlLWJldHdlZW47XG5cbiAgICAuc3dpdGNoIHtcbiAgICAgICRzaXplOiAxLjVyZW07XG4gICAgICBiYWNrZ3JvdW5kLWNvbG9yOiB3aGl0ZTtcbiAgICAgIHdpZHRoOiAyLjhyZW07XG4gICAgICBoZWlnaHQ6ICRzaXplO1xuICAgICAgYm9yZGVyLXJhZGl1czogJHNpemU7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCAkY29sb3ItYm9yZGVyO1xuICAgICAgYm94LXNpemluZzogY29udGVudC1ib3g7XG5cbiAgICAgICYsICYgLmhhbmRsZSB7XG4gICAgICAgIHRyYW5zaXRpb246IC4ycztcbiAgICAgIH1cblxuICAgICAgLmhhbmRsZSB7XG4gICAgICAgIEBpbmNsdWRlIGNhcmQtc2hhZG93O1xuICAgICAgICB3aWR0aDogJHNpemU7XG4gICAgICAgIGhlaWdodDogJHNpemU7XG4gICAgICAgIGJvcmRlci1yYWRpdXM6ICRzaXplO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCAkY29sb3ItYm9yZGVyO1xuICAgICAgICBiYWNrZ3JvdW5kLWNvbG9yOiB3aGl0ZTtcbiAgICAgIH1cblxuICAgICAgJi5hY3RpdmUge1xuICAgICAgICBiYWNrZ3JvdW5kLWNvbG9yOiAkY29sb3ItaGlnaGxpZ2h0O1xuXG4gICAgICAgIC5oYW5kbGUge1xuICAgICAgICAgIG1hcmdpbi1sZWZ0OiAxLjNyZW07XG4gICAgICAgICAgYm9yZGVyLWNvbG9yOiAkY29sb3ItaGlnaGxpZ2h0O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuXG4gICAgJi5lbmFibGVkIHtcbiAgICAgIGJvcmRlci1ib3R0b206IDFweCBzb2xpZCAkY29sb3ItYm9yZGVyO1xuXG4gICAgICAudGl0bGUge1xuICAgICAgICBmb250LXdlaWdodDogNTAwO1xuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIiwiJGNvbG9yLWJhY2tncm91bmQ6IHJnYigyNDgsIDI0OSwgMjUwKTtcbiRjb2xvci1ib3JkZXI6IHJnYigyMTgsIDIyMCwgMjI0KTtcbiRjb2xvci1mb250OiByZ2IoMzQsIDM0LCAzNCk7XG4kY29sb3ItaGlnaGxpZ2h0OiByZ2IoNjYsIDEzMywgMjQ0KTtcbiRjb2xvci1wb3NpdGl2ZTogcmdiKDE1LCAxNTcsIDg4KTtcbiRjb2xvci1uZWdhdGl2ZTogcmdiKDIxOSwgNjgsIDU1KTtcblxuJGZvbnQtc2l6ZS1sYXJnZTogMjRweDtcbiRmb250LXNpemUtbWVkaXVtOiAxNnB4O1xuJGZvbnQtc2l6ZS1zbWFsbDogMTJweDtcblxuQG1peGluIGNhcmQtc2hhZG93IHtcbiAgYm94LXNoYWRvdzogcmdiYSgwLCAwLCAwLCAwLjIpIDAgMXB4IDNweCAwLCByZ2JhKDAsIDAsIDAsIDAuMTQpIDAgMXB4IDFweCAwLCByZ2JhKDAsIDAsIDAsIDAuMTIpIDAgMnB4IDFweCAtMXB4O1xufVxuIiwiOmhvc3Qge1xuICBib3gtc2hhZG93OiByZ2JhKDAsIDAsIDAsIDAuMikgMCAxcHggM3B4IDAsIHJnYmEoMCwgMCwgMCwgMC4xNCkgMCAxcHggMXB4IDAsIHJnYmEoMCwgMCwgMCwgMC4xMikgMCAycHggMXB4IC0xcHg7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG4gIGFsaWduLWl0ZW1zOiBzdHJldGNoO1xuICBiYWNrZ3JvdW5kLWNvbG9yOiB3aGl0ZTtcbn1cbjpob3N0IC5oZWFkZXIge1xuICBjdXJzb3I6IHBvaW50ZXI7XG4gIHBhZGRpbmc6IDFyZW07XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2Vlbjtcbn1cbjpob3N0IC5oZWFkZXIgLnN3aXRjaCB7XG4gIGJhY2tncm91bmQtY29sb3I6IHdoaXRlO1xuICB3aWR0aDogMi44cmVtO1xuICBoZWlnaHQ6IDEuNXJlbTtcbiAgYm9yZGVyLXJhZGl1czogMS41cmVtO1xuICBib3JkZXI6IDFweCBzb2xpZCAjZGFkY2UwO1xuICBib3gtc2l6aW5nOiBjb250ZW50LWJveDtcbn1cbjpob3N0IC5oZWFkZXIgLnN3aXRjaCwgOmhvc3QgLmhlYWRlciAuc3dpdGNoIC5oYW5kbGUge1xuICB0cmFuc2l0aW9uOiAwLjJzO1xufVxuOmhvc3QgLmhlYWRlciAuc3dpdGNoIC5oYW5kbGUge1xuICBib3gtc2hhZG93OiByZ2JhKDAsIDAsIDAsIDAuMikgMCAxcHggM3B4IDAsIHJnYmEoMCwgMCwgMCwgMC4xNCkgMCAxcHggMXB4IDAsIHJnYmEoMCwgMCwgMCwgMC4xMikgMCAycHggMXB4IC0xcHg7XG4gIHdpZHRoOiAxLjVyZW07XG4gIGhlaWdodDogMS41cmVtO1xuICBib3JkZXItcmFkaXVzOiAxLjVyZW07XG4gIGJvcmRlcjogMXB4IHNvbGlkICNkYWRjZTA7XG4gIGJhY2tncm91bmQtY29sb3I6IHdoaXRlO1xufVxuOmhvc3QgLmhlYWRlciAuc3dpdGNoLmFjdGl2ZSB7XG4gIGJhY2tncm91bmQtY29sb3I6ICM0Mjg1ZjQ7XG59XG46aG9zdCAuaGVhZGVyIC5zd2l0Y2guYWN0aXZlIC5oYW5kbGUge1xuICBtYXJnaW4tbGVmdDogMS4zcmVtO1xuICBib3JkZXItY29sb3I6ICM0Mjg1ZjQ7XG59XG46aG9zdCAuaGVhZGVyLmVuYWJsZWQge1xuICBib3JkZXItYm90dG9tOiAxcHggc29saWQgI2RhZGNlMDtcbn1cbjpob3N0IC5oZWFkZXIuZW5hYmxlZCAudGl0bGUge1xuICBmb250LXdlaWdodDogNTAwO1xufSJdfQ== */"]
+      styles: ["[_nghost-%COMP%] {\n  box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px 0, rgba(0, 0, 0, 0.14) 0 1px 1px 0, rgba(0, 0, 0, 0.12) 0 2px 1px -1px;\n  display: flex;\n  flex-direction: column;\n  align-items: stretch;\n  background-color: white;\n}\n[_nghost-%COMP%]   .header[_ngcontent-%COMP%] {\n  cursor: pointer;\n  padding: 1rem;\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n[_nghost-%COMP%]   .header[_ngcontent-%COMP%]   .switch[_ngcontent-%COMP%] {\n  background-color: white;\n  width: 2.8rem;\n  height: 1.5rem;\n  border-radius: 1.5rem;\n  border: 1px solid #dadce0;\n  box-sizing: content-box;\n}\n[_nghost-%COMP%]   .header[_ngcontent-%COMP%]   .switch[_ngcontent-%COMP%], [_nghost-%COMP%]   .header[_ngcontent-%COMP%]   .switch[_ngcontent-%COMP%]   .handle[_ngcontent-%COMP%] {\n  transition: 0.2s;\n}\n[_nghost-%COMP%]   .header[_ngcontent-%COMP%]   .switch[_ngcontent-%COMP%]   .handle[_ngcontent-%COMP%] {\n  box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px 0, rgba(0, 0, 0, 0.14) 0 1px 1px 0, rgba(0, 0, 0, 0.12) 0 2px 1px -1px;\n  width: 1.5rem;\n  height: 1.5rem;\n  border-radius: 1.5rem;\n  border: 1px solid #dadce0;\n  background-color: white;\n}\n[_nghost-%COMP%]   .header[_ngcontent-%COMP%]   .switch.active[_ngcontent-%COMP%] {\n  background-color: #4285f4;\n}\n[_nghost-%COMP%]   .header[_ngcontent-%COMP%]   .switch.active[_ngcontent-%COMP%]   .handle[_ngcontent-%COMP%] {\n  margin-left: 1.3rem;\n  border-color: #4285f4;\n}\n[_nghost-%COMP%]   .header.enabled[_ngcontent-%COMP%] {\n  border-bottom: 1px solid #dadce0;\n}\n[_nghost-%COMP%]   .header.enabled[_ngcontent-%COMP%]   .title[_ngcontent-%COMP%] {\n  font-weight: 500;\n}\n[_nghost-%COMP%]   .header.always-enabled[_ngcontent-%COMP%] {\n  cursor: auto;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL3J1bm5lci93b3JrL2d1aWRlLWRvZ2UvZ3VpZGUtZG9nZS9zcmMvY29tcG9uZW50cy9wcmVmZXJlbmNlLWdyb3VwL3ByZWZlcmVuY2UtZ3JvdXAuY29tcG9uZW50LnNjc3MiLCIvaG9tZS9ydW5uZXIvd29yay9ndWlkZS1kb2dlL2d1aWRlLWRvZ2Uvc3JjL3V0aWxzL2NvbnN0YW50cy5zY3NzIiwic3JjL2NvbXBvbmVudHMvcHJlZmVyZW5jZS1ncm91cC9wcmVmZXJlbmNlLWdyb3VwLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUVBO0VDVUUsK0dBQUE7RURSQSxhQUFBO0VBQ0Esc0JBQUE7RUFDQSxvQkFBQTtFQUNBLHVCQUFBO0FFREY7QUZHRTtFQUNFLGVBQUE7RUFDQSxhQUFBO0VBQ0EsYUFBQTtFQUNBLG1CQUFBO0VBQ0EsOEJBQUE7QUVESjtBRkdJO0VBRUUsdUJBQUE7RUFDQSxhQUFBO0VBQ0EsY0FITztFQUlQLHFCQUpPO0VBS1AseUJBQUE7RUFDQSx1QkFBQTtBRUZOO0FGSU07RUFDRSxnQkFBQTtBRUZSO0FGS007RUNqQkosK0dBQUE7RURtQk0sYUFkSztFQWVMLGNBZks7RUFnQkwscUJBaEJLO0VBaUJMLHlCQUFBO0VBQ0EsdUJBQUE7QUVIUjtBRk1NO0VBQ0UseUJDcENVO0FDZ0NsQjtBRk1RO0VBQ0UsbUJBQUE7RUFDQSxxQkN4Q1E7QUNvQ2xCO0FGU0k7RUFDRSxnQ0FBQTtBRVBOO0FGU007RUFDRSxnQkFBQTtBRVBSO0FGV0k7RUFDRSxZQUFBO0FFVE4iLCJmaWxlIjoic3JjL2NvbXBvbmVudHMvcHJlZmVyZW5jZS1ncm91cC9wcmVmZXJlbmNlLWdyb3VwLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiQGltcG9ydCBcIi4uLy4uL3V0aWxzL2NvbnN0YW50c1wiO1xuXG46aG9zdCB7XG4gIEBpbmNsdWRlIGNhcmQtc2hhZG93O1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xuICBhbGlnbi1pdGVtczogc3RyZXRjaDtcbiAgYmFja2dyb3VuZC1jb2xvcjogd2hpdGU7XG5cbiAgLmhlYWRlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIHBhZGRpbmc6IDFyZW07XG4gICAgZGlzcGxheTogZmxleDtcbiAgICBhbGlnbi1pdGVtczogY2VudGVyO1xuICAgIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2VlbjtcblxuICAgIC5zd2l0Y2gge1xuICAgICAgJHNpemU6IDEuNXJlbTtcbiAgICAgIGJhY2tncm91bmQtY29sb3I6IHdoaXRlO1xuICAgICAgd2lkdGg6IDIuOHJlbTtcbiAgICAgIGhlaWdodDogJHNpemU7XG4gICAgICBib3JkZXItcmFkaXVzOiAkc2l6ZTtcbiAgICAgIGJvcmRlcjogMXB4IHNvbGlkICRjb2xvci1ib3JkZXI7XG4gICAgICBib3gtc2l6aW5nOiBjb250ZW50LWJveDtcblxuICAgICAgJiwgJiAuaGFuZGxlIHtcbiAgICAgICAgdHJhbnNpdGlvbjogLjJzO1xuICAgICAgfVxuXG4gICAgICAuaGFuZGxlIHtcbiAgICAgICAgQGluY2x1ZGUgY2FyZC1zaGFkb3c7XG4gICAgICAgIHdpZHRoOiAkc2l6ZTtcbiAgICAgICAgaGVpZ2h0OiAkc2l6ZTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogJHNpemU7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkICRjb2xvci1ib3JkZXI7XG4gICAgICAgIGJhY2tncm91bmQtY29sb3I6IHdoaXRlO1xuICAgICAgfVxuXG4gICAgICAmLmFjdGl2ZSB7XG4gICAgICAgIGJhY2tncm91bmQtY29sb3I6ICRjb2xvci1oaWdobGlnaHQ7XG5cbiAgICAgICAgLmhhbmRsZSB7XG4gICAgICAgICAgbWFyZ2luLWxlZnQ6IDEuM3JlbTtcbiAgICAgICAgICBib3JkZXItY29sb3I6ICRjb2xvci1oaWdobGlnaHQ7XG4gICAgICAgIH1cbiAgICAgIH1cbiAgICB9XG5cbiAgICAmLmVuYWJsZWQge1xuICAgICAgYm9yZGVyLWJvdHRvbTogMXB4IHNvbGlkICRjb2xvci1ib3JkZXI7XG5cbiAgICAgIC50aXRsZSB7XG4gICAgICAgIGZvbnQtd2VpZ2h0OiA1MDA7XG4gICAgICB9XG4gICAgfVxuXG4gICAgJi5hbHdheXMtZW5hYmxlZCB7XG4gICAgICBjdXJzb3I6IGF1dG87XG4gICAgfVxuICB9XG59XG4iLCIkY29sb3ItYmFja2dyb3VuZDogcmdiKDI0OCwgMjQ5LCAyNTApO1xuJGNvbG9yLWJvcmRlcjogcmdiKDIxOCwgMjIwLCAyMjQpO1xuJGNvbG9yLWZvbnQ6IHJnYigzNCwgMzQsIDM0KTtcbiRjb2xvci1oaWdobGlnaHQ6IHJnYig2NiwgMTMzLCAyNDQpO1xuJGNvbG9yLXBvc2l0aXZlOiByZ2IoMTUsIDE1NywgODgpO1xuJGNvbG9yLW5lZ2F0aXZlOiByZ2IoMjE5LCA2OCwgNTUpO1xuXG4kZm9udC1zaXplLWxhcmdlOiAyNHB4O1xuJGZvbnQtc2l6ZS1tZWRpdW06IDE2cHg7XG4kZm9udC1zaXplLXNtYWxsOiAxMnB4O1xuXG5AbWl4aW4gY2FyZC1zaGFkb3cge1xuICBib3gtc2hhZG93OiByZ2JhKDAsIDAsIDAsIDAuMikgMCAxcHggM3B4IDAsIHJnYmEoMCwgMCwgMCwgMC4xNCkgMCAxcHggMXB4IDAsIHJnYmEoMCwgMCwgMCwgMC4xMikgMCAycHggMXB4IC0xcHg7XG59XG4iLCI6aG9zdCB7XG4gIGJveC1zaGFkb3c6IHJnYmEoMCwgMCwgMCwgMC4yKSAwIDFweCAzcHggMCwgcmdiYSgwLCAwLCAwLCAwLjE0KSAwIDFweCAxcHggMCwgcmdiYSgwLCAwLCAwLCAwLjEyKSAwIDJweCAxcHggLTFweDtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcbiAgYWxpZ24taXRlbXM6IHN0cmV0Y2g7XG4gIGJhY2tncm91bmQtY29sb3I6IHdoaXRlO1xufVxuOmhvc3QgLmhlYWRlciB7XG4gIGN1cnNvcjogcG9pbnRlcjtcbiAgcGFkZGluZzogMXJlbTtcbiAgZGlzcGxheTogZmxleDtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAganVzdGlmeS1jb250ZW50OiBzcGFjZS1iZXR3ZWVuO1xufVxuOmhvc3QgLmhlYWRlciAuc3dpdGNoIHtcbiAgYmFja2dyb3VuZC1jb2xvcjogd2hpdGU7XG4gIHdpZHRoOiAyLjhyZW07XG4gIGhlaWdodDogMS41cmVtO1xuICBib3JkZXItcmFkaXVzOiAxLjVyZW07XG4gIGJvcmRlcjogMXB4IHNvbGlkICNkYWRjZTA7XG4gIGJveC1zaXppbmc6IGNvbnRlbnQtYm94O1xufVxuOmhvc3QgLmhlYWRlciAuc3dpdGNoLCA6aG9zdCAuaGVhZGVyIC5zd2l0Y2ggLmhhbmRsZSB7XG4gIHRyYW5zaXRpb246IDAuMnM7XG59XG46aG9zdCAuaGVhZGVyIC5zd2l0Y2ggLmhhbmRsZSB7XG4gIGJveC1zaGFkb3c6IHJnYmEoMCwgMCwgMCwgMC4yKSAwIDFweCAzcHggMCwgcmdiYSgwLCAwLCAwLCAwLjE0KSAwIDFweCAxcHggMCwgcmdiYSgwLCAwLCAwLCAwLjEyKSAwIDJweCAxcHggLTFweDtcbiAgd2lkdGg6IDEuNXJlbTtcbiAgaGVpZ2h0OiAxLjVyZW07XG4gIGJvcmRlci1yYWRpdXM6IDEuNXJlbTtcbiAgYm9yZGVyOiAxcHggc29saWQgI2RhZGNlMDtcbiAgYmFja2dyb3VuZC1jb2xvcjogd2hpdGU7XG59XG46aG9zdCAuaGVhZGVyIC5zd2l0Y2guYWN0aXZlIHtcbiAgYmFja2dyb3VuZC1jb2xvcjogIzQyODVmNDtcbn1cbjpob3N0IC5oZWFkZXIgLnN3aXRjaC5hY3RpdmUgLmhhbmRsZSB7XG4gIG1hcmdpbi1sZWZ0OiAxLjNyZW07XG4gIGJvcmRlci1jb2xvcjogIzQyODVmNDtcbn1cbjpob3N0IC5oZWFkZXIuZW5hYmxlZCB7XG4gIGJvcmRlci1ib3R0b206IDFweCBzb2xpZCAjZGFkY2UwO1xufVxuOmhvc3QgLmhlYWRlci5lbmFibGVkIC50aXRsZSB7XG4gIGZvbnQtd2VpZ2h0OiA1MDA7XG59XG46aG9zdCAuaGVhZGVyLmFsd2F5cy1lbmFibGVkIHtcbiAgY3Vyc29yOiBhdXRvO1xufSJdfQ== */"]
     });
 
     (function () {
@@ -78512,6 +78598,9 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
           type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
         }],
         i18n: [{
+          type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
+        }],
+        alwaysEnabled: [{
           type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
         }],
         preference$: [{
@@ -79463,14 +79552,14 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
       _createClass2(LineChartD3, [{
         key: "renderData",
         value: function renderData() {
-          var _this6 = this;
+          var _this7 = this;
 
           this.line = d3__WEBPACK_IMPORTED_MODULE_1__["line"]().defined(function (d) {
             return !isNaN(d.value);
           }).x(function (d) {
-            return _this6.scaleX(d.date);
+            return _this7.scaleX(d.date);
           }).y(function (d) {
-            return _this6.scaleY(d.value);
+            return _this7.scaleY(d.value);
           });
           this.path = this.svg.append('path').attr('fill', 'none').attr('stroke', this.colorHighlight).attr('stroke-width', 2).attr('stroke-linejoin', 'round').attr('stroke-linecap', 'round');
         }
@@ -79551,7 +79640,7 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
       }, {
         key: "generatePts",
         value: function generatePts() {
-          var _this7 = this;
+          var _this8 = this;
 
           var hscale = d3__WEBPACK_IMPORTED_MODULE_0__["scaleLinear"]();
           hscale.domain([0, d3__WEBPACK_IMPORTED_MODULE_0__["max"](this.data)]).range([0, 10]);
@@ -79559,7 +79648,7 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
           d3__WEBPACK_IMPORTED_MODULE_0__["select"](this.container).selectAll(this.shape).attr('position', function (d, i) {
             var x = i * 5;
             var y = i * 10;
-            var z = -_this7.data[i] * 2;
+            var z = -_this8.data[i] * 2;
             return "".concat(x, " ").concat(y, " ").concat(z);
           });
         }
@@ -79630,7 +79719,7 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
       _createClass2(XYChartD3, [{
         key: "render",
         value: function render() {
-          var _this8 = this;
+          var _this9 = this;
 
           _get(_getPrototypeOf(XYChartD3.prototype), "render", this).call(this);
 
@@ -79641,12 +79730,12 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
           this.renderData();
           this.renderActiveDatum();
           data$.pipe(this.takeUntilCleared()).subscribe(function (data) {
-            _this8.updateAxis(data);
+            _this9.updateAxis(data);
 
-            _this8.updateData(data);
+            _this9.updateData(data);
           });
           activeDatum$.pipe(this.takeUntilCleared()).subscribe(function (activeDatum) {
-            _this8.updateActiveDatum(activeDatum);
+            _this9.updateActiveDatum(activeDatum);
           });
         }
       }, {
@@ -79942,10 +80031,10 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
       _createClass2(AudificationDirective, [{
         key: "ngOnInit",
         value: function ngOnInit() {
-          var _this9 = this;
+          var _this10 = this;
 
           this.preferenceService.audification$.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["takeUntil"])(this.destroy$)).subscribe(function (preference) {
-            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(_this9, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(_this10, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
               return regeneratorRuntime.wrap(function _callee2$(_context3) {
                 while (1) {
                   switch (_context3.prev = _context3.next) {
@@ -80181,7 +80270,7 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
     !*** ./src/i18n/index.ts ***!
     \***************************/
 
-  /*! exports provided: GUIDE_DOGE, VISUALIZATION, AUDIFICATION, AUDIFICATION_PREFERENCE, DATA_TABLE_PREFERENCE, TEXT_SUMMARY_PREFERENCE, setLanguage, getLanguage, t, tA11y */
+  /*! exports provided: GUIDE_DOGE, VISUALIZATION, AUDIFICATION, DATA_PREFERENCE, AUDIFICATION_PREFERENCE, DATA_TABLE_PREFERENCE, TEXT_SUMMARY_PREFERENCE, setLanguage, getLanguage, t, tA11y */
 
   /***/
   function srcI18nIndexTs(module, __webpack_exports__, __webpack_require__) {
@@ -80211,6 +80300,12 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
 
     __webpack_require__.d(__webpack_exports__, "AUDIFICATION", function () {
       return _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"];
+    });
+    /* harmony reexport (safe) */
+
+
+    __webpack_require__.d(__webpack_exports__, "DATA_PREFERENCE", function () {
+      return _types__WEBPACK_IMPORTED_MODULE_0__["DATA_PREFERENCE"];
     });
     /* harmony reexport (safe) */
 
@@ -80292,7 +80387,7 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
     /*! ../types */
     "./src/i18n/types.ts");
 
-    var en = (_en = {}, _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].TITLE, 'Guide-Doge'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].VISUALIZATION, 'Data visualization'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].AUDIFICATION, 'Data audification'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["VISUALIZATION"].ACTIVE_DATUM, '%(y)s on %(x)s'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].INSTRUCTIONS, ['Hold down <kbd>SPACE</kbd> to play the audified melody and <kbd>SHIFT</kbd> + <kbd>SPACE</kbd> to play it backward.', 'Press <kbd>X</kbd> or <kbd>Y</kbd> to read out the domain or range respectively.', 'Press <kbd>L</kbd> to read out the legend items.', 'Press <kbd>0</kbd> ... <kbd>9</kbd> to move playhead.'].join(' <br/>')), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].DOMAIN, 'Domain from %(min)s to %(max)s'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].RANGE, 'Range from %(min)s to %(max)s'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].ACTIVE_DATUM, '%(y)s on %(x)s'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION_PREFERENCE"].enabled, 'Audification'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION_PREFERENCE"].lowestPitch, 'Lowest note (Hz)'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION_PREFERENCE"].highestPitch, 'Highest note (Hz)'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION_PREFERENCE"].noteDuration, 'Note duration (ms)'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION_PREFERENCE"].readAfter, 'Read out before playing'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION_PREFERENCE"].readBefore, 'Read out after playing'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["DATA_TABLE_PREFERENCE"].enabled, 'Data Table'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["TEXT_SUMMARY_PREFERENCE"].enabled, 'Text Summary'), _en);
+    var en = (_en = {}, _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].TITLE, 'Guide-Doge'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].VISUALIZATION, 'Data visualization'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["GUIDE_DOGE"].AUDIFICATION, 'Data audification'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["VISUALIZATION"].ACTIVE_DATUM, '%(y)s on %(x)s'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].INSTRUCTIONS, ['Hold down <kbd>SPACE</kbd> to play the audified melody and <kbd>SHIFT</kbd> + <kbd>SPACE</kbd> to play it backward.', 'Press <kbd>X</kbd> or <kbd>Y</kbd> to read out the domain or range respectively.', 'Press <kbd>L</kbd> to read out the legend items.', 'Press <kbd>0</kbd> ... <kbd>9</kbd> to move playhead.'].join(' <br/>')), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].DOMAIN, 'Domain from %(min)s to %(max)s'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].RANGE, 'Range from %(min)s to %(max)s'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].ACTIVE_DATUM, '%(y)s on %(x)s'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["DATA_PREFERENCE"].enabled, 'Data Generator'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["DATA_PREFERENCE"].avgHits, 'Average Hits'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["DATA_PREFERENCE"].hitStdDev, 'Hit Std'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["DATA_PREFERENCE"].avgUsers, 'Average Users'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["DATA_PREFERENCE"].userStdDev, 'User Std'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["DATA_PREFERENCE"].avgSessionsPerUser, 'Average Sessions Per User'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["DATA_PREFERENCE"].sessionsPerUserStdDev, 'Sessions Per User Std'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION_PREFERENCE"].enabled, 'Audification'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION_PREFERENCE"].lowestPitch, 'Lowest note (Hz)'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION_PREFERENCE"].highestPitch, 'Highest note (Hz)'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION_PREFERENCE"].noteDuration, 'Note duration (ms)'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION_PREFERENCE"].readAfter, 'Read out before playing'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION_PREFERENCE"].readBefore, 'Read out after playing'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["DATA_TABLE_PREFERENCE"].enabled, 'Data Table'), _defineProperty(_en, _types__WEBPACK_IMPORTED_MODULE_0__["TEXT_SUMMARY_PREFERENCE"].enabled, 'Text Summary'), _en);
     /***/
   },
 
@@ -80381,7 +80476,7 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
     !*** ./src/i18n/types.ts ***!
     \***************************/
 
-  /*! exports provided: GUIDE_DOGE, VISUALIZATION, AUDIFICATION, AUDIFICATION_PREFERENCE, DATA_TABLE_PREFERENCE, TEXT_SUMMARY_PREFERENCE */
+  /*! exports provided: GUIDE_DOGE, VISUALIZATION, AUDIFICATION, DATA_PREFERENCE, AUDIFICATION_PREFERENCE, DATA_TABLE_PREFERENCE, TEXT_SUMMARY_PREFERENCE */
 
   /***/
   function srcI18nTypesTs(module, __webpack_exports__, __webpack_require__) {
@@ -80405,6 +80500,12 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
 
     __webpack_require__.d(__webpack_exports__, "AUDIFICATION", function () {
       return AUDIFICATION;
+    });
+    /* harmony export (binding) */
+
+
+    __webpack_require__.d(__webpack_exports__, "DATA_PREFERENCE", function () {
+      return DATA_PREFERENCE;
     });
     /* harmony export (binding) */
 
@@ -80448,27 +80549,39 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
       AUDIFICATION[AUDIFICATION["ACTIVE_DATUM"] = 515] = "ACTIVE_DATUM";
     })(AUDIFICATION || (AUDIFICATION = {}));
 
+    var DATA_PREFERENCE;
+
+    (function (DATA_PREFERENCE) {
+      DATA_PREFERENCE[DATA_PREFERENCE["enabled"] = 768] = "enabled";
+      DATA_PREFERENCE[DATA_PREFERENCE["avgHits"] = 769] = "avgHits";
+      DATA_PREFERENCE[DATA_PREFERENCE["hitStdDev"] = 770] = "hitStdDev";
+      DATA_PREFERENCE[DATA_PREFERENCE["avgUsers"] = 771] = "avgUsers";
+      DATA_PREFERENCE[DATA_PREFERENCE["userStdDev"] = 772] = "userStdDev";
+      DATA_PREFERENCE[DATA_PREFERENCE["avgSessionsPerUser"] = 773] = "avgSessionsPerUser";
+      DATA_PREFERENCE[DATA_PREFERENCE["sessionsPerUserStdDev"] = 774] = "sessionsPerUserStdDev";
+    })(DATA_PREFERENCE || (DATA_PREFERENCE = {}));
+
     var AUDIFICATION_PREFERENCE;
 
     (function (AUDIFICATION_PREFERENCE) {
-      AUDIFICATION_PREFERENCE[AUDIFICATION_PREFERENCE["enabled"] = 768] = "enabled";
-      AUDIFICATION_PREFERENCE[AUDIFICATION_PREFERENCE["lowestPitch"] = 769] = "lowestPitch";
-      AUDIFICATION_PREFERENCE[AUDIFICATION_PREFERENCE["highestPitch"] = 770] = "highestPitch";
-      AUDIFICATION_PREFERENCE[AUDIFICATION_PREFERENCE["noteDuration"] = 771] = "noteDuration";
-      AUDIFICATION_PREFERENCE[AUDIFICATION_PREFERENCE["readBefore"] = 772] = "readBefore";
-      AUDIFICATION_PREFERENCE[AUDIFICATION_PREFERENCE["readAfter"] = 773] = "readAfter";
+      AUDIFICATION_PREFERENCE[AUDIFICATION_PREFERENCE["enabled"] = 1024] = "enabled";
+      AUDIFICATION_PREFERENCE[AUDIFICATION_PREFERENCE["lowestPitch"] = 1025] = "lowestPitch";
+      AUDIFICATION_PREFERENCE[AUDIFICATION_PREFERENCE["highestPitch"] = 1026] = "highestPitch";
+      AUDIFICATION_PREFERENCE[AUDIFICATION_PREFERENCE["noteDuration"] = 1027] = "noteDuration";
+      AUDIFICATION_PREFERENCE[AUDIFICATION_PREFERENCE["readBefore"] = 1028] = "readBefore";
+      AUDIFICATION_PREFERENCE[AUDIFICATION_PREFERENCE["readAfter"] = 1029] = "readAfter";
     })(AUDIFICATION_PREFERENCE || (AUDIFICATION_PREFERENCE = {}));
 
     var DATA_TABLE_PREFERENCE;
 
     (function (DATA_TABLE_PREFERENCE) {
-      DATA_TABLE_PREFERENCE[DATA_TABLE_PREFERENCE["enabled"] = 1024] = "enabled";
+      DATA_TABLE_PREFERENCE[DATA_TABLE_PREFERENCE["enabled"] = 1280] = "enabled";
     })(DATA_TABLE_PREFERENCE || (DATA_TABLE_PREFERENCE = {}));
 
     var TEXT_SUMMARY_PREFERENCE;
 
     (function (TEXT_SUMMARY_PREFERENCE) {
-      TEXT_SUMMARY_PREFERENCE[TEXT_SUMMARY_PREFERENCE["enabled"] = 1280] = "enabled";
+      TEXT_SUMMARY_PREFERENCE[TEXT_SUMMARY_PREFERENCE["enabled"] = 1536] = "enabled";
     })(TEXT_SUMMARY_PREFERENCE || (TEXT_SUMMARY_PREFERENCE = {}));
     /***/
 
@@ -80647,18 +80760,24 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
 
       _createClass2(DataCube, [{
         key: "getDataFor",
-        value: function getDataFor(categoryNames, measureNames) {
-          var _this10 = this;
+        value: function getDataFor(queryOptions) {
+          var _this11 = this;
 
-          var filters = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
-          var sortBy = arguments.length > 3 ? arguments[3] : undefined;
+          var _queryOptions$categor = queryOptions.categoryNames,
+              categoryNames = _queryOptions$categor === void 0 ? [] : _queryOptions$categor,
+              _queryOptions$measure = queryOptions.measureNames,
+              measureNames = _queryOptions$measure === void 0 ? [] : _queryOptions$measure,
+              _queryOptions$filters = queryOptions.filters,
+              filters = _queryOptions$filters === void 0 ? [] : _queryOptions$filters,
+              _queryOptions$sortBy = queryOptions.sortBy,
+              sortBy = _queryOptions$sortBy === void 0 ? [].concat(_toConsumableArray(categoryNames), _toConsumableArray(measureNames)) : _queryOptions$sortBy;
           var measureIndices = measureNames.map(function (name) {
-            return _this10.measures.findIndex(function (measure) {
+            return _this11.measures.findIndex(function (measure) {
               return measure.name === name;
             });
           });
           var categoryIndices = categoryNames.map(function (name) {
-            return _this10.categories.findIndex(function (category) {
+            return _this11.categories.findIndex(function (category) {
               return category.name === name;
             });
           });
@@ -80666,7 +80785,7 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
             children: {}
           };
           var filterFuncs = filters.map(function (filter) {
-            return filter(_this10.categories, _this10.measures);
+            return filter(_this11.categories, _this11.measures);
           });
           this.rows.filter(function (row) {
             return filterFuncs.every(function (filter) {
@@ -80681,14 +80800,15 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
             try {
               for (_iterator.s(); !(_step = _iterator.n()).done;) {
                 var categoryIndex = _step.value;
+                var label = row.header[categoryIndex];
 
-                if (!trieNode.children[row.header[categoryIndex]]) {
-                  trieNode.children[row.header[categoryIndex]] = {
+                if (!trieNode.children[label]) {
+                  trieNode.children[label] = {
                     children: {}
                   };
                 }
 
-                trieNode = trieNode.children[row.header[categoryIndex]];
+                trieNode = trieNode.children[label];
               }
             } catch (err) {
               _iterator.e(err);
@@ -80721,12 +80841,13 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
           });
           var result = [];
           var labelList = [];
+          var dateIndex = categoryNames.indexOf('date');
 
           var traverseNode = function traverseNode(node) {
             if (node.values) {
               result.push({
                 categories: new Map(labelList.map(function (label, index) {
-                  return [categoryNames[index], label];
+                  return [categoryNames[index], index === dateIndex ? new Date(+label) : label];
                 })),
                 values: new Map(node.values.map(function (value, index) {
                   return [measureNames[index], value];
@@ -80746,35 +80867,8 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
           };
 
           traverseNode(categoryTrie);
-          this.normalizeNthDay(result, categoryNames);
-          this.sortResults(result, categoryNames, measureNames, sortBy !== null && sortBy !== void 0 ? sortBy : [].concat(_toConsumableArray(categoryNames), _toConsumableArray(measureNames)));
+          this.sortResults(result, categoryNames, measureNames, sortBy);
           return result;
-        }
-      }, {
-        key: "normalizeNthDay",
-        value: function normalizeNthDay(rows, categoryNames) {
-          if (!categoryNames.includes('nthDay')) {
-            return;
-          }
-
-          var largestNthDay = Math.max.apply(Math, _toConsumableArray(rows.map(function (row) {
-            return row.categories.get('nthDay');
-          })));
-
-          var _iterator3 = _createForOfIteratorHelper(rows),
-              _step3;
-
-          try {
-            for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-              var row = _step3.value;
-              var nthDay = row.categories.get('nthDay');
-              row.categories.set('nthDay', largestNthDay - nthDay);
-            }
-          } catch (err) {
-            _iterator3.e(err);
-          } finally {
-            _iterator3.f();
-          }
         }
       }, {
         key: "sortResults",
@@ -80811,12 +80905,12 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
           var comparators = sortBy.map(getComparator);
 
           var combinedComparator = function combinedComparator(a, b) {
-            var _iterator4 = _createForOfIteratorHelper(comparators),
-                _step4;
+            var _iterator3 = _createForOfIteratorHelper(comparators),
+                _step3;
 
             try {
-              for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
-                var comparator = _step4.value;
+              for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+                var comparator = _step3.value;
                 var result = comparator(a, b);
 
                 if (result !== 0) {
@@ -80824,9 +80918,9 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
                 }
               }
             } catch (err) {
-              _iterator4.e(err);
+              _iterator3.e(err);
             } finally {
-              _iterator4.f();
+              _iterator3.f();
             }
 
             return 0;
@@ -80848,7 +80942,7 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
     !*** ./src/models/data-cube/filters.ts ***!
     \*****************************************/
 
-  /*! exports provided: betweenDates */
+  /*! exports provided: betweenDates, inOneOfDateRanges */
 
   /***/
   function srcModelsDataCubeFiltersTs(module, __webpack_exports__, __webpack_require__) {
@@ -80861,38 +80955,42 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
     __webpack_require__.d(__webpack_exports__, "betweenDates", function () {
       return betweenDates;
     });
+    /* harmony export (binding) */
 
-    var millisecondsPerDay = 24 * 60 * 60 * 1000;
-    var defaultOptions = {
-      excludeStartDate: false,
-      excludeEndDate: false
-    };
 
-    function betweenDates(startDate, endDate) {
-      var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    __webpack_require__.d(__webpack_exports__, "inOneOfDateRanges", function () {
+      return inOneOfDateRanges;
+    });
 
-      var _Object$assign3 = Object.assign(Object.assign({}, defaultOptions), options),
-          excludeStartDate = _Object$assign3.excludeStartDate,
-          excludeEndDate = _Object$assign3.excludeEndDate;
+    function betweenDates(startDate, endDate, rangeOptions) {
+      var dateRange = [startDate, endDate];
+      return inOneOfDateRanges([dateRange], rangeOptions);
+    }
 
+    function inOneOfDateRanges(dateRanges) {
+      var rangeOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var _rangeOptions$exclude = rangeOptions.excludeStart,
+          excludeStart = _rangeOptions$exclude === void 0 ? false : _rangeOptions$exclude,
+          _rangeOptions$exclude2 = rangeOptions.excludeEnd,
+          excludeEnd = _rangeOptions$exclude2 === void 0 ? false : _rangeOptions$exclude2;
+      var intervalClosedToOpenOffset = 1;
+      var startOffset = excludeStart ? intervalClosedToOpenOffset : 0;
+      var endOffset = excludeEnd ? -intervalClosedToOpenOffset : 0;
       return function (categories) {
-        var nThDayIndex = categories.findIndex(function (category) {
-          return category.name === 'nthDay';
+        var dateIndex = categories.findIndex(function (category) {
+          return category.name === 'date';
         });
-        var startIndex = Math.round((Date.now() - startDate.getTime()) / millisecondsPerDay);
-
-        if (excludeStartDate) {
-          startIndex--;
-        }
-
-        var endIndex = Math.round((Date.now() - endDate.getTime()) / millisecondsPerDay);
-
-        if (excludeEndDate) {
-          endIndex++;
-        }
-
         return function (row) {
-          return row.header[nThDayIndex] <= startIndex && row.header[nThDayIndex] >= endIndex;
+          return dateRanges.some(function (_ref) {
+            var _ref2 = _slicedToArray(_ref, 2),
+                startDate = _ref2[0],
+                endDate = _ref2[1];
+
+            var time = row.header[dateIndex];
+            var start = startDate.getTime() + startOffset;
+            var end = endDate.getTime() + endOffset;
+            return start <= time && time <= end;
+          });
         };
       };
     }
@@ -80941,6 +81039,12 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
     var _data_cube_model__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
     /*! ./data-cube.model */
     "./src/models/data-cube/data-cube.model.ts");
+    /* harmony import */
+
+
+    var _utils_timeUnits__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+    /*! ../../utils/timeUnits */
+    "./src/utils/timeUnits.ts");
 
     function generateCube(categories, measures) {
       var settings = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
@@ -80948,9 +81052,9 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
 
       var actualCategories = _toConsumableArray(categories);
 
-      if (completeSettings.nthDay) {
-        var nthDayCategory = generateNthDay(completeSettings.days, completeSettings.dailyStdDev);
-        actualCategories.push(nthDayCategory);
+      if (completeSettings.timeSeries) {
+        var dateCategory = generateDateCategory(completeSettings.startDate, completeSettings.endDate, completeSettings.dailyStdDev);
+        actualCategories.push(dateCategory);
       }
 
       var rows = generateEmptyRows(actualCategories, measures);
@@ -80959,6 +81063,7 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
       return new _data_cube_model__WEBPACK_IMPORTED_MODULE_2__["DataCube"](rows, measures, actualCategories);
     }
 
+    var defaultStartDaysBeforeNow = 60;
     var defaultSettings = {
       avgHits: 1000000,
       hitStdDev: 10000,
@@ -80966,16 +81071,17 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
       userStdDev: 100,
       avgSessionsPerUser: 5,
       sessionsPerUserStdDev: 3,
-      nthDay: true,
-      days: 60,
+      timeSeries: true,
+      startDate: new Date(Date.now() - defaultStartDaysBeforeNow * _utils_timeUnits__WEBPACK_IMPORTED_MODULE_3__["DAY"]),
+      endDate: new Date(),
       dailyStdDev: 0.1
     };
 
-    function generateUsersAndSessions(_ref) {
-      var avgUsers = _ref.avgUsers,
-          userStdDev = _ref.userStdDev,
-          avgSessionsPerUser = _ref.avgSessionsPerUser,
-          sessionsPerUserStdDev = _ref.sessionsPerUserStdDev;
+    function generateUsersAndSessions(_ref3) {
+      var avgUsers = _ref3.avgUsers,
+          userStdDev = _ref3.userStdDev,
+          avgSessionsPerUser = _ref3.avgSessionsPerUser,
+          sessionsPerUserStdDev = _ref3.sessionsPerUserStdDev;
       var userCount = Math.round(random__WEBPACK_IMPORTED_MODULE_0__["normal"](avgUsers, userStdDev)());
       var sessionThunk = random__WEBPACK_IMPORTED_MODULE_0__["normal"](avgSessionsPerUser, sessionsPerUserStdDev);
       var sessions = [];
@@ -81034,9 +81140,9 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
       return random__WEBPACK_IMPORTED_MODULE_0__["float"](measure.range[0], measure.range[1]);
     }
 
-    function generateHits(rows, measures, cumulativeWeights, sessions, _ref2) {
-      var avgHits = _ref2.avgHits,
-          hitStdDev = _ref2.hitStdDev;
+    function generateHits(rows, measures, cumulativeWeights, sessions, _ref4) {
+      var avgHits = _ref4.avgHits,
+          hitStdDev = _ref4.hitStdDev;
       var hitTotal = Math.round(random__WEBPACK_IMPORTED_MODULE_0__["normal"](avgHits, hitStdDev)());
       var placementThunk = random__WEBPACK_IMPORTED_MODULE_0__["uniform"]();
       var sessionThunk = random__WEBPACK_IMPORTED_MODULE_0__["uniformInt"](0, sessions.length - 1);
@@ -81046,14 +81152,14 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
         var session = sessionThunk();
         var rowIndex = binarySearch(cumulativeWeights, placement);
 
-        var _iterator5 = _createForOfIteratorHelper(measures.entries()),
-            _step5;
+        var _iterator4 = _createForOfIteratorHelper(measures.entries()),
+            _step4;
 
         try {
-          for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
-            var _step5$value = _slicedToArray(_step5.value, 2),
-                index = _step5$value[0],
-                measure = _step5$value[1];
+          for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+            var _step4$value = _slicedToArray(_step4.value, 2),
+                index = _step4$value[0],
+                measure = _step4$value[1];
 
             var newSession = !sessions[session].rowsSeen.has(rowIndex);
             var newUser = !sessions[session].user.rowsSeen.has(rowIndex);
@@ -81087,9 +81193,9 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
             }
           }
         } catch (err) {
-          _iterator5.e(err);
+          _iterator4.e(err);
         } finally {
-          _iterator5.f();
+          _iterator4.f();
         }
       }
     }
@@ -81144,19 +81250,21 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
       }, [0]);
     }
 
-    function generateNthDay(days, dailyVariance) {
+    function generateDateCategory(startDate, endDate, dailyVariance) {
       var dailyThunk = random__WEBPACK_IMPORTED_MODULE_0__["normal"](1, dailyVariance);
       var values = [];
+      var date = new Date(startDate);
 
-      for (var day = 0; day < days; day++) {
+      while (date <= endDate) {
         values.push({
-          name: day,
+          name: date.getTime(),
           weight: dailyThunk()
         });
+        date.setTime(date.getTime() + _utils_timeUnits__WEBPACK_IMPORTED_MODULE_3__["DAY"]);
       }
 
       return {
-        name: 'nthDay',
+        name: 'date',
         values: values
       };
     }
@@ -81353,6 +81461,12 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
     var _data_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
     /*! ./data.service */
     "./src/services/data/data.service.ts");
+    /* harmony import */
+
+
+    var _preference_preference_module__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
+    /*! ../preference/preference.module */
+    "./src/services/preference/preference.module.ts");
 
     var DataModule = function DataModule() {
       _classCallCheck2(this, DataModule);
@@ -81365,14 +81479,22 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
       factory: function DataModule_Factory(t) {
         return new (t || DataModule)();
       },
-      providers: [_data_service__WEBPACK_IMPORTED_MODULE_1__["DataService"]]
+      providers: [_data_service__WEBPACK_IMPORTED_MODULE_1__["DataService"]],
+      imports: [[_preference_preference_module__WEBPACK_IMPORTED_MODULE_2__["PreferenceModule"]]]
     });
+
+    (function () {
+      (typeof ngJitMode === "undefined" || ngJitMode) && _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsetNgModuleScope"](DataModule, {
+        imports: [_preference_preference_module__WEBPACK_IMPORTED_MODULE_2__["PreferenceModule"]]
+      });
+    })();
 
     (function () {
       _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](DataModule, [{
         type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["NgModule"],
         args: [{
-          providers: [_data_service__WEBPACK_IMPORTED_MODULE_1__["DataService"]]
+          providers: [_data_service__WEBPACK_IMPORTED_MODULE_1__["DataService"]],
+          imports: [_preference_preference_module__WEBPACK_IMPORTED_MODULE_2__["PreferenceModule"]]
         }]
       }], null, null);
     })();
@@ -81402,13 +81524,9 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
     /* harmony import */
 
 
-    var luxon__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
-    /*! luxon */
-    "./node_modules/luxon/build/cjs-browser/luxon.js");
-    /* harmony import */
-
-
-    var luxon__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(luxon__WEBPACK_IMPORTED_MODULE_0__);
+    var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
+    /*! tslib */
+    "./node_modules/tslib/tslib.es6.js");
     /* harmony import */
 
 
@@ -81427,47 +81545,111 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
     var src_models_data_cube_generation__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
     /*! src/models/data-cube/generation */
     "./src/models/data-cube/generation.ts");
+    /* harmony import */
+
+
+    var rxjs_operators__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
+    /*! rxjs/operators */
+    "./node_modules/rxjs/_esm2015/operators/index.js");
+    /* harmony import */
+
+
+    var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
+    /*! rxjs */
+    "./node_modules/rxjs/_esm2015/index.js");
+    /* harmony import */
+
+
+    var _angular_core__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+    /*! @angular/core */
+    "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
+    /* harmony import */
+
+
+    var _preference_preference_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
+    /*! ../preference/preference.service */
+    "./src/services/preference/preference.service.ts");
 
     var DataService = /*#__PURE__*/function () {
-      function DataService() {
+      function DataService(preferenceService) {
+        var _this12 = this;
+
         _classCallCheck2(this, DataService);
 
-        this.dataCube = Object(src_models_data_cube_generation__WEBPACK_IMPORTED_MODULE_3__["generateCube"])([_models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__["countryCategory"], _models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__["browserCategory"], _models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__["sourceCategory"]], [_models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__["activeUserMeasure"], _models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__["revenueMeasure"], _models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__["eventCountMeasure"]], {
+        this.preferenceService = preferenceService;
+        this.dataCube$ = new rxjs__WEBPACK_IMPORTED_MODULE_5__["ReplaySubject"](1);
+        this.destroy$ = new rxjs__WEBPACK_IMPORTED_MODULE_5__["Subject"]();
+        var categories = [_models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__["countryCategory"], _models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__["browserCategory"], _models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__["sourceCategory"]];
+        var measures = [_models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__["activeUserMeasure"], _models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__["revenueMeasure"], _models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__["eventCountMeasure"]];
+        var defaultSettings = {
           avgHits: 10000,
           hitStdDev: 100,
           avgUsers: 100,
           userStdDev: 1,
           avgSessionsPerUser: 5,
           sessionsPerUserStdDev: 3
+        };
+        this.preferenceService.data$.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["takeUntil"])(this.destroy$)).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["throttleTime"])(500, rxjs__WEBPACK_IMPORTED_MODULE_5__["asyncScheduler"], {
+          leading: true,
+          trailing: true
+        })).subscribe(function (preference) {
+          _this12.dataCube$.next(Object(src_models_data_cube_generation__WEBPACK_IMPORTED_MODULE_3__["generateCube"])(categories, measures, Object.assign(Object.assign({}, defaultSettings), preference)));
         });
       }
 
       _createClass2(DataService, [{
-        key: "getMeasureOverDays",
-        value: function getMeasureOverDays(measureName) {
-          var days = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 30;
-          var categoryName = 'nthDay';
-          var endDate = luxon__WEBPACK_IMPORTED_MODULE_0__["DateTime"].local();
-          var startDate = endDate.minus({
-            day: days
-          });
-          return this.dataCube.getDataFor([categoryName], [measureName], [Object(_models_data_cube_filters__WEBPACK_IMPORTED_MODULE_2__["betweenDates"])(startDate.toJSDate(), endDate.toJSDate(), {
-            excludeStartDate: true
-          })]).map(function (row) {
-            return {
-              date: startDate.plus({
-                days: row.categories.get(categoryName)
-              }).toJSDate(),
-              value: row.values.get(measureName)
-            };
-          });
+        key: "ngOnDestroy",
+        value: function ngOnDestroy() {
+          this.destroy$.next();
+          this.destroy$.complete();
+        }
+      }, {
+        key: "observeData",
+        value: function observeData(queryOptions$) {
+          return Object(rxjs__WEBPACK_IMPORTED_MODULE_5__["combineLatest"])([this.dataCube$, queryOptions$]).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["map"])(function (_ref5) {
+            var _ref6 = _slicedToArray(_ref5, 2),
+                dataCube = _ref6[0],
+                queryOptions = _ref6[1];
+
+            return dataCube.getDataFor(queryOptions);
+          }));
+        }
+      }, {
+        key: "observeTimeSeries",
+        value: function observeTimeSeries(timeSeriesQueryOptions$) {
+          var queryOptions$ = timeSeriesQueryOptions$.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["map"])(function (queryOptions) {
+            var startDate = queryOptions.startDate,
+                endDate = queryOptions.endDate,
+                _queryOptions$categor2 = queryOptions.categoryNames,
+                categoryNames = _queryOptions$categor2 === void 0 ? [] : _queryOptions$categor2,
+                _queryOptions$filters2 = queryOptions.filters,
+                filters = _queryOptions$filters2 === void 0 ? [] : _queryOptions$filters2,
+                _queryOptions$sortBy2 = queryOptions.sortBy,
+                sortBy = _queryOptions$sortBy2 === void 0 ? [] : _queryOptions$sortBy2,
+                restOptions = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__rest"])(queryOptions, ["startDate", "endDate", "categoryNames", "filters", "sortBy"]);
+            var categoryName = 'date';
+            var dateFilter = Object(_models_data_cube_filters__WEBPACK_IMPORTED_MODULE_2__["betweenDates"])(startDate, endDate);
+            return Object.assign(Object.assign({}, restOptions), {
+              categoryNames: [categoryName].concat(_toConsumableArray(categoryNames)),
+              filters: [dateFilter].concat(_toConsumableArray(filters)),
+              sortBy: [categoryName].concat(_toConsumableArray(sortBy))
+            });
+          }));
+          return this.observeData(queryOptions$);
         }
       }]);
 
       return DataService;
     }();
-    /***/
 
+    DataService.ɵfac = function DataService_Factory(t) {
+      return new (t || DataService)(_angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵdirectiveInject"](_preference_preference_service__WEBPACK_IMPORTED_MODULE_7__["PreferenceService"]));
+    };
+
+    DataService.ɵdir = _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵdefineDirective"]({
+      type: DataService
+    });
+    /***/
   },
 
   /***/
@@ -81568,6 +81750,15 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
       function PreferenceService() {
         _classCallCheck2(this, PreferenceService);
 
+        this.data$ = this.createPreference({
+          enabled: true,
+          avgHits: 10000,
+          hitStdDev: 100,
+          avgUsers: 100,
+          userStdDev: 1,
+          avgSessionsPerUser: 5,
+          sessionsPerUserStdDev: 3
+        }, 'data');
         this.audification$ = this.createPreference({
           enabled: true,
           lowestPitch: 256,
@@ -81587,7 +81778,7 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
       _createClass2(PreferenceService, [{
         key: "createPreference",
         value: function createPreference(defaultPreference, cookieKeySuffix) {
-          var _this11 = this;
+          var _this13 = this;
 
           var cookieKey = "a11y-preference-".concat(cookieKeySuffix);
           var loadedPreference = Object.assign(Object.assign({}, defaultPreference), this.loadPreference(cookieKey));
@@ -81611,7 +81802,7 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
 
           var preference$ = new rxjs__WEBPACK_IMPORTED_MODULE_0__["BehaviorSubject"](loadedPreference);
           preference$.subscribe(function (preference) {
-            _this11.savePreference(cookieKey, preference);
+            _this13.savePreference(cookieKey, preference);
           });
           return preference$;
         }
@@ -81696,6 +81887,58 @@ function _classCallCheck2(instance, Constructor) { if (!(instance instanceof Con
     };
     /***/
 
+  },
+
+  /***/
+  "./src/utils/timeUnits.ts":
+  /*!********************************!*\
+    !*** ./src/utils/timeUnits.ts ***!
+    \********************************/
+
+  /*! exports provided: MILLISECOND, SECOND, MINUTE, HOUR, DAY */
+
+  /***/
+  function srcUtilsTimeUnitsTs(module, __webpack_exports__, __webpack_require__) {
+    "use strict";
+
+    __webpack_require__.r(__webpack_exports__);
+    /* harmony export (binding) */
+
+
+    __webpack_require__.d(__webpack_exports__, "MILLISECOND", function () {
+      return MILLISECOND;
+    });
+    /* harmony export (binding) */
+
+
+    __webpack_require__.d(__webpack_exports__, "SECOND", function () {
+      return SECOND;
+    });
+    /* harmony export (binding) */
+
+
+    __webpack_require__.d(__webpack_exports__, "MINUTE", function () {
+      return MINUTE;
+    });
+    /* harmony export (binding) */
+
+
+    __webpack_require__.d(__webpack_exports__, "HOUR", function () {
+      return HOUR;
+    });
+    /* harmony export (binding) */
+
+
+    __webpack_require__.d(__webpack_exports__, "DAY", function () {
+      return DAY;
+    });
+
+    var MILLISECOND = 1;
+    var SECOND = 1000 * MILLISECOND;
+    var MINUTE = 60 * SECOND;
+    var HOUR = 60 * MINUTE;
+    var DAY = 24 * HOUR;
+    /***/
   },
 
   /***/

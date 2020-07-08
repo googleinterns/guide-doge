@@ -43976,8 +43976,8 @@ class LineChartAudificationComponent {
     get data() {
         return this.host.data;
     }
-    get measureName() {
-        return this.host.measureName;
+    get measureNames() {
+        return this.host.measureNames;
     }
     set activeDatum(activeDatum) {
         this.host.activeDatum = activeDatum;
@@ -44088,7 +44088,7 @@ class LineChartAudificationComponent {
         }));
     }
     readOutMeasure() {
-        return this.screenReaderComponent.readOut(Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["humanizeMeasureName"])(this.measureName));
+        return this.screenReaderComponent.readOut(Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["humanizeMeasureName"])(this.measureNames[0]));
     }
     readOutCurrentDatum() {
         if (!this.melody) {

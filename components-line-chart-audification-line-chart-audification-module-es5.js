@@ -76599,7 +76599,7 @@ function _arrayWithHoles2(arr) { if (Array.isArray(arr)) return arr; }
       }, {
         key: "readOutMeasure",
         value: function readOutMeasure() {
-          return this.screenReaderComponent.readOut(Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["humanizeMeasureName"])(this.measureName));
+          return this.screenReaderComponent.readOut(Object(_utils_formatters__WEBPACK_IMPORTED_MODULE_4__["humanizeMeasureName"])(this.measureNames[0]));
         }
       }, {
         key: "readOutCurrentDatum",
@@ -76632,9 +76632,9 @@ function _arrayWithHoles2(arr) { if (Array.isArray(arr)) return arr; }
           return this.host.data;
         }
       }, {
-        key: "measureName",
+        key: "measureNames",
         get: function get() {
-          return this.host.measureName;
+          return this.host.measureNames;
         }
       }, {
         key: "activeDatum",

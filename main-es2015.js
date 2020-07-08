@@ -86276,11 +86276,12 @@ function CardComponent_div_3_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx_r0.measureNames);
 } }
+const _c0 = function (a0) { return [a0]; };
 function CardComponent_app_line_chart_5_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](0, "app-line-chart", 8);
 } if (rf & 2) {
     const ctx_r1 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("measureName", ctx_r1.currentMeasureName);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("measureNames", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](1, _c0, ctx_r1.currentMeasureName));
 } }
 class CardComponent {
     constructor() {
@@ -86295,14 +86296,14 @@ class CardComponent {
     }
 }
 CardComponent.ɵfac = function CardComponent_Factory(t) { return new (t || CardComponent)(); };
-CardComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: CardComponent, selectors: [["app-card"]], inputs: { title: "title", tabbed: "tabbed", type: "type", measureNames: "measureNames" }, decls: 6, vars: 4, consts: [[1, "card-title"], [1, "card-content"], ["class", "tabs", 4, "ngIf"], [3, "ngSwitch"], ["appAudification", "", 3, "measureName", 4, "ngSwitchCase"], [1, "tabs"], ["class", "tab", "role", "button", 3, "active", "click", 4, "ngFor", "ngForOf"], ["role", "button", 1, "tab", 3, "click"], ["appAudification", "", 3, "measureName"]], template: function CardComponent_Template(rf, ctx) { if (rf & 1) {
+CardComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: CardComponent, selectors: [["app-card"]], inputs: { title: "title", tabbed: "tabbed", type: "type", measureNames: "measureNames" }, decls: 6, vars: 4, consts: [[1, "card-title"], [1, "card-content"], ["class", "tabs", 4, "ngIf"], [3, "ngSwitch"], ["appAudification", "", 3, "measureNames", 4, "ngSwitchCase"], [1, "tabs"], ["class", "tab", "role", "button", 3, "active", "click", 4, "ngFor", "ngForOf"], ["role", "button", 1, "tab", 3, "click"], ["appAudification", "", 3, "measureNames"]], template: function CardComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "h2", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](1);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "div", 1);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](3, CardComponent_div_3_Template, 2, 1, "div", 2);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerStart"](4, 3);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](5, CardComponent_app_line_chart_5_Template, 1, 1, "app-line-chart", 4);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](5, CardComponent_app_line_chart_5_Template, 1, 3, "app-line-chart", 4);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     } if (rf & 2) {
@@ -86412,39 +86413,44 @@ const _c0 = function () { return ["activeUsers", "revenue", "eventCount"]; };
 class DashboardComponent {
     constructor(preferenceService) {
         this.preferenceService = preferenceService;
+        this.data$ = this.preferenceService.data$;
         this.audification$ = this.preferenceService.audification$;
         this.dataTable$ = this.preferenceService.dataTable$;
         this.textSummary$ = this.preferenceService.textSummary$;
+        this.DATA_PREFERENCE = _i18n__WEBPACK_IMPORTED_MODULE_1__["DATA_PREFERENCE"];
         this.AUDIFICATION_PREFERENCE = _i18n__WEBPACK_IMPORTED_MODULE_1__["AUDIFICATION_PREFERENCE"];
         this.DATA_TABLE_PREFERENCE = _i18n__WEBPACK_IMPORTED_MODULE_1__["DATA_TABLE_PREFERENCE"];
         this.TEXT_SUMMARY_PREFERENCE = _i18n__WEBPACK_IMPORTED_MODULE_1__["TEXT_SUMMARY_PREFERENCE"];
     }
 }
 DashboardComponent.ɵfac = function DashboardComponent_Factory(t) { return new (t || DashboardComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_preference_preference_service__WEBPACK_IMPORTED_MODULE_2__["PreferenceService"])); };
-DashboardComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: DashboardComponent, selectors: [["app-dashboard"]], decls: 9, vars: 12, consts: [[1, "sidebar"], [1, "sidebar-title"], [3, "preference$", "i18n"], [1, "card-container"], ["title", "Tabbed Line Chart", "type", "line", 3, "tabbed", "measureNames"], ["title", "Line Chart", "type", "line", 3, "tabbed", "measureNames"]], template: function DashboardComponent_Template(rf, ctx) { if (rf & 1) {
+DashboardComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: DashboardComponent, selectors: [["app-dashboard"]], decls: 10, vars: 14, consts: [[1, "sidebar"], [1, "sidebar-title"], ["alwaysEnabled", "true", 3, "preference$", "i18n"], [3, "preference$", "i18n"], [1, "card-container"], ["title", "Tabbed Line Chart", "type", "line", 3, "tabbed", "measureNames"], ["title", "Line Chart", "type", "line", 3, "tabbed", "measureNames"]], template: function DashboardComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "aside", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "h2", 1);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](2, "Customization");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](3, "app-preference-group", 2);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](4, "app-preference-group", 2);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](5, "app-preference-group", 2);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](4, "app-preference-group", 3);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](5, "app-preference-group", 3);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](6, "app-preference-group", 3);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](6, "div", 3);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](7, "app-card", 4);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](7, "div", 4);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](8, "app-card", 5);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](9, "app-card", 6);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     } if (rf & 2) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](3);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("preference$", ctx.data$)("i18n", ctx.DATA_PREFERENCE);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("preference$", ctx.audification$)("i18n", ctx.AUDIFICATION_PREFERENCE);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("preference$", ctx.dataTable$)("i18n", ctx.DATA_TABLE_PREFERENCE);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("preference$", ctx.textSummary$)("i18n", ctx.TEXT_SUMMARY_PREFERENCE);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("tabbed", true)("measureNames", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction0"](10, _c0));
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("tabbed", true)("measureNames", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction0"](12, _c0));
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("tabbed", false)("measureNames", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction0"](11, _c0));
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("tabbed", false)("measureNames", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction0"](13, _c0));
     } }, directives: [_preference_group_preference_group_component__WEBPACK_IMPORTED_MODULE_3__["PreferenceGroupComponent"], _card_card_component__WEBPACK_IMPORTED_MODULE_4__["CardComponent"]], styles: ["[_nghost-%COMP%] {\n  flex: 1;\n  display: flex;\n  overflow: hidden;\n}\n[_nghost-%COMP%]   .sidebar[_ngcontent-%COMP%] {\n  padding: 1rem;\n  width: 20rem;\n  border-right: 1px solid #dadce0;\n  overflow-x: hidden;\n  overflow-y: auto;\n}\n[_nghost-%COMP%]   .sidebar[_ngcontent-%COMP%]   .sidebar-title[_ngcontent-%COMP%] {\n  font-size: 24px;\n  margin: 1rem 0;\n}\n[_nghost-%COMP%]   .sidebar[_ngcontent-%COMP%]   app-preference-group[_ngcontent-%COMP%] {\n  margin: 0 -1rem;\n  margin-bottom: 0.5rem;\n}\n[_nghost-%COMP%]   .card-container[_ngcontent-%COMP%] {\n  display: flex;\n  flex: 1 0;\n  align-items: flex-start;\n  justify-content: center;\n  flex-wrap: wrap;\n  padding-top: 1rem;\n  padding-left: 1rem;\n  overflow-y: auto;\n}\n[_nghost-%COMP%]   .card-container[_ngcontent-%COMP%]    > *[_ngcontent-%COMP%] {\n  margin-bottom: 1rem;\n  margin-right: 1rem;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL3J1bm5lci93b3JrL2d1aWRlLWRvZ2UvZ3VpZGUtZG9nZS9zcmMvY29tcG9uZW50cy9kYXNoYm9hcmQvZGFzaGJvYXJkLmNvbXBvbmVudC5zY3NzIiwic3JjL2NvbXBvbmVudHMvZGFzaGJvYXJkL2Rhc2hib2FyZC5jb21wb25lbnQuc2NzcyIsIi9ob21lL3J1bm5lci93b3JrL2d1aWRlLWRvZ2UvZ3VpZGUtZG9nZS9zcmMvdXRpbHMvY29uc3RhbnRzLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBRUE7RUFDRSxPQUFBO0VBQ0EsYUFBQTtFQUNBLGdCQUFBO0FDREY7QURHRTtFQUNFLGFBQUE7RUFDQSxZQUFBO0VBQ0EsK0JBQUE7RUFDQSxrQkFBQTtFQUNBLGdCQUFBO0FDREo7QURHSTtFQUNFLGVFUlk7RUZTWixjQUFBO0FDRE47QURJSTtFQUNFLGVBQUE7RUFDQSxxQkFBQTtBQ0ZOO0FETUU7RUFDRSxhQUFBO0VBQ0EsU0FBQTtFQUNBLHVCQUFBO0VBQ0EsdUJBQUE7RUFDQSxlQUFBO0VBQ0EsaUJBQUE7RUFDQSxrQkFBQTtFQUNBLGdCQUFBO0FDSko7QURNSTtFQUNFLG1CQUFBO0VBQ0Esa0JBQUE7QUNKTiIsImZpbGUiOiJzcmMvY29tcG9uZW50cy9kYXNoYm9hcmQvZGFzaGJvYXJkLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiQGltcG9ydCBcIi4uLy4uL3V0aWxzL2NvbnN0YW50c1wiO1xuXG46aG9zdCB7XG4gIGZsZXg6IDE7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgLnNpZGViYXIge1xuICAgIHBhZGRpbmc6IDFyZW07XG4gICAgd2lkdGg6IDIwcmVtO1xuICAgIGJvcmRlci1yaWdodDogMXB4IHNvbGlkICRjb2xvci1ib3JkZXI7XG4gICAgb3ZlcmZsb3cteDogaGlkZGVuO1xuICAgIG92ZXJmbG93LXk6IGF1dG87XG5cbiAgICAuc2lkZWJhci10aXRsZSB7XG4gICAgICBmb250LXNpemU6ICRmb250LXNpemUtbGFyZ2U7XG4gICAgICBtYXJnaW46IDFyZW0gMDtcbiAgICB9XG5cbiAgICBhcHAtcHJlZmVyZW5jZS1ncm91cCB7XG4gICAgICBtYXJnaW46IDAgLTFyZW07XG4gICAgICBtYXJnaW4tYm90dG9tOiAuNXJlbTtcbiAgICB9XG4gIH1cblxuICAuY2FyZC1jb250YWluZXIge1xuICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgZmxleDogMSAwO1xuICAgIGFsaWduLWl0ZW1zOiBmbGV4LXN0YXJ0O1xuICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgIGZsZXgtd3JhcDogd3JhcDtcbiAgICBwYWRkaW5nLXRvcDogMXJlbTtcbiAgICBwYWRkaW5nLWxlZnQ6IDFyZW07XG4gICAgb3ZlcmZsb3cteTogYXV0bztcblxuICAgID4gKiB7XG4gICAgICBtYXJnaW4tYm90dG9tOiAxcmVtO1xuICAgICAgbWFyZ2luLXJpZ2h0OiAxcmVtO1xuICAgIH1cbiAgfVxufVxuIiwiOmhvc3Qge1xuICBmbGV4OiAxO1xuICBkaXNwbGF5OiBmbGV4O1xuICBvdmVyZmxvdzogaGlkZGVuO1xufVxuOmhvc3QgLnNpZGViYXIge1xuICBwYWRkaW5nOiAxcmVtO1xuICB3aWR0aDogMjByZW07XG4gIGJvcmRlci1yaWdodDogMXB4IHNvbGlkICNkYWRjZTA7XG4gIG92ZXJmbG93LXg6IGhpZGRlbjtcbiAgb3ZlcmZsb3cteTogYXV0bztcbn1cbjpob3N0IC5zaWRlYmFyIC5zaWRlYmFyLXRpdGxlIHtcbiAgZm9udC1zaXplOiAyNHB4O1xuICBtYXJnaW46IDFyZW0gMDtcbn1cbjpob3N0IC5zaWRlYmFyIGFwcC1wcmVmZXJlbmNlLWdyb3VwIHtcbiAgbWFyZ2luOiAwIC0xcmVtO1xuICBtYXJnaW4tYm90dG9tOiAwLjVyZW07XG59XG46aG9zdCAuY2FyZC1jb250YWluZXIge1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbGV4OiAxIDA7XG4gIGFsaWduLWl0ZW1zOiBmbGV4LXN0YXJ0O1xuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgZmxleC13cmFwOiB3cmFwO1xuICBwYWRkaW5nLXRvcDogMXJlbTtcbiAgcGFkZGluZy1sZWZ0OiAxcmVtO1xuICBvdmVyZmxvdy15OiBhdXRvO1xufVxuOmhvc3QgLmNhcmQtY29udGFpbmVyID4gKiB7XG4gIG1hcmdpbi1ib3R0b206IDFyZW07XG4gIG1hcmdpbi1yaWdodDogMXJlbTtcbn0iLCIkY29sb3ItYmFja2dyb3VuZDogcmdiKDI0OCwgMjQ5LCAyNTApO1xuJGNvbG9yLWJvcmRlcjogcmdiKDIxOCwgMjIwLCAyMjQpO1xuJGNvbG9yLWZvbnQ6IHJnYigzNCwgMzQsIDM0KTtcbiRjb2xvci1oaWdobGlnaHQ6IHJnYig2NiwgMTMzLCAyNDQpO1xuJGNvbG9yLXBvc2l0aXZlOiByZ2IoMTUsIDE1NywgODgpO1xuJGNvbG9yLW5lZ2F0aXZlOiByZ2IoMjE5LCA2OCwgNTUpO1xuXG4kZm9udC1zaXplLWxhcmdlOiAyNHB4O1xuJGZvbnQtc2l6ZS1tZWRpdW06IDE2cHg7XG4kZm9udC1zaXplLXNtYWxsOiAxMnB4O1xuXG5AbWl4aW4gY2FyZC1zaGFkb3cge1xuICBib3gtc2hhZG93OiByZ2JhKDAsIDAsIDAsIDAuMikgMCAxcHggM3B4IDAsIHJnYmEoMCwgMCwgMCwgMC4xNCkgMCAxcHggMXB4IDAsIHJnYmEoMCwgMCwgMCwgMC4xMikgMCAycHggMXB4IC0xcHg7XG59XG4iXX0= */"] });
 (function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](DashboardComponent, [{
         type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"],
@@ -86536,12 +86542,16 @@ DashboardModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineIn
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LineChartComponent", function() { return LineChartComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
-/* harmony import */ var _d3_line_chart_d3__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../d3/line-chart.d3 */ "./src/d3/line-chart.d3.ts");
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm2015/index.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm2015/index.js");
+/* harmony import */ var _d3_line_chart_d3__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../d3/line-chart.d3 */ "./src/d3/line-chart.d3.ts");
 /* harmony import */ var _i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../i18n */ "./src/i18n/index.ts");
 /* harmony import */ var _utils_formatters__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../utils/formatters */ "./src/utils/formatters.ts");
 /* harmony import */ var _directives_a11y_placeholder_a11y_placeholder_directive__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../directives/a11y-placeholder/a11y-placeholder.directive */ "./src/directives/a11y-placeholder/a11y-placeholder.directive.ts");
-/* harmony import */ var _services_data_data_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../services/data/data.service */ "./src/services/data/data.service.ts");
+/* harmony import */ var _utils_timeUnits__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../utils/timeUnits */ "./src/utils/timeUnits.ts");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm2015/operators/index.js");
+/* harmony import */ var _services_data_data_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../services/data/data.service */ "./src/services/data/data.service.ts");
+
+
 
 
 
@@ -86556,21 +86566,23 @@ class LineChartComponent {
     constructor(dataService, elementRef) {
         this.dataService = dataService;
         this.elementRef = elementRef;
+        this.endDate = new Date();
+        this.startDate = new Date(this.endDate.getTime() - 30 * _utils_timeUnits__WEBPACK_IMPORTED_MODULE_6__["DAY"]);
+        this.measureNames = [];
         this.height = 500;
         this.width = 800;
         this.marginTop = 20;
         this.marginRight = 30;
         this.marginBottom = 30;
         this.marginLeft = 40;
-        this.data$ = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"]([]);
-        this.activeDatum$ = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
-        this.lineChartD3 = new _d3_line_chart_d3__WEBPACK_IMPORTED_MODULE_1__["LineChartD3"](this);
+        this.queryOptions$ = new rxjs__WEBPACK_IMPORTED_MODULE_1__["ReplaySubject"](1);
+        this.data$ = new rxjs__WEBPACK_IMPORTED_MODULE_1__["BehaviorSubject"]([]);
+        this.activeDatum$ = new rxjs__WEBPACK_IMPORTED_MODULE_1__["BehaviorSubject"](null);
+        this.destroy$ = new rxjs__WEBPACK_IMPORTED_MODULE_1__["Subject"]();
+        this.lineChartD3 = new _d3_line_chart_d3__WEBPACK_IMPORTED_MODULE_2__["LineChartD3"](this);
     }
     get data() {
         return this.data$.value;
-    }
-    set data(data) {
-        this.data$.next(data);
     }
     get activeDatum() {
         return this.activeDatum$.value;
@@ -86592,25 +86604,46 @@ class LineChartComponent {
         return Object(_i18n__WEBPACK_IMPORTED_MODULE_3__["t"])(_i18n__WEBPACK_IMPORTED_MODULE_3__["GUIDE_DOGE"].VISUALIZATION);
     }
     ngOnInit() {
+        this.dataService.observeTimeSeries(this.queryOptions$)
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["takeUntil"])(this.destroy$))
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["map"])(rows => {
+            this.activeDatum$.next(null);
+            if (!rows.length) {
+                return [];
+            }
+            const firstMeasureName = rows[0].values.keys().next().value;
+            return rows.map(row => ({
+                date: row.categories.get('date'),
+                value: row.values.get(firstMeasureName),
+            }));
+        }))
+            .subscribe(this.data$);
         this.lineChartD3.render();
     }
     ngOnDestroy() {
+        this.destroy$.next();
+        this.destroy$.complete();
         this.lineChartD3.clear();
     }
     ngOnChanges(changes) {
-        if ('measureName' in changes) {
-            this.data = this.dataService.getMeasureOverDays(this.measureName);
-            this.activeDatum = null;
+        const queryOptions = {
+            startDate: this.startDate,
+            endDate: this.endDate,
+            measureNames: this.measureNames,
+        };
+        const changed = Object.keys(queryOptions).some(key => key in changes);
+        if (changed) {
+            this.queryOptions$.next(queryOptions);
         }
     }
 }
-LineChartComponent.ɵfac = function LineChartComponent_Factory(t) { return new (t || LineChartComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_data_data_service__WEBPACK_IMPORTED_MODULE_6__["DataService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["ElementRef"])); };
+LineChartComponent.ɵfac = function LineChartComponent_Factory(t) { return new (t || LineChartComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_services_data_data_service__WEBPACK_IMPORTED_MODULE_8__["DataService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["ElementRef"])); };
 LineChartComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: LineChartComponent, selectors: [["app-line-chart"]], viewQuery: function LineChartComponent_Query(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵstaticViewQuery"](_directives_a11y_placeholder_a11y_placeholder_directive__WEBPACK_IMPORTED_MODULE_5__["A11yPlaceholderDirective"], true);
     } if (rf & 2) {
         var _t;
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵqueryRefresh"](_t = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵloadQuery"]()) && (ctx.a11yPlaceholder = _t.first);
-    } }, inputs: { measureName: "measureName", height: "height", width: "width", marginTop: "marginTop", marginRight: "marginRight", marginBottom: "marginBottom", marginLeft: "marginLeft" }, features: [_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵNgOnChangesFeature"]], decls: 5, vars: 2, consts: [["role", "img", 1, "svg-wrapper"], [1, "active-indicator"], ["appA11yPlaceholder", ""]], template: function LineChartComponent_Template(rf, ctx) { if (rf & 1) {
+    } }, inputs: { endDate: "endDate", startDate: "startDate", measureNames: "measureNames", height: "height", width: "width", marginTop: "marginTop", marginRight: "marginRight", marginBottom: "marginBottom", marginLeft: "marginLeft" }, features: [_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵNgOnChangesFeature"]], decls: 5, vars: 2, consts: [["role", "img", 1, "svg-wrapper"], [1, "active-indicator"], ["appA11yPlaceholder", ""]], template: function LineChartComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnamespaceSVG"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](1, "svg");
@@ -86632,10 +86665,14 @@ LineChartComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefin
                 templateUrl: './line-chart.component.html',
                 styleUrls: ['./line-chart.component.scss'],
             }]
-    }], function () { return [{ type: _services_data_data_service__WEBPACK_IMPORTED_MODULE_6__["DataService"] }, { type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ElementRef"] }]; }, { a11yPlaceholder: [{
+    }], function () { return [{ type: _services_data_data_service__WEBPACK_IMPORTED_MODULE_8__["DataService"] }, { type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ElementRef"] }]; }, { a11yPlaceholder: [{
             type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"],
             args: [_directives_a11y_placeholder_a11y_placeholder_directive__WEBPACK_IMPORTED_MODULE_5__["A11yPlaceholderDirective"], { static: true }]
-        }], measureName: [{
+        }], endDate: [{
+            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
+        }], startDate: [{
+            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
+        }], measureNames: [{
             type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
         }], height: [{
             type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
@@ -86721,32 +86758,47 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function PreferenceGroupComponent_ng_container_4_app_preference_item_1_Template(rf, ctx) { if (rf & 1) {
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](0, "app-preference-item", 5);
+function PreferenceGroupComponent_app_switch_3_Template(rf, ctx) { if (rf & 1) {
+    const _r3 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "app-switch", 4);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("valueChange", function PreferenceGroupComponent_app_switch_3_Template_app_switch_valueChange_0_listener($event) { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r3); const ctx_r2 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r2.enabled = $event; });
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 } if (rf & 2) {
-    const property_r2 = ctx.$implicit;
-    const ctx_r1 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](2);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("name", ctx_r1.getI18nValue(property_r2))("property", property_r2);
+    const ctx_r0 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("value", ctx_r0.enabled);
+} }
+function PreferenceGroupComponent_ng_container_4_app_preference_item_1_Template(rf, ctx) { if (rf & 1) {
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](0, "app-preference-item", 6);
+} if (rf & 2) {
+    const property_r5 = ctx.$implicit;
+    const ctx_r4 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](2);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("name", ctx_r4.getI18nValue(property_r5))("property", property_r5);
 } }
 function PreferenceGroupComponent_ng_container_4_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerStart"](0);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](1, PreferenceGroupComponent_ng_container_4_app_preference_item_1_Template, 1, 2, "app-preference-item", 4);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](1, PreferenceGroupComponent_ng_container_4_app_preference_item_1_Template, 1, 2, "app-preference-item", 5);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵprojection"](2);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerEnd"]();
 } if (rf & 2) {
-    const ctx_r0 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+    const ctx_r1 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx_r0.childProperties);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx_r1.childProperties);
 } }
 const _c0 = ["*"];
 class PreferenceGroupComponent {
+    constructor() {
+        this.alwaysEnabled = false;
+    }
     get enabled() {
-        return this.preference$.value.enabled;
+        return this.preference$.value.enabled || this.alwaysEnabled;
     }
     set enabled(value) {
         this.preference$.next(Object.assign(Object.assign({}, this.preference$.value), { enabled: value }));
     }
     get childProperties() {
+        if (!this.i18n) {
+            return [];
+        }
         const properties = Object.keys(this.preference$.value);
         return properties.filter(property => property !== 'enabled');
     }
@@ -86755,26 +86807,24 @@ class PreferenceGroupComponent {
     }
 }
 PreferenceGroupComponent.ɵfac = function PreferenceGroupComponent_Factory(t) { return new (t || PreferenceGroupComponent)(); };
-PreferenceGroupComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: PreferenceGroupComponent, selectors: [["app-preference-group"]], inputs: { name: "name", i18n: "i18n", preference$: "preference$" }, ngContentSelectors: _c0, decls: 5, vars: 5, consts: [[1, "header"], [1, "title"], [3, "value", "valueChange"], [4, "ngIf"], [3, "name", "property", 4, "ngFor", "ngForOf"], [3, "name", "property"]], template: function PreferenceGroupComponent_Template(rf, ctx) { if (rf & 1) {
+PreferenceGroupComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: PreferenceGroupComponent, selectors: [["app-preference-group"]], inputs: { name: "name", i18n: "i18n", alwaysEnabled: "alwaysEnabled", preference$: "preference$" }, ngContentSelectors: _c0, decls: 5, vars: 7, consts: [[1, "header"], [1, "title"], [3, "value", "valueChange", 4, "ngIf"], [4, "ngIf"], [3, "value", "valueChange"], [3, "name", "property", 4, "ngFor", "ngForOf"], [3, "name", "property"]], template: function PreferenceGroupComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵprojectionDef"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "label", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "span", 1);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](2);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](3, "app-switch", 2);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("valueChange", function PreferenceGroupComponent_Template_app_switch_valueChange_3_listener($event) { return ctx.enabled = $event; });
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](3, PreferenceGroupComponent_app_switch_3_Template, 1, 1, "app-switch", 2);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](4, PreferenceGroupComponent_ng_container_4_Template, 3, 1, "ng-container", 3);
     } if (rf & 2) {
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵclassProp"]("enabled", ctx.enabled);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵclassProp"]("enabled", ctx.enabled)("always-enabled", ctx.alwaysEnabled);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"](" ", ctx.name || ctx.getI18nValue("enabled"), " ");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("value", ctx.enabled);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", !ctx.alwaysEnabled);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx.enabled);
-    } }, styles: ["[_nghost-%COMP%] {\n  box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px 0, rgba(0, 0, 0, 0.14) 0 1px 1px 0, rgba(0, 0, 0, 0.12) 0 2px 1px -1px;\n  display: flex;\n  flex-direction: column;\n  align-items: stretch;\n  background-color: white;\n}\n[_nghost-%COMP%]   .header[_ngcontent-%COMP%] {\n  cursor: pointer;\n  padding: 1rem;\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n[_nghost-%COMP%]   .header[_ngcontent-%COMP%]   .switch[_ngcontent-%COMP%] {\n  background-color: white;\n  width: 2.8rem;\n  height: 1.5rem;\n  border-radius: 1.5rem;\n  border: 1px solid #dadce0;\n  box-sizing: content-box;\n}\n[_nghost-%COMP%]   .header[_ngcontent-%COMP%]   .switch[_ngcontent-%COMP%], [_nghost-%COMP%]   .header[_ngcontent-%COMP%]   .switch[_ngcontent-%COMP%]   .handle[_ngcontent-%COMP%] {\n  transition: 0.2s;\n}\n[_nghost-%COMP%]   .header[_ngcontent-%COMP%]   .switch[_ngcontent-%COMP%]   .handle[_ngcontent-%COMP%] {\n  box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px 0, rgba(0, 0, 0, 0.14) 0 1px 1px 0, rgba(0, 0, 0, 0.12) 0 2px 1px -1px;\n  width: 1.5rem;\n  height: 1.5rem;\n  border-radius: 1.5rem;\n  border: 1px solid #dadce0;\n  background-color: white;\n}\n[_nghost-%COMP%]   .header[_ngcontent-%COMP%]   .switch.active[_ngcontent-%COMP%] {\n  background-color: #4285f4;\n}\n[_nghost-%COMP%]   .header[_ngcontent-%COMP%]   .switch.active[_ngcontent-%COMP%]   .handle[_ngcontent-%COMP%] {\n  margin-left: 1.3rem;\n  border-color: #4285f4;\n}\n[_nghost-%COMP%]   .header.enabled[_ngcontent-%COMP%] {\n  border-bottom: 1px solid #dadce0;\n}\n[_nghost-%COMP%]   .header.enabled[_ngcontent-%COMP%]   .title[_ngcontent-%COMP%] {\n  font-weight: 500;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL3J1bm5lci93b3JrL2d1aWRlLWRvZ2UvZ3VpZGUtZG9nZS9zcmMvY29tcG9uZW50cy9wcmVmZXJlbmNlLWdyb3VwL3ByZWZlcmVuY2UtZ3JvdXAuY29tcG9uZW50LnNjc3MiLCIvaG9tZS9ydW5uZXIvd29yay9ndWlkZS1kb2dlL2d1aWRlLWRvZ2Uvc3JjL3V0aWxzL2NvbnN0YW50cy5zY3NzIiwic3JjL2NvbXBvbmVudHMvcHJlZmVyZW5jZS1ncm91cC9wcmVmZXJlbmNlLWdyb3VwLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUVBO0VDVUUsK0dBQUE7RURSQSxhQUFBO0VBQ0Esc0JBQUE7RUFDQSxvQkFBQTtFQUNBLHVCQUFBO0FFREY7QUZHRTtFQUNFLGVBQUE7RUFDQSxhQUFBO0VBQ0EsYUFBQTtFQUNBLG1CQUFBO0VBQ0EsOEJBQUE7QUVESjtBRkdJO0VBRUUsdUJBQUE7RUFDQSxhQUFBO0VBQ0EsY0FITztFQUlQLHFCQUpPO0VBS1AseUJBQUE7RUFDQSx1QkFBQTtBRUZOO0FGSU07RUFDRSxnQkFBQTtBRUZSO0FGS007RUNqQkosK0dBQUE7RURtQk0sYUFkSztFQWVMLGNBZks7RUFnQkwscUJBaEJLO0VBaUJMLHlCQUFBO0VBQ0EsdUJBQUE7QUVIUjtBRk1NO0VBQ0UseUJDcENVO0FDZ0NsQjtBRk1RO0VBQ0UsbUJBQUE7RUFDQSxxQkN4Q1E7QUNvQ2xCO0FGU0k7RUFDRSxnQ0FBQTtBRVBOO0FGU007RUFDRSxnQkFBQTtBRVBSIiwiZmlsZSI6InNyYy9jb21wb25lbnRzL3ByZWZlcmVuY2UtZ3JvdXAvcHJlZmVyZW5jZS1ncm91cC5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIkBpbXBvcnQgXCIuLi8uLi91dGlscy9jb25zdGFudHNcIjtcblxuOmhvc3Qge1xuICBAaW5jbHVkZSBjYXJkLXNoYWRvdztcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcbiAgYWxpZ24taXRlbXM6IHN0cmV0Y2g7XG4gIGJhY2tncm91bmQtY29sb3I6IHdoaXRlO1xuXG4gIC5oZWFkZXIge1xuICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICBwYWRkaW5nOiAxcmVtO1xuICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICBqdXN0aWZ5LWNvbnRlbnQ6IHNwYWNlLWJldHdlZW47XG5cbiAgICAuc3dpdGNoIHtcbiAgICAgICRzaXplOiAxLjVyZW07XG4gICAgICBiYWNrZ3JvdW5kLWNvbG9yOiB3aGl0ZTtcbiAgICAgIHdpZHRoOiAyLjhyZW07XG4gICAgICBoZWlnaHQ6ICRzaXplO1xuICAgICAgYm9yZGVyLXJhZGl1czogJHNpemU7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCAkY29sb3ItYm9yZGVyO1xuICAgICAgYm94LXNpemluZzogY29udGVudC1ib3g7XG5cbiAgICAgICYsICYgLmhhbmRsZSB7XG4gICAgICAgIHRyYW5zaXRpb246IC4ycztcbiAgICAgIH1cblxuICAgICAgLmhhbmRsZSB7XG4gICAgICAgIEBpbmNsdWRlIGNhcmQtc2hhZG93O1xuICAgICAgICB3aWR0aDogJHNpemU7XG4gICAgICAgIGhlaWdodDogJHNpemU7XG4gICAgICAgIGJvcmRlci1yYWRpdXM6ICRzaXplO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCAkY29sb3ItYm9yZGVyO1xuICAgICAgICBiYWNrZ3JvdW5kLWNvbG9yOiB3aGl0ZTtcbiAgICAgIH1cblxuICAgICAgJi5hY3RpdmUge1xuICAgICAgICBiYWNrZ3JvdW5kLWNvbG9yOiAkY29sb3ItaGlnaGxpZ2h0O1xuXG4gICAgICAgIC5oYW5kbGUge1xuICAgICAgICAgIG1hcmdpbi1sZWZ0OiAxLjNyZW07XG4gICAgICAgICAgYm9yZGVyLWNvbG9yOiAkY29sb3ItaGlnaGxpZ2h0O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuXG4gICAgJi5lbmFibGVkIHtcbiAgICAgIGJvcmRlci1ib3R0b206IDFweCBzb2xpZCAkY29sb3ItYm9yZGVyO1xuXG4gICAgICAudGl0bGUge1xuICAgICAgICBmb250LXdlaWdodDogNTAwO1xuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIiwiJGNvbG9yLWJhY2tncm91bmQ6IHJnYigyNDgsIDI0OSwgMjUwKTtcbiRjb2xvci1ib3JkZXI6IHJnYigyMTgsIDIyMCwgMjI0KTtcbiRjb2xvci1mb250OiByZ2IoMzQsIDM0LCAzNCk7XG4kY29sb3ItaGlnaGxpZ2h0OiByZ2IoNjYsIDEzMywgMjQ0KTtcbiRjb2xvci1wb3NpdGl2ZTogcmdiKDE1LCAxNTcsIDg4KTtcbiRjb2xvci1uZWdhdGl2ZTogcmdiKDIxOSwgNjgsIDU1KTtcblxuJGZvbnQtc2l6ZS1sYXJnZTogMjRweDtcbiRmb250LXNpemUtbWVkaXVtOiAxNnB4O1xuJGZvbnQtc2l6ZS1zbWFsbDogMTJweDtcblxuQG1peGluIGNhcmQtc2hhZG93IHtcbiAgYm94LXNoYWRvdzogcmdiYSgwLCAwLCAwLCAwLjIpIDAgMXB4IDNweCAwLCByZ2JhKDAsIDAsIDAsIDAuMTQpIDAgMXB4IDFweCAwLCByZ2JhKDAsIDAsIDAsIDAuMTIpIDAgMnB4IDFweCAtMXB4O1xufVxuIiwiOmhvc3Qge1xuICBib3gtc2hhZG93OiByZ2JhKDAsIDAsIDAsIDAuMikgMCAxcHggM3B4IDAsIHJnYmEoMCwgMCwgMCwgMC4xNCkgMCAxcHggMXB4IDAsIHJnYmEoMCwgMCwgMCwgMC4xMikgMCAycHggMXB4IC0xcHg7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG4gIGFsaWduLWl0ZW1zOiBzdHJldGNoO1xuICBiYWNrZ3JvdW5kLWNvbG9yOiB3aGl0ZTtcbn1cbjpob3N0IC5oZWFkZXIge1xuICBjdXJzb3I6IHBvaW50ZXI7XG4gIHBhZGRpbmc6IDFyZW07XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2Vlbjtcbn1cbjpob3N0IC5oZWFkZXIgLnN3aXRjaCB7XG4gIGJhY2tncm91bmQtY29sb3I6IHdoaXRlO1xuICB3aWR0aDogMi44cmVtO1xuICBoZWlnaHQ6IDEuNXJlbTtcbiAgYm9yZGVyLXJhZGl1czogMS41cmVtO1xuICBib3JkZXI6IDFweCBzb2xpZCAjZGFkY2UwO1xuICBib3gtc2l6aW5nOiBjb250ZW50LWJveDtcbn1cbjpob3N0IC5oZWFkZXIgLnN3aXRjaCwgOmhvc3QgLmhlYWRlciAuc3dpdGNoIC5oYW5kbGUge1xuICB0cmFuc2l0aW9uOiAwLjJzO1xufVxuOmhvc3QgLmhlYWRlciAuc3dpdGNoIC5oYW5kbGUge1xuICBib3gtc2hhZG93OiByZ2JhKDAsIDAsIDAsIDAuMikgMCAxcHggM3B4IDAsIHJnYmEoMCwgMCwgMCwgMC4xNCkgMCAxcHggMXB4IDAsIHJnYmEoMCwgMCwgMCwgMC4xMikgMCAycHggMXB4IC0xcHg7XG4gIHdpZHRoOiAxLjVyZW07XG4gIGhlaWdodDogMS41cmVtO1xuICBib3JkZXItcmFkaXVzOiAxLjVyZW07XG4gIGJvcmRlcjogMXB4IHNvbGlkICNkYWRjZTA7XG4gIGJhY2tncm91bmQtY29sb3I6IHdoaXRlO1xufVxuOmhvc3QgLmhlYWRlciAuc3dpdGNoLmFjdGl2ZSB7XG4gIGJhY2tncm91bmQtY29sb3I6ICM0Mjg1ZjQ7XG59XG46aG9zdCAuaGVhZGVyIC5zd2l0Y2guYWN0aXZlIC5oYW5kbGUge1xuICBtYXJnaW4tbGVmdDogMS4zcmVtO1xuICBib3JkZXItY29sb3I6ICM0Mjg1ZjQ7XG59XG46aG9zdCAuaGVhZGVyLmVuYWJsZWQge1xuICBib3JkZXItYm90dG9tOiAxcHggc29saWQgI2RhZGNlMDtcbn1cbjpob3N0IC5oZWFkZXIuZW5hYmxlZCAudGl0bGUge1xuICBmb250LXdlaWdodDogNTAwO1xufSJdfQ== */"] });
+    } }, styles: ["[_nghost-%COMP%] {\n  box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px 0, rgba(0, 0, 0, 0.14) 0 1px 1px 0, rgba(0, 0, 0, 0.12) 0 2px 1px -1px;\n  display: flex;\n  flex-direction: column;\n  align-items: stretch;\n  background-color: white;\n}\n[_nghost-%COMP%]   .header[_ngcontent-%COMP%] {\n  cursor: pointer;\n  padding: 1rem;\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n[_nghost-%COMP%]   .header[_ngcontent-%COMP%]   .switch[_ngcontent-%COMP%] {\n  background-color: white;\n  width: 2.8rem;\n  height: 1.5rem;\n  border-radius: 1.5rem;\n  border: 1px solid #dadce0;\n  box-sizing: content-box;\n}\n[_nghost-%COMP%]   .header[_ngcontent-%COMP%]   .switch[_ngcontent-%COMP%], [_nghost-%COMP%]   .header[_ngcontent-%COMP%]   .switch[_ngcontent-%COMP%]   .handle[_ngcontent-%COMP%] {\n  transition: 0.2s;\n}\n[_nghost-%COMP%]   .header[_ngcontent-%COMP%]   .switch[_ngcontent-%COMP%]   .handle[_ngcontent-%COMP%] {\n  box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px 0, rgba(0, 0, 0, 0.14) 0 1px 1px 0, rgba(0, 0, 0, 0.12) 0 2px 1px -1px;\n  width: 1.5rem;\n  height: 1.5rem;\n  border-radius: 1.5rem;\n  border: 1px solid #dadce0;\n  background-color: white;\n}\n[_nghost-%COMP%]   .header[_ngcontent-%COMP%]   .switch.active[_ngcontent-%COMP%] {\n  background-color: #4285f4;\n}\n[_nghost-%COMP%]   .header[_ngcontent-%COMP%]   .switch.active[_ngcontent-%COMP%]   .handle[_ngcontent-%COMP%] {\n  margin-left: 1.3rem;\n  border-color: #4285f4;\n}\n[_nghost-%COMP%]   .header.enabled[_ngcontent-%COMP%] {\n  border-bottom: 1px solid #dadce0;\n}\n[_nghost-%COMP%]   .header.enabled[_ngcontent-%COMP%]   .title[_ngcontent-%COMP%] {\n  font-weight: 500;\n}\n[_nghost-%COMP%]   .header.always-enabled[_ngcontent-%COMP%] {\n  cursor: auto;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL3J1bm5lci93b3JrL2d1aWRlLWRvZ2UvZ3VpZGUtZG9nZS9zcmMvY29tcG9uZW50cy9wcmVmZXJlbmNlLWdyb3VwL3ByZWZlcmVuY2UtZ3JvdXAuY29tcG9uZW50LnNjc3MiLCIvaG9tZS9ydW5uZXIvd29yay9ndWlkZS1kb2dlL2d1aWRlLWRvZ2Uvc3JjL3V0aWxzL2NvbnN0YW50cy5zY3NzIiwic3JjL2NvbXBvbmVudHMvcHJlZmVyZW5jZS1ncm91cC9wcmVmZXJlbmNlLWdyb3VwLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUVBO0VDVUUsK0dBQUE7RURSQSxhQUFBO0VBQ0Esc0JBQUE7RUFDQSxvQkFBQTtFQUNBLHVCQUFBO0FFREY7QUZHRTtFQUNFLGVBQUE7RUFDQSxhQUFBO0VBQ0EsYUFBQTtFQUNBLG1CQUFBO0VBQ0EsOEJBQUE7QUVESjtBRkdJO0VBRUUsdUJBQUE7RUFDQSxhQUFBO0VBQ0EsY0FITztFQUlQLHFCQUpPO0VBS1AseUJBQUE7RUFDQSx1QkFBQTtBRUZOO0FGSU07RUFDRSxnQkFBQTtBRUZSO0FGS007RUNqQkosK0dBQUE7RURtQk0sYUFkSztFQWVMLGNBZks7RUFnQkwscUJBaEJLO0VBaUJMLHlCQUFBO0VBQ0EsdUJBQUE7QUVIUjtBRk1NO0VBQ0UseUJDcENVO0FDZ0NsQjtBRk1RO0VBQ0UsbUJBQUE7RUFDQSxxQkN4Q1E7QUNvQ2xCO0FGU0k7RUFDRSxnQ0FBQTtBRVBOO0FGU007RUFDRSxnQkFBQTtBRVBSO0FGV0k7RUFDRSxZQUFBO0FFVE4iLCJmaWxlIjoic3JjL2NvbXBvbmVudHMvcHJlZmVyZW5jZS1ncm91cC9wcmVmZXJlbmNlLWdyb3VwLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiQGltcG9ydCBcIi4uLy4uL3V0aWxzL2NvbnN0YW50c1wiO1xuXG46aG9zdCB7XG4gIEBpbmNsdWRlIGNhcmQtc2hhZG93O1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xuICBhbGlnbi1pdGVtczogc3RyZXRjaDtcbiAgYmFja2dyb3VuZC1jb2xvcjogd2hpdGU7XG5cbiAgLmhlYWRlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIHBhZGRpbmc6IDFyZW07XG4gICAgZGlzcGxheTogZmxleDtcbiAgICBhbGlnbi1pdGVtczogY2VudGVyO1xuICAgIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2VlbjtcblxuICAgIC5zd2l0Y2gge1xuICAgICAgJHNpemU6IDEuNXJlbTtcbiAgICAgIGJhY2tncm91bmQtY29sb3I6IHdoaXRlO1xuICAgICAgd2lkdGg6IDIuOHJlbTtcbiAgICAgIGhlaWdodDogJHNpemU7XG4gICAgICBib3JkZXItcmFkaXVzOiAkc2l6ZTtcbiAgICAgIGJvcmRlcjogMXB4IHNvbGlkICRjb2xvci1ib3JkZXI7XG4gICAgICBib3gtc2l6aW5nOiBjb250ZW50LWJveDtcblxuICAgICAgJiwgJiAuaGFuZGxlIHtcbiAgICAgICAgdHJhbnNpdGlvbjogLjJzO1xuICAgICAgfVxuXG4gICAgICAuaGFuZGxlIHtcbiAgICAgICAgQGluY2x1ZGUgY2FyZC1zaGFkb3c7XG4gICAgICAgIHdpZHRoOiAkc2l6ZTtcbiAgICAgICAgaGVpZ2h0OiAkc2l6ZTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogJHNpemU7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkICRjb2xvci1ib3JkZXI7XG4gICAgICAgIGJhY2tncm91bmQtY29sb3I6IHdoaXRlO1xuICAgICAgfVxuXG4gICAgICAmLmFjdGl2ZSB7XG4gICAgICAgIGJhY2tncm91bmQtY29sb3I6ICRjb2xvci1oaWdobGlnaHQ7XG5cbiAgICAgICAgLmhhbmRsZSB7XG4gICAgICAgICAgbWFyZ2luLWxlZnQ6IDEuM3JlbTtcbiAgICAgICAgICBib3JkZXItY29sb3I6ICRjb2xvci1oaWdobGlnaHQ7XG4gICAgICAgIH1cbiAgICAgIH1cbiAgICB9XG5cbiAgICAmLmVuYWJsZWQge1xuICAgICAgYm9yZGVyLWJvdHRvbTogMXB4IHNvbGlkICRjb2xvci1ib3JkZXI7XG5cbiAgICAgIC50aXRsZSB7XG4gICAgICAgIGZvbnQtd2VpZ2h0OiA1MDA7XG4gICAgICB9XG4gICAgfVxuXG4gICAgJi5hbHdheXMtZW5hYmxlZCB7XG4gICAgICBjdXJzb3I6IGF1dG87XG4gICAgfVxuICB9XG59XG4iLCIkY29sb3ItYmFja2dyb3VuZDogcmdiKDI0OCwgMjQ5LCAyNTApO1xuJGNvbG9yLWJvcmRlcjogcmdiKDIxOCwgMjIwLCAyMjQpO1xuJGNvbG9yLWZvbnQ6IHJnYigzNCwgMzQsIDM0KTtcbiRjb2xvci1oaWdobGlnaHQ6IHJnYig2NiwgMTMzLCAyNDQpO1xuJGNvbG9yLXBvc2l0aXZlOiByZ2IoMTUsIDE1NywgODgpO1xuJGNvbG9yLW5lZ2F0aXZlOiByZ2IoMjE5LCA2OCwgNTUpO1xuXG4kZm9udC1zaXplLWxhcmdlOiAyNHB4O1xuJGZvbnQtc2l6ZS1tZWRpdW06IDE2cHg7XG4kZm9udC1zaXplLXNtYWxsOiAxMnB4O1xuXG5AbWl4aW4gY2FyZC1zaGFkb3cge1xuICBib3gtc2hhZG93OiByZ2JhKDAsIDAsIDAsIDAuMikgMCAxcHggM3B4IDAsIHJnYmEoMCwgMCwgMCwgMC4xNCkgMCAxcHggMXB4IDAsIHJnYmEoMCwgMCwgMCwgMC4xMikgMCAycHggMXB4IC0xcHg7XG59XG4iLCI6aG9zdCB7XG4gIGJveC1zaGFkb3c6IHJnYmEoMCwgMCwgMCwgMC4yKSAwIDFweCAzcHggMCwgcmdiYSgwLCAwLCAwLCAwLjE0KSAwIDFweCAxcHggMCwgcmdiYSgwLCAwLCAwLCAwLjEyKSAwIDJweCAxcHggLTFweDtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcbiAgYWxpZ24taXRlbXM6IHN0cmV0Y2g7XG4gIGJhY2tncm91bmQtY29sb3I6IHdoaXRlO1xufVxuOmhvc3QgLmhlYWRlciB7XG4gIGN1cnNvcjogcG9pbnRlcjtcbiAgcGFkZGluZzogMXJlbTtcbiAgZGlzcGxheTogZmxleDtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAganVzdGlmeS1jb250ZW50OiBzcGFjZS1iZXR3ZWVuO1xufVxuOmhvc3QgLmhlYWRlciAuc3dpdGNoIHtcbiAgYmFja2dyb3VuZC1jb2xvcjogd2hpdGU7XG4gIHdpZHRoOiAyLjhyZW07XG4gIGhlaWdodDogMS41cmVtO1xuICBib3JkZXItcmFkaXVzOiAxLjVyZW07XG4gIGJvcmRlcjogMXB4IHNvbGlkICNkYWRjZTA7XG4gIGJveC1zaXppbmc6IGNvbnRlbnQtYm94O1xufVxuOmhvc3QgLmhlYWRlciAuc3dpdGNoLCA6aG9zdCAuaGVhZGVyIC5zd2l0Y2ggLmhhbmRsZSB7XG4gIHRyYW5zaXRpb246IDAuMnM7XG59XG46aG9zdCAuaGVhZGVyIC5zd2l0Y2ggLmhhbmRsZSB7XG4gIGJveC1zaGFkb3c6IHJnYmEoMCwgMCwgMCwgMC4yKSAwIDFweCAzcHggMCwgcmdiYSgwLCAwLCAwLCAwLjE0KSAwIDFweCAxcHggMCwgcmdiYSgwLCAwLCAwLCAwLjEyKSAwIDJweCAxcHggLTFweDtcbiAgd2lkdGg6IDEuNXJlbTtcbiAgaGVpZ2h0OiAxLjVyZW07XG4gIGJvcmRlci1yYWRpdXM6IDEuNXJlbTtcbiAgYm9yZGVyOiAxcHggc29saWQgI2RhZGNlMDtcbiAgYmFja2dyb3VuZC1jb2xvcjogd2hpdGU7XG59XG46aG9zdCAuaGVhZGVyIC5zd2l0Y2guYWN0aXZlIHtcbiAgYmFja2dyb3VuZC1jb2xvcjogIzQyODVmNDtcbn1cbjpob3N0IC5oZWFkZXIgLnN3aXRjaC5hY3RpdmUgLmhhbmRsZSB7XG4gIG1hcmdpbi1sZWZ0OiAxLjNyZW07XG4gIGJvcmRlci1jb2xvcjogIzQyODVmNDtcbn1cbjpob3N0IC5oZWFkZXIuZW5hYmxlZCB7XG4gIGJvcmRlci1ib3R0b206IDFweCBzb2xpZCAjZGFkY2UwO1xufVxuOmhvc3QgLmhlYWRlci5lbmFibGVkIC50aXRsZSB7XG4gIGZvbnQtd2VpZ2h0OiA1MDA7XG59XG46aG9zdCAuaGVhZGVyLmFsd2F5cy1lbmFibGVkIHtcbiAgY3Vyc29yOiBhdXRvO1xufSJdfQ== */"] });
 (function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](PreferenceGroupComponent, [{
         type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"],
         args: [{
@@ -86785,6 +86835,8 @@ PreferenceGroupComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵ�
     }], null, { name: [{
             type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
         }], i18n: [{
+            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
+        }], alwaysEnabled: [{
             type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
         }], preference$: [{
             type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"]
@@ -87683,7 +87735,7 @@ const environment = {
 /*!***************************!*\
   !*** ./src/i18n/index.ts ***!
   \***************************/
-/*! exports provided: GUIDE_DOGE, VISUALIZATION, AUDIFICATION, AUDIFICATION_PREFERENCE, DATA_TABLE_PREFERENCE, TEXT_SUMMARY_PREFERENCE, setLanguage, getLanguage, t, tA11y */
+/*! exports provided: GUIDE_DOGE, VISUALIZATION, AUDIFICATION, DATA_PREFERENCE, AUDIFICATION_PREFERENCE, DATA_TABLE_PREFERENCE, TEXT_SUMMARY_PREFERENCE, setLanguage, getLanguage, t, tA11y */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -87694,6 +87746,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VISUALIZATION", function() { return _types__WEBPACK_IMPORTED_MODULE_0__["VISUALIZATION"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AUDIFICATION", function() { return _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DATA_PREFERENCE", function() { return _types__WEBPACK_IMPORTED_MODULE_0__["DATA_PREFERENCE"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AUDIFICATION_PREFERENCE", function() { return _types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION_PREFERENCE"]; });
 
@@ -87742,6 +87796,13 @@ const en = {
     [_types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].DOMAIN]: 'Domain from %(min)s to %(max)s',
     [_types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].RANGE]: 'Range from %(min)s to %(max)s',
     [_types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION"].ACTIVE_DATUM]: '%(y)s on %(x)s',
+    [_types__WEBPACK_IMPORTED_MODULE_0__["DATA_PREFERENCE"].enabled]: 'Data Generator',
+    [_types__WEBPACK_IMPORTED_MODULE_0__["DATA_PREFERENCE"].avgHits]: 'Average Hits',
+    [_types__WEBPACK_IMPORTED_MODULE_0__["DATA_PREFERENCE"].hitStdDev]: 'Hit Std',
+    [_types__WEBPACK_IMPORTED_MODULE_0__["DATA_PREFERENCE"].avgUsers]: 'Average Users',
+    [_types__WEBPACK_IMPORTED_MODULE_0__["DATA_PREFERENCE"].userStdDev]: 'User Std',
+    [_types__WEBPACK_IMPORTED_MODULE_0__["DATA_PREFERENCE"].avgSessionsPerUser]: 'Average Sessions Per User',
+    [_types__WEBPACK_IMPORTED_MODULE_0__["DATA_PREFERENCE"].sessionsPerUserStdDev]: 'Sessions Per User Std',
     [_types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION_PREFERENCE"].enabled]: 'Audification',
     [_types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION_PREFERENCE"].lowestPitch]: 'Lowest note (Hz)',
     [_types__WEBPACK_IMPORTED_MODULE_0__["AUDIFICATION_PREFERENCE"].highestPitch]: 'Highest note (Hz)',
@@ -87804,7 +87865,7 @@ const ko = Object.assign(Object.assign({}, _en__WEBPACK_IMPORTED_MODULE_1__["en"
 /*!***************************!*\
   !*** ./src/i18n/types.ts ***!
   \***************************/
-/*! exports provided: GUIDE_DOGE, VISUALIZATION, AUDIFICATION, AUDIFICATION_PREFERENCE, DATA_TABLE_PREFERENCE, TEXT_SUMMARY_PREFERENCE */
+/*! exports provided: GUIDE_DOGE, VISUALIZATION, AUDIFICATION, DATA_PREFERENCE, AUDIFICATION_PREFERENCE, DATA_TABLE_PREFERENCE, TEXT_SUMMARY_PREFERENCE */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -87812,6 +87873,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GUIDE_DOGE", function() { return GUIDE_DOGE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VISUALIZATION", function() { return VISUALIZATION; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AUDIFICATION", function() { return AUDIFICATION; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DATA_PREFERENCE", function() { return DATA_PREFERENCE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AUDIFICATION_PREFERENCE", function() { return AUDIFICATION_PREFERENCE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DATA_TABLE_PREFERENCE", function() { return DATA_TABLE_PREFERENCE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TEXT_SUMMARY_PREFERENCE", function() { return TEXT_SUMMARY_PREFERENCE; });
@@ -87832,22 +87894,32 @@ var AUDIFICATION;
     AUDIFICATION[AUDIFICATION["RANGE"] = 514] = "RANGE";
     AUDIFICATION[AUDIFICATION["ACTIVE_DATUM"] = 515] = "ACTIVE_DATUM";
 })(AUDIFICATION || (AUDIFICATION = {}));
+var DATA_PREFERENCE;
+(function (DATA_PREFERENCE) {
+    DATA_PREFERENCE[DATA_PREFERENCE["enabled"] = 768] = "enabled";
+    DATA_PREFERENCE[DATA_PREFERENCE["avgHits"] = 769] = "avgHits";
+    DATA_PREFERENCE[DATA_PREFERENCE["hitStdDev"] = 770] = "hitStdDev";
+    DATA_PREFERENCE[DATA_PREFERENCE["avgUsers"] = 771] = "avgUsers";
+    DATA_PREFERENCE[DATA_PREFERENCE["userStdDev"] = 772] = "userStdDev";
+    DATA_PREFERENCE[DATA_PREFERENCE["avgSessionsPerUser"] = 773] = "avgSessionsPerUser";
+    DATA_PREFERENCE[DATA_PREFERENCE["sessionsPerUserStdDev"] = 774] = "sessionsPerUserStdDev";
+})(DATA_PREFERENCE || (DATA_PREFERENCE = {}));
 var AUDIFICATION_PREFERENCE;
 (function (AUDIFICATION_PREFERENCE) {
-    AUDIFICATION_PREFERENCE[AUDIFICATION_PREFERENCE["enabled"] = 768] = "enabled";
-    AUDIFICATION_PREFERENCE[AUDIFICATION_PREFERENCE["lowestPitch"] = 769] = "lowestPitch";
-    AUDIFICATION_PREFERENCE[AUDIFICATION_PREFERENCE["highestPitch"] = 770] = "highestPitch";
-    AUDIFICATION_PREFERENCE[AUDIFICATION_PREFERENCE["noteDuration"] = 771] = "noteDuration";
-    AUDIFICATION_PREFERENCE[AUDIFICATION_PREFERENCE["readBefore"] = 772] = "readBefore";
-    AUDIFICATION_PREFERENCE[AUDIFICATION_PREFERENCE["readAfter"] = 773] = "readAfter";
+    AUDIFICATION_PREFERENCE[AUDIFICATION_PREFERENCE["enabled"] = 1024] = "enabled";
+    AUDIFICATION_PREFERENCE[AUDIFICATION_PREFERENCE["lowestPitch"] = 1025] = "lowestPitch";
+    AUDIFICATION_PREFERENCE[AUDIFICATION_PREFERENCE["highestPitch"] = 1026] = "highestPitch";
+    AUDIFICATION_PREFERENCE[AUDIFICATION_PREFERENCE["noteDuration"] = 1027] = "noteDuration";
+    AUDIFICATION_PREFERENCE[AUDIFICATION_PREFERENCE["readBefore"] = 1028] = "readBefore";
+    AUDIFICATION_PREFERENCE[AUDIFICATION_PREFERENCE["readAfter"] = 1029] = "readAfter";
 })(AUDIFICATION_PREFERENCE || (AUDIFICATION_PREFERENCE = {}));
 var DATA_TABLE_PREFERENCE;
 (function (DATA_TABLE_PREFERENCE) {
-    DATA_TABLE_PREFERENCE[DATA_TABLE_PREFERENCE["enabled"] = 1024] = "enabled";
+    DATA_TABLE_PREFERENCE[DATA_TABLE_PREFERENCE["enabled"] = 1280] = "enabled";
 })(DATA_TABLE_PREFERENCE || (DATA_TABLE_PREFERENCE = {}));
 var TEXT_SUMMARY_PREFERENCE;
 (function (TEXT_SUMMARY_PREFERENCE) {
-    TEXT_SUMMARY_PREFERENCE[TEXT_SUMMARY_PREFERENCE["enabled"] = 1280] = "enabled";
+    TEXT_SUMMARY_PREFERENCE[TEXT_SUMMARY_PREFERENCE["enabled"] = 1536] = "enabled";
 })(TEXT_SUMMARY_PREFERENCE || (TEXT_SUMMARY_PREFERENCE = {}));
 
 
@@ -87933,7 +88005,8 @@ class DataCube {
         this.measures = measures;
         this.categories = categories;
     }
-    getDataFor(categoryNames, measureNames, filters = [], sortBy) {
+    getDataFor(queryOptions) {
+        const { categoryNames = [], measureNames = [], filters = [], sortBy = [...categoryNames, ...measureNames], } = queryOptions;
         const measureIndices = measureNames.map(name => this.measures.findIndex(measure => measure.name === name));
         const categoryIndices = categoryNames.map(name => this.categories.findIndex(category => category.name === name));
         const categoryTrie = { children: {} };
@@ -87943,10 +88016,11 @@ class DataCube {
             .forEach(row => {
             let trieNode = categoryTrie;
             for (const categoryIndex of categoryIndices) {
-                if (!trieNode.children[row.header[categoryIndex]]) {
-                    trieNode.children[row.header[categoryIndex]] = { children: {} };
+                const label = row.header[categoryIndex];
+                if (!trieNode.children[label]) {
+                    trieNode.children[label] = { children: {} };
                 }
-                trieNode = trieNode.children[row.header[categoryIndex]];
+                trieNode = trieNode.children[label];
             }
             if (!trieNode.values) {
                 trieNode.values = measureNames.map(() => 0);
@@ -87957,10 +88031,11 @@ class DataCube {
         });
         const result = [];
         const labelList = [];
+        const dateIndex = categoryNames.indexOf('date');
         const traverseNode = (node) => {
             if (node.values) {
                 result.push({
-                    categories: new Map(labelList.map((label, index) => [categoryNames[index], label])),
+                    categories: new Map(labelList.map((label, index) => [categoryNames[index], index === dateIndex ? new Date(+label) : label])),
                     values: new Map(node.values.map((value, index) => [measureNames[index], value])),
                 });
             }
@@ -87973,19 +88048,8 @@ class DataCube {
             }
         };
         traverseNode(categoryTrie);
-        this.normalizeNthDay(result, categoryNames);
-        this.sortResults(result, categoryNames, measureNames, sortBy !== null && sortBy !== void 0 ? sortBy : [...categoryNames, ...measureNames]);
+        this.sortResults(result, categoryNames, measureNames, sortBy);
         return result;
-    }
-    normalizeNthDay(rows, categoryNames) {
-        if (!categoryNames.includes('nthDay')) {
-            return;
-        }
-        const largestNthDay = Math.max(...rows.map(row => row.categories.get('nthDay')));
-        for (const row of rows) {
-            const nthDay = row.categories.get('nthDay');
-            row.categories.set('nthDay', largestNthDay - nthDay);
-        }
     }
     sortResults(results, categoryNames, measureNames, sortBy) {
         function getComparator(sortConcept) {
@@ -88028,31 +88092,30 @@ class DataCube {
 /*!*****************************************!*\
   !*** ./src/models/data-cube/filters.ts ***!
   \*****************************************/
-/*! exports provided: betweenDates */
+/*! exports provided: betweenDates, inOneOfDateRanges */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "betweenDates", function() { return betweenDates; });
-const millisecondsPerDay = 24 * 60 * 60 * 1000;
-const defaultOptions = {
-    excludeStartDate: false,
-    excludeEndDate: false,
-};
-function betweenDates(startDate, endDate, options = {}) {
-    const { excludeStartDate, excludeEndDate } = Object.assign(Object.assign({}, defaultOptions), options);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "inOneOfDateRanges", function() { return inOneOfDateRanges; });
+function betweenDates(startDate, endDate, rangeOptions) {
+    const dateRange = [startDate, endDate];
+    return inOneOfDateRanges([dateRange], rangeOptions);
+}
+function inOneOfDateRanges(dateRanges, rangeOptions = {}) {
+    const { excludeStart = false, excludeEnd = false, } = rangeOptions;
+    const intervalClosedToOpenOffset = 1;
+    const startOffset = excludeStart ? intervalClosedToOpenOffset : 0;
+    const endOffset = excludeEnd ? -intervalClosedToOpenOffset : 0;
     return (categories) => {
-        const nThDayIndex = categories.findIndex(category => category.name === 'nthDay');
-        let startIndex = Math.round((Date.now() - startDate.getTime()) / millisecondsPerDay);
-        if (excludeStartDate) {
-            startIndex--;
-        }
-        let endIndex = Math.round((Date.now() - endDate.getTime()) / millisecondsPerDay);
-        if (excludeEndDate) {
-            endIndex++;
-        }
-        return (row) => row.header[nThDayIndex] <= startIndex &&
-            row.header[nThDayIndex] >= endIndex;
+        const dateIndex = categories.findIndex(category => category.name === 'date');
+        return (row) => dateRanges.some(([startDate, endDate]) => {
+            const time = row.header[dateIndex];
+            const start = startDate.getTime() + startOffset;
+            const end = endDate.getTime() + endOffset;
+            return start <= time && time <= end;
+        });
     };
 }
 
@@ -88073,21 +88136,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var random__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(random__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./types */ "./src/models/data-cube/types.ts");
 /* harmony import */ var _data_cube_model__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./data-cube.model */ "./src/models/data-cube/data-cube.model.ts");
+/* harmony import */ var _utils_timeUnits__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../utils/timeUnits */ "./src/utils/timeUnits.ts");
+
 
 
 
 function generateCube(categories, measures, settings = {}) {
     const completeSettings = Object.assign(Object.assign({}, defaultSettings), settings);
     const actualCategories = [...categories];
-    if (completeSettings.nthDay) {
-        const nthDayCategory = generateNthDay(completeSettings.days, completeSettings.dailyStdDev);
-        actualCategories.push(nthDayCategory);
+    if (completeSettings.timeSeries) {
+        const dateCategory = generateDateCategory(completeSettings.startDate, completeSettings.endDate, completeSettings.dailyStdDev);
+        actualCategories.push(dateCategory);
     }
     const rows = generateEmptyRows(actualCategories, measures);
     const cumulativeWeights = generateCumulativeWeights(rows, actualCategories);
     generateHits(rows, measures, cumulativeWeights, generateUsersAndSessions(completeSettings), completeSettings);
     return new _data_cube_model__WEBPACK_IMPORTED_MODULE_2__["DataCube"](rows, measures, actualCategories);
 }
+const defaultStartDaysBeforeNow = 60;
 const defaultSettings = {
     avgHits: 1000000,
     hitStdDev: 10000,
@@ -88095,8 +88161,9 @@ const defaultSettings = {
     userStdDev: 100,
     avgSessionsPerUser: 5,
     sessionsPerUserStdDev: 3,
-    nthDay: true,
-    days: 60,
+    timeSeries: true,
+    startDate: new Date(Date.now() - defaultStartDaysBeforeNow * _utils_timeUnits__WEBPACK_IMPORTED_MODULE_3__["DAY"]),
+    endDate: new Date(),
     dailyStdDev: 0.1,
 };
 function generateUsersAndSessions({ avgUsers, userStdDev, avgSessionsPerUser, sessionsPerUserStdDev, }) {
@@ -88204,17 +88271,19 @@ function generateCumulativeWeights(rows, categories) {
         return cumulativeWeights;
     }, [0]);
 }
-function generateNthDay(days, dailyVariance) {
+function generateDateCategory(startDate, endDate, dailyVariance) {
     const dailyThunk = random__WEBPACK_IMPORTED_MODULE_0__["normal"](1, dailyVariance);
     const values = [];
-    for (let day = 0; day < days; day++) {
+    const date = new Date(startDate);
+    while (date <= endDate) {
         values.push({
-            name: day,
+            name: date.getTime(),
             weight: dailyThunk(),
         });
+        date.setTime(date.getTime() + _utils_timeUnits__WEBPACK_IMPORTED_MODULE_3__["DAY"]);
     }
     return {
-        name: 'nthDay',
+        name: 'date',
         values,
     };
 }
@@ -88348,6 +88417,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DataModule", function() { return DataModule; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
 /* harmony import */ var _data_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./data.service */ "./src/services/data/data.service.ts");
+/* harmony import */ var _preference_preference_module__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../preference/preference.module */ "./src/services/preference/preference.module.ts");
+
 
 
 
@@ -88356,13 +88427,19 @@ class DataModule {
 DataModule.ɵmod = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineNgModule"]({ type: DataModule });
 DataModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjector"]({ factory: function DataModule_Factory(t) { return new (t || DataModule)(); }, providers: [
         _data_service__WEBPACK_IMPORTED_MODULE_1__["DataService"],
-    ] });
+    ], imports: [[
+            _preference_preference_module__WEBPACK_IMPORTED_MODULE_2__["PreferenceModule"],
+        ]] });
+(function () { (typeof ngJitMode === "undefined" || ngJitMode) && _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsetNgModuleScope"](DataModule, { imports: [_preference_preference_module__WEBPACK_IMPORTED_MODULE_2__["PreferenceModule"]] }); })();
 (function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](DataModule, [{
         type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["NgModule"],
         args: [{
                 providers: [
                     _data_service__WEBPACK_IMPORTED_MODULE_1__["DataService"],
                 ],
+                imports: [
+                    _preference_preference_module__WEBPACK_IMPORTED_MODULE_2__["PreferenceModule"],
+                ]
             }]
     }], null, null); })();
 
@@ -88379,40 +88456,67 @@ DataModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjecto
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DataService", function() { return DataService; });
-/* harmony import */ var luxon__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! luxon */ "./node_modules/luxon/build/cjs-browser/luxon.js");
-/* harmony import */ var luxon__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(luxon__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../models/data-cube/presets */ "./src/models/data-cube/presets.ts");
 /* harmony import */ var _models_data_cube_filters__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../models/data-cube/filters */ "./src/models/data-cube/filters.ts");
 /* harmony import */ var src_models_data_cube_generation__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/models/data-cube/generation */ "./src/models/data-cube/generation.ts");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm2015/operators/index.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm2015/index.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js");
+/* harmony import */ var _preference_preference_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../preference/preference.service */ "./src/services/preference/preference.service.ts");
+
+
+
+
 
 
 
 
 class DataService {
-    constructor() {
-        this.dataCube = Object(src_models_data_cube_generation__WEBPACK_IMPORTED_MODULE_3__["generateCube"])([_models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__["countryCategory"], _models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__["browserCategory"], _models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__["sourceCategory"]], [_models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__["activeUserMeasure"], _models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__["revenueMeasure"], _models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__["eventCountMeasure"]], {
+    constructor(preferenceService) {
+        this.preferenceService = preferenceService;
+        this.dataCube$ = new rxjs__WEBPACK_IMPORTED_MODULE_5__["ReplaySubject"](1);
+        this.destroy$ = new rxjs__WEBPACK_IMPORTED_MODULE_5__["Subject"]();
+        const categories = [_models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__["countryCategory"], _models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__["browserCategory"], _models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__["sourceCategory"]];
+        const measures = [_models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__["activeUserMeasure"], _models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__["revenueMeasure"], _models_data_cube_presets__WEBPACK_IMPORTED_MODULE_1__["eventCountMeasure"]];
+        const defaultSettings = {
             avgHits: 10000,
             hitStdDev: 100,
             avgUsers: 100,
             userStdDev: 1,
             avgSessionsPerUser: 5,
             sessionsPerUserStdDev: 3,
+        };
+        this.preferenceService.data$
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["takeUntil"])(this.destroy$))
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["throttleTime"])(500, rxjs__WEBPACK_IMPORTED_MODULE_5__["asyncScheduler"], { leading: true, trailing: true }))
+            .subscribe(preference => {
+            this.dataCube$.next(Object(src_models_data_cube_generation__WEBPACK_IMPORTED_MODULE_3__["generateCube"])(categories, measures, Object.assign(Object.assign({}, defaultSettings), preference)));
         });
     }
-    getMeasureOverDays(measureName, days = 30) {
-        const categoryName = 'nthDay';
-        const endDate = luxon__WEBPACK_IMPORTED_MODULE_0__["DateTime"].local();
-        const startDate = endDate.minus({ day: days });
-        return this.dataCube
-            .getDataFor([categoryName], [measureName], [Object(_models_data_cube_filters__WEBPACK_IMPORTED_MODULE_2__["betweenDates"])(startDate.toJSDate(), endDate.toJSDate(), { excludeStartDate: true })])
-            .map(row => ({
-            date: startDate
-                .plus({ days: row.categories.get(categoryName) })
-                .toJSDate(),
-            value: row.values.get(measureName),
+    ngOnDestroy() {
+        this.destroy$.next();
+        this.destroy$.complete();
+    }
+    observeData(queryOptions$) {
+        return Object(rxjs__WEBPACK_IMPORTED_MODULE_5__["combineLatest"])([this.dataCube$, queryOptions$])
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["map"])(([dataCube, queryOptions]) => {
+            return dataCube.getDataFor(queryOptions);
         }));
     }
+    observeTimeSeries(timeSeriesQueryOptions$) {
+        const queryOptions$ = timeSeriesQueryOptions$
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["map"])(queryOptions => {
+            const { startDate, endDate, categoryNames = [], filters = [], sortBy = [] } = queryOptions, restOptions = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__rest"])(queryOptions, ["startDate", "endDate", "categoryNames", "filters", "sortBy"]);
+            const categoryName = 'date';
+            const dateFilter = Object(_models_data_cube_filters__WEBPACK_IMPORTED_MODULE_2__["betweenDates"])(startDate, endDate);
+            return Object.assign(Object.assign({}, restOptions), { categoryNames: [categoryName, ...categoryNames], filters: [dateFilter, ...filters], sortBy: [categoryName, ...sortBy] });
+        }));
+        return this.observeData(queryOptions$);
+    }
 }
+DataService.ɵfac = function DataService_Factory(t) { return new (t || DataService)(_angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵdirectiveInject"](_preference_preference_service__WEBPACK_IMPORTED_MODULE_7__["PreferenceService"])); };
+DataService.ɵdir = _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵdefineDirective"]({ type: DataService });
 
 
 /***/ }),
@@ -88467,6 +88571,15 @@ __webpack_require__.r(__webpack_exports__);
 
 class PreferenceService {
     constructor() {
+        this.data$ = this.createPreference({
+            enabled: true,
+            avgHits: 10000,
+            hitStdDev: 100,
+            avgUsers: 100,
+            userStdDev: 1,
+            avgSessionsPerUser: 5,
+            sessionsPerUserStdDev: 3,
+        }, 'data');
         this.audification$ = this.createPreference({
             enabled: true,
             lowestPitch: 256,
@@ -88543,6 +88656,29 @@ const formatY = (value) => Number.isInteger(value) ? `${value}` : value.toFixed(
 const humanizeMeasureName = (str) => str
     .replace(/([A-Z])/g, ' $1')
     .replace(/^./, firstCharacter => firstCharacter.toUpperCase());
+
+
+/***/ }),
+
+/***/ "./src/utils/timeUnits.ts":
+/*!********************************!*\
+  !*** ./src/utils/timeUnits.ts ***!
+  \********************************/
+/*! exports provided: MILLISECOND, SECOND, MINUTE, HOUR, DAY */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MILLISECOND", function() { return MILLISECOND; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SECOND", function() { return SECOND; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MINUTE", function() { return MINUTE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HOUR", function() { return HOUR; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DAY", function() { return DAY; });
+const MILLISECOND = 1;
+const SECOND = 1000 * MILLISECOND;
+const MINUTE = 60 * SECOND;
+const HOUR = 60 * MINUTE;
+const DAY = 24 * HOUR;
 
 
 /***/ }),
