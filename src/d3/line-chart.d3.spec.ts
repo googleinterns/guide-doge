@@ -64,11 +64,11 @@ describe('LineChartD3', () => {
 
   it('should update the active point upon changes.', async () => {
     lineChartD3.render();
-    const circleElement = svgElement.querySelector('.line_chart-active_point')!;
-    const transformAttribute = circleElement.getAttribute('transform');
+    const activePointElement = svgElement.querySelector('.line_chart-active_point')!;
+    const transformAttribute = activePointElement.getAttribute('transform');
     renderOptions.activePoint$.next(mockPoint);
     await new Promise(resolve => setTimeout(resolve, transitionDelay));
-    const newTransformAttribute = circleElement.getAttribute('transform');
+    const newTransformAttribute = activePointElement.getAttribute('transform');
     expect(newTransformAttribute).not.toBe(transformAttribute);
   });
 
