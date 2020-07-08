@@ -91,4 +91,11 @@ describe('XYChartD3', () => {
     expect(xAxisElement).not.toBe(null);
     expect(yAxisElement).not.toBe(null);
   });
+
+  it('should render the legend.', () => {
+    xyChartD3.render();
+    renderOptions.data$.next(mockData);
+    const textElements = svgElement.querySelectorAll('.xy_chart-legend text');
+    expect(textElements.length).toBe(mockData.length);
+  });
 });
