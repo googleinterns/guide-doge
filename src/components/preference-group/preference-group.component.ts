@@ -11,10 +11,11 @@ import { I18nKey, t } from '../../i18n';
 export class PreferenceGroupComponent<T extends Preference> {
   @Input() name?: string;
   @Input() i18n?: { [key in keyof T]: I18nKey };
+  @Input() alwaysEnabled = false;
   @Input() preference$: BehaviorSubject<T>;
 
   get enabled() {
-    return this.preference$.value.enabled;
+    return this.preference$.value.enabled || this.alwaysEnabled;
   }
 
   set enabled(value) {
@@ -25,6 +26,9 @@ export class PreferenceGroupComponent<T extends Preference> {
   }
 
   get childProperties() {
+    if (!this.i18n) {
+      return [];
+    }
     const properties = Object.keys(this.preference$.value) as (keyof T)[];
     return properties.filter(property => property !== 'enabled');
   }

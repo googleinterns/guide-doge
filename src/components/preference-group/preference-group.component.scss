@@ -53,5 +53,9 @@
         font-weight: 500;
       }
     }
+
+    &.always-enabled {
+      cursor: auto;
+    }
   }
 }

@@ -10,6 +10,15 @@ export interface AudificationPreference extends Preference {
   readAfter: boolean;
 }
 
+export interface DataPreference extends Preference {
+  avgHits: number;
+  hitStdDev: number;
+  avgUsers: number;
+  userStdDev: number;
+  avgSessionsPerUser: number;
+  sessionsPerUserStdDev: number;
+}
+
 export type DataTablePreference = Preference;
 
 export type TextSummaryPreference = Preference;
