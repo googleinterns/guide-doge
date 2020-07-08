@@ -7,12 +7,12 @@
     <div class="date">
       {{formatX(activePoint.x)}}
     </div>
-    <div *ngFor="let datum of data" class="legend-item">
+    <div *ngFor="let legendItem of legendItems" class="legend-item">
       <div class="label">
-        {{datum.label}}
+        {{legendItem.label}}
       </div>
       <div class="value">
-        {{formatY(getCorrespondingPoint(datum, activePoint)!.y)}}
+        {{formatY(legendItem.activePoint.y)}}
       </div>
     </div>
   </mat-card>

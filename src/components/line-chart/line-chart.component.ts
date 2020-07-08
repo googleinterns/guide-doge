@@ -55,6 +55,19 @@ export class LineChartComponent implements RenderOptions<LineChartDatum>, OnChan
     return t(GUIDE_DOGE.VISUALIZATION);
   }
 
+  get legendItems() {
+    if (!this.activePoint) {
+      return [];
+    }
+    const xTime = this.activePoint.x.getTime();
+    return this.data
+      .map(datum => ({
+        label: datum.label,
+        activePoint: datum.points.find(point => point.x.getTime() === xTime),
+      }))
+      .filter((datum): datum is { label: string, activePoint: TimeSeriesPoint } => datum.activePoint !== undefined);
+  }
+
   ngOnInit() {
     this.lineChartD3.render();
   }
@@ -73,9 +86,5 @@ export class LineChartComponent implements RenderOptions<LineChartDatum>, OnChan
       this.data$.next(data);
       this.activePoint$.next(null);
     }
-  }
-
-  getCorrespondingPoint(datum: LineChartDatum, point: TimeSeriesPoint) {
-    return datum.points.find(p => p.x.getTime() === point.x.getTime());
   }
 }
