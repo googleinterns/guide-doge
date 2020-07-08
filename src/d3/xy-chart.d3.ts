@@ -27,6 +27,7 @@ export abstract class XYChartD3<LegendItemStyle,
   protected yAxis: d3.Axis<number>;
   protected xAxisG: d3.Selection<SVGGElement, unknown, null, undefined>;
   protected yAxisG: d3.Selection<SVGGElement, unknown, null, undefined>;
+  protected dataG: d3.Selection<SVGGElement, unknown, null, undefined>;
   protected legendG: d3.Selection<SVGGElement, unknown, null, undefined>;
 
   x(value: Date) {
@@ -71,6 +72,7 @@ export abstract class XYChartD3<LegendItemStyle,
 
     this.legendG = this.svg
       .append('g')
+      .attr('class', 'xy_chart-legend')
       .attr('transform', `translate(${left},${top})`);
   }
 
@@ -91,7 +93,8 @@ export abstract class XYChartD3<LegendItemStyle,
         .attr('font-size', fontSizeMedium)
         .attr('transform', `translate(${textOffsetX}, ${fontSizeMedium})`)
         .text(datum.label);
-      const textWidth = measureText.node()!.getBBox().width;
+      const fallbackTextWidth = datum.label.length * fontSizeMedium / 2;
+      const textWidth = measureText.node()?.getBBox?.().width ?? fallbackTextWidth;
       offsetX += textOffsetX + textWidth + fontSizeMedium;
     }
   }
@@ -121,10 +124,12 @@ export abstract class XYChartD3<LegendItemStyle,
 
     this.xAxisG = this.svg
       .append('g')
+      .attr('class', 'xy_chart-x_axis')
       .attr('transform', `translate(0,${bottom})`)
       .attr('font-size', fontSizeSmall);
     this.yAxisG = this.svg
       .append('g')
+      .attr('class', 'xy_chart-y_axis')
       .attr('transform', `translate(${left},0)`)
       .attr('font-size', fontSizeSmall);
   }
@@ -144,7 +149,11 @@ export abstract class XYChartD3<LegendItemStyle,
       .call(this.yAxis);
   }
 
-  protected abstract renderData();
+  protected renderData() {
+    this.dataG = this.svg
+      .append('g')
+      .attr('class', 'xy_chart-data');
+  }
 
   protected abstract updateData(data: Datum[]);
 

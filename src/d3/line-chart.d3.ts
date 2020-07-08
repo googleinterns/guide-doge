@@ -27,6 +27,8 @@ export class LineChartD3 extends XYChartD3<LegendItemStyle> {
   protected activePointCircle: d3.Selection<SVGCircleElement, unknown, null, undefined>;
 
   protected renderData() {
+    super.renderData();
+
     this.linePaths = [];
   }
 
@@ -43,7 +45,7 @@ export class LineChartD3 extends XYChartD3<LegendItemStyle> {
       for (let i = 0; i < itemCount - oldItemCount; i++) {
         this.linePaths.push({
           line: d3.line<TimeSeriesPoint>(),
-          path: this.svg
+          path: this.dataG
             .append('path')
             .attr('fill', 'none')
             .attr('stroke-linejoin', 'round')
@@ -64,12 +66,12 @@ export class LineChartD3 extends XYChartD3<LegendItemStyle> {
         .transition(this.transition)
         .attr('d', line);
     });
-
   }
 
   protected renderActivePoint() {
     this.activePointCircle = this.svg
       .append('circle')
+      .attr('class', 'line_chart-active_point')
       .attr('r', 4)
       .attr('fill', LineChartD3.colorPrimary);
   }
