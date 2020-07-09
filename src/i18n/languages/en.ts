@@ -6,15 +6,12 @@ import {
   GUIDE_DOGE,
   I18n,
   TEXT_SUMMARY_PREFERENCE,
-  VISUALIZATION,
 } from '../types';
 
 export const en: I18n = {
   [GUIDE_DOGE.TITLE]: 'Guide-Doge',
   [GUIDE_DOGE.VISUALIZATION]: 'Data visualization',
   [GUIDE_DOGE.AUDIFICATION]: 'Data audification',
-
-  [VISUALIZATION.ACTIVE_DATUM]: '%(y)s on %(x)s',
 
   [AUDIFICATION.INSTRUCTIONS]: [
     'Hold down <kbd>SPACE</kbd> to play the audified melody and <kbd>SHIFT</kbd> + <kbd>SPACE</kbd> to play it backward.',
@@ -23,9 +20,15 @@ export const en: I18n = {
     'Press <kbd>UP</kbd> or <kbd>DOWN</kbd> to switch among the legend items.',
     'Press <kbd>0</kbd> ... <kbd>9</kbd> to move playhead.',
   ].join(' <br/>'),
-  [AUDIFICATION.DOMAIN]: 'Domain from %(min)s to %(max)s',
-  [AUDIFICATION.RANGE]: 'Range from %(min)s to %(max)s',
-  [AUDIFICATION.ACTIVE_DATUM]: '%(y)s on %(x)s',
+  [AUDIFICATION.DOMAIN]: 'Domain from %(min)s to %(max)s.',
+  [AUDIFICATION.RANGE]: 'Range from %(min)s to %(max)s.',
+  [AUDIFICATION.ACTIVE_POINT]: '%(y)s on %(x)s.',
+  [AUDIFICATION.CURRENT_LEGEND_ITEM]: [
+    `The current legend item is '%(label)s'.`,
+    'Domain from %(domain_min)s to %(domain_max)s.',
+    'Range from %(range_min)s to %(range_max)s.',
+    'Press <kbd>?</kbd> to read out the instructions.',
+  ].join(' <br/>'),
 
   [DATA_PREFERENCE.enabled]: 'Data Generator',
   [DATA_PREFERENCE.name]: 'Dataset',

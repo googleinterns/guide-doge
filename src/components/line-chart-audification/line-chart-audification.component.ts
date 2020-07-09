@@ -45,10 +45,6 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     return t(AUDIFICATION.INSTRUCTIONS);
   }
 
-  get INSTRUCTIONS_A11Y() {
-    return tA11y(AUDIFICATION.INSTRUCTIONS);
-  }
-
   get data() {
     return this.host.data;
   }
@@ -103,29 +99,37 @@ export class LineChartAudificationComponent implements AudificationPreference, O
 
   @HostListener('keydown', ['$event'])
   async handleKeyDown($event: KeyboardEvent) {
-    $event.preventDefault();
-    $event.stopPropagation();
-    const { key, shiftKey, repeat } = $event;
-    if (!this.melody || repeat) {
+    const { key, shiftKey, repeat, altKey, ctrlKey, metaKey } = $event;
+    if (!this.melody || altKey || ctrlKey || metaKey) {
       return;
     }
-    if (key === ' ') {
-      this.resumeMelody(shiftKey);
-    } else if (key === 'x') {
-      this.readOutDomain();
-    } else if (key === 'y') {
-      this.readOutRange();
-    } else if (key === 'l') {
-      this.readOutMeasure();
-    } else if ('0' <= key && key <= '9') {
-      const pointIndex = Math.floor(+key / 10 * this.points.length);
-      this.melody.seekTo(pointIndex, true);
-      this.readOutCurrentDatum();
-    } else if (key === 'ArrowUp') {
-      this.datumIndex = mod(this.datumIndex + 1, this.data.length);
-    } else if (key === 'ArrowDown') {
-      this.datumIndex = mod(this.datumIndex - 1, this.data.length);
+    if (!repeat) {
+      if (key === ' ') {
+        this.resumeMelody(shiftKey);
+      } else if (key === 'x') {
+        this.readOutDomain();
+      } else if (key === 'y') {
+        this.readOutRange();
+      } else if (key === 'l') {
+        this.readOutLegendItems();
+      } else if ('0' <= key && key <= '9') {
+        const pointIndex = Math.floor(+key / 10 * this.points.length);
+        this.melody.seekTo(pointIndex, true);
+        this.readOutCurrentDatum();
+      } else if (key === 'ArrowUp' || key === 'ArrowDown') {
+        const delta = key === 'ArrowUp' ? +1 : -1;
+        const { pointIndex } = this.melody;
+        this.datumIndex = mod(this.datumIndex + delta, this.data.length);
+        this.melody.seekTo(pointIndex, true);
+        this.readOutCurrentLegendItem();
+      } else if (key === '?') {
+        this.readOutInstructions();
+      } else {
+        return;
+      }
     }
+    $event.preventDefault();
+    $event.stopPropagation();
   }
 
   @HostListener('keyup', ['$event'])
@@ -139,6 +143,11 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     if (key === ' ') {
       this.pauseMelody();
     }
+  }
+
+  @HostListener('focus', ['$event'])
+  handleFocus() {
+    this.readOutCurrentLegendItem();
   }
 
   @HostListener('blur', ['$event'])
@@ -185,18 +194,35 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     }));
   }
 
-  private readOutMeasure() {
-    return this.screenReaderComponent.readOut(this.data.map(item => item.label).join(', '));
+  private readOutCurrentLegendItem() {
+    return this.screenReaderComponent.readOut(tA11y(AUDIFICATION.CURRENT_LEGEND_ITEM, {
+      label: this.data[this.datumIndex].label,
+      domain_min: formatX(this.domain[0]),
+      domain_max: formatX(this.domain[this.domain.length - 1]),
+      range_min: formatY(this.range[0]),
+      range_max: formatY(this.range[this.range.length - 1]),
+    }));
+  }
+
+  private readOutLegendItems() {
+    const labels = this.data.map(item => item.label);
+    const { datumIndex } = this;
+    const reorderedLabels = [...labels, ...labels].slice(datumIndex, datumIndex + labels.length);
+    return this.screenReaderComponent.readOut(reorderedLabels.join(', '));
   }
 
   private readOutCurrentDatum() {
     if (!this.melody) {
       return 0;
     }
-    const { x, y } = this.points[this.melody.currentDatumIndex];
-    return this.screenReaderComponent.readOut(t(AUDIFICATION.ACTIVE_DATUM, {
+    const { x, y } = this.points[this.melody.pointIndex];
+    return this.screenReaderComponent.readOut(t(AUDIFICATION.ACTIVE_POINT, {
       x: formatX(x),
       y: formatY(y),
     }));
+  }
+
+  private readOutInstructions() {
+    return this.screenReaderComponent.readOut(tA11y(AUDIFICATION.INSTRUCTIONS));
   }
 }

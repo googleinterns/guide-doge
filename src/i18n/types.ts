@@ -5,14 +5,14 @@ export enum GUIDE_DOGE {
 }
 
 export enum VISUALIZATION {
-  ACTIVE_DATUM = 0x100,
 }
 
 export enum AUDIFICATION {
   INSTRUCTIONS = 0x200,
   DOMAIN,
   RANGE,
-  ACTIVE_DATUM,
+  ACTIVE_POINT,
+  CURRENT_LEGEND_ITEM,
 }
 
 export enum DATA_PREFERENCE {
