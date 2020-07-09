@@ -27,7 +27,7 @@ export type LegendItem<S> = {
   measureName: string;
   periodOffset?: number;
   windowSize?: number;
-  summarizationQueryFactory?: (points: TimeSeriesPoint[]) => () => Summary[];
+  summariesQueryFactory?: (points: TimeSeriesPoint[]) => () => Summary[];
 };
 
 export function createTimeSeriesQuery<S>(dataCube: DataCube, legendItems: LegendItem<S>[]): TimeSeriesQuery<S> {
@@ -70,7 +70,7 @@ function createTimeSeriesDatum<S>(rows: ResultRow[], startDate: Date, endDate: D
     measureName,
     periodOffset = 0,
     windowSize = DAY,
-    summarizationQueryFactory,
+    summariesQueryFactory,
     style,
   } = item;
 
@@ -120,8 +120,8 @@ function createTimeSeriesDatum<S>(rows: ResultRow[], startDate: Date, endDate: D
     points,
   };
 
-  if (summarizationQueryFactory) {
-    datum.summariesQuery = summarizationQueryFactory(points);
+  if (summariesQueryFactory) {
+    datum.summariesQuery = summariesQueryFactory(points);
   }
 
   return datum;
