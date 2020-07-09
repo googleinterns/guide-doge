@@ -18,7 +18,9 @@ export class ChartSummarizationComponent implements OnInit {
     private zone: NgZone,
   ) {
     if (this.summaryQuery) {
-      this.summaries = this.summaryQuery();
+      this.summaries = this.summaryQuery()
+        .sort(({ validity: va }, { validity: vb }) => vb - va)
+        .filter(({ validity }) => validity >= (this.validityThreshold ?? 0.0));
     } else {
       this.summaries = [];
     }
