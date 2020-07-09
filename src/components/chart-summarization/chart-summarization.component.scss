@@ -1,0 +1,11 @@
+@import "../../utils/constants";
+
+:host {
+  @include card-section;
+  display: block;
+
+  .instructions {
+    font-size: $font-size-medium;
+    line-height: 2em;
+  }
+}

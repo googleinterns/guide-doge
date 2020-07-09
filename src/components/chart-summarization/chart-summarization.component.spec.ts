@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ChartSummarizationComponent } from './summarization.component';
+import { ChartSummarizationComponent } from './chart-summarization.component';
 
 describe('ChartSummarizationComponent', () => {
   let component: ChartSummarizationComponent;

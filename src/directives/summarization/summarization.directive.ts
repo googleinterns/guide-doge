@@ -51,7 +51,7 @@ export class SummarizationDirective implements OnInit, OnDestroy {
     this.detach();
 
     const { host } = this;
-    const { ChartSummarizationModule } = await import('../../components/chart-summarization/summarization.module');
+    const { ChartSummarizationModule } = await import('../../components/chart-summarization/chart-summarization.module');
     this.summarizationComponentRef = await host.a11yPlaceholder.addComponent(ChartSummarizationModule, host, preference);
   }
 

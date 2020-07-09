@@ -1,6 +1,4 @@
-export type SummarizationQuery = () => Summarization[];
-
-export interface Summarization {
+export interface Summary {
   text: string;
   validity: number;
 }

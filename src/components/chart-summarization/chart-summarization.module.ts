@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ChartSummarizationComponent } from './summarization.component';
+import { ChartSummarizationComponent } from './chart-summarization.component';
 import { LazyA11yModule } from '../../directives/a11y-placeholder/types';
 
 @NgModule({

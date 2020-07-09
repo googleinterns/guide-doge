@@ -65,6 +65,10 @@ export class PreferenceService {
       type: 'boolean',
       defaultValue: true,
     },
+    validityThreshold: {
+      type: 'number',
+      defaultValue: 0.5,
+    },
   }, 'summarization');
 
   private createPreference<T extends Preference>(preferenceMeta: PreferenceMeta<T>, cookieKeySuffix: string) {

@@ -1,0 +1,8 @@
+<div class="instructions">
+  <ul *ngIf="this.hasSummaries; else elseBlock">
+    <li *ngFor="let summary of summaries">
+      ({{summary.validity | number: '1.2-2'}}) {{summary.text}}
+    </li>
+  </ul>
+  <ng-template #elseBlock>No summaries available.</ng-template>
+</div>
