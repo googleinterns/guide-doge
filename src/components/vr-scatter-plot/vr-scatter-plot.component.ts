@@ -4,15 +4,14 @@ import { PreferenceService } from '../../services/preference/preference.service'
 import { DataService } from '../../services/data/data.service';
 import { AUDIFICATION_PREFERENCE, DATA_PREFERENCE, DATA_TABLE_PREFERENCE, TEXT_SUMMARY_PREFERENCE } from '../../i18n';
 import { Meta } from '../../datasets/metas/types';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
-import { createLineChartMeta, LineChartMeta } from '../../datasets/metas/line-chart.meta';
 import { TimeSeriesDatum, TimeSeriesPoint, TimeSeriesQueryOptions, createTimeSeriesQuery } from '../../datasets/queries/time-series.query';
 import { LineChartDatum} from '../line-chart/line-chart.component';
-import { DAY } from '../../utils/timeUnits';
 import { query } from '@angular/animations';
 import { XYPoint } from '../../datasets/metas/types';
-
+import { LineChartMeta, createLineChartMeta } from '../../datasets/metas/line-chart.meta';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { DAY } from '../../utils/timeUnits';
+import { map, takeUntil } from 'rxjs/operators';
 
 
 @Component({
@@ -20,12 +19,12 @@ import { XYPoint } from '../../datasets/metas/types';
   templateUrl: './vr-scatter-plot.component.html'
 })
 export class VRScatterPlotComponent implements OnInit, OnChanges, OnDestroy{
-  private vrScatterPlot: Scatterplot;
-  @Input() meta: LineChartMeta;
-  private shape: string;
-  private color: string;
   @Input() endDate = new Date();
   @Input() startDate = new Date(this.endDate.getTime() - 30 * DAY);
+  @Input() meta: LineChartMeta;
+  private vrScatterPlot: Scatterplot;
+  private shape: string;
+  private color: string;
   dataset$ = this.preferenceService.dataset$;
   dataTable$ = this.preferenceService.dataTable$;
   textSummary$ = this.preferenceService.textSummary$;
@@ -44,6 +43,8 @@ export class VRScatterPlotComponent implements OnInit, OnChanges, OnDestroy{
   AUDIFICATION_PREFERENCE = AUDIFICATION_PREFERENCE;
   DATA_TABLE_PREFERENCE = DATA_TABLE_PREFERENCE;
   TEXT_SUMMARY_PREFERENCE = TEXT_SUMMARY_PREFERENCE;
+  activeDatum$ = new BehaviorSubject<TimeSeriesPoint| null>(null);
+ 
 
   constructor(
     private dataService: DataService,
