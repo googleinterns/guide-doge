@@ -16,15 +16,7 @@ export class ChartSummarizationComponent implements OnInit {
   constructor(
     @Inject('host') private host: LineChartComponent,
     private zone: NgZone,
-  ) {
-    if (this.summaryQuery) {
-      this.summaries = this.summaryQuery()
-        .sort(({ validity: va }, { validity: vb }) => vb - va)
-        .filter(({ validity }) => validity >= (this.validityThreshold ?? 0.0));
-    } else {
-      this.summaries = [];
-    }
-  }
+  ) { }
 
   get summaryQuery() {
     return this.host.datum.summariesQuery;
@@ -35,6 +27,13 @@ export class ChartSummarizationComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (this.summaryQuery) {
+      this.summaries = this.summaryQuery()
+        .sort(({ validity: va }, { validity: vb }) => vb - va)
+        .filter(({ validity }) => validity >= (this.validityThreshold ?? 0.0));
+    } else {
+      this.summaries = [];
+    }
   }
 
 }
