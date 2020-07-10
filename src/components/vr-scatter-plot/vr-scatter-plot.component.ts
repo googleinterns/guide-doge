@@ -11,6 +11,7 @@ import { XYPoint } from '../../datasets/metas/types';
 import { LineChartMeta, createLineChartMeta } from '../../datasets/metas/line-chart.meta';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { DAY } from '../../utils/timeUnits';
+import { datasets } from '../../datasets/'
 import { map, takeUntil } from 'rxjs/operators';
 
 
@@ -21,13 +22,15 @@ import { map, takeUntil } from 'rxjs/operators';
 export class VRScatterPlotComponent implements OnInit, OnChanges, OnDestroy{
   @Input() endDate = new Date();
   @Input() startDate = new Date(this.endDate.getTime() - 30 * DAY);
-  @Input() meta: LineChartMeta;
+  meta: LineChartMeta;
   private vrScatterPlot: Scatterplot;
   private shape: string;
   private color: string;
   dataset$ = this.preferenceService.dataset$;
   dataTable$ = this.preferenceService.dataTable$;
   textSummary$ = this.preferenceService.textSummary$;
+  time = new Date(Date.now() - 100 * DAY);
+  data: XYPoint<Date, number>[] = [];
   componentMetas: Meta[];
   queryOptions$ = new BehaviorSubject<TimeSeriesQueryOptions>({
     range: [this.startDate, this.endDate],
@@ -38,24 +41,18 @@ export class VRScatterPlotComponent implements OnInit, OnChanges, OnDestroy{
   });
   private destroy$ = new Subject();
   activePoint$ = new BehaviorSubject<TimeSeriesPoint | null>(null);
-
-  DATA_PREFERENCE = DATA_PREFERENCE;
-  AUDIFICATION_PREFERENCE = AUDIFICATION_PREFERENCE;
-  DATA_TABLE_PREFERENCE = DATA_TABLE_PREFERENCE;
-  TEXT_SUMMARY_PREFERENCE = TEXT_SUMMARY_PREFERENCE;
-  activeDatum$ = new BehaviorSubject<TimeSeriesPoint| null>(null);
  
 
   constructor(
     private dataService: DataService,
     private preferenceService: PreferenceService,
   ) {
-    const time = new Date(Date.now() - 100 * DAY);
-    const data: XYPoint<Date, number>[] = [];
-    //const rand = random.normal(0, 500);
+    //dataService.preference
+   
+    dataService = new DataService(preferenceService);
     for (let i = 1; i <= 100; i++) {
-      data.push({
-        x: new Date(time.getTime() + i * DAY),
+      this.data.push({
+        x: new Date(this.time.getTime() + i * DAY),
         y: 20,
       });
     }
@@ -63,42 +60,42 @@ export class VRScatterPlotComponent implements OnInit, OnChanges, OnDestroy{
       'Line Chart',
       (options: TimeSeriesQueryOptions) => [{
         label: 'Dummy Data',
-        points: data,
+        points: this.data,
       }],
     );
-    console.log(this.dataset$.value);
-        this.dataService.dataset$
+    
+      this.dataService.dataset$
       .pipe(takeUntil(this.destroy$))
       .subscribe(dataset => {
-        // console.log(dataset.metas);
-        this.componentMetas = dataset.metas;
+        this.componentMetas = dataset.metas
+         this.meta = dataset.metas[0] as any;
       });
-      console.log(this.dataService.dataset$);
+
+      // this.dataService.dataset$ will print out data array points
+      console.log(dataService.dataset$);
       this.vrScatterPlot = new Scatterplot('a-sphere');
   }
 
   get datum() {
     return this.datum$.value;
   }
+
   ngOnInit() {
     this.queryOptions$
     .pipe(takeUntil(this.destroy$))
     .pipe(map(queryOption => {
-      this.activePoint$.next(null);
-      // return this.dataset$.meta.query(queryOption)[0];
+      console.log(this.meta.query(queryOption)[0]);
       return this.meta.query(queryOption)[0];
     }))
     .subscribe(this.datum$);
     console.log(this.datum$.value.points);
-   this.vrScatterPlot.init(document.querySelector('a-scene'), [10, 20, 30, 40, 50, 60]);
+    
+   this.vrScatterPlot.init(document.querySelector('a-scene'), this.data);
   }
 
   ngOnDestroy() {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // if ('measureName' in changes) {
-    //   this.data = this.dataService.getMeasureOverDays(this.measureName);
-    //   this.activeDatum = null;
     }
   }
