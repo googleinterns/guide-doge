@@ -24,7 +24,7 @@ export const configMeta: PreferenceMeta<Config> = {
   },
   workdayHolidayActiveRatio: {
     type: 'number',
-    defaultValue: 2,
+    defaultValue: 10,
   },
 };
 
