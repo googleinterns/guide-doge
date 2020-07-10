@@ -79,6 +79,10 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
       .pipe(takeUntil(this.destroy$))
       .pipe(map(queryOption => {
         this.activePoint$.next(null);
+        // TODO: Render multiple data (legend items) on line chart
+        // It should render multiple lines when there are more than one datum in the
+        // array, but this feature is not yet supported. The workaround here is to
+        // render the first datum in the array only.
         return this.meta.query(queryOption)[0];
       }))
       .subscribe(this.datum$);
