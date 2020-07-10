@@ -29,8 +29,13 @@ export class ChartSummarizationComponent implements OnInit {
   ngOnInit(): void {
     if (this.summaryQuery) {
       this.summaries = this.summaryQuery()
+        .filter(({ validity }) => validity >= (this.validityThreshold ?? 0.0))
         .sort(({ validity: va }, { validity: vb }) => vb - va)
-        .filter(({ validity }) => validity >= (this.validityThreshold ?? 0.0));
+        // TODO: use customized angular pipe to capitalize summary
+        .map(({ text, ...rest }) => ({
+          text: text.charAt(0).toUpperCase() + text.slice(1),
+          ...rest,
+        }));
     } else {
       this.summaries = [];
     }
