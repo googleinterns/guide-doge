@@ -1,5 +1,5 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { VRAccessiilityComponent } from './vr-accessibility.component';
+import { VRAccessibilityComponent } from './vr-accessibility.component';
 
 
 
