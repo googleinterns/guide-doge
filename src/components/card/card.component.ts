@@ -13,7 +13,7 @@ export class CardComponent<T extends Meta> implements OnInit {
   humanizeMeasureName = humanizeMeasureName;
   currentTabTitle: string;
 
-  get titles() {
+  get titles(): string[] {
     if (this.isTabbed()) {
       return this.meta.metas.map(c => c.title);
     } else {
