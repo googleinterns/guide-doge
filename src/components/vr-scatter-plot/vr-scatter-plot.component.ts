@@ -18,7 +18,7 @@ export class VRScatterPlotComponent implements OnInit, OnChanges, OnDestroy{
     this.vrScatterPlot = new Scatterplot('a-sphere');
   }
   ngOnInit() {
-   this.vrScatterPlot.init(document.querySelector('a-scene'), [10, 20, 30, 40, 50, 60]);
+   this.vrScatterPlot.init(document.querySelector('a-scene'), [0, 1, 2, 3, 4, 5, 6]);
   }
 
   ngOnDestroy() {

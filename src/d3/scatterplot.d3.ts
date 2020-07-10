@@ -30,6 +30,7 @@ export class Scatterplot{
     this.createSky();
     this.generatePts();
     this.setColor('blue');
+    this.setSize('0.1');
     this.createGridPlane();
   }
 
@@ -39,9 +40,9 @@ export class Scatterplot{
     // d is data at index, i within
     // select all shapes within given container
     d3.select(this.container).selectAll(this.shape).attr('position', (d, i) => {
-      const x = i * 5;
-      const y = i * 10;
-      const z = (-this.data[i] * 2);
+      const x = i;
+      const y = i;
+      const z = 2 * (i*i);
       return `${x} ${y} ${z}`;
     });
   }
@@ -50,11 +51,17 @@ export class Scatterplot{
       return color;
     });
   }
+
+  private setSize(size) {
+    d3.select(this.container).selectAll(this.shape).attr('radius', () => {
+      return size;
+    });
+  }
   private createSky(){
     const aSky = document.createElement('a-sky');
     this.container!.appendChild(aSky);
     d3.select(this.container).selectAll('a-sky').attr('color', () => {
-      return '#f2b9af';
+      return '#808080';
     });
   }
   private createGridPlane()

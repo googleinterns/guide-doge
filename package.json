@@ -13,7 +13,7 @@
   ],
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --ssl=true",
     "build": "ng build",
     "test": "ng test --codeCoverage=true",
     "test-ci": "npm test -- --watch=false",
