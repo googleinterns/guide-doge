@@ -4,6 +4,7 @@
  * @param array The input array with possibly redundant values.
  */
 import { Subject } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 export function unique<T>(array: T[]): T[] {
   return [...new Set(array)];
@@ -34,9 +35,11 @@ export function waitFor(duration: number, cancel$?: Subject<unknown>) {
       cancelSubscription?.unsubscribe();
       resolve(true);
     }, duration);
-    const cancelSubscription = cancel$?.subscribe(() => {
-      window.clearTimeout(timeoutId);
-      resolve(false);
-    });
+    const cancelSubscription = cancel$
+      ?.pipe(take(1))
+      .subscribe(() => {
+        window.clearTimeout(timeoutId);
+        resolve(false);
+      });
   });
 }
