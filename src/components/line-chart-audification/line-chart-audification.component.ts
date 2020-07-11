@@ -184,7 +184,12 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     }));
   }
 
-  private readOutRange() {
+  private async readOutRange() {
+    if (!this.melody) {
+      return false;
+    }
+    await this.melody.prepare();
+    await this.melody.informFrequencyRange();
     return this.screenReaderComponent.readOut(t(AUDIFICATION.RANGE, {
       min: formatY(this.range[0]),
       max: formatY(this.range[this.range.length - 1]),
