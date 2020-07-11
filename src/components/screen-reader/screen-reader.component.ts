@@ -19,10 +19,10 @@ export class ScreenReaderComponent implements OnDestroy {
   }
 
   /**
-   * Make a screen-reader software read out the text.
+   * Makes a screen-reader software read out the text.
    *
    * @param text The text to read out.
-   * @return The delay before reading out.
+   * @return The promise to be fulfilled with true after reading out finishes. If cancelled, it will be immediately fulfilled with false.
    */
   async readOut(text: string): Promise<boolean> {
     this.cancel();
@@ -38,6 +38,9 @@ export class ScreenReaderComponent implements OnDestroy {
     return waitFor(this.estimateDuration(text), this.cancel$);
   }
 
+  /**
+   * Cancels previously scheduled reading out.
+   */
   cancel() {
     this.cancel$.next();
   }
