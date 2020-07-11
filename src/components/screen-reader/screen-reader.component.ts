@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { waitFor } from '../../utils/misc';
 import { Subject } from 'rxjs';
+import * as numbered from 'numbered';
 
 @Component({
   selector: 'app-screen-reader',
@@ -45,21 +46,26 @@ export class ScreenReaderComponent implements OnDestroy {
     this.cancel$.next();
   }
 
+  /**
+   * Estimates how long it would take to read the given text. Currently only works for English.
+   *
+   * @param text The text to estimate the duration of.
+   */
   private estimateDuration(text: string) {
-    const letterDuration = 50;
-    const numberDuration = 200;
-    const spaceDuration = 100;
-    const periodDuration = 400;
+    // spell out numbers
+    const plainText = text.replace(/\d+(\.\d+)?/g, match => numbered.stringify(+match));
 
-    const countMatches = regexp => (text.match(regexp) ?? []).length;
-    const letters = countMatches(/[a-zA-Z]/g);
-    const numbers = countMatches(/\d/g);
-    const spaces = countMatches(/\s+/g);
-    const periods = countMatches(/[.?!]+/g);
+    const letterDuration = 30;
+    const wordDelay = 100;
+    const sentenceDelay = 300;
 
-    return letterDuration * letters
-      + numberDuration * numbers
-      + spaceDuration * spaces
-      + periodDuration * periods;
+    const countMatches = regexp => (plainText.match(regexp) ?? []).length;
+    const sentences = countMatches(/[.?!]+/g);
+    const words = countMatches(/\s+/g);
+    const letters = plainText.replace(/\W/g, '').length;
+
+    return sentenceDelay * sentences
+      + wordDelay * words
+      + letterDuration * letters;
   }
 }
