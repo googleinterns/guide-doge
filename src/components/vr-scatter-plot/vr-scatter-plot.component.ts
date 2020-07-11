@@ -3,15 +3,12 @@ import { Scatterplot } from '../../d3/scatterplot.d3';
 import { PreferenceService } from '../../services/preference/preference.service';
 import { DataService } from '../../services/data/data.service';
 import { Meta } from '../../datasets/metas/types';
-import { TimeSeriesPoint, TimeSeriesQueryOptions } from '../../datasets/queries/time-series.query';
+import { TimeSeriesQueryOptions } from '../../datasets/queries/time-series.query';
 import { LineChartDatum} from '../line-chart/line-chart.component';
-import { XYPoint } from '../../datasets/metas/types';
-import { LineChartMeta, createLineChartMeta } from '../../datasets/metas/line-chart.meta';
+import { LineChartMeta } from '../../datasets/metas/line-chart.meta';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { DAY } from '../../utils/timeUnits';
 import { map, takeUntil } from 'rxjs/operators';
-
-
 
 @Component({
   selector: 'app-vr-scatter-plot',
