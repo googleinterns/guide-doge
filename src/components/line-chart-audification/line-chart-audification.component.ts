@@ -32,7 +32,6 @@ export class LineChartAudificationComponent implements AudificationPreference, O
   private domain: Date[];
   private range: number[];
   @HostBinding('attr.tabindex') private readonly tabindex = 0;
-  private resumeTimeoutId: number | null = null;
 
   constructor(
     @Inject('host') private host: LineChartComponent,
@@ -147,7 +146,7 @@ export class LineChartAudificationComponent implements AudificationPreference, O
 
   @HostListener('focus', ['$event'])
   handleFocus() {
-    this.readOutCurrentLegendItem();
+    return this.readOutCurrentLegendItem();
   }
 
   @HostListener('blur', ['$event'])
@@ -155,29 +154,27 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     this.melody?.pause();
   }
 
-  private resumeMelody(reversed: boolean) {
-    if (this.readBefore) {
-      const delay = this.readOutCurrentDatum();
-      const duration = 2000; // an estimated upper bound of how long it would take to read out
-      this.resumeTimeoutId = window.setTimeout(async () => {
-        this.resumeTimeoutId = null;
-        this.melody?.resume(reversed);
-      }, delay + duration);
-    } else {
-      this.melody?.resume(reversed);
+  private async resumeMelody(reversed: boolean) {
+    if (!this.melody) {
+      return false;
     }
-  }
-
-  private pauseMelody() {
-    if (this.resumeTimeoutId !== null) {
-      window.clearTimeout(this.resumeTimeoutId);
-      this.resumeTimeoutId = null;
-    } else {
-      this.melody?.pause();
-      if (this.readAfter) {
-        this.readOutCurrentDatum();
+    await this.melody.prepare();
+    if (this.readBefore) {
+      const waited = await this.readOutCurrentDatum();
+      if (!waited) {
+        return false;
       }
     }
+    return this.melody.resume(reversed);
+  }
+
+  private async pauseMelody() {
+    this.screenReaderComponent.cancel();
+    this.melody?.pause();
+    if (this.readAfter) {
+      return this.readOutCurrentDatum();
+    }
+    return true;
   }
 
   private readOutDomain() {
@@ -211,9 +208,9 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     return this.screenReaderComponent.readOut(reorderedLabels.join(', '));
   }
 
-  private readOutCurrentDatum() {
+  private async readOutCurrentDatum() {
     if (!this.melody) {
-      return 0;
+      return false;
     }
     const { x, y } = this.points[this.melody.pointIndex];
     return this.screenReaderComponent.readOut(t(AUDIFICATION.ACTIVE_POINT, {

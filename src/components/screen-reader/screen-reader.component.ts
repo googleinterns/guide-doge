@@ -1,15 +1,22 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
+import { waitFor } from '../../utils/misc';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-screen-reader',
   templateUrl: './screen-reader.component.html',
   styleUrls: ['./screen-reader.component.scss'],
 })
-export class ScreenReaderComponent {
+export class ScreenReaderComponent implements OnDestroy {
   @Input() repetitionDelay = 500; // duration (in ms) for which empty the live text when the same text needs to be read out consequently
 
   liveText: string | null = null;
-  private readOutTimeoutId: number | null = null;
+  private cancel$ = new Subject();
+
+  ngOnDestroy() {
+    this.cancel$.next();
+    this.cancel$.complete();
+  }
 
   /**
    * Make a screen-reader software read out the text.
@@ -17,21 +24,39 @@ export class ScreenReaderComponent {
    * @param text The text to read out.
    * @return The delay before reading out.
    */
-  readOut(text: string) {
-    if (this.readOutTimeoutId !== null) {
-      window.clearTimeout(this.readOutTimeoutId);
-      this.readOutTimeoutId = null;
-    }
+  async readOut(text: string): Promise<boolean> {
+    this.cancel();
     const repetitive = this.liveText === text;
     if (repetitive) {
       this.liveText = null;
-      this.readOutTimeoutId = window.setTimeout(() => {
-        this.readOutTimeoutId = null;
-        this.readOut(text);
-      }, this.repetitionDelay);
-    } else {
-      this.liveText = text;
+      const waited = await waitFor(this.repetitionDelay, this.cancel$);
+      if (!waited) {
+        return false;
+      }
     }
-    return repetitive ? this.repetitionDelay : 0;
+    this.liveText = text;
+    return waitFor(this.estimateDuration(text), this.cancel$);
+  }
+
+  cancel() {
+    this.cancel$.next();
+  }
+
+  private estimateDuration(text: string) {
+    const letterDuration = 50;
+    const numberDuration = 200;
+    const spaceDuration = 100;
+    const periodDuration = 400;
+
+    const countMatches = regexp => (text.match(regexp) ?? []).length;
+    const letters = countMatches(/[a-zA-Z]/g);
+    const numbers = countMatches(/\d/g);
+    const spaces = countMatches(/\s+/g);
+    const periods = countMatches(/[.?!]+/g);
+
+    return letterDuration * letters
+      + numberDuration * numbers
+      + spaceDuration * spaces
+      + periodDuration * periods;
   }
 }

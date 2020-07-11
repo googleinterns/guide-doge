@@ -44,8 +44,8 @@ export const en: I18n = {
   [AUDIFICATION_PREFERENCE.lowestPitch]: 'Lowest note (Hz)',
   [AUDIFICATION_PREFERENCE.highestPitch]: 'Highest note (Hz)',
   [AUDIFICATION_PREFERENCE.noteDuration]: 'Note duration (ms)',
-  [AUDIFICATION_PREFERENCE.readAfter]: 'Read out before playing',
-  [AUDIFICATION_PREFERENCE.readBefore]: 'Read out after playing',
+  [AUDIFICATION_PREFERENCE.readBefore]: 'Read out before playing',
+  [AUDIFICATION_PREFERENCE.readAfter]: 'Read out after playing',
 
   [DATA_TABLE_PREFERENCE.enabled]: 'Data Table',
 

@@ -62,14 +62,18 @@ export class Melody {
     return Math.pow(2, (keyNumber - 49) / 12) * 440;
   }
 
-  async resume(reversed: boolean) {
+  async prepare() {
     if (Tone.getContext().state === 'suspended') {
       await Tone.start();
     }
-    if (!this.isPlaying) {
-      this.reversed = reversed;
-      this.playNextNote();
+  }
+
+  resume(reversed: boolean) {
+    if (this.isPlaying) {
+      return;
     }
+    this.reversed = reversed;
+    this.playNextNote();
   }
 
   pause() {
