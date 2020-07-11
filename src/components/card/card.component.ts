@@ -11,9 +11,9 @@ import { TabbedChartsMeta } from '../../datasets/metas/tabbed-charts.meta';
 export class CardComponent<T extends Meta> implements OnInit {
   @Input() meta: T;
   humanizeMeasureName = humanizeMeasureName;
-  currentTabTitle: string;
+  currentTabTitle?: string;
 
-  get titles() {
+  get titles(): string[] {
     if (this.isTabbed()) {
       return this.meta.metas.map(c => c.title);
     } else {
@@ -34,7 +34,7 @@ export class CardComponent<T extends Meta> implements OnInit {
     if (this.isTabbed()) {
       this.setCurrentTabTitle(this.meta.metas[0].title);
     } else {
-      this.setCurrentTabTitle('');
+      this.setCurrentTabTitle(undefined);
     }
   }
 
