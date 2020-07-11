@@ -68,6 +68,21 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     this.host.activePoint = activePoint;
   }
 
+  private get i18nDomainArgs() {
+    return {
+      domain_min: formatX(this.domain[0]),
+      domain_max: formatX(this.domain[this.domain.length - 1]),
+      domain_unit: t(AUDIFICATION.DOMAIN_UNIT_DAY),
+    };
+  }
+
+  private get i18nRangeArgs() {
+    return {
+      range_min: formatY(this.range[0]),
+      range_max: formatY(this.range[this.range.length - 1]),
+    };
+  }
+
   ngOnInit() {
     combineLatest([
       this.host.data$,
@@ -178,10 +193,7 @@ export class LineChartAudificationComponent implements AudificationPreference, O
   }
 
   private readOutDomain() {
-    return this.screenReaderComponent.readOut(t(AUDIFICATION.DOMAIN, {
-      min: formatX(this.domain[0]),
-      max: formatX(this.domain[this.domain.length - 1]),
-    }));
+    return this.screenReaderComponent.readOut(t(AUDIFICATION.DOMAIN, this.i18nDomainArgs));
   }
 
   private async readOutRange() {
@@ -190,19 +202,14 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     }
     await this.melody.prepare();
     await this.melody.informFrequencyRange();
-    return this.screenReaderComponent.readOut(t(AUDIFICATION.RANGE, {
-      min: formatY(this.range[0]),
-      max: formatY(this.range[this.range.length - 1]),
-    }));
+    return this.screenReaderComponent.readOut(t(AUDIFICATION.RANGE, this.i18nRangeArgs));
   }
 
   private readOutCurrentLegendItem() {
     return this.screenReaderComponent.readOut(tA11y(AUDIFICATION.CURRENT_LEGEND_ITEM, {
       label: this.data[this.datumIndex].label,
-      domain_min: formatX(this.domain[0]),
-      domain_max: formatX(this.domain[this.domain.length - 1]),
-      range_min: formatY(this.range[0]),
-      range_max: formatY(this.range[this.range.length - 1]),
+      ...this.i18nDomainArgs,
+      ...this.i18nRangeArgs,
     }));
   }
 

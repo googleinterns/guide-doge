@@ -14,7 +14,7 @@ export const ko: I18n = {
     '<kbd>UP</kbd> 또는 <kbd>DOWN</kbd>을 눌러 범례 항목을 변경합니다.',
     '<kbd>0</kbd> ... <kbd>9</kbd>를 눌러 재생 위치를 이동합니다.',
   ].join(' <br/>'),
-  [AUDIFICATION.DOMAIN]: '정의역 %(min)s 부터 %(max)s 까지.',
-  [AUDIFICATION.RANGE]: '치역 %(min)s 부터 %(max)s 까지.',
+  [AUDIFICATION.DOMAIN]: '정의역은 %(domain_min)s 부터 %(domain_max)s 까지이며 한 음표는 %(domain_unit)s을 나타냅니다.',
+  [AUDIFICATION.RANGE]: '치역은 %(range_min)s 부터 %(range_max)s 까지입니다.',
   [AUDIFICATION.ACTIVE_POINT]: '%(y)s, %(x)s.',
 };
