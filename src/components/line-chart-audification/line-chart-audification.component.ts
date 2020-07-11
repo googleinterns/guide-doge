@@ -112,51 +112,52 @@ export class LineChartAudificationComponent implements AudificationPreference, O
   }
 
   @HostListener('keydown', ['$event'])
-  async handleKeyDown($event: KeyboardEvent) {
+  async handleKeyDown($event: KeyboardEvent): Promise<boolean> {
     const { key, shiftKey, repeat, altKey, ctrlKey, metaKey } = $event;
-    if (!this.melody || altKey || ctrlKey || metaKey) {
-      return;
-    }
-    if (!repeat) {
-      if (key === ' ') {
-        this.resumeMelody(shiftKey);
-      } else if (key === 'x') {
-        this.readOutDomain();
-      } else if (key === 'y') {
-        this.readOutRange();
-      } else if (key === 'l') {
-        this.readOutLegendItems();
-      } else if ('0' <= key && key <= '9') {
-        const pointIndex = Math.floor(+key / 10 * this.points.length);
-        this.melody.seekTo(pointIndex, true);
-        this.readOutCurrentDatum();
-      } else if (key === 'ArrowUp' || key === 'ArrowDown') {
-        const delta = key === 'ArrowUp' ? +1 : -1;
-        const { pointIndex } = this.melody;
-        this.datumIndex = mod(this.datumIndex + delta, this.data.length);
-        this.melody.seekTo(pointIndex, true);
-        this.readOutCurrentLegendItem();
-      } else if (key === '?') {
-        this.readOutInstructions();
-      } else {
-        return;
-      }
+    if (!this.melody || altKey || ctrlKey || metaKey || key === 'Tab') {
+      return false;
     }
     $event.preventDefault();
     $event.stopPropagation();
+    if (repeat) {
+      return false;
+    }
+    if (key === ' ') {
+      return this.resumeMelody(shiftKey);
+    } else if (key === 'x') {
+      return this.readOutDomain();
+    } else if (key === 'y') {
+      return this.readOutRange();
+    } else if (key === 'l') {
+      return this.readOutLegendItems();
+    } else if ('0' <= key && key <= '9') {
+      const pointIndex = Math.floor(+key / 10 * this.points.length);
+      this.melody.seekTo(pointIndex, true);
+      return this.readOutCurrentDatum();
+    } else if (key === 'ArrowUp' || key === 'ArrowDown') {
+      const delta = key === 'ArrowUp' ? +1 : -1;
+      const { pointIndex } = this.melody;
+      this.datumIndex = mod(this.datumIndex + delta, this.data.length);
+      this.melody.seekTo(pointIndex, true);
+      return this.readOutCurrentLegendItem();
+    } else if (key === '?') {
+      return this.readOutInstructions();
+    }
+    return false;
   }
 
   @HostListener('keyup', ['$event'])
-  handleKeyUp($event: KeyboardEvent) {
+  async handleKeyUp($event: KeyboardEvent): Promise<boolean> {
     if (!this.melody) {
-      return;
+      return false;
     }
     $event.preventDefault();
     $event.stopPropagation();
     const { key } = $event;
     if (key === ' ') {
-      this.pauseMelody();
+      return this.pauseMelody();
     }
+    return false;
   }
 
   @HostListener('focus', ['$event'])
@@ -180,7 +181,8 @@ export class LineChartAudificationComponent implements AudificationPreference, O
         return false;
       }
     }
-    return this.melody.resume(reversed);
+    this.melody.resume(reversed);
+    return true;
   }
 
   private async pauseMelody() {
