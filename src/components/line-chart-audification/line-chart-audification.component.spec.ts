@@ -7,6 +7,7 @@ import { ScreenReaderModule } from '../screen-reader/screen-reader.module';
 import { MatCardModule } from '@angular/material/card';
 import { createLineChartMeta } from '../../datasets/metas/line-chart.meta';
 import { mockData } from '../../utils/mocks.spec';
+import { mod } from '../../utils/misc';
 
 describe('LineChartAudificationComponent', () => {
   let fixture: ComponentFixture<LineChartAudificationComponent>;
@@ -103,11 +104,15 @@ describe('LineChartAudificationComponent', () => {
   });
 
   it('should switch the legend item upon pressing UP or DOWN.', () => {
-    ['ArrowUp', 'ArrowDown'].forEach(key => {
-      const prevDatumIndex = component.datumIndex;
-      triggerKeyDown(key);
-      expect(component.datumIndex).not.toBe(prevDatumIndex);
-    });
+    let prevDatumIndex;
+
+    prevDatumIndex = component.datumIndex;
+    triggerKeyDown('ArrowUp');
+    expect(component.datumIndex).toBe(mod(prevDatumIndex + 1, mockData.length));
+
+    prevDatumIndex = component.datumIndex;
+    triggerKeyDown('ArrowDown');
+    expect(component.datumIndex).toBe(mod(prevDatumIndex - 1, mockData.length));
   });
 
   it('should pause the melody when losing focus.', () => {

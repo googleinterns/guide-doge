@@ -5,6 +5,7 @@ import {
   DATA_TABLE_PREFERENCE,
   GUIDE_DOGE,
   I18n,
+  PUNCTUATION,
   TEXT_SUMMARY_PREFERENCE,
 } from '../types';
 
@@ -53,4 +54,6 @@ export const en: I18n = {
   [DATA_TABLE_PREFERENCE.enabled]: 'Data Table',
 
   [TEXT_SUMMARY_PREFERENCE.enabled]: 'Text Summary',
+
+  [PUNCTUATION.QUESTION_MARK]: 'QUESTION MARK',
 };
