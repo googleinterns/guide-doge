@@ -9,9 +9,9 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       return summariesCache;
     }
 
-    const uHighTraffic = ({ y }) => tFuncL(120, 150)(y);
-    const uMediumTraffic = ({ y }) => tFunc(50, 75, 125, 150)(y);
-    const uLowTraffic = ({ y }) => tFuncR(50, 75)(y);
+    const uHighTraffic = ({ y }) => tFuncL(130, 150)(y);
+    const uMediumTraffic = ({ y }) => tFunc(50, 70, 130, 150)(y);
+    const uLowTraffic = ({ y }) => tFuncR(50, 70)(y);
 
     const uMostPercentage = (v: number) => tFuncL(0.6, 0.7)(v);
     const uHalfPercentage = (v: number) => tFunc(0.3, 0.4, 0.6, 0.7)(v);
@@ -21,9 +21,9 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const uWeekday = pair => 1 - uHoliday(pair);
 
     const uTraffics = {
-      high: uHighTraffic,
-      medium: uMediumTraffic,
-      low: uLowTraffic,
+      "high (Count > 140)": uHighTraffic,
+      "medium (60 < Count < 140)": uMediumTraffic,
+      "low (Count < 60)": uLowTraffic,
     };
 
     const uPercentages = {

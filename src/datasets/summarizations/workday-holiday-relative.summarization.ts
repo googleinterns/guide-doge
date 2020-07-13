@@ -39,9 +39,9 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     }).filter(({ y }) => y >= 0);
 
     const uTraffics = {
-      higher: uHigherTraffic,
-      equal: uEqualTraffic,
-      lower: uLowerTraffic,
+      "higher (WorkdayCount/HolidayCount > 1.3)": uHigherTraffic,
+      "equal (0.7 < WorkdayCount/HolidayCount < 1.3)": uEqualTraffic,
+      "lower (WorkdayCount/HolidayCount < 0.7)": uLowerTraffic,
     };
 
     const uPercentages = {
