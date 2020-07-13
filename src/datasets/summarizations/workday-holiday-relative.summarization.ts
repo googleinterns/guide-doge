@@ -37,7 +37,6 @@ export function queryFactory(points: TimeSeriesPoint[]) {
         return { x: week, y: weekdayHolidayRatio };
       }
     }).filter(({ y }) => y >= 0);
-    console.log(points)
 
     const uTraffics = {
       higher: uHigherTraffic,

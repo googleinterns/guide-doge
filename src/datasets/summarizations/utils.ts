@@ -1,5 +1,16 @@
+import { Summary } from './types';
 import { TimeSeriesPoint } from '../queries/time-series.query';
 import { DAY } from '../../utils/timeUnits';
+
+export type SummariesQueryFactory = (points: TimeSeriesPoint[]) => () => Summary[];
+
+export function joinSummariesQueryFactories(...queryFactories: SummariesQueryFactory[]): SummariesQueryFactory {
+  return (points: TimeSeriesPoint[]) => () => {
+    const summaries = queryFactories.map(f => f(points)());
+    const summariesFlat = summaries.reduce((p, summary) => [...p, ...summary], []);
+    return summariesFlat;
+  };
+}
 
 export function tFunc(bStart: number, cStart: number, cEnd: number, bEnd: number) {
   return (v) => {

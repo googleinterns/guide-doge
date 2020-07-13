@@ -7,7 +7,9 @@ import { createLineChartMeta } from './metas/line-chart.meta';
 import { PreferenceMeta } from '../services/preference/types';
 import { createDefault } from '../utils/preferences';
 import { DAY } from '../utils/timeUnits';
+import { joinSummariesQueryFactories } from './summarizations/utils';
 import * as WorkdayHolidaySummarization from './summarizations/workday-holiday.summarization';
+import * as WorkdayHolidayRelativeSummarization from './summarizations/workday-holiday-relative.summarization';
 
 export interface Config {
   dailyWeightStd: number;
@@ -67,7 +69,10 @@ export function create(config: Config): Dataset {
 
   const dataCube = generateCube(categories, measures, generateCubeConfig);
 
-  const visitCountSummariesQueryFactory =  WorkdayHolidaySummarization.queryFactory;
+  const visitCountSummariesQueryFactory = joinSummariesQueryFactories(
+    WorkdayHolidaySummarization.queryFactory,
+    WorkdayHolidayRelativeSummarization.queryFactory,
+  );
 
   const lineChartMeta = createLineChartMeta(
     'Visit Count',
