@@ -1,6 +1,8 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { Scatterplot } from '../../d3/scatterplot.d3';
 import 'aframe';
+import 'aframe-extras';
+import 'super-hands';
 
 
 
@@ -18,7 +20,7 @@ export class VRAccessibilityComponent implements OnInit, OnChanges, OnDestroy{
     this.vrScatterPlot = new Scatterplot('a-sphere');
   }
   ngOnInit() {
-   this.vrScatterPlot.init(document.querySelector('a-scene'), [10, 20, 30, 40, 50, 60]);
+   this.vrScatterPlot.init(document.querySelector('a-scene'), [0, 1, 2, 3, 4, 5, 6]);
   }
 
   ngOnDestroy() {

@@ -1,4 +1,14 @@
-<a-scene embedded style="position: absolute; height: 90vh;">
+<!--a-scene embedded style="position: absolute; height: 90vh;">
   <a-entity oculus-touch-controls="hand: left"></a-entity>
   <a-entity oculus-touch-controls="hand: right"></a-entity>
-</a-scene>
+</a-scene-->
+<a-scene embedded style="position: absolute; height: 90vh;">
+    <a-assets></a-assets>
+    <a-entity>
+      <a-camera></a-camera>
+      <a-entity sphere-collider super-hands oculus-touch-controls="hand: left;"></a-entity>
+      <a-entity sphere-collider super-hands oculus-touch-controls="hand: right;"></a-entity>
+    </a-entity>
+    <!-- hover & drag-drop won't have any obvious effect without some additional event handlers or components. See the examples page for more -->
+    <a-box hoverable grabbable stretchable draggable dropppable color="green" position="-1 0 -1"></a-box>
+  </a-scene>

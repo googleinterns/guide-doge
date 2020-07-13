@@ -30,6 +30,8 @@ export class Scatterplot{
     this.createSky();
     this.generatePts();
     this.setColor('blue');
+    this.setRadius(0.1);
+    this.setInteraction();
     this.createGridPlane();
   }
 
@@ -39,9 +41,9 @@ export class Scatterplot{
     // d is data at index, i within
     // select all shapes within given container
     d3.select(this.container).selectAll(this.shape).attr('position', (d, i) => {
-      const x = i * 5;
-      const y = i * 10;
-      const z = (-this.data[i] * 2);
+      const x = i/10;
+      const y = this.data[i]/5;
+      const z = -1;
       return `${x} ${y} ${z}`;
     });
   }
@@ -50,6 +52,26 @@ export class Scatterplot{
       return color;
     });
   }
+
+  private setRadius(size) {
+    d3.select(this.container).selectAll(this.shape).attr('radius', size);
+  }
+
+  private setInteraction() {
+    d3.select(this.container).selectAll(this.shape).attr('hoverable', '');
+    d3.select(this.container).selectAll(this.shape).attr('grabbable', '');
+    d3.select(this.container).selectAll(this.shape).attr('stretchable', '');
+    d3.select(this.container).selectAll(this.shape).attr('draggable', '');
+    d3.select(this.container).selectAll(this.shape).attr('dropppable', '');
+
+  }
+
+  //adding event listeners to react if object is hovered
+  /*private addEventListeners() {
+    if (d3.select(this.container).selectAll(this.shape).is('hovered')
+  }*/
+
+
   private createSky(){
     const aSky = document.createElement('a-sky');
     this.container!.appendChild(aSky);
