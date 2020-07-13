@@ -52,7 +52,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
         for (const [traffic, uTraffic] of Object.entries(uTraffics)) {
           const t = sigmaCountQAB(uPercentage, uDay, uTraffic);
           summaries.push({
-            text: `${quantifier} of ${day}s are ${traffic} traffic.`,
+            text: `<b>${quantifier}</b> of <b>${day}s</b> are <b>${traffic}</b> traffic.`,
             validity: t
           });
         }
