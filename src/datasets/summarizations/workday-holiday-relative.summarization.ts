@@ -68,7 +68,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       for (const [traffic, uTraffic] of Object.entries(uTraffics)) {
         const t = sigmaCountQA(uPercentage, uTraffic);
         summaries.push({
-          text: `In ${quantifier} of week, weekdays has ${traffic} traffic.`,
+          text: `In ${quantifier} of weeks, weekdays has ${traffic} traffic.`,
           validity: t
         });
       }
