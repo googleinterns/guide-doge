@@ -1,3 +1,6 @@
+import { TimeSeriesPoint } from '../queries/time-series.query';
+import { DAY } from '../../utils/timeUnits';
+
 export function tFunc(bStart: number, cStart: number, cEnd: number, bEnd: number) {
   return (v) => {
     if (v < bStart) {
@@ -20,4 +23,14 @@ export function tFuncL(bStart: number, cStart: number) {
 
 export function tFuncR(cEnd: number, bEnd: number) {
   return tFunc(-Infinity, -Infinity, cEnd, bEnd);
+}
+
+export function groupByWeek(points: TimeSeriesPoint[]): TimeSeriesPoint[][] {
+  const weekPoints: Record<string, TimeSeriesPoint[]> = {};
+  for (const point of points) {
+    const week = Math.floor((point.x.getTime() - 4 * DAY) / (7 * DAY));
+    weekPoints[week] = [...(weekPoints[week] ?? []), point];
+  }
+  const sortedWeekPointPairs = Object.entries(weekPoints).sort(([wa], [wb]) => Number(wa) - Number(wb));
+  return sortedWeekPointPairs.map(([_, currentWeekPoints]) => currentWeekPoints);
 }
