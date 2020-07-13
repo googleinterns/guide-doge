@@ -16,7 +16,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
 
     const uMostPercentage = (v: number) => tFuncL(0.6, 0.7)(v);
     const uHalfPercentage = (v: number) => tFunc(0.3, 0.4, 0.6, 0.7)(v);
-    const uFewPercentage = (v: number) => tFunc(0.0, 0.1, 0.3, 0.4)(v);
+    const uFewPercentage = (v: number) => tFunc(0.05, 0.1, 0.3, 0.4)(v);
 
     const uHoliday = ({ x }) => x.getDay() === 5 ? 0.2 : +(x.getDay() === 0 || x.getDay() === 6);
     const uWeekday = pair => 1 - uHoliday(pair);
