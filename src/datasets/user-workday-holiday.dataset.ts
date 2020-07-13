@@ -7,7 +7,7 @@ import { createLineChartMeta } from './metas/line-chart.meta';
 import { PreferenceMeta } from '../services/preference/types';
 import { createDefault } from '../utils/preferences';
 import { DAY } from '../utils/timeUnits';
-import * as WorkdayHolidaySummarization from './summarizations/workday-holiday-summarization';
+import * as WorkdayHolidaySummarization from './summarizations/workday-holiday.summarization';
 
 export interface Config {
   dailyWeightStd: number;
