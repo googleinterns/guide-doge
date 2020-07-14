@@ -40,6 +40,53 @@ describe('VR Scatter Plot', () => {
   });
 });
 
+describe('Adding VR Grids/Sky', () => {
+  let element: HTMLElement;
+  let scatterplot: Scatterplot;
+
+  beforeEach( () =>  {
+    element = document.createElement('a-scene');
+    document.append(element);
+    scatterplot = new Scatterplot('a-shape');
+  });
+  it('Check for sky', () => {
+    scatterplot.init(element, []);
+    const sky = element.getElementsByTagName('a-sky');
+    var skyPresent = false;
+    if (sky !== null){
+      skyPresent = true;
+    }
+    expect(skyPresent).toEqual(true);
+  });
+  it('Check for xGrid', () => {
+    scatterplot.init(element, []);
+    const xGrid = document.getElementById('xGrid');
+    var xGridPresent = false;
+    if (xGrid !== null){
+      xGridPresent = true;
+    }
+    expect(xGridPresent).toEqual(true);
+  });
+  it('Check for yGrid', () => {
+    scatterplot.init(element, []);
+    const yGrid = document.getElementById('yGrid');
+    var yGridPresent = false;
+    if (yGrid !== null){
+      yGridPresent = true;
+    }
+    expect(yGridPresent).toEqual(true);
+  });
+  it('Check for zGrid', () => {
+    scatterplot.init(element, []);
+    const zGrid = document.getElementById('zGrid');
+    var zGridPresent = false;
+    if (zGrid !== null){
+      zGridPresent = true;
+    }
+    expect(zGridPresent).toEqual(true);
+  });
+});
+
 // returns array of actual position vectors
 function getPosition(element: HTMLElement, shape: string): Array<{x: number, y: number, z: number}>{
   const childrenArray = element.querySelectorAll(shape);
