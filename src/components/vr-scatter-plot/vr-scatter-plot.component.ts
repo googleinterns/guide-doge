@@ -49,9 +49,9 @@ export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges,
     .subscribe(dataset => {
       // componentMetas is initialized to different dataset metas - will help funnel dataset
       this.componentMetas = dataset.metas;
-      // dataset.metas[0].type = 'tabbed' and dataset.metas[1] = 'line' if chosen UserWhiteNoise  
+      // dataset.metas[0].type = 'tabbed' and dataset.metas[1] = 'line' if chosen UserWhiteNoise
       // dataset.metas[0] - 'line' if Dummy chosen
-       this.meta = dataset.metas[0];
+      this.meta = dataset.metas[0];
       if (this.isTabbed()) {
        // this.meta = dataset.metas[0];
         this.meta2 = (this.meta as any).metas[0];
@@ -69,7 +69,6 @@ export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges,
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    
   }
 
   init(){
@@ -81,7 +80,6 @@ export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges,
     }))
     .subscribe(this.datum$);
     this.vrScatterPlot.init(document.querySelector('a-scene'), this.datum$.value.points);
-    
   }
 
   isTabbed(): boolean {
