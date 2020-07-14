@@ -1,28 +1,31 @@
 import { ElementRef } from '@angular/core';
-import { Datum, XYChartD3 } from './xy-chart.d3';
+import { XYChartD3 } from './xy-chart.d3';
 import { Subject } from 'rxjs';
+import { TimeSeriesPoint } from '../datasets/queries/time-series.query';
+import { LineChartDatum } from '../components/line-chart/line-chart.component';
+import { mockDatum } from '../utils/mocks.spec';
 
 describe('XYChartD3', () => {
   // since XYChartD3 is an abstract class, make a concrete child class
   class TestXYChartD3 extends XYChartD3 {
     // the flags below will be used to check if the methods have been called at the right time
-    activeDatumFlag = 0;
+    activePointFlag = 0;
     dataFlag = 0;
 
     protected renderData() {
       this.dataFlag = 1;
     }
 
-    protected updateData(data: Datum[]) {
+    protected updateData(data: TimeSeriesPoint[]) {
       this.dataFlag = 2;
     }
 
-    protected renderActiveDatum() {
-      this.activeDatumFlag = 1;
+    protected renderActivePoint() {
+      this.activePointFlag = 1;
     }
 
-    protected updateActiveDatum(activeDatum: Datum | null) {
-      this.activeDatumFlag = 2;
+    protected updateActivePoint(activePoint: TimeSeriesPoint | null) {
+      this.activePointFlag = 2;
     }
   }
 
@@ -37,8 +40,8 @@ describe('XYChartD3', () => {
     marginRight: 8,
     marginBottom: 8,
     marginLeft: 8,
-    data$: new Subject<Datum[]>(),
-    activeDatum$: new Subject<Datum | null>(),
+    datum$: new Subject<LineChartDatum>(),
+    activePoint$: new Subject<TimeSeriesPoint | null>(),
   };
   let xyChartD3: TestXYChartD3;
 
@@ -58,16 +61,16 @@ describe('XYChartD3', () => {
     expect(xyChartD3.dataFlag).toBe(0);
     xyChartD3.render();
     expect(xyChartD3.dataFlag).toBe(1);
-    renderOptions.data$.next([]);
+    renderOptions.datum$.next(mockDatum);
     expect(xyChartD3.dataFlag).toBe(2);
   });
 
   it('should render the active datum and update upon changes.', () => {
-    expect(xyChartD3.activeDatumFlag).toBe(0);
+    expect(xyChartD3.activePointFlag).toBe(0);
     xyChartD3.render();
-    expect(xyChartD3.activeDatumFlag).toBe(1);
-    renderOptions.activeDatum$.next(null);
-    expect(xyChartD3.activeDatumFlag).toBe(2);
+    expect(xyChartD3.activePointFlag).toBe(1);
+    renderOptions.activePoint$.next(null);
+    expect(xyChartD3.activePointFlag).toBe(2);
   });
 
   it('should render two g elements for the axis.', () => {

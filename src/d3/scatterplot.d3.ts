@@ -10,9 +10,10 @@
 // for running on unit tests
 import * as d3 from 'd3';
 import * as THREE from 'three';
+import { XYPoint } from '../datasets/metas/types';
 
 export class Scatterplot{
-    private data: number[];
+    private data: XYPoint<Date, number>[];
     private shape: string;
     private container: HTMLElement | null;
     private hscale: d3.ScaleLinear<number, number>;
@@ -20,41 +21,34 @@ export class Scatterplot{
   constructor(shape: string) {
     this.shape = shape;
   }
-  init(container: HTMLElement | null, data: number[]){
+  init(container: HTMLElement | null, data: XYPoint<Date, number>[]){
     this.data = data;
     this.container = container;
-    // create a scale so that there is correspondence between data set and screen render
-    this.hscale = d3.scaleLinear();
-    this.hscale.domain([0, d3.max(this.data) as number])       // max of dataset
-    .range([0, 100]);                                      // linear mapping of data set values to values from 0 to 10
-    this.createSky();
     this.generatePts();
     this.setColor('blue');
-    this.createGridPlane();
+    this.createSky('gray');
   }
 
   private generatePts() {
+    // create a scale so that there is correspondence between data set and screen render
+    const hscale = d3.scaleLinear();
+    // hscale needs to be reassessed - this.data not of type number - need to write function to return max of each dimension
+    // hscale.domain([0, d3.max(this.data)]       // max of dataset
+    // .range([0, 10]);                                      // linear mapping of data set values to values from 0 to 10
      // enter identifies any DOM elements to be added when # array elements doesn't match
     d3.select(this.container).selectAll(this.shape).data(this.data).enter().append(this.shape);
     // d is data at index, i within
     // select all shapes within given container
     d3.select(this.container).selectAll(this.shape).attr('position', (d, i) => {
-      const x = i * 5;
+      const x = (d as XYPoint<Date, number>).y - (d as XYPoint<Date, number>).y;
       const y = i * 10;
-      const z = (-this.data[i] * 2);
+      const z = -10;
       return `${x} ${y} ${z}`;
     });
   }
   private setColor(color) {
     d3.select(this.container).selectAll(this.shape).attr('color', () => {
       return color;
-    });
-  }
-  private createSky(){
-    const aSky = document.createElement('a-sky');
-    this.container!.appendChild(aSky);
-    d3.select(this.container).selectAll('a-sky').attr('color', () => {
-      return '#f2b9af';
     });
   }
   private createGridPlane()
@@ -79,5 +73,13 @@ export class Scatterplot{
     zGrid.object3D.add(new THREE.GridHelper(50, 50, 0xffffff, 0xffffff));
     d3.select(this.container).select('#zGrid').attr('position', '0 0 0');
     d3.select(this.container).select('#zGrid').attr('rotation', '-90 0 0');
+  }
+  private createSky(color: string | number){
+    const sky = document.createElement('a-sky');
+    sky.id = 'sky';
+    this.container?.appendChild(sky);
+    d3.select(this.container).selectAll('#sky').attr('color', () => {
+      return color;
+    });
   }
 }

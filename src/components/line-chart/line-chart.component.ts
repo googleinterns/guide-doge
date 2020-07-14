@@ -1,11 +1,16 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { LineChartD3 } from '../../d3/line-chart.d3';
-import { BehaviorSubject } from 'rxjs';
-import { Datum, RenderOptions } from '../../d3/xy-chart.d3';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { LineChartD3, LineChartStyle } from '../../d3/line-chart.d3';
+import { RenderOptions } from '../../d3/xy-chart.d3';
 import { AUDIFICATION, GUIDE_DOGE, t } from '../../i18n';
 import { formatX, formatY } from '../../utils/formatters';
 import { A11yPlaceholderDirective } from '../../directives/a11y-placeholder/a11y-placeholder.directive';
-import { DataService } from '../../services/data/data.service';
+import { DAY } from '../../utils/timeUnits';
+import { map, takeUntil } from 'rxjs/operators';
+import { LineChartMeta } from '../../datasets/metas/line-chart.meta';
+import { TimeSeriesDatum, TimeSeriesPoint, TimeSeriesQueryOptions } from '../../datasets/queries/time-series.query';
+
+export type LineChartDatum = TimeSeriesDatum<LineChartStyle>;
 
 @Component({
   selector: 'app-line-chart',
@@ -15,7 +20,9 @@ import { DataService } from '../../services/data/data.service';
 export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnDestroy {
   @ViewChild(A11yPlaceholderDirective, { static: true }) a11yPlaceholder: A11yPlaceholderDirective<LineChartComponent>;
 
-  @Input() measureName: string;
+  @Input() endDate = new Date();
+  @Input() startDate = new Date(this.endDate.getTime() - 30 * DAY);
+  @Input() meta: LineChartMeta;
   @Input() height = 500;
   @Input() width = 800;
   @Input() marginTop = 20;
@@ -23,41 +30,43 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
   @Input() marginBottom = 30;
   @Input() marginLeft = 40;
 
-  data$ = new BehaviorSubject<Datum[]>([]);
-  activeDatum$ = new BehaviorSubject<Datum | null>(null);
-  lineChartD3: LineChartD3;
+  queryOptions$ = new BehaviorSubject<TimeSeriesQueryOptions>({
+    range: [this.startDate, this.endDate],
+  });
+  datum$ = new BehaviorSubject<LineChartDatum>({
+    label: '',
+    points: [],
+  });
+  activePoint$ = new BehaviorSubject<TimeSeriesPoint | null>(null);
+  private destroy$ = new Subject();
+  private lineChartD3: LineChartD3;
 
   constructor(
-    private dataService: DataService,
     public elementRef: ElementRef<HTMLElement>,
   ) {
     this.lineChartD3 = new LineChartD3(this);
   }
 
-  get data() {
-    return this.data$.value;
+  get datum() {
+    return this.datum$.value;
   }
 
-  set data(data) {
-    this.data$.next(data);
+  get activePoint() {
+    return this.activePoint$.value;
   }
 
-  get activeDatum() {
-    return this.activeDatum$.value;
-  }
-
-  set activeDatum(activeDatum) {
-    this.activeDatum$.next(activeDatum);
+  set activePoint(activePoint) {
+    this.activePoint$.next(activePoint);
   }
 
   get ACTIVE_DATUM() {
-    if (!this.activeDatum) {
+    if (!this.activePoint) {
       return null;
     }
-    const { date, value } = this.activeDatum;
+    const { x, y } = this.activePoint;
     return t(AUDIFICATION.ACTIVE_DATUM, {
-      x: formatX(date),
-      y: formatY(value),
+      x: formatX(x),
+      y: formatY(y),
     });
   }
 
@@ -66,17 +75,32 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
   }
 
   ngOnInit() {
+    this.queryOptions$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(map(queryOption => {
+        this.activePoint$.next(null);
+        // TODO: Render multiple data (legend items) on line chart
+        // It should render multiple lines when there are more than one datum in the
+        // array, but this feature is not yet supported. The workaround here is to
+        // render the first datum in the array only.
+        return this.meta.query(queryOption)[0];
+      }))
+      .subscribe(this.datum$);
     this.lineChartD3.render();
   }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.lineChartD3.clear();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if ('measureName' in changes) {
-      this.data = this.dataService.getMeasureOverDays(this.measureName);
-      this.activeDatum = null;
+    const changed = ['startDate', 'endDate', 'meta'].some(key => key in changes);
+    if (changed) {
+      this.queryOptions$.next({
+        range: [this.startDate, this.endDate],
+      });
     }
   }
 }
