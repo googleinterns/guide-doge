@@ -32,6 +32,7 @@ export class Scatterplot{
     this.setColor('blue');
     this.setRadius(0.1);
     this.setInteraction();
+    this.addEventListeners();
     this.createGridPlane();
   }
 
@@ -58,18 +59,30 @@ export class Scatterplot{
   }
 
   private setInteraction() {
-    d3.select(this.container).selectAll(this.shape).attr('hoverable', '');
-    d3.select(this.container).selectAll(this.shape).attr('grabbable', '');
-    d3.select(this.container).selectAll(this.shape).attr('stretchable', '');
-    d3.select(this.container).selectAll(this.shape).attr('draggable', '');
-    d3.select(this.container).selectAll(this.shape).attr('dropppable', '');
+    //add interaction options to all objects of type this.shape
+    d3.select(this.container).selectAll(this.shape)
+      .attr('hoverable', '')
+      .attr('grabbable', '')
+      .attr('stretchable', '')
+      .attr('draggable', '')
+      .attr('dropppable', '');
 
   }
 
-  //adding event listeners to react if object is hovered
-  /*private addEventListeners() {
-    if (d3.select(this.container).selectAll(this.shape).is('hovered')
-  }*/
+  private addEventListeners() {
+    //adding event listeners to react if a data object is hovered or un-hovered
+    d3.select(this.container).selectAll(this.shape).on('stateadded', function(d, i) {
+      if (d3.event.detail === 'hovered'){
+        d3.select(this).attr('color', 'orange');
+      }
+    });
+    d3.select(this.container).selectAll(this.shape).on('stateremoved', function(d, i) {
+      if (d3.event.detail === 'hovered'){
+        d3.select(this).attr('color', 'blue');
+      }
+    });
+  }
+
 
 
   private createSky(){
