@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { Scatterplot } from '../../d3/scatterplot.d3';
+import { Hapticplot } from '../../d3/hapticplot.d3';
 import 'aframe';
 import 'aframe-extras';
 import 'super-hands';
@@ -12,16 +12,16 @@ import 'aframe-haptics-component';
   templateUrl: './vr-accessibility.component.html'
 })
 export class VRAccessibilityComponent implements OnInit, OnChanges, OnDestroy{
-  private vrScatterPlot: Scatterplot;
+  private vrHapticPlot: Hapticplot;
   private shape: string;
   private color: string;
 
   constructor(
   ) {
-    this.vrScatterPlot = new Scatterplot('a-sphere');
+    this.vrHapticPlot = new Hapticplot('a-sphere');
   }
   ngOnInit() {
-   this.vrScatterPlot.init(document.querySelector('a-scene'), [0, 1, 2, 3, 4, 5, 6]);
+   this.vrHapticPlot.init(document.querySelector('a-scene'), [0, 1, 2, 3, 4, 5, 6]);
   }
 
   ngOnDestroy() {

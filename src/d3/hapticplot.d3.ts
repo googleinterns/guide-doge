@@ -1,4 +1,4 @@
-// run `tsc Scatterplot.ts` to compile into Scatterplot.js file
+// run `tsc Hapticplot.ts` to compile into Hapticplot.js file
 
 // for running on browser
 // import * as _d3 from 'd3';
@@ -11,7 +11,7 @@
 import * as d3 from 'd3';
 import * as THREE from 'three';
 
-export class Scatterplot{
+export class Hapticplot{
     private data: number[];
     private shape: string;
     private container: HTMLElement | null;
@@ -30,6 +30,9 @@ export class Scatterplot{
     this.createSky();
     this.generatePts();
     this.setColor('blue');
+    this.setRadius(0.1);
+    this.setInteraction();
+    this.addEventListeners();
     this.createGridPlane();
   }
 
@@ -39,9 +42,9 @@ export class Scatterplot{
     // d is data at index, i within
     // select all shapes within given container
     d3.select(this.container).selectAll(this.shape).attr('position', (d, i) => {
-      const x = i * 5;
-      const y = i * 10;
-      const z = (-this.data[i] * 2);
+      const x = i/10;
+      const y = this.data[i]/5;
+      const z = -1;
       return `${x} ${y} ${z}`;
     });
   }
@@ -50,6 +53,38 @@ export class Scatterplot{
       return color;
     });
   }
+
+  private setRadius(size) {
+    d3.select(this.container).selectAll(this.shape).attr('radius', size);
+  }
+
+  private setInteraction() {
+    //add interaction options to all objects of type this.shape
+    d3.select(this.container).selectAll(this.shape)
+      .attr('hoverable', '')
+      .attr('grabbable', '')
+      .attr('stretchable', '')
+      .attr('draggable', '')
+      .attr('dropppable', '');
+
+  }
+
+  private addEventListeners() {
+    //adding event listeners to react if a data object is hovered or un-hovered
+    d3.select(this.container).selectAll(this.shape).on('stateadded', function(d, i) {
+      if (d3.event.detail === 'hovered'){
+        d3.select(this).attr('color', 'orange');
+      }
+    });
+    d3.select(this.container).selectAll(this.shape).on('stateremoved', function(d, i) {
+      if (d3.event.detail === 'hovered'){
+        d3.select(this).attr('color', 'blue');
+      }
+    });
+  }
+
+
+
   private createSky(){
     const aSky = document.createElement('a-sky');
     this.container!.appendChild(aSky);
