@@ -3,6 +3,7 @@ import { Scatterplot } from '../../d3/scatterplot.d3';
 import 'aframe';
 import 'aframe-extras';
 import 'super-hands';
+import 'aframe-haptics-component';
 
 
 
