@@ -125,8 +125,12 @@ export interface ResultRow {
 }
 
 export interface QueryOptions {
+  /** The categories to request a breakdown from. */
   categoryNames?: string[];
+  /** The measures to provide values for. */
   measureNames?: string[];
+  /** The filters to apply to the cube before finding the results. */
   filters?: Filter[];
+  /** The concept names to sort in ascending order. */
   sortBy?: string[];
 }
