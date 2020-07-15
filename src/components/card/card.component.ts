@@ -14,7 +14,7 @@ export class CardComponent<T extends Meta> implements OnInit {
   currentTabTitle?: string;
 
   get titles(): string[] {
-    if (this.isTabbed()) {
+    if (this.isTabbedChartsMetaCard()) {
       return this.meta.metas.map(c => c.title);
     } else {
       return [this.meta.title];
@@ -22,7 +22,7 @@ export class CardComponent<T extends Meta> implements OnInit {
   }
 
   get currentChart(): Meta {
-    if (this.isTabbed()) {
+    if (this.isTabbedChartsMetaCard()) {
       const { metas } = this.meta;
       return metas.find(c => c.title === this.currentTabTitle) ?? metas[0];
     } else {
@@ -31,7 +31,7 @@ export class CardComponent<T extends Meta> implements OnInit {
   }
 
   ngOnInit() {
-    if (this.isTabbed()) {
+    if (this.isTabbedChartsMetaCard()) {
       this.setCurrentTabTitle(this.meta.metas[0].title);
     } else {
       this.setCurrentTabTitle(undefined);
@@ -42,7 +42,7 @@ export class CardComponent<T extends Meta> implements OnInit {
     this.currentTabTitle = title;
   }
 
-  isTabbed(): this is CardComponent<TabbedChartsMeta> {
+  isTabbedChartsMetaCard(): this is CardComponent<TabbedChartsMeta> {
     return this.meta.type === 'tabbed';
   }
 }
