@@ -50,4 +50,7 @@ describe('DataService', () => {
     expect(preferenceService.dataset$.value)
       .toEqual(jasmine.objectContaining(createDefault(UserWhiteNoiseDataset.configMeta)));
   });
+
+  // TODO: Add tests for updating current dataset based on dataset preference
+  // It should work with a mock dataset dependency and a spy on the exported create funciton of dataset module
 });
