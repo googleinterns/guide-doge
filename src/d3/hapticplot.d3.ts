@@ -37,29 +37,40 @@ export class Hapticplot{
   }
 
   private generatePts() {
-     // enter identifies any DOM elements to be added when # array elements doesn't match
+     /*
+     Generates points based on initilization data
+      - "enter" identifies any DOM elements to be added when # array elements & # DOM elements don't match
+      - select all generated entities and updates their position based on ingested data
+    */
     d3.select(this.container).selectAll(this.shape).data(this.data).enter().append(this.shape);
-    // d is data at index, i within
-    // select all shapes within given container
     d3.select(this.container).selectAll(this.shape).attr('position', (d, i) => {
       const x = i/10;
-      const y = this.data[i]/5;
+      const y = this.data[i];
       const z = -1;
       return `${x} ${y} ${z}`;
     });
   }
   private setColor(color) {
+    /*
+    Adds given color property to all generated entities
+    */
     d3.select(this.container).selectAll(this.shape).attr('color', () => {
       return color;
     });
   }
 
   private setRadius(size) {
+    /*
+    Sets the radius of generated entities
+    */
     d3.select(this.container).selectAll(this.shape).attr('radius', size);
   }
 
   private setInteraction() {
-    //add interaction options to all objects of type this.shape
+    /*
+    adds interaction properties to all objects of type this.shape
+      - enables controller interaction with tagged entities
+    */
     d3.select(this.container).selectAll(this.shape)
       .attr('hoverable', '')
       .attr('grabbable', '')
@@ -70,7 +81,9 @@ export class Hapticplot{
   }
 
   private addEventListeners() {
-    //adding event listeners to react if a data object is hovered or un-hovered
+    /*
+      adds event listeners to react if a generated data object is hovered or un-hovered
+    */
     d3.select(this.container).selectAll(this.shape).on('stateadded', function(d, i) {
       if (d3.event.detail === 'hovered'){
         d3.select(this).attr('color', 'orange');
@@ -86,6 +99,9 @@ export class Hapticplot{
 
 
   private createSky(){
+    /*
+    creates and adds a sky box to the scene
+    */
     const aSky = document.createElement('a-sky');
     this.container!.appendChild(aSky);
     d3.select(this.container).selectAll('a-sky').attr('color', () => {
@@ -94,6 +110,9 @@ export class Hapticplot{
   }
   private createGridPlane()
   {
+    /*
+    creates and adds grid 3D grid lines to the scene
+    */
     const xGrid = document.createElement('a-entity');
     xGrid.id = 'xGrid';
     this.container!.appendChild(xGrid);

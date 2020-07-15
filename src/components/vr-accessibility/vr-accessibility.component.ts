@@ -21,7 +21,7 @@ export class VRAccessibilityComponent implements OnInit, OnChanges, OnDestroy{
     this.vrHapticPlot = new Hapticplot('a-sphere');
   }
   ngOnInit() {
-   this.vrHapticPlot.init(document.querySelector('a-scene'), [0, 1, 2, 3, 4, 5, 6]);
+   this.vrHapticPlot.init(document.querySelector('a-scene'), [0, 1/5, 2/5, 3/5, 4/5, 5/5, 6/5]);
   }
 
   ngOnDestroy() {

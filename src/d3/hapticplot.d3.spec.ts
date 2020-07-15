@@ -18,23 +18,23 @@ describe('VR Haptic Plot', () => {
   });
   it('places points for each element in a one element array', () => {
     hapticplot.init(element, [10]);
-    const expectedPosArray = [{ x: 0, y: 0, z: -20 }];
+    const expectedPosArray = [{ x: 0, y: 10, z: -1 }];
     const result = getPosition(element, shape);
     expect(result).toEqual(expectedPosArray);
   });
   it('places points for each element in a two element array', () => {
     hapticplot.init(element, [10, 10]);
-    const expectedPosArray = [{ x: 0, y: 0, z: -20 }, { x: 5, y: 10, z: -20 }];
+    const expectedPosArray = [{ x: 0, y: 10, z: -1 }, { x: 0.1, y: 10, z: -1 }];
     const result = getPosition(element, shape);
     expect(result).toEqual(expectedPosArray);
   });
   it('places points for each element in a eight element array', () => {
     hapticplot.init(element, [10, 10, 20, 20, 30, 30, 40, 40]);
     const expectedPosArray = [
-      { x: 0, y: 0, z: -20 }, { x: 5, y: 10, z: -20 },
-      { x: 10, y: 20, z: -40 }, { x: 15, y: 30, z: -40 },
-      { x: 20, y: 40, z: -60 }, { x: 25, y: 50, z: -60 },
-     { x: 30, y: 60, z: -80 }, { x: 35, y: 70, z: -80 }];
+      { x: 0, y: 10, z: -1 }, { x: 0.10, y: 10, z: -1 },
+      { x: 0.2, y: 20, z: -1 }, { x: 0.3, y: 20, z: -1 },
+      { x: 0.4, y: 30, z: -1 }, { x: 0.5, y: 30, z: -1 },
+     { x: 0.6, y: 40, z: -1 }, { x: 0.7, y: 40, z: -1 }];
     const result = getPosition(element, shape);
     expect(result).toEqual(expectedPosArray);
   });
