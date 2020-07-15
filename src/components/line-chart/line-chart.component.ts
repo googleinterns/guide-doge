@@ -83,7 +83,7 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
         // It should render multiple lines when there are more than one datum in the
         // array, but this feature is not yet supported. The workaround here is to
         // render the first datum in the array only.
-        return this.meta.query(queryOption)[0];
+        return this.meta.queryData(queryOption)[0];
       }))
       .subscribe(this.datum$);
     this.lineChartD3.render();

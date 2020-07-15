@@ -13,12 +13,12 @@ describe('CardComponent', () => {
   const testChartMeta1: LineChartMeta = {
     type: 'line',
     title: 'testChart1',
-    query: () => [],
+    queryData: () => [],
   };
   const testChartMeta2: LineChartMeta = {
     type: 'line',
     title: 'testChart2',
-    query: () => [],
+    queryData: () => [],
   };
   const testTabbedChartsMeta: TabbedChartsMeta = {
     type: 'tabbed',
