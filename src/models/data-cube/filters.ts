@@ -10,8 +10,9 @@ export function inOneOfDateRanges(dateRanges: [Date, Date][], rangeOptions: Rang
     excludeStart = false,
     excludeEnd = false,
   } = rangeOptions;
-  const startOffset = excludeStart ? 1 : 0;
-  const endOffset = excludeEnd ? -1 : 0;
+  const intervalClosedToOpenOffset = 1;
+  const startOffset = excludeStart ? intervalClosedToOpenOffset : 0;
+  const endOffset = excludeEnd ? -intervalClosedToOpenOffset : 0;
   return (categories: Category[]) => {
     const dateIndex = categories.findIndex(
       category => category.name === 'date',

@@ -13,12 +13,12 @@ describe('CardComponent', () => {
   const testChartMeta1: LineChartMeta = {
     type: 'line',
     title: 'testChart1',
-    query: () => [],
+    queryData: () => [],
   };
   const testChartMeta2: LineChartMeta = {
     type: 'line',
     title: 'testChart2',
-    query: () => [],
+    queryData: () => [],
   };
   const testTabbedChartsMeta: TabbedChartsMeta = {
     type: 'tabbed',
@@ -58,9 +58,9 @@ describe('CardComponent', () => {
 
   it('should return whether input meta is tabbed charts or not.', () => {
     lineComponent.meta = testChartMeta1;
-    expect(lineComponent.isTabbed()).toBeFalse();
+    expect(lineComponent.isTabbedChartsMetaCard()).toBeFalse();
     tabbedComponent.meta = testTabbedChartsMeta;
-    expect(tabbedComponent.isTabbed()).toBeTrue();
+    expect(tabbedComponent.isTabbedChartsMetaCard()).toBeTrue();
   });
 
   it('should return input meta titles.', () => {
