@@ -23,12 +23,12 @@ describe('UserWhiteNoiseDataset', () => {
     const testMeta = (meta: Meta) => {
       if (meta.type === 'tabbed') {
         meta.metas.map(testMeta);
-      } else {
+      } else if (meta.type === 'line') {
         const testRanges: [Date, Date][] = [
           [new Date(currentTime - 10 * DAY), new Date(currentTime - 5 * DAY)],
           [new Date(currentTime + 5 * DAY), new Date(currentTime + 10 * DAY)],
           [new Date(currentTime), new Date(currentTime)],
-          [new Date(currentTime + 1), new Date(currentTime - 1)]
+          [new Date(currentTime + 1), new Date(currentTime - 1)],
         ];
 
         for (const range of testRanges) {
@@ -40,6 +40,8 @@ describe('UserWhiteNoiseDataset', () => {
             }
           }
         }
+      } else {
+        throw new Error(`Unexpected meta type '${meta.type}'.`);
       }
     };
 

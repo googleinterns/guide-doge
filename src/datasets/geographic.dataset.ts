@@ -16,7 +16,7 @@ export const configMeta: PreferenceMeta<Config> = {
 export function create(config: Config): Dataset {
   const geoMapMeta = createGeoMapMeta(
     'Geo Map',
-    null,
+    () => null,
   );
 
   const metas = [
