@@ -1,22 +1,32 @@
-import { ElementRef } from '@angular/core';
-import { XYChartD3 } from './xy-chart.d3';
+import { RenderOptions, XYChartD3 } from './xy-chart.d3';
 import { Subject } from 'rxjs';
-import { TimeSeriesPoint } from '../datasets/queries/time-series.query';
+import { TimeSeriesDatum, TimeSeriesPoint } from '../datasets/queries/time-series.query';
+import { mockData } from '../utils/mocks.spec';
+import { ElementRef } from '@angular/core';
 import { LineChartDatum } from '../components/line-chart/line-chart.component';
-import { mockDatum } from '../utils/mocks.spec';
+
+type TestLegendItemStyle = {};
+
+type TestDatum = TimeSeriesDatum<TestLegendItemStyle>;
+
+interface SubjectRenderOptions extends RenderOptions<TestDatum> {
+  data$: Subject<TestDatum[]>;
+  activePoint$: Subject<TimeSeriesPoint | null>;
+}
 
 describe('XYChartD3', () => {
   // since XYChartD3 is an abstract class, make a concrete child class
-  class TestXYChartD3 extends XYChartD3 {
+  class TestXYChartD3 extends XYChartD3<TestLegendItemStyle> {
     // the flags below will be used to check if the methods have been called at the right time
-    activePointFlag = 0;
     dataFlag = 0;
+    activePointFlag = 0;
 
     protected renderData() {
+      super.renderData();
       this.dataFlag = 1;
     }
 
-    protected updateData(data: TimeSeriesPoint[]) {
+    protected updateData(data: TestDatum[]) {
       this.dataFlag = 2;
     }
 
@@ -27,25 +37,27 @@ describe('XYChartD3', () => {
     protected updateActivePoint(activePoint: TimeSeriesPoint | null) {
       this.activePointFlag = 2;
     }
+
+    protected appendLegendItemIcon(itemG: d3.Selection<SVGGElement, unknown, null, undefined>, datum: TestDatum) {
+    }
   }
 
-  const svgElement = document.createElement('svg');
-  const containerElement = document.createElement('div');
-  containerElement.appendChild(svgElement);
-  const renderOptions = {
-    elementRef: new ElementRef<HTMLElement>(containerElement),
-    height: 256,
-    width: 256,
-    marginTop: 8,
-    marginRight: 8,
-    marginBottom: 8,
-    marginLeft: 8,
-    datum$: new Subject<LineChartDatum>(),
-    activePoint$: new Subject<TimeSeriesPoint | null>(),
-  };
+  let containerElement: HTMLElement;
+  let svgElement: HTMLElement;
+  let renderOptions: SubjectRenderOptions;
   let xyChartD3: TestXYChartD3;
 
   beforeEach(() => {
+    svgElement = document.createElement('svg');
+    containerElement = document.createElement('div');
+    containerElement.appendChild(svgElement);
+    renderOptions = {
+      elementRef: new ElementRef<HTMLElement>(containerElement),
+      width: 256,
+      height: 256,
+      data$: new Subject<LineChartDatum[]>(),
+      activePoint$: new Subject<TimeSeriesPoint | null>(),
+    };
     xyChartD3 = new TestXYChartD3(renderOptions);
   });
 
@@ -61,7 +73,7 @@ describe('XYChartD3', () => {
     expect(xyChartD3.dataFlag).toBe(0);
     xyChartD3.render();
     expect(xyChartD3.dataFlag).toBe(1);
-    renderOptions.datum$.next(mockDatum);
+    renderOptions.data$.next(mockData);
     expect(xyChartD3.dataFlag).toBe(2);
   });
 
@@ -73,9 +85,18 @@ describe('XYChartD3', () => {
     expect(xyChartD3.activePointFlag).toBe(2);
   });
 
-  it('should render two g elements for the axis.', () => {
+  it('should render the x and y axis.', () => {
     xyChartD3.render();
-    const gElements = svgElement.querySelectorAll('g');
-    expect(gElements.length).toBe(2);
+    const xAxisElement = svgElement.querySelector('.xy_chart-x_axis');
+    const yAxisElement = svgElement.querySelector('.xy_chart-y_axis');
+    expect(xAxisElement).not.toBe(null);
+    expect(yAxisElement).not.toBe(null);
+  });
+
+  it('should render the legend.', () => {
+    xyChartD3.render();
+    renderOptions.data$.next(mockData);
+    const textElements = svgElement.querySelectorAll('.xy_chart-legend text');
+    expect(textElements.length).toBe(mockData.length);
   });
 });

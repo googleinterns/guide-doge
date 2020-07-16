@@ -63,10 +63,10 @@ describe('LineChartAudificationComponent', () => {
     component.readAfter = true;
 
     host.ngOnInit();
-    component.ngOnInit();
     host.ngOnChanges({
       meta: new SimpleChange(null, host.meta, true),
     });
+    component.ngOnInit();
   });
 
   it('should instantiate.', () => {
