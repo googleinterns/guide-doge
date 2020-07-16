@@ -6,7 +6,7 @@ import { createTimeSeriesQuery } from './queries/time-series.query';
 import { createLineChartMeta } from './metas/line-chart.meta';
 import { PreferenceMeta } from '../services/preference/types';
 import { DAY } from '../utils/timeUnits';
-import { joinSummariesQueryFactories } from './summarizations/utils';
+import { joinSummariesQueryFactories } from './summarizations/utils/commons';
 import * as WorkdayHolidayAbsoluteSummarization from './summarizations/workday-holiday-absolute.summarization';
 import * as WorkdayHolidayRelativeSummarization from './summarizations/workday-holiday-relative.summarization';
 
