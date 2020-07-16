@@ -20,8 +20,8 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const uHalfPercentage = trapezoidalMF(0.3, 0.4, 0.6, 0.7);
     const uFewPercentage = trapezoidalMF(0.05, 0.1, 0.3, 0.4);
 
-    const uHoliday = ({ x }) => x.getDay() === 5 ? 0.2 : +(x.getDay() === 0 || x.getDay() === 6);
-    const uWeekday = (p: TimeSeriesPoint) => 1 - uHoliday(p);
+    const uWeekend = ({ x }) => x.getDay() === 5 ? 0.2 : +(x.getDay() === 0 || x.getDay() === 6);
+    const uWeekday = (p: TimeSeriesPoint) => 1 - uWeekend(p);
 
     const uPercentages: [string, MembershipFunction][] = [
       ['most', uMostPercentage],
@@ -30,8 +30,8 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     ];
 
     const uDays: [string, PointMembershipFunction<TimeSeriesPoint>][] = [
-      ['weekday', uWeekday],
-      ['holiday', uHoliday],
+      ['weekdays', uWeekday],
+      ['weekends', uWeekend],
     ];
 
     const uTraffics: [string, PointMembershipFunction<TimeSeriesPoint>][] = [
@@ -46,7 +46,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
         for (const [traffic, uTraffic] of uTraffics) {
           const t = sigmaCountQAB(points, uPercentage, uDay, uTraffic);
           summaries.push({
-            text: `<b>${quantifier}</b> of <b>${day}s</b> are <b>${traffic}</b> traffic.`,
+            text: `<b>${quantifier}</b> of the <b>${day}</b> have <b>${traffic}</b> traffic.`,
             validity: t
           });
         }

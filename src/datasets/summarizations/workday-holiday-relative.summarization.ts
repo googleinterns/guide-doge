@@ -21,21 +21,21 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const uHalfPercentage = trapezoidalMF(0.3, 0.4, 0.6, 0.7);
     const uFewPercentage = trapezoidalMF(0.05, 0.1, 0.3, 0.4);
 
-    const uHoliday = ({ x }) => x.getDay() === 5 ? 0.2 : +(x.getDay() === 0 || x.getDay() === 6);
-    const uWeekday = (p: TimeSeriesPoint) => 1 - uHoliday(p);
+    const uWeekend = ({ x }) => x.getDay() === 5 ? 0.2 : +(x.getDay() === 0 || x.getDay() === 6);
+    const uWeekday = (p: TimeSeriesPoint) => 1 - uWeekend(p);
 
     points = groupPointsByXWeek(points).map(weekPoints => {
       const week = weekPoints[0].x;
-      const wWeekday = weekPoints.reduce((p, v) => p + uWeekday(v), 0);
-      const wHoliday = weekPoints.reduce((p, v) => p + uHoliday(v), 0);
-      const sWeekday = weekPoints.reduce((p, v) => p + v.y * uWeekday(v), 0);
-      const sHoliday = weekPoints.reduce((p, v) => p + v.y * uHoliday(v), 0);
+      const wWeekdays = weekPoints.reduce((p, v) => p + uWeekday(v), 0);
+      const wWeekends = weekPoints.reduce((p, v) => p + uWeekend(v), 0);
+      const sWeekdays = weekPoints.reduce((p, v) => p + v.y * uWeekday(v), 0);
+      const sWeekends = weekPoints.reduce((p, v) => p + v.y * uWeekend(v), 0);
 
-      if (wWeekday < 1e-7 || wHoliday < 1e-7) {
+      if (wWeekdays < 1e-7 || wWeekends < 1e-7) {
         return { x: week, y: -1 };
       } else {
-        const avgWeekday = sWeekday / wWeekday;
-        const avgHoliday = sHoliday / wHoliday;
+        const avgWeekday = sWeekdays / wWeekdays;
+        const avgHoliday = sWeekends / wWeekends;
         const weekdayHolidayRatio = avgWeekday / avgHoliday;
         return { x: week, y: weekdayHolidayRatio };
       }
@@ -48,9 +48,9 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     ];
 
     const uTraffics: [string, PointMembershipFunction<TimeSeriesPoint>][] = [
-      ['higher (WorkdayCount/HolidayCount > 1.3)', uHigherTraffic],
-      ['equal (0.7 < WorkdayCount/HolidayCount < 1.3)', uEqualTraffic],
-      ['lower (WorkdayCount/HolidayCount < 0.7)', uLowerTraffic],
+      ['higher (WorkdayCount/HolidayCount > 1.3) than', uHigherTraffic],
+      ['equal (0.7 < WorkdayCount/HolidayCount < 1.3) to', uEqualTraffic],
+      ['lower (WorkdayCount/HolidayCount < 0.7) than', uLowerTraffic],
     ];
 
     const summaries: Summary[] = [];
@@ -58,7 +58,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       for (const [traffic, uTraffic] of uTraffics) {
         const t = sigmaCountQA(points, uPercentage, uTraffic);
         summaries.push({
-          text: `In <b>${quantifier}</b> of weeks, weekdays has <b>${traffic}</b> traffic.`,
+          text: `In <b>${quantifier}</b> of the weeks, weekdays have traffic <b>${traffic}</b> weekends.`,
           validity: t
         });
       }
