@@ -17,12 +17,8 @@ describe('BaseD3', () => {
     containerElement.appendChild(svgElement);
     renderOptions = {
       elementRef: new ElementRef<HTMLElement>(containerElement),
-      height: 256,
       width: 256,
-      marginTop: 8,
-      marginRight: 8,
-      marginBottom: 8,
-      marginLeft: 8,
+      height: 256,
     };
     baseD3 = new TestBaseD3(renderOptions);
   });

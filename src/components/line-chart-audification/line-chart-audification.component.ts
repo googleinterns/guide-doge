@@ -1,7 +1,7 @@
 import { Component, HostBinding, HostListener, Inject, Input, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Melody } from '../../models/melody/melody.model';
+import { formatX, formatY } from '../../utils/formatters';
 import { AUDIFICATION, t, tA11y } from '../../i18n';
-import { formatX, formatY, humanizeMeasureName } from '../../utils/formatters';
 import { LineChartComponent } from '../line-chart/line-chart.component';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -47,8 +47,12 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     return tA11y(AUDIFICATION.INSTRUCTIONS);
   }
 
+  get data() {
+    return this.host.data;
+  }
+
   get points() {
-    return this.host.datum.points;
+    return this.data[0].points;
   }
 
   get meta() {
@@ -60,13 +64,13 @@ export class LineChartAudificationComponent implements AudificationPreference, O
   }
 
   ngOnInit() {
-    this.host.datum$
+    this.host.data$
       .pipe(takeUntil(this.destroy$))
       .subscribe(data => {
-        const points = data.points;
+        const { points } = data[0];
         const values = points.map(datum => datum.y);
         this.domain = points.map(d => d.x).sort(ascendingDate);
-        this.range = points.map(d => d.y).sort(ascendingNumber);
+        this.range = [...values].sort(ascendingNumber);
         this.melody?.dispose();
         this.melody = new Melody(values, [this.lowestPitch, this.highestPitch], this.noteDuration, this.handleSeek);
       });
@@ -167,9 +171,7 @@ export class LineChartAudificationComponent implements AudificationPreference, O
   }
 
   private readOutMeasure() {
-    // TODO: read the entire measureNames
-    // TODO: read label or legend instead of title
-    return this.screenReaderComponent.readOut(humanizeMeasureName(this.meta.title));
+    return this.screenReaderComponent.readOut(this.data.map(item => item.label).join(', '));
   }
 
   private readOutCurrentDatum() {
