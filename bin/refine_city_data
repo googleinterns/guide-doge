@@ -1,0 +1,42 @@
+#!/usr/bin/env node
+
+const path = require('path');
+const fs = require('fs');
+
+const inputPath = path.resolve(__dirname, 'simplemaps_worldcities_basicv1.6', 'worldcities.csv');
+const outputPath = path.resolve(__dirname, '..', 'src', 'assets', 'cities.json');
+
+// read csv and convert to 2d array
+const [headerRow, ...rows] = fs.readFileSync(inputPath, 'utf8')
+  .split('\r\n')
+  .map(v => v
+    .split(',')
+    .map(v => v.replace(/^"(.+)"$/, '$1')),
+  );
+
+// create an array of city dictionaries
+const cities = rows
+  .map(values => {
+    const city = {};
+    headerRow.forEach((label, i) => {
+      city[label] = values[i];
+    });
+    return city;
+  });
+
+const largeCities = cities
+  // filter cities with population over a hundred thousand
+  .filter(city => city.population > 100_000)
+  // map only the properties needed
+  .map(city => ({
+    country: city.country,
+    city: city.city_ascii,
+    lat: +city.lat,
+    lng: +city.lng,
+    population: +city.population,
+  }));
+
+// write json
+fs.writeFileSync(outputPath, JSON.stringify(largeCities), 'utf8');
+
+console.log(largeCities);
