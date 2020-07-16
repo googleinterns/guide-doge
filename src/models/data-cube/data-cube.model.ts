@@ -113,10 +113,6 @@ export class DataCube {
    * By default, the results are sorted by the first requested category, then
    * the second, and so on.
    *
-   * @param queryOptions.categoryNames The categories to request a breakdown from.
-   * @param queryOptions.measureNames The measures to provide values for.
-   * @param queryOptions.filters The filters to apply to the cube before finding the results.
-   * @param queryOptions.sortBy The concept names to sort in ascending order.
    */
   getDataFor(queryOptions: QueryOptions): ResultRow[] {
     const {
