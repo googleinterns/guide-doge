@@ -4,6 +4,7 @@ import { LineChartModule } from '../line-chart/line-chart.module';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { GeoMapModule } from '../geo-map/geo-map.module';
+import { AudificationModule } from '../../directives/audification/audification.module';
 
 @NgModule({
   declarations: [
@@ -11,6 +12,7 @@ import { GeoMapModule } from '../geo-map/geo-map.module';
   ],
   imports: [
     LineChartModule,
+    AudificationModule,
     GeoMapModule,
     CommonModule,
     MatCardModule,
