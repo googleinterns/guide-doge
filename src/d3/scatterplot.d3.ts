@@ -41,9 +41,9 @@ export class Scatterplot{
     // d is data at index, i within
     // select all shapes within given container
     d3.select(this.container).selectAll(this.shape).attr('position', (d, i) => {
-      const x = (d as XYZPoint<Date, number, number>).y - (d as XYZPoint<Date, number, number>).z;
-      const y = i * 10;
-      const z = -10;
+      const x = (d as XYZPoint<Date, number, number>).y - (d as XYZPoint<Date, number, number>).y;
+      const y = (d as XYZPoint<Date, number, number>).y;
+      const z = (d as XYZPoint<Date, number, number>).y;
       return `${x} ${y} ${z}`;
     });
   }
