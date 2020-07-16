@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Preference } from '../../services/preference/types';
+import { Preference, PreferenceWithMeta } from '../../services/preference/types';
 import { BehaviorSubject } from 'rxjs';
 import { I18nKey, t } from '../../i18n';
 
@@ -12,7 +12,7 @@ export class PreferenceGroupComponent<T extends Preference> {
   @Input() name?: string;
   @Input() i18n?: { [key in keyof T]: I18nKey };
   @Input() alwaysEnabled = false;
-  @Input() preference$: BehaviorSubject<T>;
+  @Input() preference$: BehaviorSubject<PreferenceWithMeta<T>>;
 
   get enabled() {
     return this.preference$.value.enabled || this.alwaysEnabled;
@@ -30,10 +30,10 @@ export class PreferenceGroupComponent<T extends Preference> {
       return [];
     }
     const properties = Object.keys(this.preference$.value) as (keyof T)[];
-    return properties.filter(property => property !== 'enabled');
+    return properties.filter(property => property !== 'enabled' && property !== '_meta');
   }
 
   getI18nValue(key: keyof T) {
-    return this.i18n && t(this.i18n[key]);
+    return (this.i18n && t(this.i18n[key])) || key;
   }
 }

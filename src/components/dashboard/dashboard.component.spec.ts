@@ -1,19 +1,30 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DashboardComponent } from './dashboard.component';
-import { PreferenceModule } from '../../services/preference/preference.module';
+import { DataService } from '../../services/data/data.service';
+import { PreferenceService } from '../../services/preference/preference.service';
+import { PreferenceGroupModule } from '../preference-group/preference-group.module';
 
 describe('DashboardComponent', () => {
   let fixture: ComponentFixture<DashboardComponent>;
   let component: DashboardComponent;
+  let preferenceService: PreferenceService;
+  let dataService: DataService;
 
   beforeEach(() => {
+    preferenceService = new PreferenceService();
+    dataService = new DataService(preferenceService);
+
     TestBed.configureTestingModule({
-      imports: [
-        PreferenceModule,
-      ],
       declarations: [
         DashboardComponent,
       ],
+      imports: [
+        PreferenceGroupModule
+      ],
+      providers: [
+        { provide: PreferenceService, useValue: preferenceService },
+        { provide: DataService, useValue: dataService },
+      ]
     });
     fixture = TestBed.createComponent(DashboardComponent);
     component = fixture.componentInstance;
@@ -24,7 +35,7 @@ describe('DashboardComponent', () => {
   });
 
   it('should have preference objects.', () => {
-    for (const key of ['audification', 'dataTable', 'textSummary']) {
+    for (const key of ['dataset$', 'audification$', 'dataTable$', 'textSummary$']) {
       const preference = component[key];
       expect(preference).toBeInstanceOf(Object);
     }

@@ -47,25 +47,26 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     return tA11y(AUDIFICATION.INSTRUCTIONS);
   }
 
-  get data() {
-    return this.host.data;
+  get points() {
+    return this.host.datum.points;
   }
 
-  get measureNames() {
-    return this.host.measureNames;
+  get meta() {
+    return this.host.meta;
   }
 
-  set activeDatum(activeDatum) {
-    this.host.activeDatum = activeDatum;
+  set activePoint(activePoint) {
+    this.host.activePoint = activePoint;
   }
 
   ngOnInit() {
-    this.host.data$
+    this.host.datum$
       .pipe(takeUntil(this.destroy$))
       .subscribe(data => {
-        const values = data.map(datum => datum.value);
-        this.domain = data.map(d => d.date).sort(ascendingDate);
-        this.range = data.map(d => d.value).sort(ascendingNumber);
+        const points = data.points;
+        const values = points.map(datum => datum.y);
+        this.domain = points.map(d => d.x).sort(ascendingDate);
+        this.range = points.map(d => d.y).sort(ascendingNumber);
         this.melody?.dispose();
         this.melody = new Melody(values, [this.lowestPitch, this.highestPitch], this.noteDuration, this.handleSeek);
       });
@@ -80,7 +81,7 @@ export class LineChartAudificationComponent implements AudificationPreference, O
   handleSeek(index) {
     // since Tone.js is running outside of the Angular zone, it needs to reenter the zone to trigger change detection.
     this.zone.run((() => {
-      this.activeDatum = this.data[index];
+      this.activePoint = this.points[index];
     }));
   }
 
@@ -101,7 +102,8 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     } else if (key === 'l') {
       this.readOutMeasure();
     } else if ('0' <= key && key <= '9') {
-      const datumIndex = Math.floor(+key / 10 * this.data.length);
+      const seekPercentage = +key * 10;
+      const datumIndex = Math.floor(seekPercentage / 100 * this.points.length);
       this.melody.seekTo(datumIndex, true);
       this.readOutCurrentDatum();
     }
@@ -166,17 +168,18 @@ export class LineChartAudificationComponent implements AudificationPreference, O
 
   private readOutMeasure() {
     // TODO: read the entire measureNames
-    return this.screenReaderComponent.readOut(humanizeMeasureName(this.measureNames[0]));
+    // TODO: read label or legend instead of title
+    return this.screenReaderComponent.readOut(humanizeMeasureName(this.meta.title));
   }
 
   private readOutCurrentDatum() {
     if (!this.melody) {
       return 0;
     }
-    const { date, value } = this.data[this.melody.currentDatumIndex];
+    const { x, y } = this.points[this.melody.currentDatumIndex];
     return this.screenReaderComponent.readOut(t(AUDIFICATION.ACTIVE_DATUM, {
-      x: formatX(date),
-      y: formatY(value),
+      x: formatX(x),
+      y: formatY(y),
     }));
   }
 }
