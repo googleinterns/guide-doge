@@ -30,7 +30,7 @@ describe('LineChartComponent', () => {
 
   it('should have truthy i18n values.', () => {
     component.activePoint = mockPoint;
-    expect(component.ACTIVE_DATUM).toBeTruthy();
+    expect(component.VISUALIZATION).toBeTruthy();
   });
 
   it('should synchronize activePoint with activePoint$.', () => {
