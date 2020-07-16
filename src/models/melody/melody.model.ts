@@ -1,4 +1,5 @@
 import * as Tone from 'tone';
+import { waitFor } from '../../utils/misc';
 
 export type OnSeek = (index: number) => void;
 
@@ -62,14 +63,18 @@ export class Melody {
     return Math.pow(2, (keyNumber - 49) / 12) * 440;
   }
 
-  async resume(reversed: boolean) {
+  async prepare() {
     if (Tone.getContext().state === 'suspended') {
       await Tone.start();
     }
-    if (!this.isPlaying) {
-      this.reversed = reversed;
-      this.playNextNote();
+  }
+
+  resume(reversed: boolean) {
+    if (this.isPlaying) {
+      return;
     }
+    this.reversed = reversed;
+    this.playNextNote();
   }
 
   pause() {
@@ -88,6 +93,14 @@ export class Melody {
   dispose() {
     this.pause();
     this.synth.dispose();
+  }
+
+  async informFrequencyRange() {
+    const [minFrequency, maxFrequency] = this.frequencyRange;
+    this.synth.triggerAttackRelease(minFrequency, this.noteDuration / 1000);
+    await waitFor(this.noteDuration);
+    this.synth.triggerAttackRelease(maxFrequency, this.noteDuration / 1000);
+    return await waitFor(this.noteDuration);
   }
 
   private playNextNote() {

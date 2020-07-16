@@ -32,7 +32,6 @@ export class LineChartAudificationComponent implements AudificationPreference, O
   private domain: Date[];
   private range: number[];
   @HostBinding('attr.tabindex') private readonly tabindex = 0;
-  private resumeTimeoutId: number | null = null;
 
   constructor(
     @Inject('host') private host: LineChartComponent,
@@ -69,6 +68,21 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     this.host.activePoint = activePoint;
   }
 
+  private get i18nDomainArgs() {
+    return {
+      domain_min: formatX(this.domain[0]),
+      domain_max: formatX(this.domain[this.domain.length - 1]),
+      domain_unit: t(AUDIFICATION.DOMAIN_UNIT_DAY),
+    };
+  }
+
+  private get i18nRangeArgs() {
+    return {
+      range_min: formatY(this.range[0]),
+      range_max: formatY(this.range[this.range.length - 1]),
+    };
+  }
+
   ngOnInit() {
     combineLatest([
       this.host.data$,
@@ -98,57 +112,58 @@ export class LineChartAudificationComponent implements AudificationPreference, O
   }
 
   @HostListener('keydown', ['$event'])
-  async handleKeyDown($event: KeyboardEvent) {
+  async handleKeyDown($event: KeyboardEvent): Promise<boolean> {
     const { key, shiftKey, repeat, altKey, ctrlKey, metaKey } = $event;
-    if (!this.melody || altKey || ctrlKey || metaKey) {
-      return;
-    }
-    if (!repeat) {
-      if (key === ' ') {
-        this.resumeMelody(shiftKey);
-      } else if (key === 'x') {
-        this.readOutDomain();
-      } else if (key === 'y') {
-        this.readOutRange();
-      } else if (key === 'l') {
-        this.readOutLegendItems();
-      } else if ('0' <= key && key <= '9') {
-        const seekPercentage = +key * 10;
-        const pointIndex = Math.floor(seekPercentage / 100 * this.points.length);
-        this.melody.seekTo(pointIndex, true);
-        this.readOutCurrentDatum();
-      } else if (key === 'ArrowUp' || key === 'ArrowDown') {
-        const delta = key === 'ArrowUp' ? +1 : -1;
-        const { pointIndex } = this.melody;
-        this.datumIndex = mod(this.datumIndex + delta, this.data.length);
-        this.melody.seekTo(pointIndex, true);
-        this.readOutCurrentLegendItem();
-      } else if (key === '?') {
-        this.readOutInstructions();
-      } else {
-        return;
-      }
+    if (!this.melody || altKey || ctrlKey || metaKey || key === 'Tab') {
+      return false;
     }
     $event.preventDefault();
     $event.stopPropagation();
+    if (repeat) {
+      return false;
+    }
+    if (key === ' ') {
+      return this.resumeMelody(shiftKey);
+    } else if (key === 'x') {
+      return this.readOutDomain();
+    } else if (key === 'y') {
+      return this.readOutRange();
+    } else if (key === 'l') {
+      return this.readOutLegendItems();
+    } else if ('0' <= key && key <= '9') {
+      const seekPercentage = +key * 10;
+      const pointIndex = Math.floor(seekPercentage / 100 * this.points.length);
+      this.melody.seekTo(pointIndex, true);
+      return this.readOutCurrentDatum();
+    } else if (key === 'ArrowUp' || key === 'ArrowDown') {
+      const delta = key === 'ArrowUp' ? +1 : -1;
+      const { pointIndex } = this.melody;
+      this.datumIndex = mod(this.datumIndex + delta, this.data.length);
+      this.melody.seekTo(pointIndex, true);
+      return this.readOutCurrentLegendItem();
+    } else if (key === '?') {
+      return this.readOutInstructions();
+    }
+    return false;
   }
 
   @HostListener('keyup', ['$event'])
-  handleKeyUp($event: KeyboardEvent) {
+  async handleKeyUp($event: KeyboardEvent): Promise<boolean> {
     if (!this.melody) {
-      return;
+      return false;
     }
     $event.preventDefault();
     $event.stopPropagation();
     const { key } = $event;
     if (key === ' ') {
-      this.pauseMelody();
+      return this.pauseMelody();
     }
+    return false;
   }
 
   @HostListener('focus', ['$event'])
   handleFocus() {
-    this.readOutCurrentLegendItem();
+    return this.readOutCurrentLegendItem();
   }
 
   @HostListener('blur', ['$event'])
@@ -156,52 +171,48 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     this.melody?.pause();
   }
 
-  private resumeMelody(reversed: boolean) {
-    if (this.readBefore) {
-      const delay = this.readOutCurrentDatum();
-      const duration = 2000; // an estimated upper bound of how long it would take to read out
-      this.resumeTimeoutId = window.setTimeout(async () => {
-        this.resumeTimeoutId = null;
-        this.melody?.resume(reversed);
-      }, delay + duration);
-    } else {
-      this.melody?.resume(reversed);
+  private async resumeMelody(reversed: boolean) {
+    if (!this.melody) {
+      return false;
     }
-  }
-
-  private pauseMelody() {
-    if (this.resumeTimeoutId !== null) {
-      window.clearTimeout(this.resumeTimeoutId);
-      this.resumeTimeoutId = null;
-    } else {
-      this.melody?.pause();
-      if (this.readAfter) {
-        this.readOutCurrentDatum();
+    await this.melody.prepare();
+    if (this.readBefore) {
+      const waited = await this.readOutCurrentDatum();
+      if (!waited) {
+        return false;
       }
     }
+    this.melody.resume(reversed);
+    return true;
+  }
+
+  private async pauseMelody() {
+    this.screenReaderComponent.cancel();
+    this.melody?.pause();
+    if (this.readAfter) {
+      return this.readOutCurrentDatum();
+    }
+    return true;
   }
 
   private readOutDomain() {
-    return this.screenReaderComponent.readOut(t(AUDIFICATION.DOMAIN, {
-      min: formatX(this.domain[0]),
-      max: formatX(this.domain[this.domain.length - 1]),
-    }));
+    return this.screenReaderComponent.readOut(t(AUDIFICATION.DOMAIN, this.i18nDomainArgs));
   }
 
-  private readOutRange() {
-    return this.screenReaderComponent.readOut(t(AUDIFICATION.RANGE, {
-      min: formatY(this.range[0]),
-      max: formatY(this.range[this.range.length - 1]),
-    }));
+  private async readOutRange() {
+    if (!this.melody) {
+      return false;
+    }
+    await this.melody.prepare();
+    await this.melody.informFrequencyRange();
+    return this.screenReaderComponent.readOut(t(AUDIFICATION.RANGE, this.i18nRangeArgs));
   }
 
   private readOutCurrentLegendItem() {
     return this.screenReaderComponent.readOut(tA11y(AUDIFICATION.CURRENT_LEGEND_ITEM, {
       label: this.data[this.datumIndex].label,
-      domain_min: formatX(this.domain[0]),
-      domain_max: formatX(this.domain[this.domain.length - 1]),
-      range_min: formatY(this.range[0]),
-      range_max: formatY(this.range[this.range.length - 1]),
+      ...this.i18nDomainArgs,
+      ...this.i18nRangeArgs,
     }));
   }
 
@@ -212,9 +223,9 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     return this.screenReaderComponent.readOut(reorderedLabels.join(', '));
   }
 
-  private readOutCurrentDatum() {
+  private async readOutCurrentDatum() {
     if (!this.melody) {
-      return 0;
+      return false;
     }
     const { x, y } = this.points[this.melody.pointIndex];
     return this.screenReaderComponent.readOut(t(AUDIFICATION.ACTIVE_POINT, {

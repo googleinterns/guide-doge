@@ -21,15 +21,18 @@ export const en: I18n = {
     'Press <kbd>UP</kbd> or <kbd>DOWN</kbd> to switch among the legend items.',
     'Press <kbd>0</kbd> ... <kbd>9</kbd> to move playhead.',
   ].join(' <br/>'),
-  [AUDIFICATION.DOMAIN]: 'Domain from %(min)s to %(max)s.',
-  [AUDIFICATION.RANGE]: 'Range from %(min)s to %(max)s.',
+  [AUDIFICATION.DOMAIN]: 'Domain from %(domain_min)s to %(domain_max)s, each note representing %(domain_unit)s.',
+  [AUDIFICATION.RANGE]: 'Range from %(range_min)s to %(range_max)s.',
   [AUDIFICATION.ACTIVE_POINT]: '%(y)s on %(x)s.',
-  [AUDIFICATION.CURRENT_LEGEND_ITEM]: [
-    `The current legend item is '%(label)s'.`,
-    'Domain from %(domain_min)s to %(domain_max)s.',
-    'Range from %(range_min)s to %(range_max)s.',
-    'Press <kbd>?</kbd> to read out the instructions.',
-  ].join(' <br/>'),
+  get [AUDIFICATION.CURRENT_LEGEND_ITEM]() {
+    return [
+      `The current legend item is '%(label)s'.`,
+      en[AUDIFICATION.DOMAIN],
+      en[AUDIFICATION.RANGE],
+      'Press <kbd>?</kbd> to read out the instructions.',
+    ].join(' <br/>');
+  },
+  [AUDIFICATION.DOMAIN_UNIT_DAY]: 'a day',
 
   [DATA_PREFERENCE.enabled]: 'Data Generator',
   [DATA_PREFERENCE.name]: 'Dataset',
@@ -45,8 +48,8 @@ export const en: I18n = {
   [AUDIFICATION_PREFERENCE.lowestPitch]: 'Lowest note (Hz)',
   [AUDIFICATION_PREFERENCE.highestPitch]: 'Highest note (Hz)',
   [AUDIFICATION_PREFERENCE.noteDuration]: 'Note duration (ms)',
-  [AUDIFICATION_PREFERENCE.readAfter]: 'Read out before playing',
-  [AUDIFICATION_PREFERENCE.readBefore]: 'Read out after playing',
+  [AUDIFICATION_PREFERENCE.readBefore]: 'Read out before playing',
+  [AUDIFICATION_PREFERENCE.readAfter]: 'Read out after playing',
 
   [DATA_TABLE_PREFERENCE.enabled]: 'Data Table',
 
