@@ -6,17 +6,27 @@ import { SimpleChange } from '@angular/core';
 import { ScreenReaderModule } from '../screen-reader/screen-reader.module';
 import { MatCardModule } from '@angular/material/card';
 import { createLineChartMeta } from '../../datasets/metas/line-chart.meta';
+import { mockData } from '../../utils/mocks.spec';
+import { mod } from '../../utils/misc';
+import { ScreenReaderComponent } from '../screen-reader/screen-reader.component';
 
 describe('LineChartAudificationComponent', () => {
+  class MockScreenReaderComponent extends ScreenReaderComponent {
+    // override to remove unnecessary delay in running tests
+    async readOut(text: string) {
+      return true;
+    }
+  }
+
   let fixture: ComponentFixture<LineChartAudificationComponent>;
   let component: LineChartAudificationComponent;
 
   function triggerKeyDown(key: string) {
-    component.handleKeyDown(new KeyboardEvent('keydown', { key }));
+    return component.handleKeyDown(new KeyboardEvent('keydown', { key }));
   }
 
   function triggerKeyUp(key: string) {
-    component.handleKeyUp(new KeyboardEvent('keyup', { key }));
+    return component.handleKeyUp(new KeyboardEvent('keyup', { key }));
   }
 
   beforeEach(() => {
@@ -30,16 +40,12 @@ describe('LineChartAudificationComponent', () => {
     });
     const hostFixture = TestBed.createComponent(LineChartComponent);
     const host = hostFixture.componentInstance;
-    const time = new Date();
     host.meta = createLineChartMeta(
       'Title',
-      () => [{
-        label: '',
-        points: [{ x: time, y: 0 }, { x: new Date(time.getTime() + 10), y: 1 }],
-      }],
+      () => mockData,
     );
-
     TestBed.resetTestingModule();
+
     TestBed.configureTestingModule({
       imports: [
         ScreenReaderModule,
@@ -55,6 +61,7 @@ describe('LineChartAudificationComponent', () => {
 
     // init component inputs
     component = fixture.componentInstance;
+    component.screenReaderComponent = new MockScreenReaderComponent();
     component.enabled = true;
     component.lowestPitch = 256;
     component.highestPitch = 1024;
@@ -63,10 +70,10 @@ describe('LineChartAudificationComponent', () => {
     component.readAfter = true;
 
     host.ngOnInit();
-    component.ngOnInit();
     host.ngOnChanges({
       meta: new SimpleChange(null, host.meta, true),
     });
+    component.ngOnInit();
   });
 
   it('should instantiate.', () => {
@@ -75,39 +82,51 @@ describe('LineChartAudificationComponent', () => {
 
   it('should have truthy i18n values.', () => {
     expect(component.INSTRUCTIONS).toBeTruthy();
-    expect(component.INSTRUCTIONS_A11Y).toBeTruthy();
   });
 
   it('should create a melody as the data changes.', () => {
     expect(component.melody).toBeInstanceOf(Melody);
   });
 
-  it('should play the melody while pressing SPACE.', () => {
-    triggerKeyDown(' ');
+  it('should play the melody while pressing SPACE.', async () => {
+    await triggerKeyDown(' ');
     expect(component.melody?.isPlaying).toBeTrue();
 
-    triggerKeyUp(' ');
+    await triggerKeyUp(' ');
     expect(component.melody?.isPlaying).toBeFalse();
   });
 
-  it(`should read out upon pressing 'x', 'y', or 'l'.`, () => {
+  it(`should read out upon pressing 'x', 'y', 'l', or '?'.`, async () => {
     spyOn(component.screenReaderComponent, 'readOut');
-    ['x', 'y', 'l'].forEach((key, i) => {
-      triggerKeyDown(key);
-      expect(component.screenReaderComponent.readOut).toHaveBeenCalledTimes(i + 1);
-    });
+    let count = 0;
+    for (const key of ['x', 'y', 'l', '?']) {
+      await triggerKeyDown(key);
+      expect(component.screenReaderComponent.readOut).toHaveBeenCalledTimes(++count);
+    }
   });
 
-  it(`should move playhead upon pressing numbers.`, () => {
+  it(`should move playhead upon pressing numbers.`, async () => {
     spyOn(component.melody!, 'seekTo');
     for (let i = 0; i < 10; i++) {
-      triggerKeyDown(`${i}`);
+      await triggerKeyDown(`${i}`);
       expect(component.melody!.seekTo).toHaveBeenCalledTimes(i + 1);
     }
   });
 
-  it('should pause the melody when losing focus.', () => {
-    triggerKeyDown(' ');
+  it('should switch the legend item upon pressing UP or DOWN.', async () => {
+    let prevDatumIndex;
+
+    prevDatumIndex = component.datumIndex;
+    await triggerKeyDown('ArrowUp');
+    expect(component.datumIndex).toBe(mod(prevDatumIndex + 1, mockData.length));
+
+    prevDatumIndex = component.datumIndex;
+    await triggerKeyDown('ArrowDown');
+    expect(component.datumIndex).toBe(mod(prevDatumIndex - 1, mockData.length));
+  });
+
+  it('should pause the melody when losing focus.', async () => {
+    await triggerKeyDown(' ');
     expect(component.melody?.isPlaying).toBeTrue();
     component.handleBlur();
     expect(component.melody?.isPlaying).toBeFalse();

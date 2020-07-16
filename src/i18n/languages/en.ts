@@ -6,7 +6,7 @@ import {
   GUIDE_DOGE,
   I18n,
   SUMMARIZATION_PREFERENCE,
-  VISUALIZATION,
+  PUNCTUATION,
 } from '../types';
 
 export const en: I18n = {
@@ -14,17 +14,25 @@ export const en: I18n = {
   [GUIDE_DOGE.VISUALIZATION]: 'Data visualization',
   [GUIDE_DOGE.AUDIFICATION]: 'Data audification',
 
-  [VISUALIZATION.ACTIVE_DATUM]: '%(y)s on %(x)s',
-
   [AUDIFICATION.INSTRUCTIONS]: [
     'Hold down <kbd>SPACE</kbd> to play the audified melody and <kbd>SHIFT</kbd> + <kbd>SPACE</kbd> to play it backward.',
     'Press <kbd>X</kbd> or <kbd>Y</kbd> to read out the domain or range respectively.',
     'Press <kbd>L</kbd> to read out the legend items.',
+    'Press <kbd>UP</kbd> or <kbd>DOWN</kbd> to switch among the legend items.',
     'Press <kbd>0</kbd> ... <kbd>9</kbd> to move playhead.',
   ].join(' <br/>'),
-  [AUDIFICATION.DOMAIN]: 'Domain from %(min)s to %(max)s',
-  [AUDIFICATION.RANGE]: 'Range from %(min)s to %(max)s',
-  [AUDIFICATION.ACTIVE_DATUM]: '%(y)s on %(x)s',
+  [AUDIFICATION.DOMAIN]: 'Domain from %(domain_min)s to %(domain_max)s, each note representing %(domain_unit)s.',
+  [AUDIFICATION.RANGE]: 'Range from %(range_min)s to %(range_max)s.',
+  [AUDIFICATION.ACTIVE_POINT]: '%(y)s on %(x)s.',
+  get [AUDIFICATION.CURRENT_LEGEND_ITEM]() {
+    return [
+      `The current legend item is '%(label)s'.`,
+      en[AUDIFICATION.DOMAIN],
+      en[AUDIFICATION.RANGE],
+      'Press <kbd>?</kbd> to read out the instructions.',
+    ].join(' <br/>');
+  },
+  [AUDIFICATION.DOMAIN_UNIT_DAY]: 'a day',
 
   [DATA_PREFERENCE.enabled]: 'Data Generator',
   [DATA_PREFERENCE.name]: 'Dataset',
@@ -40,10 +48,11 @@ export const en: I18n = {
   [AUDIFICATION_PREFERENCE.lowestPitch]: 'Lowest note (Hz)',
   [AUDIFICATION_PREFERENCE.highestPitch]: 'Highest note (Hz)',
   [AUDIFICATION_PREFERENCE.noteDuration]: 'Note duration (ms)',
-  [AUDIFICATION_PREFERENCE.readAfter]: 'Read out before playing',
-  [AUDIFICATION_PREFERENCE.readBefore]: 'Read out after playing',
+  [AUDIFICATION_PREFERENCE.readBefore]: 'Read out before playing',
+  [AUDIFICATION_PREFERENCE.readAfter]: 'Read out after playing',
 
   [DATA_TABLE_PREFERENCE.enabled]: 'Data Table',
 
   [SUMMARIZATION_PREFERENCE.enabled]: 'Text Summarization',
+  [PUNCTUATION.QUESTION_MARK]: 'QUESTION MARK',
 };

@@ -18,8 +18,13 @@ export class ChartSummarizationComponent implements OnInit {
     private zone: NgZone,
   ) { }
 
-  get summaryQuery() {
-    return this.host.datum.summariesQuery;
+  get datum() {
+    // TODO: Support multiple legend items summarization
+    return this.host.data[0];
+  }
+
+  get querySumaries() {
+    return this.datum.querySummaries;
   }
 
   get hasSummaries() {
@@ -27,8 +32,8 @@ export class ChartSummarizationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.summaryQuery) {
-      this.summaries = this.summaryQuery()
+    if (this.querySumaries) {
+      this.summaries = this.querySumaries()
         .filter(({ validity }) => validity >= (this.validityThreshold ?? 0.0))
         .sort(({ validity: va }, { validity: vb }) => vb - va);
     } else {

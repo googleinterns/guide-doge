@@ -68,7 +68,7 @@ export function create(config: Config): Dataset {
 
   const dataCube = generateCube(categories, measures, generateCubeConfig);
 
-  const visitCountSummariesQueryFactory = joinSummariesQueryFactories(
+  const visitCountQuerySummariesFactory = joinSummariesQueryFactories(
     WorkdayHolidayAbsoluteSummarization.queryFactory,
     WorkdayHolidayRelativeSummarization.queryFactory,
   );
@@ -78,7 +78,7 @@ export function create(config: Config): Dataset {
     createTimeSeriesQuery(dataCube, [{
       label: 'Visit Count',
       measureName: 'visitCount',
-      summariesQueryFactory: visitCountSummariesQueryFactory,
+      querySummariesFactory: visitCountQuerySummariesFactory,
     }]),
   );
 
