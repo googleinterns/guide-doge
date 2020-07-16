@@ -3,7 +3,7 @@ import { BaseD3, RenderOptions as BaseRenderOptions } from './base.d3';
 import * as topojson from 'topojson';
 
 export interface RenderOptions extends BaseRenderOptions {
-  placeholder?: never;
+  topoJsonUrl: string;
 }
 
 export class GeoMapD3 extends BaseD3<RenderOptions> {
@@ -14,7 +14,7 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
   }
 
   async renderMap() {
-    const { height, width } = this.renderOptions;
+    const { height, width, topoJsonUrl } = this.renderOptions;
 
     const projection = d3.geoNaturalEarth1()
       .scale(153)
@@ -24,7 +24,7 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
       .projection(projection);
     const graticule = d3.geoGraticule();
 
-    const world = await d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-10m.json');
+    const world = await d3.json(topoJsonUrl);
 
     const landPath = this.svg
       .append('path')

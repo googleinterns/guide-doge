@@ -14,6 +14,7 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
   @Input() meta: GeoMapMeta;
   @Input() height = 500;
   @Input() width = 800;
+  @Input() topoJsonUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-10m.json';
 
   geoMapD3: GeoMapD3;
 
