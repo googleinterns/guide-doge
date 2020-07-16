@@ -86,6 +86,7 @@ export function generateCube(
   return new DataCube(rows, measures, actualCategories);
 }
 
+const defaultStartDaysBeforeNow = 60;
 const defaultSettings: ModelSettings = {
   avgHits: 1000000,
   hitStdDev: 10000,
@@ -94,7 +95,7 @@ const defaultSettings: ModelSettings = {
   avgSessionsPerUser: 5,
   sessionsPerUserStdDev: 3,
   timeSeries: true,
-  startDate: new Date(Date.now() - 90 * DAY),
+  startDate: new Date(Date.now() - defaultStartDaysBeforeNow * DAY),
   endDate: new Date(),
   dailyStdDev: 0.1,
 };
