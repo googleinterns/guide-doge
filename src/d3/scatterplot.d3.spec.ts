@@ -46,13 +46,12 @@ describe('Adding VR Grids/Sky', () => {
 
   beforeEach( () =>  {
     element = document.createElement('a-scene');
-    document.append(element);
-    scatterplot = new Scatterplot('a-shape');
+    scatterplot = new Scatterplot('a-sphere');
   });
   it('Check for sky', () => {
     scatterplot.init(element, []);
     const sky = element.getElementsByTagName('a-sky');
-    var skyPresent = false;
+    let skyPresent = false;
     if (sky !== null){
       skyPresent = true;
     }
@@ -60,8 +59,8 @@ describe('Adding VR Grids/Sky', () => {
   });
   it('Check for xGrid', () => {
     scatterplot.init(element, []);
-    const xGrid = document.getElementById('xGrid');
-    var xGridPresent = false;
+    const xGrid = document.getElementsByTagName('a-entity');
+    let xGridPresent = false;
     if (xGrid !== null){
       xGridPresent = true;
     }
@@ -70,7 +69,7 @@ describe('Adding VR Grids/Sky', () => {
   it('Check for yGrid', () => {
     scatterplot.init(element, []);
     const yGrid = document.getElementById('yGrid');
-    var yGridPresent = false;
+    let yGridPresent = false;
     if (yGrid !== null){
       yGridPresent = true;
     }
@@ -79,7 +78,8 @@ describe('Adding VR Grids/Sky', () => {
   it('Check for zGrid', () => {
     scatterplot.init(element, []);
     const zGrid = document.getElementById('zGrid');
-    var zGridPresent = false;
+    console.log(zGrid);
+    let zGridPresent = false;
     if (zGrid !== null){
       zGridPresent = true;
     }

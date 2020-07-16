@@ -20,9 +20,10 @@ export class Scatterplot{
   constructor(shape: string) {
     this.shape = shape;
   }
-  init(container: HTMLElement | null, data: number[]){
+  init(container: HTMLElement, data: number[]){
     this.data = data;
     this.container = container;
+    document.body.append(container);
     // create a scale so that there is correspondence between data set and screen render
     this.hscale = d3.scaleLinear();
     this.hscale.domain([0, d3.max(this.data) as number])       // max of dataset
