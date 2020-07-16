@@ -1,27 +1,30 @@
 import { Summary } from './types';
 import { TimeSeriesPoint } from '../queries/time-series.query';
-import { tFunc, tFuncL, tFuncR } from './utils';
-import { groupByWeek } from './utils';
+import { cacheSummaries } from './utils/commons';
+import { groupPointsByXWeek } from './utils/time-series';
+import {
+  PointMembershipFunction,
+  MembershipFunction,
+  trapezoidalMF,
+  trapezoidalMFL,
+  trapezoidalMFR,
+  sigmaCountQA,
+} from './libs/protoform';
 
 export function queryFactory(points: TimeSeriesPoint[]) {
-  let summariesCache: Summary[] | null = null;
-  return () => {
-    if (summariesCache) {
-      return summariesCache;
-    }
+  return cacheSummaries(() => {
+    const uHigherTraffic = ({ y }) => trapezoidalMFL(1.2, 1.4)(y);
+    const uEqualTraffic = ({ y }) => trapezoidalMF(0.6, 0.8, 1.2, 1.4)(y);
+    const uLowerTraffic = ({ y }) => trapezoidalMFR(0.6, 0.8)(y);
 
-    const uHigherTraffic = ({ y }) => tFuncL(1.2, 1.4)(y);
-    const uEqualTraffic = ({ y }) => tFunc(0.6, 0.8, 1.2, 1.4)(y);
-    const uLowerTraffic = ({ y }) => tFuncR(0.6, 0.8)(y);
-
-    const uMostPercentage = (v: number) => tFuncL(0.6, 0.7)(v);
-    const uHalfPercentage = (v: number) => tFunc(0.3, 0.4, 0.6, 0.7)(v);
-    const uFewPercentage = (v: number) => tFunc(0.05, 0.1, 0.3, 0.4)(v);
+    const uMostPercentage = trapezoidalMFL(0.6, 0.7);
+    const uHalfPercentage = trapezoidalMF(0.3, 0.4, 0.6, 0.7);
+    const uFewPercentage = trapezoidalMF(0.05, 0.1, 0.3, 0.4);
 
     const uHoliday = ({ x }) => x.getDay() === 5 ? 0.2 : +(x.getDay() === 0 || x.getDay() === 6);
-    const uWeekday = pair => 1 - uHoliday(pair);
+    const uWeekday = (p: TimeSeriesPoint) => 1 - uHoliday(p);
 
-    points = groupByWeek(points).map(weekPoints => {
+    points = groupPointsByXWeek(points).map(weekPoints => {
       const week = weekPoints[0].x;
       const wWeekday = weekPoints.reduce((p, v) => p + uWeekday(v), 0);
       const wHoliday = weekPoints.reduce((p, v) => p + uHoliday(v), 0);
@@ -38,35 +41,22 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       }
     }).filter(({ y }) => y >= 0);
 
-    const uTraffics = {
-      "higher (WorkdayCount/HolidayCount > 1.3)": uHigherTraffic,
-      "equal (0.7 < WorkdayCount/HolidayCount < 1.3)": uEqualTraffic,
-      "lower (WorkdayCount/HolidayCount < 0.7)": uLowerTraffic,
-    };
+    const uPercentages: [string, MembershipFunction][] = [
+      ['most', uMostPercentage],
+      ['half', uHalfPercentage],
+      ['few', uFewPercentage],
+    ];
 
-    const uPercentages = {
-      most: uMostPercentage,
-      half: uHalfPercentage,
-      few: uFewPercentage,
-    };
-
-    const uDays = {
-      weekday: uWeekday,
-      holiday: uHoliday,
-    };
-
-    const sigmaCountQA = (fQ, fA): number => {
-      const uA: number[] = points.map(fA);
-      const n = uA.reduce((p, v) => p + v, 0);
-      const d = uA.length + 1e-7;
-      const t = fQ(n / d);
-      return t;
-    };
+    const uTraffics: [string, PointMembershipFunction<TimeSeriesPoint>][] = [
+      ['higher (WorkdayCount/HolidayCount > 1.3)', uHigherTraffic],
+      ['equal (0.7 < WorkdayCount/HolidayCount < 1.3)', uEqualTraffic],
+      ['lower (WorkdayCount/HolidayCount < 0.7)', uLowerTraffic],
+    ];
 
     const summaries: Summary[] = [];
-    for (const [quantifier, uPercentage] of Object.entries(uPercentages)) {
-      for (const [traffic, uTraffic] of Object.entries(uTraffics)) {
-        const t = sigmaCountQA(uPercentage, uTraffic);
+    for (const [quantifier, uPercentage] of uPercentages) {
+      for (const [traffic, uTraffic] of uTraffics) {
+        const t = sigmaCountQA(points, uPercentage, uTraffic);
         summaries.push({
           text: `In <b>${quantifier}</b> of weeks, weekdays has <b>${traffic}</b> traffic.`,
           validity: t
@@ -74,7 +64,6 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       }
     }
 
-    summariesCache = summaries;
     return summaries;
-  };
+  });
 }
