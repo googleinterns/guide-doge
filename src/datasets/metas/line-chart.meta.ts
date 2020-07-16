@@ -6,11 +6,11 @@ export type LineChartMeta = XYChartMeta<'line', TimeSeriesQuery<LineChartLegendI
 
 export function createLineChartMeta(
   title: string,
-  query: TimeSeriesQuery<LineChartLegendItemStyle>,
+  queryData: TimeSeriesQuery<LineChartLegendItemStyle>,
 ): LineChartMeta {
   return {
     type: 'line',
     title,
-    query,
+    queryData,
   };
 }

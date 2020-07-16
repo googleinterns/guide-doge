@@ -1,6 +1,6 @@
 <h2 class="card-title">{{meta.title}}</h2>
 <mat-card class="card-content">
-  <div class="tabs" *ngIf="isTabbed()">
+  <div class="tabs" *ngIf="isTabbedChartsMetaCard()">
     <div *ngFor="let title of titles"
          class="tab" [class.active]="title === currentTabTitle"
          (click)="setCurrentTabTitle(title)" role="button">

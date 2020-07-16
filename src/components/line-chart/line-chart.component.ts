@@ -80,7 +80,7 @@ export class LineChartComponent implements RenderOptions<LineChartDatum>, OnChan
 
   ngOnChanges(changes: SimpleChanges): void {
     if (['startDate', 'endDate', 'meta'].some(key => key in changes)) {
-      const data = this.meta.query({
+      const data = this.meta.queryData({
         range: [this.startDate, this.endDate],
       });
       this.data$.next(data);

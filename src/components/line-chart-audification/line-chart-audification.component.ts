@@ -131,7 +131,8 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     } else if (key === 'l') {
       return this.readOutLegendItems();
     } else if ('0' <= key && key <= '9') {
-      const pointIndex = Math.floor(+key / 10 * this.points.length);
+      const seekPercentage = +key * 10;
+      const pointIndex = Math.floor(seekPercentage / 100 * this.points.length);
       this.melody.seekTo(pointIndex, true);
       return this.readOutCurrentDatum();
     } else if (key === 'ArrowUp' || key === 'ArrowDown') {
