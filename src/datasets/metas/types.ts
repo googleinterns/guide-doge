@@ -1,5 +1,6 @@
 import { LineChartMeta } from './line-chart.meta';
 import { TabbedChartsMeta } from './tabbed-charts.meta';
+import { GeoMapMeta } from './geo-map.meta';
 
 export interface BaseMeta<T extends string> {
   type: T;
@@ -20,4 +21,4 @@ export interface XYPoint<T, U> {
   y: U;
 }
 
-export type Meta = LineChartMeta | TabbedChartsMeta;
+export type Meta = LineChartMeta | TabbedChartsMeta | GeoMapMeta;
