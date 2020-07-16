@@ -5,10 +5,9 @@ import { generateCube } from '../models/data-cube/generation';
 import { createTimeSeriesQuery } from './queries/time-series.query';
 import { createLineChartMeta } from './metas/line-chart.meta';
 import { PreferenceMeta } from '../services/preference/types';
-import { createDefault } from '../utils/preferences';
 import { DAY } from '../utils/timeUnits';
 import { joinSummariesQueryFactories } from './summarizations/utils';
-import * as WorkdayHolidaySummarization from './summarizations/workday-holiday.summarization';
+import * as WorkdayHolidayAbsoluteSummarization from './summarizations/workday-holiday-absolute.summarization';
 import * as WorkdayHolidayRelativeSummarization from './summarizations/workday-holiday-relative.summarization';
 
 export interface Config {
@@ -70,7 +69,7 @@ export function create(config: Config): Dataset {
   const dataCube = generateCube(categories, measures, generateCubeConfig);
 
   const visitCountSummariesQueryFactory = joinSummariesQueryFactories(
-    WorkdayHolidaySummarization.queryFactory,
+    WorkdayHolidayAbsoluteSummarization.queryFactory,
     WorkdayHolidayRelativeSummarization.queryFactory,
   );
 
