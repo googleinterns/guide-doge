@@ -1,4 +1,4 @@
-import { Summary, SummariesQueryFactory } from '../types';
+import { Summary, QuerySummariesFactory } from '../types';
 
 export function cacheSummaries(f: () => Summary[]): () => Summary[] {
   let cache: Summary[] | null = null;
@@ -10,8 +10,8 @@ export function cacheSummaries(f: () => Summary[]): () => Summary[] {
   };
 }
 
-export function joinSummariesQueryFactories<PointT>(
-  ...queryFactories: SummariesQueryFactory<PointT>[]): SummariesQueryFactory<PointT> {
+export function joinQuerySummariesFactories<PointT>(
+  ...queryFactories: QuerySummariesFactory<PointT>[]): QuerySummariesFactory<PointT> {
   return (points: PointT[]) => () => {
     const summaries = queryFactories.map(f => f(points)());
     const summariesFlat = summaries.reduce((p, summary) => [...p, ...summary], []);

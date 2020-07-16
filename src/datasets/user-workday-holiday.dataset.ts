@@ -6,7 +6,7 @@ import { createTimeSeriesQuery } from './queries/time-series.query';
 import { createLineChartMeta } from './metas/line-chart.meta';
 import { PreferenceMeta } from '../services/preference/types';
 import { DAY } from '../utils/timeUnits';
-import { joinSummariesQueryFactories } from './summarizations/utils/commons';
+import { joinQuerySummariesFactories } from './summarizations/utils/commons';
 import * as WorkdayHolidayAbsoluteSummarization from './summarizations/workday-holiday-absolute.summarization';
 import * as WorkdayHolidayRelativeSummarization from './summarizations/workday-holiday-relative.summarization';
 
@@ -68,7 +68,7 @@ export function create(config: Config): Dataset {
 
   const dataCube = generateCube(categories, measures, generateCubeConfig);
 
-  const visitCountQuerySummariesFactory = joinSummariesQueryFactories(
+  const visitCountQuerySummariesFactory = joinQuerySummariesFactories(
     WorkdayHolidayAbsoluteSummarization.queryFactory,
     WorkdayHolidayRelativeSummarization.queryFactory,
   );
