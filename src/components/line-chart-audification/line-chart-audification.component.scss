@@ -1,9 +1,10 @@
 @import "../../utils/constants";
 
 :host {
-  display: block;
-  padding: 1.5rem;
-  border-top: 1px solid $color-border;
+  @include card-section;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 
   .instructions {
     font-size: $font-size-small;

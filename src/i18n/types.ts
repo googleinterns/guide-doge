@@ -5,18 +5,31 @@ export enum GUIDE_DOGE {
 }
 
 export enum VISUALIZATION {
-  ACTIVE_DATUM = 0x100,
 }
 
 export enum AUDIFICATION {
   INSTRUCTIONS = 0x200,
   DOMAIN,
   RANGE,
-  ACTIVE_DATUM,
+  ACTIVE_POINT,
+  CURRENT_LEGEND_ITEM,
+  DOMAIN_UNIT_DAY,
+}
+
+export enum DATA_PREFERENCE {
+  enabled = 0x300,
+  name,
+  avgHits,
+  hitStdDev,
+  avgUsers,
+  userStdDev,
+  avgSessionsPerUser,
+  sessionsPerUserStdDev,
+  offset,
 }
 
 export enum AUDIFICATION_PREFERENCE {
-  enabled = 0x300,
+  enabled = 0x400,
   lowestPitch,
   highestPitch,
   noteDuration,
@@ -25,16 +38,21 @@ export enum AUDIFICATION_PREFERENCE {
 }
 
 export enum DATA_TABLE_PREFERENCE {
-  enabled = 0x400,
+  enabled = 0x500,
 }
 
 export enum TEXT_SUMMARY_PREFERENCE {
-  enabled = 0x500,
+  enabled = 0x600,
+}
+
+export enum PUNCTUATION {
+  QUESTION_MARK = 0x700,
 }
 
 export type I18nKey =
   GUIDE_DOGE | VISUALIZATION | AUDIFICATION |
-  AUDIFICATION_PREFERENCE | DATA_TABLE_PREFERENCE | TEXT_SUMMARY_PREFERENCE;
+  DATA_PREFERENCE | AUDIFICATION_PREFERENCE | DATA_TABLE_PREFERENCE | TEXT_SUMMARY_PREFERENCE |
+  PUNCTUATION;
 
 export type I18n = {
   [key in I18nKey]: string;

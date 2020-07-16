@@ -1,27 +1,56 @@
 import { DataService } from './data.service';
-import { mockMeasureName } from '../../utils/mocks.spec';
-import { Duration } from 'luxon';
+import { PreferenceService } from '../preference/preference.service';
+import { createDefault } from '../../utils/preferences';
+import * as UserWhiteNoiseDataset from '../../datasets/user-white-noise.dataset';
+import * as DummyDataset from '../../datasets/dummy.dataset';
 
 describe('DataService', () => {
   let dataService: DataService;
+  let preferenceService: PreferenceService;
 
   beforeEach(() => {
-    dataService = new DataService();
+    preferenceService = new PreferenceService();
+    preferenceService.dataset$.next({
+      ...preferenceService.dataset$.value,
+      name: 'UserWhiteNoise'
+    });
+    dataService = new DataService(preferenceService);
   });
 
   it('should instantiate.', () => {
     expect(dataService).toBeInstanceOf(DataService);
   });
 
-  it('should get data for the given days.', () => {
-    for (const days of [7, 14, 30]) {
-      const data = dataService.getMeasureOverDays(mockMeasureName, days);
-      expect(data.length).toBe(days);
-      const firstDate = data[0].date;
-      const lastDate = data[data.length - 1].date;
-      const actualDifference = lastDate.getTime() - firstDate.getTime();
-      const expectedDifference = Duration.fromObject({ days: days - 1 }).as('milliseconds');
-      expect(actualDifference).toBe(expectedDifference);
-    }
+  it('should initialize dataset preference.', () => {
+    expect(preferenceService.dataset$.value._meta)
+      .toEqual(jasmine.objectContaining(UserWhiteNoiseDataset.configMeta));
+    expect(preferenceService.dataset$.value)
+      .toEqual(jasmine.objectContaining(createDefault(UserWhiteNoiseDataset.configMeta)));
   });
+
+  it('should update dataset preference in PreferenceService when name is changed and valid.', () => {
+    preferenceService.dataset$.next({
+      ...preferenceService.dataset$.value,
+      name: 'Dummy'
+    });
+    expect(preferenceService.dataset$.value._meta)
+      .toEqual(jasmine.objectContaining(DummyDataset.configMeta));
+    expect(preferenceService.dataset$.value)
+      .toEqual(jasmine.objectContaining(createDefault(DummyDataset.configMeta)));
+  });
+
+  it('should not update dataset preference when name is invalid.', () => {
+    preferenceService.dataset$.next({
+      ...preferenceService.dataset$.value,
+      name: 'INVALID_DATASET_NAME'
+    });
+
+    expect(preferenceService.dataset$.value._meta)
+      .toEqual(jasmine.objectContaining(UserWhiteNoiseDataset.configMeta));
+    expect(preferenceService.dataset$.value)
+      .toEqual(jasmine.objectContaining(createDefault(UserWhiteNoiseDataset.configMeta)));
+  });
+
+  // TODO: Add tests for updating current dataset based on dataset preference
+  // It should work with a mock dataset dependency and a spy on the exported create funciton of dataset module
 });

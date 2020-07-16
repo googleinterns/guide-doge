@@ -1,9 +1,12 @@
 @import "../../utils/constants";
 
+$card-width: 854px;
+
 :host {
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  width: $card-width;
 
   .card-title {
     font-size: $font-size-large;
@@ -11,7 +14,7 @@
   }
 
   .card-content {
-    @include card-shadow;
+    padding: 0;
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -31,7 +34,7 @@
         cursor: pointer;
 
         &.active {
-          border-top: 4px solid $color-highlight;
+          border-top: 4px solid mat-color($guide-doge-primary);
           font-weight: 500;
         }
       }

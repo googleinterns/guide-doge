@@ -1,34 +1,39 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { LineChartD3 } from '../../d3/line-chart.d3';
-import { BehaviorSubject } from 'rxjs';
-import { Datum, RenderOptions } from '../../d3/xy-chart.d3';
-import { AUDIFICATION, GUIDE_DOGE, t } from '../../i18n';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { LegendItemStyle, LineChartD3 } from '../../d3/line-chart.d3';
+import { RenderOptions } from '../../d3/xy-chart.d3';
+import { GUIDE_DOGE, t } from '../../i18n';
 import { formatX, formatY } from '../../utils/formatters';
 import { A11yPlaceholderDirective } from '../../directives/a11y-placeholder/a11y-placeholder.directive';
-import { DataService } from '../../services/data/data.service';
+import { DAY } from '../../utils/timeUnits';
+import { LineChartMeta } from '../../datasets/metas/line-chart.meta';
+import { TimeSeriesDatum, TimeSeriesPoint } from '../../datasets/queries/time-series.query';
+
+export type LineChartDatum = TimeSeriesDatum<LegendItemStyle>;
 
 @Component({
   selector: 'app-line-chart',
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.scss'],
 })
-export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnDestroy {
+export class LineChartComponent implements RenderOptions<LineChartDatum>, OnChanges, OnInit, OnDestroy {
   @ViewChild(A11yPlaceholderDirective, { static: true }) a11yPlaceholder: A11yPlaceholderDirective<LineChartComponent>;
 
-  @Input() measureName: string;
+  @Input() endDate = new Date();
+  @Input() startDate = new Date(this.endDate.getTime() - 30 * DAY);
+  @Input() meta: LineChartMeta;
   @Input() height = 500;
   @Input() width = 800;
-  @Input() marginTop = 20;
-  @Input() marginRight = 30;
-  @Input() marginBottom = 30;
-  @Input() marginLeft = 40;
 
-  data$ = new BehaviorSubject<Datum[]>([]);
-  activeDatum$ = new BehaviorSubject<Datum | null>(null);
+  formatX = formatX;
+  formatY = formatY;
+
+  data$ = new BehaviorSubject<LineChartDatum[]>([]);
+  activePoint$ = new BehaviorSubject<TimeSeriesPoint | null>(null);
   lineChartD3: LineChartD3;
+  private destroy$ = new Subject();
 
   constructor(
-    private dataService: DataService,
     public elementRef: ElementRef<HTMLElement>,
   ) {
     this.lineChartD3 = new LineChartD3(this);
@@ -38,31 +43,29 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
     return this.data$.value;
   }
 
-  set data(data) {
-    this.data$.next(data);
+  get activePoint() {
+    return this.activePoint$.value;
   }
 
-  get activeDatum() {
-    return this.activeDatum$.value;
-  }
-
-  set activeDatum(activeDatum) {
-    this.activeDatum$.next(activeDatum);
-  }
-
-  get ACTIVE_DATUM() {
-    if (!this.activeDatum) {
-      return null;
-    }
-    const { date, value } = this.activeDatum;
-    return t(AUDIFICATION.ACTIVE_DATUM, {
-      x: formatX(date),
-      y: formatY(value),
-    });
+  set activePoint(activePoint) {
+    this.activePoint$.next(activePoint);
   }
 
   get VISUALIZATION() {
     return t(GUIDE_DOGE.VISUALIZATION);
+  }
+
+  get legendItems() {
+    if (!this.activePoint) {
+      return [];
+    }
+    const xTime = this.activePoint.x.getTime();
+    return this.data
+      .map(datum => ({
+        label: datum.label,
+        activePoint: datum.points.find(point => point.x.getTime() === xTime),
+      }))
+      .filter((datum): datum is { label: string, activePoint: TimeSeriesPoint } => datum.activePoint !== undefined);
   }
 
   ngOnInit() {
@@ -70,13 +73,18 @@ export class LineChartComponent implements RenderOptions, OnChanges, OnInit, OnD
   }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.lineChartD3.clear();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if ('measureName' in changes) {
-      this.data = this.dataService.getMeasureOverDays(this.measureName);
-      this.activeDatum = null;
+    if (['startDate', 'endDate', 'meta'].some(key => key in changes)) {
+      const data = this.meta.queryData({
+        range: [this.startDate, this.endDate],
+      });
+      this.data$.next(data);
+      this.activePoint$.next(null);
     }
   }
 }
