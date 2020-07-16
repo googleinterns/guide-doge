@@ -30,7 +30,7 @@ export class ChartSummarizationComponent implements OnInit {
     if (this.summaryQuery) {
       this.summaries = this.summaryQuery()
         .filter(({ validity }) => validity >= (this.validityThreshold ?? 0.0))
-        .sort(({ validity: va }, { validity: vb }) => vb - va)
+        .sort(({ validity: va }, { validity: vb }) => vb - va);
     } else {
       this.summaries = [];
     }
