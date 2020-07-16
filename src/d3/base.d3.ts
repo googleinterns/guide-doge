@@ -40,10 +40,7 @@ export abstract class BaseD3<T extends RenderOptions> {
     this.clear();
     this.clear$ = new Subject();
 
-    this.svg
-      .style('width', width)
-      .style('height', height)
-      .attr('viewBox', [0, 0, width, height].join(' '));
+    this.svg.attr('viewBox', [0, 0, width, height].join(' '));
   }
 
   clear() {

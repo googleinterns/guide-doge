@@ -1,7 +1,7 @@
 import { sprintf } from 'sprintf-js';
 import * as striptags from 'striptags';
 import * as dictionary from './languages';
-import { I18nKey } from './types';
+import { I18nKey, PUNCTUATION } from './types';
 
 export type Language = keyof typeof dictionary;
 
@@ -32,5 +32,10 @@ export function t(key: I18nKey, ...args: any[]) {
  * @param args The arguments to format the string with.
  */
 export function tA11y(key: I18nKey, ...args: any[]) {
-  return striptags(t(key, ...args));
+  return striptags(
+    t(key, ...args)
+      .replace(/\.{3}/g, 'to')
+      .replace(/<kbd>(\S+)<\/kbd>/g, `'$1'`)
+      .replace(/'\?'/g, `'${t(PUNCTUATION.QUESTION_MARK)}'`),
+  );
 }

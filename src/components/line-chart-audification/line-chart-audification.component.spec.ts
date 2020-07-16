@@ -6,6 +6,8 @@ import { SimpleChange } from '@angular/core';
 import { ScreenReaderModule } from '../screen-reader/screen-reader.module';
 import { MatCardModule } from '@angular/material/card';
 import { createLineChartMeta } from '../../datasets/metas/line-chart.meta';
+import { mockData } from '../../utils/mocks.spec';
+import { mod } from '../../utils/misc';
 
 describe('LineChartAudificationComponent', () => {
   let fixture: ComponentFixture<LineChartAudificationComponent>;
@@ -30,13 +32,9 @@ describe('LineChartAudificationComponent', () => {
     });
     const hostFixture = TestBed.createComponent(LineChartComponent);
     const host = hostFixture.componentInstance;
-    const time = new Date();
     host.meta = createLineChartMeta(
       'Title',
-      () => [{
-        label: '',
-        points: [{ x: time, y: 0 }, { x: new Date(time.getTime() + 10), y: 1 }],
-      }],
+      () => mockData,
     );
 
     TestBed.resetTestingModule();
@@ -75,7 +73,6 @@ describe('LineChartAudificationComponent', () => {
 
   it('should have truthy i18n values.', () => {
     expect(component.INSTRUCTIONS).toBeTruthy();
-    expect(component.INSTRUCTIONS_A11Y).toBeTruthy();
   });
 
   it('should create a melody as the data changes.', () => {
@@ -90,9 +87,9 @@ describe('LineChartAudificationComponent', () => {
     expect(component.melody?.isPlaying).toBeFalse();
   });
 
-  it(`should read out upon pressing 'x', 'y', or 'l'.`, () => {
+  it(`should read out upon pressing 'x', 'y', 'l', or '?'.`, () => {
     spyOn(component.screenReaderComponent, 'readOut');
-    ['x', 'y', 'l'].forEach((key, i) => {
+    ['x', 'y', 'l', '?'].forEach((key, i) => {
       triggerKeyDown(key);
       expect(component.screenReaderComponent.readOut).toHaveBeenCalledTimes(i + 1);
     });
@@ -104,6 +101,18 @@ describe('LineChartAudificationComponent', () => {
       triggerKeyDown(`${i}`);
       expect(component.melody!.seekTo).toHaveBeenCalledTimes(i + 1);
     }
+  });
+
+  it('should switch the legend item upon pressing UP or DOWN.', () => {
+    let prevDatumIndex;
+
+    prevDatumIndex = component.datumIndex;
+    triggerKeyDown('ArrowUp');
+    expect(component.datumIndex).toBe(mod(prevDatumIndex + 1, mockData.length));
+
+    prevDatumIndex = component.datumIndex;
+    triggerKeyDown('ArrowDown');
+    expect(component.datumIndex).toBe(mod(prevDatumIndex - 1, mockData.length));
   });
 
   it('should pause the melody when losing focus.', () => {
