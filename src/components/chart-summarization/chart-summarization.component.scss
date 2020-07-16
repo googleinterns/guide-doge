@@ -8,4 +8,13 @@
     font-size: $font-size-medium;
     line-height: 2em;
   }
+
+  .summary {
+    display: inline-block;
+    margin: 0;
+  }
+
+  .summary::first-letter {
+    text-transform: uppercase;
+  }
 }
