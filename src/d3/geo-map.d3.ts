@@ -7,14 +7,13 @@ export interface RenderOptions extends BaseRenderOptions {
 }
 
 export class GeoMapD3 extends BaseD3<RenderOptions> {
-  static padding = 16;
-
-  protected scaleX: d3.ScaleLinear<number, number>;
-  protected scaleY: d3.ScaleLinear<number, number>;
-
-  async render() {
+  render() {
     super.render();
 
+    this.renderMap().catch(console.error);
+  }
+
+  async renderMap() {
     const { height, width } = this.renderOptions;
 
     const projection = d3.geoNaturalEarth1()
@@ -26,10 +25,6 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
     const graticule = d3.geoGraticule();
 
     const world = await d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-10m.json');
-
-    console.log(world);
-    console.log(topojson.feature(world, world.objects.land));
-    console.log(graticule);
 
     const landPath = this.svg
       .append('path')

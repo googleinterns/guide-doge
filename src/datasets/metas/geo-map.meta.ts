@@ -4,11 +4,11 @@ export type GeoMapMeta = DataMeta<'geo-map', null>;
 
 export function createGeoMapMeta(
   title: string,
-  query: null,
+  queryData: null,
 ): GeoMapMeta {
   return {
     type: 'geo-map',
     title,
-    query,
+    queryData,
   };
 }
