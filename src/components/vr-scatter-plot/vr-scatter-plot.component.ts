@@ -69,7 +69,7 @@ export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges,
     .pipe(takeUntil(this.destroy$))
     .pipe(map(queryOption => {
       // this.meta2.query(queryOption)[0]) has label, points, style and is of type BehaviorSubject<LineChartData>
-      return this.meta2.query(queryOption)[0];
+      return this.meta2.queryData(queryOption)[0];
     }))
     .subscribe(this.datum$);
     this.vrScatterPlot.init(document.querySelector('a-scene'), this.datum$.value.points);

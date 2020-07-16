@@ -21,10 +21,12 @@ export class Scatterplot{
   constructor(shape: string) {
     this.shape = shape;
   }
-  init(container: HTMLElement, data: XYPoint<Date, number>[]){
+  init(container: HTMLElement | null, data: XYPoint<Date, number>[]){
     this.data = data;
     this.container = container;
-    document.body.append(container);
+    if (this.container !== null){
+      document.body.append(this.container);
+    }
     this.createSky();
     this.generatePts();
     this.setColor('blue');
