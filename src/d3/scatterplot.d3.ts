@@ -10,18 +10,19 @@
 // for running on unit tests
 import * as d3 from 'd3';
 import * as THREE from 'three';
-import { XYPoint } from '../datasets/metas/types';
+import { XYPoint, XYZPoint } from '../datasets/metas/types';
 
 
 export class Scatterplot{
-    private data: XYPoint<Date, number>[];
+    private data: XYPoint<Date, number>[] | XYZPoint<Date, number, number>[];
     private shape: string;
     private container: HTMLElement | null;
 
   constructor(shape: string) {
     this.shape = shape;
   }
-  init(container: HTMLElement | null, data: XYPoint<Date, number>[]){
+  init(container: HTMLElement | null, data: XYZPoint<Date, number, number>[] | XYPoint<Date, number>[] ){
+    console.log(data);
     this.data = data;
     this.container = container;
     this.generatePts();
@@ -40,7 +41,7 @@ export class Scatterplot{
     // d is data at index, i within
     // select all shapes within given container
     d3.select(this.container).selectAll(this.shape).attr('position', (d, i) => {
-      const x = (d as XYPoint<Date, number>).y - (d as XYPoint<Date, number>).y;
+      const x = (d as XYZPoint<Date, number, number>).y - (d as XYZPoint<Date, number, number>).z;
       const y = i * 10;
       const z = -10;
       return `${x} ${y} ${z}`;
