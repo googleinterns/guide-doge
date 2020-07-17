@@ -20,8 +20,7 @@ import { datasets } from '../../datasets';
 export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges, OnDestroy{
   @Input() endDate = new Date();
   @Input() startDate = new Date(this.endDate.getTime() - 30 * DAY);
-  @Input() meta: Meta | Meta[];
-  @Input() meta2: LineChartMeta;
+  @Input() datasetPref: LineChartMeta;
   dataset$ = this.preferenceService.dataset$;
   DATA_PREFERENCE = DATA_PREFERENCE;
   private vrScatterPlot: Scatterplot;
@@ -51,13 +50,10 @@ export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges,
       this.componentMetas = dataset.metas;
       // dataset.metas[0].type = 'tabbed' and dataset.metas[1] = 'line' if chosen UserWhiteNoise
       // dataset.metas[0] - 'line' if Dummy chosen
-      this.meta = dataset.metas[0];
-      if (this.isTabbed()) {
-       // this.meta = dataset.metas[0];
-        this.meta2 = (this.meta as any).metas[0];
-      } else {
-        this.meta = dataset.metas;
-        this.meta2 = this.meta[0] as LineChartMeta;
+      if (dataset.metas[0].type === 'tabbed') {
+        this.datasetPref = (dataset.metas[0] as any).metas[0];
+      } else if (dataset.metas[0].type === 'line') {
+        this.datasetPref = dataset.metas[0] as LineChartMeta;
       }
       // calling this.init() from inside bc when code above is in constructor,
       // and code in this.init() is in ngOnInit() there is sync problem
@@ -76,14 +72,10 @@ export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges,
     .pipe(takeUntil(this.destroy$))
     .pipe(map(queryOption => {
       // this.meta2.query(queryOption)[0]) has label, points, style and is of type BehaviorSubject<LineChartData>
-      return this.meta2.query(queryOption)[0];
+      return this.datasetPref.query(queryOption)[0];
     }))
     .subscribe(this.datum$);
     this.vrScatterPlot.init(document.querySelector('a-scene'), this.datum$.value.points);
-  }
-
-  isTabbed(): boolean {
-    return 'tabbed' === (this.meta as Meta).type;
   }
 
   get datum() {
