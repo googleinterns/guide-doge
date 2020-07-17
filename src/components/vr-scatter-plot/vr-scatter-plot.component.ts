@@ -74,7 +74,6 @@ export class VRScatterPlotComponent implements OnInit, OnChanges, OnDestroy{
     }))
     .subscribe(this.datum$);
     this.vrScatterPlot.init(document.querySelector('a-scene'), this.datum$.value.points);
-    console.log(this.datum$.value.points);
   }
 
   isTabbed(): boolean {
