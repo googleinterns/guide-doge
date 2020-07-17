@@ -2,40 +2,90 @@
 
 const path = require('path');
 const fs = require('fs');
+const request = require('request');
 
-const inputPath = path.resolve(__dirname, 'simplemaps_worldcities_basicv1.6', 'worldcities.csv');
+// TODO: include attributions on the UI
+const countriesInputUrl = 'https://raw.githubusercontent.com/lukes/ISO-3166-Countries-with-Regional-Codes/master/all/all.json';
+const citiesInputPath = path.resolve(__dirname, 'simplemaps_worldcities_basicv1.6', 'worldcities.csv');
 const outputPath = path.resolve(__dirname, '..', 'src', 'assets', 'cities.json');
 
-// read csv and convert to 2d array
-const [headerRow, ...rows] = fs.readFileSync(inputPath, 'utf8')
-  .split('\r\n')
-  .map(v => {
-      const matches = [...v.matchAll(/"([^"]*)"/g)];
-      return matches.map(match => match[1]);
-    },
-  );
+request(countriesInputUrl, { json: true }, (err, res, body) => {
+  if (err) {
+    throw err;
+  }
 
-// create an array of city dictionaries
-const cities = rows
-  .map(values => {
-    const city = {};
-    headerRow.forEach((label, i) => {
-      city[label] = values[i];
-    });
-    return city;
+  // mapping from country id to country name
+  const countryNames = {};
+  const subcontinentNames = {};
+  const continentNames = {};
+
+  // mapping from country iso2 to country/subcontinent/continent ids
+  const countries = {};
+
+  // initiate the mappings
+  body.forEach(country => {
+    const {
+      'country-code': countryId,
+      'alpha-2': countryIso2,
+      'name': countryName,
+      'sub-region-code': subcontinentId,
+      'sub-region': subcontinentName,
+      'region-code': continentId,
+      'region': continentName,
+    } = country;
+
+    countries[countryIso2] = {
+      countryId,
+      subcontinentId,
+      continentId,
+    };
+
+    countryNames[countryId] = countryName;
+    subcontinentNames[subcontinentId] = subcontinentName;
+    continentNames[continentId] = continentName;
   });
 
-const largeCities = cities
-  // filter cities with population over a hundred thousand
-  .filter(city => city.population > 100_000)
-  // map only the properties needed
-  .map(city => ({
-    country: city.country,
-    city: city.city_ascii,
-    lat: +city.lat,
-    lng: +city.lng,
-    population: +city.population,
-  }));
+  // mapping from city id to city obj
+  const cities = {};
 
-// write json
-fs.writeFileSync(outputPath, JSON.stringify(largeCities), 'utf8');
+  const citiesCsv = fs.readFileSync(citiesInputPath, 'utf8');
+  csv2json(citiesCsv)
+    .filter(city => city.population > 100_000)
+    .forEach(city => {
+      cities[city.id] = {
+        ...countries[city.iso2],
+        name: city.city_ascii,
+        lat: +city.lat,
+        lng: +city.lng,
+        population: +city.population,
+      };
+    });
+
+  // write json
+  const content = {
+    cities,
+    countryNames,
+    subcontinentNames,
+    continentNames,
+  };
+  fs.writeFileSync(outputPath, JSON.stringify(content), 'utf8');
+});
+
+// convert csv to json
+function csv2json(csv) {
+  const [headerRow, ...rows] = csv
+    .split('\r\n')
+    .map(v => {
+        const matches = [...v.matchAll(/"([^"]*)"/g)];
+        return matches.map(match => match[1]);
+      },
+    );
+  return rows
+    .map(values => {
+      const dictionary = {};
+      headerRow.forEach((label, i) => {
+        dictionary[label] = values[i];
+      });
+      return dictionary;
+    });
+}
