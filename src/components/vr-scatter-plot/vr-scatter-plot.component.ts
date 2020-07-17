@@ -14,12 +14,12 @@ import { map, takeUntil } from 'rxjs/operators';
   selector: 'app-vr-scatter-plot',
   templateUrl: './vr-scatter-plot.component.html'
 })
-export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges, OnDestroy{
+export class VRScatterPlotComponent implements OnInit, OnChanges, OnDestroy{
   @Input() endDate = new Date();
   @Input() startDate = new Date(this.endDate.getTime() - 30 * DAY);
   @Input() meta: Meta;
   @Input() meta2: LineChartMeta;
-  private vrScatterPlot: Scatterplot;
+  vrScatterPlot: Scatterplot;
   componentMetas: Meta[];
   queryOptions$ = new BehaviorSubject<TimeSeriesQueryOptions>({
     range: [this.startDate, this.endDate],
@@ -29,17 +29,18 @@ export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges,
     points: [],
   });
   private destroy$ = new Subject();
+  dataService: DataService;
 
   constructor(
     private preferenceService: PreferenceService
   ) {
     this.preferenceService = preferenceService;
+    this.dataService = new DataService(this.preferenceService);
+    this.vrScatterPlot = new Scatterplot('a-sphere');
   }
 
   ngOnInit() {
-    this.vrScatterPlot = new Scatterplot('a-sphere');
-    const dataService = new DataService(this.preferenceService);
-    dataService.dataset$
+    this.dataService.dataset$
     .pipe(takeUntil(this.destroy$))
     .subscribe(dataset => {
       // componentMetas is initialized to different dataset metas - will help funnel dataset
@@ -73,6 +74,7 @@ export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges,
     }))
     .subscribe(this.datum$);
     this.vrScatterPlot.init(document.querySelector('a-scene'), this.datum$.value.points);
+    console.log(this.datum$.value.points);
   }
 
   isTabbed(): boolean {
