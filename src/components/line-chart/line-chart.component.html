@@ -1,8 +1,20 @@
 <div class="svg-wrapper"
      role="img" [attr.aria-label]="VISUALIZATION">
   <svg></svg>
-  <mat-card class="active-indicator">
-    {{ACTIVE_DATUM}}
+  <mat-card class="active-indicator" *ngIf="activePoint && data.length"
+            [style.top.px]="lineChartD3.y(activePoint.y)"
+            [style.left.px]="lineChartD3.x(activePoint.x)">
+    <div class="date">
+      {{formatX(activePoint.x)}}
+    </div>
+    <div *ngFor="let legendItem of legendItems" class="legend-item">
+      <div class="label">
+        {{legendItem.label}}
+      </div>
+      <div class="value">
+        {{formatY(legendItem.activePoint.y)}}
+      </div>
+    </div>
   </mat-card>
 </div>
 <ng-template appA11yPlaceholder></ng-template>

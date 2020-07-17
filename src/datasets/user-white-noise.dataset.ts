@@ -14,6 +14,7 @@ import { createLineChartMeta } from './metas/line-chart.meta';
 import { createTabbedChartsMeta } from './metas/tabbed-charts.meta';
 import { PreferenceMeta } from '../services/preference/types';
 import { createDefault } from '../utils/preferences';
+import { DAY } from '../utils/timeUnits';
 
 export interface Config {
   avgHits: number;
@@ -68,8 +69,18 @@ export function create(config: Config): Dataset {
       return createLineChartMeta(
         label,
         createTimeSeriesQuery(dataCube, [{
-          label,
+          label: '1 day',
           measureName: measure.name,
+        }, {
+          label: '7 days',
+          measureName: measure.name,
+          windowSize: 7 * DAY,
+          style: { opacity: .6 },
+        }, {
+          label: '30 days',
+          measureName: measure.name,
+          windowSize: 30 * DAY,
+          style: { opacity: .3 },
         }]),
       );
     }),
@@ -78,8 +89,13 @@ export function create(config: Config): Dataset {
   const lineChartMeta = createLineChartMeta(
     'Line Chart',
     createTimeSeriesQuery(dataCube, [{
-      label: 'Active User',
+      label: 'Last 30 days',
       measureName: 'activeUsers',
+    }, {
+      label: 'Preceding period',
+      measureName: 'activeUsers',
+      periodOffset: -30 * DAY,
+      style: { dashes: [2, 5] },
     }]),
   );
 

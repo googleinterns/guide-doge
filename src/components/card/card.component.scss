@@ -1,9 +1,12 @@
 @import "../../utils/constants";
 
+$card-width: 854px;
+
 :host {
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  width: $card-width;
 
   .card-title {
     font-size: $font-size-large;
@@ -11,7 +14,6 @@
   }
 
   .card-content {
-    overflow: hidden;
     padding: 0;
     display: flex;
     flex-direction: column;
