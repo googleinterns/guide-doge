@@ -1,66 +1,116 @@
 import { XYChartD3 } from './xy-chart.d3';
 import * as d3 from 'd3';
+import { LineChartDatum } from '../components/line-chart/line-chart.component';
 import { TimeSeriesPoint } from '../datasets/queries/time-series.query';
 
-export interface LineChartStyle {
+export interface LegendItemStyle {
   color: string;
   width: number;
   opacity: number;
   dashes: number[];
 }
 
-export class LineChartD3 extends XYChartD3 {
-  protected line: d3.Line<TimeSeriesPoint>;
-  protected path: d3.Selection<SVGPathElement, unknown, null, undefined>;
+interface LinePath {
+  line: d3.Line<TimeSeriesPoint>;
+  path: d3.Selection<SVGPathElement, unknown, null, undefined>;
+}
+
+export class LineChartD3 extends XYChartD3<LegendItemStyle> {
+  static defaultLegendItemStyle: LegendItemStyle = {
+    color: LineChartD3.colorPrimary,
+    width: 2,
+    opacity: 1,
+    dashes: [],
+  };
+
+  protected linePaths: LinePath[];
   protected activePointCircle: d3.Selection<SVGCircleElement, unknown, null, undefined>;
-  protected activePointToast: d3.Selection<d3.BaseType, unknown, null, undefined>;
 
   protected renderData() {
-    this.line = d3
-      .line<TimeSeriesPoint>()
-      .defined(d => !isNaN(d.y))
-      .x(d => this.scaleX(d.x))
-      .y(d => this.scaleY(d.y));
+    super.renderData();
 
-    this.path = this.svg
-      .append('path')
-      .attr('fill', 'none')
-      .attr('stroke', this.colorHighlight)
-      .attr('stroke-width', 2)
-      .attr('stroke-linejoin', 'round')
-      .attr('stroke-linecap', 'round');
+    this.linePaths = [];
   }
 
-  protected updateData(data: TimeSeriesPoint[]) {
-    this.path
-      .datum(data)
-      .transition(this.transition)
-      .attr('d', this.line);
+  protected updateData(data: LineChartDatum[]) {
+    const itemCount = data.length;
+    const oldItemCount = this.linePaths.length;
+
+    if (oldItemCount > itemCount) {
+      const removedLinePaths = this.linePaths.splice(itemCount, oldItemCount - itemCount);
+      for (const linePath of removedLinePaths) {
+        linePath.path.remove();
+      }
+    } else {
+      for (let i = 0; i < itemCount - oldItemCount; i++) {
+        this.linePaths.push({
+          line: d3.line<TimeSeriesPoint>(),
+          path: this.dataG
+            .append('path')
+            .attr('fill', 'none')
+            .attr('stroke-linejoin', 'round')
+            .attr('stroke-linecap', 'round'),
+        });
+      }
+    }
+
+    this.linePaths.forEach(({ line, path }, i) => {
+      const { style, points } = data[i];
+      line
+        .defined(point => !isNaN(point.y))
+        .x(point => this.x(point.x))
+        .y(point => this.y(point.y));
+      path.call(this.styleLegendItem(style));
+      path
+        .datum(points)
+        .transition(this.transition)
+        .attr('d', line);
+    });
   }
 
   protected renderActivePoint() {
     this.activePointCircle = this.svg
       .append('circle')
+      .attr('class', 'line_chart-active_point')
       .attr('r', 4)
-      .attr('fill', this.colorHighlight);
-    this.activePointToast = this.container.select('.active-indicator');
+      .attr('fill', LineChartD3.colorPrimary);
   }
 
   protected updateActivePoint(activePoint: TimeSeriesPoint | null) {
     if (!activePoint) {
       this.activePointCircle.attr('display', 'none');
-      this.activePointToast.style('opacity', 0);
       return;
     }
-    const { x, y } = activePoint;
+    const translateX = this.x(activePoint.x);
+    const translateY = this.y(activePoint.y);
     this.activePointCircle
       .transition(this.createTransition(50))
       .attr('display', 'inherit')
-      .attr('transform', `translate(${this.scaleX(x)},${this.scaleY(y)})`);
-    this.activePointToast
-      .transition(this.createTransition(50))
-      .style('opacity', .8)
-      .style('top', `${this.scaleY(y) + 16}px`)
-      .style('left', `${this.scaleX(x) - 64}px`);
+      .attr('transform', `translate(${translateX},${translateY})`);
+  }
+
+  protected appendLegendItemIcon(container: d3.Selection<SVGGElement, unknown, null, undefined>, datum: LineChartDatum) {
+    const { legendIconWidth, legendHeight } = XYChartD3;
+    container
+      .append('line')
+      .attr('x1', 0)
+      .attr('x2', legendIconWidth)
+      .attr('y1', legendHeight / 2)
+      .attr('y2', legendHeight / 2)
+      .call(this.styleLegendItem(datum.style));
+  }
+
+  protected styleLegendItem<T extends SVGGraphicsElement>(style?: Partial<LegendItemStyle>) {
+    const { color, width, opacity, dashes } = {
+      ...LineChartD3.defaultLegendItemStyle,
+      ...style ?? {},
+    };
+    return (stylePath: d3.Selection<T, unknown, null, undefined>) => {
+      stylePath
+        .attr('stroke', color)
+        .attr('stroke-width', width)
+        .attr('opacity', opacity)
+        .attr('stroke-dasharray', dashes.join(' '));
+    };
   }
 }

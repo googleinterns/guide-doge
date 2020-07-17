@@ -18,7 +18,7 @@ import { datasets } from '../../datasets';
   templateUrl: './vr-scatter-plot.component.html',
   styleUrls: ['./vr-scatter-plot.component.scss'],
 })
-export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges, OnDestroy{
+export class VRScatterPlotComponent implements OnInit, OnChanges, OnDestroy{
   @Input() endDate = new Date();
   @Input() startDate = new Date(this.endDate.getTime() - 30 * DAY);
   @Input() datasetPref: LineChartMeta;
@@ -34,17 +34,18 @@ export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges,
     points: [],
   });
   private destroy$ = new Subject();
+  dataService: DataService;
 
   constructor(
     private preferenceService: PreferenceService
   ) {
     this.preferenceService = preferenceService;
+    this.dataService = new DataService(this.preferenceService);
+    this.vrScatterPlot = new Scatterplot('a-sphere');
   }
 
   ngOnInit() {
-    this.vrScatterPlot = new Scatterplot('a-sphere');
-    const dataService = new DataService(this.preferenceService);
-    dataService.dataset$
+    this.dataService.dataset$
     .pipe(takeUntil(this.destroy$))
     .subscribe(dataset => {
       // componentMetas is initialized to different dataset metas - will help funnel dataset

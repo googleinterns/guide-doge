@@ -24,6 +24,9 @@ export class Scatterplot{
   init(container: HTMLElement | null, data: XYPoint<Date, number>[]){
     this.data = data;
     this.container = container;
+    if (this.container !== null){
+      document.body.append(this.container);
+    }
     this.generatePts();
     this.setColor('blue');
     this.createSky('gray');
@@ -31,11 +34,6 @@ export class Scatterplot{
   }
 
   private generatePts() {
-    // create a scale so that there is correspondence between data set and screen render
-    const hscale = d3.scaleLinear();
-    // hscale needs to be reassessed - this.data not of type number - need to write function to return max of each dimension
-    // hscale.domain([0, d3.max(this.data)]       // max of dataset
-    // .range([0, 10]);                                      // linear mapping of data set values to values from 0 to 10
      // enter identifies any DOM elements to be added when # array elements doesn't match
     d3.select(this.container).selectAll(this.shape).data(this.data).enter().append(this.shape);
     // d is data at index, i within
@@ -43,7 +41,7 @@ export class Scatterplot{
     d3.select(this.container).selectAll(this.shape).attr('position', (d, i) => {
       const x = (d as XYPoint<Date, number>).y - (d as XYPoint<Date, number>).y;
       const y = i * 10;
-      const z = -10;
+      const z = (-this.data[i] * 2);
       return `${x} ${y} ${z}`;
     });
   }

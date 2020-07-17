@@ -2,6 +2,7 @@ import { AudificationPreference, Preference } from '../services/preference/types
 import { TimeSeriesPoint } from '../datasets/queries/time-series.query';
 import { activeUserMeasure } from '../models/data-cube/presets';
 import { LineChartDatum } from '../components/line-chart/line-chart.component';
+import { DAY } from './timeUnits';
 
 export const mockPreference: Preference = {
   enabled: false,
@@ -16,14 +17,24 @@ export const mockAudificationPreference: AudificationPreference = {
   readBefore: false,
 };
 
-export const mockPoint: TimeSeriesPoint = {
-  x: new Date(),
-  y: 0,
-};
+function createMockPoints(length = 30, max = 50): TimeSeriesPoint[] {
+  return new Array(length).fill(0).map((_, i) => ({
+    x: new Date(Date.now() - (length - i - 1) * DAY),
+    y: Math.random() * max,
+  }));
+}
 
-export const mockDatum: LineChartDatum = {
-  label: '',
-  points: [mockPoint],
-};
+export const mockPoints = createMockPoints();
+export const [mockPoint] = createMockPoints(1);
+
+function createMockData(length = 5): LineChartDatum[] {
+  return new Array(length).fill(0).map((_, i) => ({
+    label: `Datum ${i}`,
+    points: createMockPoints(),
+  }));
+}
+
+export const mockData = createMockData();
+export const [mockDatum] = createMockData(1);
 
 export const mockMeasureName = activeUserMeasure.name;
