@@ -5,7 +5,7 @@ import { activeUserMeasure, eventCountMeasure, revenueMeasure } from '../models/
 import { createDefault } from '../utils/preferences';
 import { generateCube } from '../models/data-cube/generation';
 import { Category } from '../models/data-cube/types';
-import * as d3 from 'd3-fetch';
+import { createGeoQuery } from './queries/geo.query';
 
 export interface Config {
   avgHits: number;
@@ -14,19 +14,6 @@ export interface Config {
   userStdDev: number;
   avgSessionsPerUser: number;
   sessionsPerUserStdDev: number;
-}
-
-export interface Country {
-
-}
-
-export interface City {
-  id: string;
-  name: string;
-  country: string;
-  lat: number;
-  lng: number;
-  population: number;
 }
 
 export const configMeta: PreferenceMeta<Config> = {
@@ -58,14 +45,10 @@ export const configMeta: PreferenceMeta<Config> = {
 
 export async function create(config: Config): Promise<Dataset> {
   const { cities } = await import('../assets/cities.json');
-  const cityMap: { [id: string]: City } = {};
-  for (const city of cities) {
-    cityMap[city.id] = city;
-  }
   const cityCategory: Category = {
     name: 'city',
-    values: cities.map(city => ({
-      name: city.id,
+    values: Object.entries(cities).map(([cityId, city]) => ({
+      name: cityId,
       weight: city.population,
     })),
   };
@@ -79,11 +62,13 @@ export async function create(config: Config): Promise<Dataset> {
     ...config,
   });
 
-  // dataCube.getDataFor({});
-
   const geoMapMeta = createGeoMapMeta(
     'Geo Map',
-    () => null,
+    createGeoQuery(
+      dataCube,
+      measures.map(measure => measure.name),
+      cities,
+    ),
   );
 
   const metas = [

@@ -1,52 +1,103 @@
-import { XYPoint } from '../metas/types';
-import { inOneOfDateRanges } from '../../models/data-cube/filters';
+import { betweenDates, inCities } from '../../models/data-cube/filters';
 import { DataCube } from '../../models/data-cube/data-cube.model';
-import { unique } from '../../utils/misc';
+import { Filter, MeasureValues } from '../../models/data-cube/types';
+
+export enum TerritoryLevel {
+  CONTINENT,
+  SUBCONTINENT,
+  COUNTRY,
+  CITY,
+}
+
+export interface Territory {
+  level: TerritoryLevel;
+  id: string;
+}
 
 export interface GeoQueryOptions {
+  /** The date range to filter geo data with. */
   range: [Date, Date];
+  /** The territory to filter geo data with. */
+  territory?: Territory;
+  /** The territory level of each geo datum. */
+  unit: TerritoryLevel;
 }
 
-export type TimeSeriesPoint = XYPoint<Date, number>;
-
-export interface TimeSeriesDatum<S> {
-  label: string;
-  style?: Partial<S>;
-  points: TimeSeriesPoint[];
+export interface GeoDatum {
+  id: string;
+  values: MeasureValues;
 }
 
-export type TimeSeriesQuery<S> = (options: TimeSeriesQueryOptions) => TimeSeriesDatum<S>[];
+export type GeoQuery = (options: GeoQueryOptions) => GeoDatum[];
 
-export function createGeoQuery<S>(dataCube: DataCube, legendItems: LegendItem<S>[]): TimeSeriesQuery<S> {
+export interface City {
+  countryId: string;
+  subcontinentId: string;
+  continentId: string;
+  name: string;
+  lat: number;
+  lng: number;
+  population: number;
+}
+
+export function createGeoQuery<S>(
+  dataCube: DataCube,
+  measureNames: string[],
+  cities: Record<string, City>,
+): GeoQuery {
   return queryOptions => {
     const [startDate, endDate] = queryOptions.range;
-    const measureNames = unique(legendItems.map(item => item.measureName));
 
-    const windowSizes = legendItems
-      .map(item => item.windowSize)
-      .filter(((v): v is number => v !== undefined));
-    const periodOffsets = legendItems
-      .map(item => item.periodOffset)
-      .filter(((v): v is number => v !== undefined));
-
+    const cityCategoryName = 'city';
     const dateCategoryName = 'date';
-    const duration = endDate.getTime() - startDate.getTime();
-    const maxWindowSize = Math.max(0, ...windowSizes);
-    const dateRanges: [Date, Date][] = [0, ...periodOffsets].map(periodOffset => {
-      const periodStart = startDate.getTime() + periodOffset;
-      const rangeStartDate = new Date(periodStart - maxWindowSize);
-      const rangeEndDate = new Date(periodStart + duration);
-      return [rangeStartDate, rangeEndDate];
-    });
-    const dateFilter = inOneOfDateRanges(dateRanges, { excludeStart: true });
+
+    const dateFilter = betweenDates(startDate, endDate, { excludeStart: true });
+    const cityFilter = queryOptions.territory && inCities(getCityIds(cities, queryOptions.territory));
 
     const rows = dataCube.getDataFor({
-      categoryNames: [dateCategoryName],
+      categoryNames: [cityCategoryName],
       measureNames,
-      filters: [dateFilter],
+      filters: [dateFilter, cityFilter].filter((filter): filter is Filter => filter !== undefined),
       sortBy: [dateCategoryName],
     });
 
-    return legendItems.map(item => createTimeSeriesDatum(rows, startDate, endDate, item));
+    // merge rows to the given unit (e.g., merge city rows to country rows)
+    const rowGroups: Record<string, MeasureValues> = {};
+    const idAccessor = getIdAccessor(queryOptions.unit);
+    for (const row of rows) {
+      const cityId = row.categories.city;
+      const city = cities[cityId];
+      const id = idAccessor([cityId, city]);
+      if (id in rowGroups) {
+        const cumulativeValues = rowGroups[id];
+        Object.entries(row.values).forEach(([key, value]) => {
+          cumulativeValues[key] += value;
+        });
+      } else {
+        rowGroups[id] = { ...row.values };
+      }
+    }
+
+    return Object.entries(rowGroups).map(([id, values]) => ({ id, values }));
   };
+}
+
+function getCityIds(cities: Record<string, City>, territory: Territory) {
+  const idAccessor = getIdAccessor(territory.level);
+  return Object.entries(cities)
+    .filter(cityEntry => idAccessor(cityEntry) === territory.id)
+    .map(([cityId]) => cityId);
+}
+
+function getIdAccessor(level: TerritoryLevel): (cityEntry: [string, City]) => string {
+  switch (level) {
+    case TerritoryLevel.CITY:
+      return ([cityId]) => cityId;
+    case TerritoryLevel.COUNTRY:
+      return ([, city]) => city.countryId;
+    case TerritoryLevel.SUBCONTINENT:
+      return ([, city]) => city.subcontinentId;
+    case TerritoryLevel.CONTINENT:
+      return ([, city]) => city.continentId;
+  }
 }
