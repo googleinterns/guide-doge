@@ -26,8 +26,7 @@ export type VRScatterplotDatum = VRTimeSeriesDatum<LineChartStyle>;
 export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges, OnDestroy{
   endDate = new Date();
   startDate = new Date(this.endDate.getTime() - 30 * DAY);
-  meta: Meta | Meta[];
-  meta2: VRScatterplotMeta | LineChartMeta;
+  datasetPref: VRScatterplotMeta | LineChartMeta;
   dataset$ = this.preferenceService.dataset$;
   DATA_PREFERENCE = DATA_PREFERENCE;
   private vrScatterPlot: Scatterplot;
@@ -58,18 +57,15 @@ export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges,
       this.componentMetas = dataset.metas;
       // dataset.metas[0].type = 'tabbed' and dataset.metas[1] = 'line' if chosen UserWhiteNoise
       // dataset.metas[0] - 'line' if Dummy chosen
-      this.meta = dataset.metas[0];
 
-      if ((this.meta as Meta).type === 'tabbed') {
-        this.meta = dataset.metas[0];
-         this.meta2 = (this.meta as any).metas[0];
+      if ((dataset.metas[0] as Meta).type === 'tabbed') {
+         this.datasetPref = (dataset.metas[0] as any).metas[0];
         // this.exitVR = true;
        } else { 
-           this.meta = dataset.metas;
-           if ((this.meta[0] as Meta).type === 'line')
-             this.meta2 = this.meta[0] as LineChartMeta;
-           if ((this.meta[0] as Meta).type === 'vrScatter')
-             this.meta2 = this.meta[0] as VRScatterplotMeta;
+           if ((dataset.metas[0] as Meta).type === 'line')
+             this.datasetPref = dataset.metas[0] as LineChartMeta;
+           if ((dataset.metas[0] as Meta).type === 'vrScatter')
+             this.datasetPref = dataset.metas[0] as VRScatterplotMeta;
       } 
         this.init();
     });
@@ -86,7 +82,7 @@ export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges,
     .pipe(takeUntil(this.destroy$))
     .pipe(map(queryOption => {
       // this.meta2.query(queryOption)[0]) has label, points, style and is of type BehaviorSubject<LineChartData>
-      return this.meta2.query(queryOption)[0];
+      return this.datasetPref.query(queryOption)[0];
     }))
     .subscribe(this.datum$);
     this.vrScatterPlot.init(document.querySelector('a-scene'), this.datum$.value.points);
