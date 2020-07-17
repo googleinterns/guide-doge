@@ -22,7 +22,6 @@ export class Scatterplot{
     this.shape = shape;
   }
   init(container: HTMLElement | null, data: XYZPoint<Date, number, number>[] | XYPoint<Date, number>[] ){
-    console.log(data);
     this.data = data;
     this.container = container;
     this.generatePts();

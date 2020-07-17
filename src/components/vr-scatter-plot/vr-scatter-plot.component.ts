@@ -55,21 +55,10 @@ export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges,
     .pipe(takeUntil(this.destroy$))
     .subscribe(dataset => {
       // componentMetas is initialized to different dataset metas - will help funnel dataset
-      //console.log(dataset.metas);
       this.componentMetas = dataset.metas;
       // dataset.metas[0].type = 'tabbed' and dataset.metas[1] = 'line' if chosen UserWhiteNoise
       // dataset.metas[0] - 'line' if Dummy chosen
       this.meta = dataset.metas[0];
-      // if ((this.meta as Meta).type === 'tabbed') {
-      //  // this.meta = dataset.metas[0];
-      //   this.meta2 = (this.meta as any).metas[0];
-      // } else if ((this.meta as Meta).type === 'line') {
-      //   this.meta = dataset.metas;
-      //   this.meta2 = this.meta[0] as LineChartMeta;
-      // } else if ((this.meta as Meta).type === 'vrScatter'){
-      //   this.meta = dataset.metas;
-      //   this.meta2 = this.meta[0] as VRScatterplotMeta;
-      // }
 
       if ((this.meta as Meta).type === 'tabbed') {
         this.meta = dataset.metas[0];
@@ -79,15 +68,9 @@ export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges,
            this.meta = dataset.metas;
            if ((this.meta[0] as Meta).type === 'line')
              this.meta2 = this.meta[0] as LineChartMeta;
-         //console.log(this.meta2);
            if ((this.meta[0] as Meta).type === 'vrScatter')
              this.meta2 = this.meta[0] as VRScatterplotMeta;
-        //console.log(this.meta2);
       } 
-
-      // calling this.init() from inside bc when code above is in constructor,
-      // and code in this.init() is in ngOnInit() there is sync problem
-      // if (!this.exitVR)
         this.init();
     });
   }
@@ -103,7 +86,6 @@ export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges,
     .pipe(takeUntil(this.destroy$))
     .pipe(map(queryOption => {
       // this.meta2.query(queryOption)[0]) has label, points, style and is of type BehaviorSubject<LineChartData>
-      console.log(this.meta2);
       return this.meta2.query(queryOption)[0];
     }))
     .subscribe(this.datum$);
@@ -114,13 +96,4 @@ export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges,
     return this.datum$.value;
   }
 
-  sleep(milliseconds: number) {
-      const timeStart = new Date().getTime();
-      while (true) {
-        const elapsedTime = new Date().getTime() - timeStart;
-        if (elapsedTime > milliseconds) {
-          break;
-        }
-      }
-    }
 }
