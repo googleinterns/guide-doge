@@ -10,6 +10,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { DAY } from '../../utils/timeUnits';
 import { map, takeUntil } from 'rxjs/operators';
 import { DATA_PREFERENCE } from '../../i18n';
+import { TabbedChartsMeta } from '../../datasets/metas/tabbed-charts.meta'
 import { datasets } from '../../datasets';
 
 @Component({
@@ -51,7 +52,7 @@ export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges,
       // dataset.metas[0].type = 'tabbed' and dataset.metas[1] = 'line' if chosen UserWhiteNoise
       // dataset.metas[0] - 'line' if Dummy chosen
       if (dataset.metas[0].type === 'tabbed') {
-        this.datasetPref = (dataset.metas[0] as any).metas[0];
+        this.datasetPref = (dataset.metas[0] as TabbedChartsMeta).metas[0];
       } else if (dataset.metas[0].type === 'line') {
         this.datasetPref = dataset.metas[0] as LineChartMeta;
       }
