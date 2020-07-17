@@ -9,9 +9,10 @@ const outputPath = path.resolve(__dirname, '..', 'src', 'assets', 'cities.json')
 // read csv and convert to 2d array
 const [headerRow, ...rows] = fs.readFileSync(inputPath, 'utf8')
   .split('\r\n')
-  .map(v => v
-    .split(',')
-    .map(v => v.replace(/^"(.+)"$/, '$1')),
+  .map(v => {
+      const matches = [...v.matchAll(/"([^"]*)"/g)];
+      return matches.map(match => match[1]);
+    },
   );
 
 // create an array of city dictionaries
