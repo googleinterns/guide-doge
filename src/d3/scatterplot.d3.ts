@@ -8,9 +8,8 @@
 // }
 
 // for running on unit tests
-import * as d3 from 'd3';
-import * as THREE from 'three';
 import * as AFRAME from 'aframe';
+import * as d3 from 'd3';
 import { XYPoint } from '../datasets/metas/types';
 
 export class Scatterplot{
@@ -28,9 +27,9 @@ export class Scatterplot{
     if (this.container !== null){
       document.body.append(this.container);
     }
-    this.createSky();
     this.generatePts();
     this.setColor('blue');
+    this.createSky('gray');
     this.createGridPlane();
   }
 
@@ -40,7 +39,7 @@ export class Scatterplot{
     // d is data at index, i within
     // select all shapes within given container
     d3.select(this.container).selectAll(this.shape).attr('position', (d, i) => {
-      const x = this.data[i].y - this.data[i].y;
+      const x = (d as XYPoint<Date, number>).y - (d as XYPoint<Date, number>).y;
       const y = i * 10;
       const z = (-this.data[i] * 2);
       return `${x} ${y} ${z}`;
@@ -49,13 +48,6 @@ export class Scatterplot{
   private setColor(color) {
     d3.select(this.container).selectAll(this.shape).attr('color', () => {
       return color;
-    });
-  }
-  private createSky(){
-    const aSky = document.createElement('a-sky');
-    this.container!.appendChild(aSky);
-    d3.select(this.container).selectAll('a-sky').attr('color', () => {
-      return '#f2b9af';
     });
   }
   private createGridPlane()
@@ -70,7 +62,7 @@ export class Scatterplot{
     const yGrid = document.createElement('a-entity');
     yGrid.id = 'yGrid';
     this.container!.appendChild(yGrid);
-    yGrid.object3D.add(new AFRAME.THREE.GridHelper(50, 50, 0xffffff, 0xffffff));
+    yGrid.setObject3D('grid', new AFRAME.THREE.GridHelper(50, 50, 0xffffff, 0xffffff));
     d3.select(this.container).select('#yGrid').attr('position', '0 0 0');
     d3.select(this.container).select('#yGrid').attr('rotation', '0 0 -90');
 
@@ -80,5 +72,13 @@ export class Scatterplot{
     zGrid.object3D.add(new AFRAME.THREE.GridHelper(50, 50, 0xffffff, 0xffffff));
     d3.select(this.container).select('#zGrid').attr('position', '0 0 0');
     d3.select(this.container).select('#zGrid').attr('rotation', '-90 0 0');
+  }
+  private createSky(color: string | number){
+    const sky = document.createElement('a-sky');
+    sky.id = 'sky';
+    this.container?.appendChild(sky);
+    d3.select(this.container).selectAll('#sky').attr('color', () => {
+      return color;
+    });
   }
 }
