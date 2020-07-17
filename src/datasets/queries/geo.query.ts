@@ -40,6 +40,13 @@ export interface City {
   population: number;
 }
 
+/**
+ * Create a geo query function. The query function takes GeoQueryOptions and returns an array of GeoDatum.
+ *
+ * @param dataCube The data cube to query the raw rows from.
+ * @param measureNames The measures to query.
+ * @param cities The mapping from city id to city object.
+ */
 export function createGeoQuery<S>(
   dataCube: DataCube,
   measureNames: string[],
