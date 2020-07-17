@@ -18,7 +18,8 @@
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "removeComments": true,
-    "preserveConstEnums": true
+    "preserveConstEnums": true,
+    "resolveJsonModule": true
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
