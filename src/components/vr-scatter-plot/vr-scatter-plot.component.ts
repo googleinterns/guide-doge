@@ -24,7 +24,7 @@ export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges,
   @Input() datasetPref: LineChartMeta;
   dataset$ = this.preferenceService.dataset$;
   DATA_PREFERENCE = DATA_PREFERENCE;
-  private vrScatterPlot: Scatterplot;
+  vrScatterPlot: Scatterplot;
   componentMetas: Meta[];
   queryOptions$ = new BehaviorSubject<TimeSeriesQueryOptions>({
     range: [this.startDate, this.endDate],
