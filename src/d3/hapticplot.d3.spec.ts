@@ -10,24 +10,28 @@ describe('VR Haptic Plot', () => {
     element = document.createElement('a-scene');
     hapticplot = new Hapticplot(shape);
   });
+
   it('places no points bc 1:1 correspondence with empty element array', () => {
     hapticplot.init(element, []);
     const expectedPosArray = [];
     const result = getPosition(element, shape);
     expect(result).toEqual(expectedPosArray);
   });
+
   it('places points for each element in a one element array', () => {
     hapticplot.init(element, [10]);
     const expectedPosArray = [{ x: 0, y: 10, z: -1 }];
     const result = getPosition(element, shape);
     expect(result).toEqual(expectedPosArray);
   });
+
   it('places points for each element in a two element array', () => {
     hapticplot.init(element, [10, 10]);
     const expectedPosArray = [{ x: 0, y: 10, z: -1 }, { x: 0.1, y: 10, z: -1 }];
     const result = getPosition(element, shape);
     expect(result).toEqual(expectedPosArray);
   });
+  
   it('places points for each element in a eight element array', () => {
     hapticplot.init(element, [10, 10, 20, 20, 30, 30, 40, 40]);
     const expectedPosArray = [

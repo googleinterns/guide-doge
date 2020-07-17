@@ -18,7 +18,7 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
     DashboardModule,
     VRScatterPlotModule,
-    VRAccessibilityModule
+    VRAccessibilityModule,
   ],
   exports: [
     RouterModule,

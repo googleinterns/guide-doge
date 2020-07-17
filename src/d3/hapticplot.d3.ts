@@ -1,102 +1,76 @@
-// run `tsc Hapticplot.ts` to compile into Hapticplot.js file
-
-// for running on browser
-// import * as _d3 from 'd3';
-
-// declare global {
-// const d3: typeof _d3;
-// }
-
-// for running on unit tests
 import * as d3 from 'd3';
 import * as THREE from 'three';
 
 export class Hapticplot{
     private data: number[];
     private shape: string;
-    private container: HTMLElement | null;
+    private container: HTMLElement | null = null;
     private hscale: d3.ScaleLinear<number, number>;
 
   constructor(shape: string) {
     this.shape = shape;
   }
+
   init(container: HTMLElement | null, data: number[]){
     this.data = data;
     this.container = container;
     // create a scale so that there is correspondence between data set and screen render
     this.hscale = d3.scaleLinear();
-    this.hscale.domain([0, d3.max(this.data) as number])       // max of dataset
-    .range([0, 100]);                                      // linear mapping of data set values to values from 0 to 10
+    this.hscale.domain([0, d3.max(this.data) as number])  // max of dataset
+      .range([0, 100]); 
+    this.setupPoints('blue', 0.1);                        // linear mapping of data set values to values from 0 to 10
     this.createSky();
-    this.generatePts();
-    this.setColor('blue');
-    this.setRadius(0.1);
-    this.setInteraction();
-    this.addEventListeners();
     this.createGridPlane();
   }
 
-  private generatePts() {
-     /*
-     Generates points based on initilization data
-      - "enter" identifies any DOM elements to be added when # array elements & # DOM elements don't match
-      - select all generated entities and updates their position based on ingested data
-    */
-    d3.select(this.container).selectAll(this.shape).data(this.data).enter().append(this.shape);
-    d3.select(this.container).selectAll(this.shape).attr('position', (d, i) => {
-      const x = i/10;
-      const y = this.data[i];
-      const z = -1;
-      return `${x} ${y} ${z}`;
-    });
-  }
-  private setColor(color) {
-    /*
-    Adds given color property to all generated entities
-    */
-    d3.select(this.container).selectAll(this.shape).attr('color', () => {
-      return color;
-    });
+  // selects all entities of type this.shape
+  private getShapes(){
+    return d3.select(this.container).selectAll("datapoint");
   }
 
-  private setRadius(size) {
+  private setupPoints(color, size) {
     /*
-    Sets the radius of generated entities
+    Generates points in the scene based on initilization data
+      - represented in scene as this.shape type entities
     */
-    d3.select(this.container).selectAll(this.shape).attr('radius', size);
-  }
-
-  private setInteraction() {
-    /*
-    adds interaction properties to all objects of type this.shape
-      - enables controller interaction with tagged entities
-    */
-    d3.select(this.container).selectAll(this.shape)
+    this.getShapes()
+      // Adds points of type this.shape to the scene
+      //  - "enter" identifies any DOM elements to be added when # array 
+      //    elements & # DOM elements don't match
+      .data(this.data).enter().append(this.shape).classed("datapoint", true)
+      // Updates points positions based on ingested data
+      .attr('position', (d, i) => { return this.generatePositions(d, i); })
+      // Adds given color property to all points
+      .attr('color', color)
+      // Sets points radius property
+      .attr('radius', size)
+      // Enables controller interaction with points using superhands' tags
       .attr('hoverable', '')
       .attr('grabbable', '')
       .attr('stretchable', '')
       .attr('draggable', '')
-      .attr('dropppable', '');
-
+      .attr('dropppable', '')
+      // Adds listeners for state change events, which trigger a change in the
+      // point's color property when a hover event occurs 
+      .on('stateadded', function() {
+        if (d3.event.detail === 'hovered'){
+          d3.select(this).attr('color', 'orange');
+        }
+      })
+      .on('stateremoved', function() {
+        if (d3.event.detail === 'hovered'){
+          d3.select(this).attr('color', 'green');
+        }
+      })
   }
 
-  private addEventListeners() {
-    /*
-      adds event listeners to react if a generated data object is hovered or un-hovered
-    */
-    d3.select(this.container).selectAll(this.shape).on('stateadded', function(d, i) {
-      if (d3.event.detail === 'hovered'){
-        d3.select(this).attr('color', 'orange');
-      }
-    });
-    d3.select(this.container).selectAll(this.shape).on('stateremoved', function(d, i) {
-      if (d3.event.detail === 'hovered'){
-        d3.select(this).attr('color', 'blue');
-      }
-    });
+  // Generates a world space position for each data entity, based on ingested data
+  private generatePositions  (data, index){
+    const x = index/10;
+    const y = data;
+    const z = -1;
+    return `${x} ${y} ${z}`;
   }
-
-
 
   private createSky(){
     /*
@@ -108,6 +82,7 @@ export class Hapticplot{
       return '#f2b9af';
     });
   }
+
   private createGridPlane()
   {
     /*
