@@ -88,7 +88,7 @@ export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges,
     .subscribe(this.datum$);
     console.log("init call for scatter")
       console.log(this.datum$.value.points);
-    document.querySelector('a-scene').addEventListener('load', function() {
+    document.querySelector('a-scene').addEventListener('loaded', function() {
       
       this.vrScatterPlot.init(document.querySelector('a-scene'), this.datum$.value.points, this.datasetPref.type);
     });
