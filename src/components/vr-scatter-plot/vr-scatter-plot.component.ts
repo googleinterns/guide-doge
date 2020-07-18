@@ -41,7 +41,7 @@ export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges,
     points: [],
   });
   private destroy$ = new Subject();
-
+ 
   constructor(
     private preferenceService: PreferenceService
   ) {
@@ -86,10 +86,10 @@ export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges,
       return this.datasetPref.queryData(queryOption)[0];
     }))
     .subscribe(this.datum$);
-    console.log("init call for scatter")
-      console.log(this.datum$.value.points);
+    
     document.querySelector('a-scene').addEventListener('loaded', function() {
-      
+      console.log("init call for scatter");
+      console.log(this.datum$.value.points);
       this.vrScatterPlot.init(document.querySelector('a-scene'), this.datum$.value.points, this.datasetPref.type);
     });
   }
