@@ -35,7 +35,7 @@ export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges,
   queryOptions$ = new BehaviorSubject<VRTimeSeriesQueryOptions | TimeSeriesQueryOptions>({
     range: [this.startDate, this.endDate],
   });
-  datum$ = new BehaviorSubject<VRScatterplotDatum | LineChartDatum>({
+  datum$ = new BehaviorSubject<VRScatterplotDatum | LineChartDatum >({
     label: '',
     points: [],
   });
@@ -85,7 +85,7 @@ export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges,
       return this.datasetPref.query(queryOption)[0];
     }))
     .subscribe(this.datum$);
-    this.vrScatterPlot.init(document.querySelector('a-scene'), this.datum$.value.points);
+    this.vrScatterPlot.init(document.querySelector('a-scene'), this.datum$.value.points, this.datasetPref.type);
   }
 
   get datum() {
