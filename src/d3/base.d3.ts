@@ -5,16 +5,13 @@ import { takeUntil } from 'rxjs/operators';
 
 export interface RenderOptions {
   elementRef: ElementRef<HTMLElement>;
-  height: number;
   width: number;
-  marginTop: number;
-  marginRight: number;
-  marginBottom: number;
-  marginLeft: number;
+  height: number;
 }
 
 export abstract class BaseD3<T extends RenderOptions> {
-  protected colorHighlight = 'rgb(33, 150, 243)';
+  static colorPrimary = 'rgb(33, 150, 243)';
+
   private clear$?: Subject<undefined>;
 
   constructor(protected renderOptions: T) {
@@ -43,10 +40,7 @@ export abstract class BaseD3<T extends RenderOptions> {
     this.clear();
     this.clear$ = new Subject();
 
-    this.svg
-      .style('width', width)
-      .style('height', height)
-      .attr('viewBox', [0, 0, width, height].join(' '));
+    this.svg.attr('viewBox', [0, 0, width, height].join(' '));
   }
 
   clear() {

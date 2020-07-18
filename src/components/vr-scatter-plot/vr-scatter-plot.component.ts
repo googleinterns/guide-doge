@@ -4,7 +4,7 @@ import { PreferenceService } from '../../services/preference/preference.service'
 import { DataService } from '../../services/data/data.service';
 import { Meta } from '../../datasets/metas/types';
 import { LineChartDatum} from '../line-chart/line-chart.component';
-import { LineChartStyle } from '../../d3/line-chart.d3';
+import { LegendItemStyle as LineChartLegendItemStyle } from '../../d3/line-chart.d3';
 import { VRScatterplotMeta } from '../../datasets/metas/vr-scatter-plot.meta';
 import { LineChartMeta } from '../../datasets/metas/line-chart.meta';
 import { TimeSeriesDatum, TimeSeriesQueryOptions } from '../../datasets/queries/time-series.query';
@@ -13,9 +13,10 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { DAY } from '../../utils/timeUnits';
 import { map, takeUntil } from 'rxjs/operators';
 import { DATA_PREFERENCE } from '../../i18n';
+import 'aframe';
 import { datasets } from '../../datasets';
 
-export type VRScatterplotDatum = VRTimeSeriesDatum<LineChartStyle>;
+export type VRScatterplotDatum = VRTimeSeriesDatum<LineChartLegendItemStyle>;
 
 
 @Component({
@@ -29,7 +30,7 @@ export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges,
   datasetPref: VRScatterplotMeta | LineChartMeta;
   dataset$ = this.preferenceService.dataset$;
   DATA_PREFERENCE = DATA_PREFERENCE;
-  private vrScatterPlot: Scatterplot;
+  vrScatterPlot: Scatterplot;
   componentMetas: Meta[];
   exitVR: boolean = false;
   queryOptions$ = new BehaviorSubject<VRTimeSeriesQueryOptions | TimeSeriesQueryOptions>({
@@ -82,10 +83,15 @@ export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges,
     .pipe(takeUntil(this.destroy$))
     .pipe(map(queryOption => {
       // this.meta2.query(queryOption)[0]) has label, points, style and is of type BehaviorSubject<LineChartData>
-      return this.datasetPref.query(queryOption)[0];
+      return this.datasetPref.queryData(queryOption)[0];
     }))
     .subscribe(this.datum$);
-    this.vrScatterPlot.init(document.querySelector('a-scene'), this.datum$.value.points, this.datasetPref.type);
+    console.log("init call for scatter")
+      console.log(this.datum$.value.points);
+    document.querySelector('a-scene').addEventListener('load', function() {
+      
+      this.vrScatterPlot.init(document.querySelector('a-scene'), this.datum$.value.points, this.datasetPref.type);
+    });
   }
 
   get datum() {

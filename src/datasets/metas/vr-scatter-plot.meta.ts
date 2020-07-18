@@ -1,17 +1,17 @@
 import { VRTimeSeriesQuery } from '../queries/vr-time-series.query';
-import { LineChartStyle } from '../../d3/line-chart.d3';
+import { LegendItemStyle as LineChartLegendItemStyle } from '../../d3/line-chart.d3';
 import { XYZChartMeta } from './types';
 
-export type VRScatterplotMeta = XYZChartMeta<'vrScatter', VRTimeSeriesQuery<LineChartStyle>>;
+export type VRScatterplotMeta = XYZChartMeta<'vrScatter', VRTimeSeriesQuery<LineChartLegendItemStyle>>;
 
 export function createVRScatterplotMeta(
   title: string,
-  query: VRTimeSeriesQuery<LineChartStyle>,
+  queryData: VRTimeSeriesQuery<LineChartLegendItemStyle>,
 ): VRScatterplotMeta {
   return {
     type: 'vrScatter',
     title,
-    query,
+    queryData,
   };
 }
 

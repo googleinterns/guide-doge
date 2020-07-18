@@ -31,7 +31,7 @@ describe('Melody', () => {
   });
 
   it('should have playhead at the very beginning of the sequence.', () => {
-    expect(melody.currentDatumIndex).toBe(0);
+    expect(melody.pointIndex).toBe(0);
   });
 
   it('should play the sequence forwards.', async () => {
@@ -39,7 +39,7 @@ describe('Melody', () => {
     expect(melody.isPlaying).toBeTrue();
     expect(melody.isEnded).toBeFalse();
     await new Promise(resolve => window.setTimeout(resolve, delay));
-    expect(melody.currentDatumIndex).toBeGreaterThan(0);
+    expect(melody.pointIndex).toBeGreaterThan(0);
   });
 
   it('should play the sequence backwards.', async () => {
@@ -47,7 +47,7 @@ describe('Melody', () => {
     expect(melody.isPlaying).toBeTrue();
     expect(melody.isEnded).toBeFalse();
     await new Promise(resolve => window.setTimeout(resolve, delay));
-    expect(melody.currentDatumIndex).toBeLessThan(values.length - 1);
+    expect(melody.pointIndex).toBeLessThan(values.length - 1);
   });
 
   it('should pause the sequence.', async () => {
@@ -60,7 +60,7 @@ describe('Melody', () => {
   it('should seek to the given index.', () => {
     for (let index = 0; index < values.length; index++) {
       melody.seekTo(index);
-      expect(melody.currentDatumIndex).toBe(index);
+      expect(melody.pointIndex).toBe(index);
     }
   });
 });

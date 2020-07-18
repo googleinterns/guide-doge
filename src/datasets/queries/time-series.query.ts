@@ -20,13 +20,31 @@ export interface TimeSeriesDatum<S> {
 export type TimeSeriesQuery<S> = (options: TimeSeriesQueryOptions) => TimeSeriesDatum<S>[];
 
 export type LegendItem<S> = {
+  /* The label for TimeSeriesDatum */
   label: string;
+  /* The style for TimeSeriesDatum */
   style?: Partial<S>;
+  /* The name of measure for getting data from DataCube */
   measureName: string;
+  /* The offset that is subtracted from the x-values (dates) of points */
   periodOffset?: number;
+  /* The size of time window for taking the sum of all dates within the window */
   windowSize?: number;
 };
 
+/**
+ * Creates time-series data query function based on data cube and legend item configurations.
+ *
+ * The data cube must contain a "date" category and measures with names presented in `measureName`
+ * of legend items in `legendItems`.
+ *
+ * The data query function takes an option in TimeSeriesQueryOptions and returns a list of
+ * TimeSeriesDatum, where each datum in the list corresponds to a LegendItem presented in
+ * `legendItems`. The `periodOffset` and `windowSize` in LegendItem are used to make the points
+ * of the datum if presented, and the `label` and `style` are then attached to the fields in
+ * the returned datum.
+ *
+ */
 export function createTimeSeriesQuery<S>(dataCube: DataCube, legendItems: LegendItem<S>[]): TimeSeriesQuery<S> {
   return queryOptions => {
     const [startDate, endDate] = queryOptions.range;

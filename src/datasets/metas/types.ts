@@ -8,7 +8,7 @@ export interface BaseMeta<T extends string> {
 }
 
 export interface DataMeta<T extends string, QueryT> extends BaseMeta<T> {
-  query: QueryT;
+  queryData: QueryT;
 }
 
 export interface XYChartMeta<T extends string, QueryT> extends DataMeta<T, QueryT> {
