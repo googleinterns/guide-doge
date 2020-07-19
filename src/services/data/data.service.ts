@@ -1,11 +1,10 @@
 import { OnDestroy } from '@angular/core';
-import { takeUntil, throttleTime, distinctUntilChanged, distinctUntilKeyChanged, pluck, filter, map } from 'rxjs/operators';
+import { takeUntil, throttleTime, distinctUntilChanged, pluck, filter, map } from 'rxjs/operators';
 import { asyncScheduler, ReplaySubject, Subject } from 'rxjs';
 import { PreferenceService } from '../preference/preference.service';
 import { datasets } from '../../datasets';
 import { Dataset } from '../../datasets/types';
 import { createDefault } from '../../utils/preferences';
-import { PreferenceItemMeta } from '../preference/types';
 
 export class DataService implements OnDestroy {
   public dataset$ = new ReplaySubject<Dataset>(1);
