@@ -5,7 +5,10 @@ export interface Preference {
   enabled: boolean;
 }
 
-export type PreferenceWithMeta<T extends Preference> = T & { _meta: PreferenceMeta<T> };
+export type PreferenceWithMeta<T extends Preference> = T & {
+  _meta: PreferenceMeta<T>;
+  _meta_name?: string;
+};
 
 export interface AudificationPreference extends Preference {
   lowestPitch: number;
@@ -27,8 +30,8 @@ export type DatasetPreference = UserWGNDatasetPreference | DummyDatasetPreferenc
 
 export type BaseDatasetPreference<T extends string, U> = { name: T } & U;
 
-export type UserWGNDatasetPreference = BaseDatasetPreference<'UserWhiteNoiseDataset', UserWhiteNoiseDataset.Config & Preference>;
-export type DummyDatasetPreference =  BaseDatasetPreference<'DummyDataset', DummyDataset.Config & Preference>;
+export type UserWGNDatasetPreference = BaseDatasetPreference<'UserWhiteNoise', UserWhiteNoiseDataset.Config & Preference>;
+export type DummyDatasetPreference = BaseDatasetPreference<'Dummy', DummyDataset.Config & Preference>;
 
 export type PreferenceItemMeta = NumberPreferenceItemMeta | BoolPreferenceItemMeta | SelectPreferenceItemMeta;
 

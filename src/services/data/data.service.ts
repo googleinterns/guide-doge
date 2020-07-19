@@ -1,5 +1,5 @@
 import { OnDestroy } from '@angular/core';
-import { takeUntil, throttleTime, distinctUntilChanged, pluck, filter, map } from 'rxjs/operators';
+import { takeUntil, throttleTime, distinctUntilChanged, distinctUntilKeyChanged, pluck, filter, map } from 'rxjs/operators';
 import { asyncScheduler, ReplaySubject, Subject } from 'rxjs';
 import { PreferenceService } from '../preference/preference.service';
 import { datasets } from '../../datasets';
@@ -16,34 +16,19 @@ export class DataService implements OnDestroy {
     this.preferenceService.dataset$
       .pipe(takeUntil(this.destroy$))
       .pipe(throttleTime(500, asyncScheduler, { leading: true, trailing: true }))
-      .pipe(filter(preference => {
-        if (!(preference.name in datasets)) {
-          return false;
-        } else {
-          const dataset = datasets[preference.name];
-          return (Object.entries(dataset.configMeta) as [string, PreferenceItemMeta][])
-          .every(([key, meta]) => {
-            if (!(key in preference)) {
-              return false;
-            } else if (meta.type === 'select') {
-              return dataset.configMeta[key].options.includes(preference[key]);
-            } else {
-              return typeof preference[key] === meta.type;
-            }
-          });
-        }
-      }))
-      // TODO: Deep object comparison
-      .pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)))
+      .pipe(filter(preference => preference.name === preference._meta_name))
+      .pipe(distinctUntilChanged((prev, curr) => Object.keys(curr._meta).every(k => prev[k] === curr[k])))
       .subscribe(preference => {
         this.dataset$.next(datasets[preference.name].create(preference));
       });
 
+    const datasetNames = Object.keys(datasets);
+    const defaultDatasetName = Object.keys(datasets)[0];
     this.preferenceService.dataset$
       .pipe(takeUntil(this.destroy$))
-      .pipe(distinctUntilChanged((prev, curr) => prev.name === curr.name))
       .pipe(pluck('name'))
-      .pipe(map(name => name ?? Object.keys(datasets)[0]))
+      .pipe(map(name => name ?? defaultDatasetName))
+      .pipe(distinctUntilChanged())
       .subscribe(name => {
         const meta = {
           enabled: {
@@ -52,15 +37,17 @@ export class DataService implements OnDestroy {
           },
           name: {
             type: 'select',
-            defaultValue: name,
-            options: Object.keys(datasets),
+            defaultValue: defaultDatasetName,
+            options: datasetNames,
           },
           ...datasets[name].configMeta,
         };
 
         this.preferenceService.dataset$.next({
           ...createDefault(meta),
+          name,
           _meta: meta,
+          _meta_name: name,
         });
       });
   }
