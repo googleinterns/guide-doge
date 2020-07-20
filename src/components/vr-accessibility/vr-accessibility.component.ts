@@ -15,14 +15,13 @@ export class VRAccessibilityComponent implements OnInit, OnChanges, OnDestroy, A
   private vrHapticPlot: Hapticplot = new Hapticplot('a-sphere');
   private shape: string;
   private color: string;
-  @ViewChild('theScene') theScene : ElementRef;
+  @ViewChild('theScene') theScene: ElementRef;
 
 
-  constructor(
-  ) {
-    
+  constructor() {
   }
-  ngOnInit() {    
+
+  ngOnInit() {
   }
 
   ngOnDestroy() {
@@ -30,9 +29,10 @@ export class VRAccessibilityComponent implements OnInit, OnChanges, OnDestroy, A
 
   ngOnChanges(changes: SimpleChanges): void {
   }
-  
-  ngAfterViewInit(){  
-    let scene = this.theScene.nativeElement;  
-    this.vrHapticPlot.init(scene, [0, 1/5, 2/5, 3/5, 4/5, 5/5, 6/5]);
+
+  ngAfterViewInit(){
+    const scene = this.theScene.nativeElement;
+    this.vrHapticPlot.init(scene, [0, 1 / 5, 2 / 5, 3 / 5, 4 / 5, 5 / 5, 6 / 5]);
   }
+
 }

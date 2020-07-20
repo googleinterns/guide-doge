@@ -17,7 +17,7 @@ export class Hapticplot{
     // create a scale so that there is correspondence between data set and screen render
     this.hscale = d3.scaleLinear();
     this.hscale.domain([0, d3.max(this.data) as number])  // max of dataset
-      .range([0, 100]); 
+      .range([0, 100]);
     this.setupPoints('blue', 0.1);                        // linear mapping of data set values to values from 0 to 10
     this.createSky();
     this.createGridPlane();
@@ -25,7 +25,7 @@ export class Hapticplot{
 
   // selects all entities of type this.shape
   private getShapes(){
-    return d3.select(this.container).selectAll("datapoint");
+    return d3.select(this.container).selectAll('datapoint');
   }
 
   private setupPoints(color, size) {
@@ -35,11 +35,11 @@ export class Hapticplot{
     */
     this.getShapes()
       // Adds points of type this.shape to the scene
-      //  - "enter" identifies any DOM elements to be added when # array 
+      //  - "enter" identifies any DOM elements to be added when # array
       //    elements & # DOM elements don't match
-      .data(this.data).enter().append(this.shape).classed("datapoint", true)
+      .data(this.data).enter().append(this.shape).classed('datapoint', true)
       // Updates points positions based on ingested data
-      .attr('position', (d, i) => { return this.generatePositions(d, i); })
+      .attr('position', (d, i) =>  this.generatePositions(d, i))
       // Adds given color property to all points
       .attr('color', color)
       // Sets points radius property
@@ -51,12 +51,12 @@ export class Hapticplot{
       .attr('draggable', '')
       .attr('dropppable', '')
       // Adds listeners for state change events, which trigger a change in the
-      // point's color property when a hover event occurs 
-      .on('stateadded',  (d, i, g) => { this.modifyColorOnStateChange(g[i], 'hovered', 'orange') })
-      .on('stateremoved',  (d, i, g) => { this.modifyColorOnStateChange(g[i], 'hovered', 'green') })
-      
+      // point's color property when a hover event occurs
+      .on('stateadded',  (d, i, g) => this.modifyColorOnStateChange(g[i], 'hovered', 'orange'))
+      .on('stateremoved',  (d, i, g) => this.modifyColorOnStateChange(g[i], 'hovered', 'green'));
+
   }
-  
+
   private modifyColorOnStateChange(entity, state , color){
     if (d3.event.detail === state){
       d3.select(entity).attr('color', color);
@@ -64,8 +64,8 @@ export class Hapticplot{
   }
 
   // Generates a world space position for each data entity, based on ingested data
-  private generatePositions  (data, index){
-    const x = index/10;
+  private generatePositions(data, index){
+    const x = index / 10;
     const y = data;
     const z = -1;
     return `${x} ${y} ${z}`;

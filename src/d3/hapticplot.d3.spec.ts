@@ -31,7 +31,7 @@ describe('VR Haptic Plot', () => {
     const result = getPosition(element, shape);
     expect(result).toEqual(expectedPosArray);
   });
-  
+
   it('places points for each element in a eight element array', () => {
     hapticplot.init(element, [10, 10, 20, 20, 30, 30, 40, 40]);
     const expectedPosArray = [
