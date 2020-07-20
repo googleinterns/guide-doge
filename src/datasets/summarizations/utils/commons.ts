@@ -10,7 +10,14 @@ export function cacheSummaries(f: () => Summary[]): () => Summary[] {
   };
 }
 
-export function joinQuerySummariesFactories<PointT>(
+/**
+ * Create a query-summary-factory which returns the concatenation of summaries returned
+ * by the input query factories. The returned function does not pre-compute the returned
+ * summaries from the input queryFactories, and it does not cache the concatenated
+ * sumaries. The cache and lazy evaluation need to be implemented in each input
+ * query-summary-factory individually.
+ */
+export function combineQuerySummariesFactories<PointT>(
   ...queryFactories: QuerySummariesFactory<PointT>[]): QuerySummariesFactory<PointT> {
   return (points: PointT[]) => () => {
     const summaries = queryFactories.map(f => f(points)());

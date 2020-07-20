@@ -26,8 +26,16 @@ export function sigmaCountQAB<PointT>(points: PointT[],
   return t;
 }
 
-export function trapezoidalMF(a: number, b: number, c: number, d: number): MembershipFunction {
-  return (v) => {
+/**
+ * Create a trapezoidal membership function. The fuzzy membership value is computed
+ * by the returned function with the following formula:
+ *   f(x: number) = max(min((x-a)/(b-a), 1, (d-x)/(d-c)), 0)
+ *
+ * The shoulders of the membership function is defined by parameter b and c, and the
+ * feet of the function is defined by a and d.
+ */
+export function trapmf(a: number, b: number, c: number, d: number): MembershipFunction {
+  return (v: number) => {
     if (v < a) {
       return 0.0;
     } else if (a <= v && v < b) {
@@ -42,11 +50,25 @@ export function trapezoidalMF(a: number, b: number, c: number, d: number): Membe
   };
 }
 
-export function trapezoidalMFL(a: number, b: number) {
-  return trapezoidalMF(a, b, Infinity, Infinity);
+/**
+ * Create a left trapezoidal membership function. The fuzzy membership value is computed
+ * by the returned function with the following formula:
+ *   f(x: number) = max(min((x-a)/(b-a), 1), 0)
+ *
+ * `trapmfL` is equivalent to `trapmf` with c and d being +Infinity
+ */
+export function trapmfL(a: number, b: number) {
+  return trapmf(a, b, Infinity, Infinity);
 }
 
-export function trapezoidalMFR(c: number, d: number) {
-  return trapezoidalMF(-Infinity, -Infinity, c, d);
+/**
+ * Create a right trapezoidal membership function. The fuzzy membership value is computed
+ * by the returned function with the following formula:
+ *   f(x: number) = max(min((d-x)/(d-c), 1), 0)
+ *
+ * `trapmfR` is equivalent to `trapmf` with a and b being -Infinity
+ */
+export function trapmfR(c: number, d: number) {
+  return trapmf(-Infinity, -Infinity, c, d);
 }
 

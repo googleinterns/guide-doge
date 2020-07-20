@@ -5,21 +5,21 @@ import { groupPointsByXWeek } from './utils/time-series';
 import {
   PointMembershipFunction,
   MembershipFunction,
-  trapezoidalMF,
-  trapezoidalMFL,
-  trapezoidalMFR,
+  trapmf,
+  trapmfL,
+  trapmfR,
   sigmaCountQA,
 } from './libs/protoform';
 
 export function queryFactory(points: TimeSeriesPoint[]) {
   return cacheSummaries(() => {
-    const uHigherTraffic = ({ y }) => trapezoidalMFL(1.2, 1.4)(y);
-    const uEqualTraffic = ({ y }) => trapezoidalMF(0.6, 0.8, 1.2, 1.4)(y);
-    const uLowerTraffic = ({ y }) => trapezoidalMFR(0.6, 0.8)(y);
+    const uHigherTraffic = ({ y }) => trapmfL(1.2, 1.4)(y);
+    const uEqualTraffic = ({ y }) => trapmf(0.6, 0.8, 1.2, 1.4)(y);
+    const uLowerTraffic = ({ y }) => trapmfR(0.6, 0.8)(y);
 
-    const uMostPercentage = trapezoidalMFL(0.6, 0.7);
-    const uHalfPercentage = trapezoidalMF(0.3, 0.4, 0.6, 0.7);
-    const uFewPercentage = trapezoidalMF(0.05, 0.1, 0.3, 0.4);
+    const uMostPercentage = trapmfL(0.6, 0.7);
+    const uHalfPercentage = trapmf(0.3, 0.4, 0.6, 0.7);
+    const uFewPercentage = trapmf(0.05, 0.1, 0.3, 0.4);
 
     const uWeekend = ({ x }) => x.getDay() === 5 ? 0.2 : +(x.getDay() === 0 || x.getDay() === 6);
     const uWeekday = (p: TimeSeriesPoint) => 1 - uWeekend(p);
