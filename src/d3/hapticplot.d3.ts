@@ -52,16 +52,15 @@ export class Hapticplot{
       .attr('dropppable', '')
       // Adds listeners for state change events, which trigger a change in the
       // point's color property when a hover event occurs 
-      .on('stateadded', function() {
-        if (d3.event.detail === 'hovered'){
-          d3.select(this).attr('color', 'orange');
-        }
-      })
-      .on('stateremoved', function() {
-        if (d3.event.detail === 'hovered'){
-          d3.select(this).attr('color', 'green');
-        }
-      })
+      .on('stateadded',  (d, i, g) => { this.modifyColorOnStateChange(g[i], 'hovered', 'orange') })
+      .on('stateremoved',  (d, i, g) => { this.modifyColorOnStateChange(g[i], 'hovered', 'green') })
+      
+  }
+  
+  private modifyColorOnStateChange(entity, state , color){
+    if (d3.event.detail === state){
+      d3.select(entity).attr('color', color);
+    }
   }
 
   // Generates a world space position for each data entity, based on ingested data
