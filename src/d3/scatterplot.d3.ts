@@ -18,9 +18,8 @@ export class Scatterplot{
     private data: TimeSeriesPoint[] | VRTimeSeriesPoint[];
     private shape: string;
     private container: HTMLElement | null;
-    private dataType: string;
-    private timeScale: d3.ScaleTime<number, number>;
-
+    timeScale: d3.ScaleTime<number, number>;
+    dataType: string;
 
   constructor(shape: string) {
     this.shape = shape;
@@ -28,10 +27,9 @@ export class Scatterplot{
   init(container: HTMLElement, data: TimeSeriesPoint[] | VRTimeSeriesPoint[], dataType: string){
     console.log(data);
     this.data = data;
-    this.dataType = dataType;
     this.container = container;
+    this.dataType = dataType;
     document.body.append(this.container);
-    // create a scale so that there is correspondence between data set and screen render
    this.generatePts();
    this.setColor('blue');
    this.createSky('gray');
@@ -57,18 +55,13 @@ export class Scatterplot{
     d3.select(this.container).selectAll(this.shape).data(this.data).enter().append(this.shape);
     // d is data at index, i within
     // select all shapes within given container
-    d3.select(this.container).selectAll(this.shape).attr('radius', 0.5);
     d3.select(this.container).selectAll(this.shape).attr('position', (d, i) => {
-      const x = this.scaleTime((d as TimeSeriesPoint | VRTimeSeriesPoint).x);
-      const y = (d as TimeSeriesPoint | VRTimeSeriesPoint).y;
-      if (this.dataType === 'vrScatter'){
-        const z = (d as VRTimeSeriesPoint).z;
-        return `${x} ${y} ${z}`;
-      }
-     return `${x} ${y}`;
+      const x = (d as VRTimeSeriesPoint).y - (d as VRTimeSeriesPoint).y;
+      const y = i * 5;
+      const z = -i * 10;
+      return `${x} ${y} ${z}`;
     });
   }
-
   private setColor(color) {
     d3.select(this.container).selectAll(this.shape).attr('color', () => {
       return color;
