@@ -21,7 +21,7 @@ export function combineQuerySummariesFactories<PointT>(
   ...queryFactories: QuerySummariesFactory<PointT>[]): QuerySummariesFactory<PointT> {
   return (points: PointT[]) => () => {
     const summaries = queryFactories.map(f => f(points)());
-    const summariesFlat = summaries.reduce((p, summary) => [...p, ...summary], []);
+    const summariesFlat = ([] as Summary[]).concat(...summaries);
     return summariesFlat;
   };
 }
