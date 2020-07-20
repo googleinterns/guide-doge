@@ -30,11 +30,10 @@ describe('VR Scatter Plot', () => {
   });
   it('places points for each element in a eight element array', () => {
     scatterplot.init(element, [10, 10, 20, 20, 30, 30, 40, 40]);
-    const expectedPosArray = [
-      { x: 0, y: 0, z: -20 }, { x: 5, y: 10, z: -20 },
+    const expectedPosArray = [{ x: 0, y: 0, z: -20 }, { x: 5, y: 10, z: -20 },
       { x: 10, y: 20, z: -40 }, { x: 15, y: 30, z: -40 },
       { x: 20, y: 40, z: -60 }, { x: 25, y: 50, z: -60 },
-     { x: 30, y: 60, z: -80 }, { x: 35, y: 70, z: -80 }];
+      { x: 30, y: 60, z: -80 }, { x: 35, y: 70, z: -80 }];
     const result = getPosition(element, shape);
     expect(result).toEqual(expectedPosArray);
   });
