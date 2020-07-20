@@ -3,6 +3,7 @@
     <app-preference-group [preference$]="dataset$" [i18n]="DATA_PREFERENCE" alwaysEnabled="true">
     </app-preference-group>
 </aside>
-<a-scene embedded>
+<a-scene embedded style="position: absolute;">
+    <a-entity camera></a-entity>
     <a-entity daydream-controls="hand: right"></a-entity>
 </a-scene>
