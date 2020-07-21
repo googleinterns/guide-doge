@@ -3,14 +3,14 @@ import { DAY, WEEK } from '../../../utils/timeUnits';
 
 /**
  * Group time-series points by the week number of their x-values (date).
- * The firstday of the week is Monday when computing the week number of
+ * The first day of the week is Monday when computing the week number of
  * a date.
  *
  * @param points The array of time-series point to group
  * @return The group result. Each of the element in the returned array is an
  * array of time-series points which have the x-values (date) in the same week.
- * The week arries are sorted by the week number and the points in each array
- * are sorted by the x-value (date) in increasing order.
+ * The week arrays are sorted by the week number and the points in each array
+ * are sorted by the x-value (date) in ascending order.
  */
 export function groupPointsByXWeek(points: TimeSeriesPoint[]): TimeSeriesPoint[][] {
   const weekStartOffset = 4 * DAY;
