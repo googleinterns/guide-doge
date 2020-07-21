@@ -1,7 +1,8 @@
 import { cacheSummaries, combineQuerySummariesFactories } from './commons';
+import { Summary } from '../types';
 
 describe('cacheSummaries', () => {
-  const summaries = ['s1', 's2', 's3'];
+  const summaries: Summary[] = ['s1', 's2', 's3'].map(createMockSummaryFromText);
   let querySummariesSpy;
   let cachedQuerySummaries;
 
@@ -33,7 +34,10 @@ describe('cacheSummaries', () => {
 });
 
 describe('combineQuerySummariesFactories', () => {
-  const summariesArrays = [['s1', 's2'], ['s3', 's4']];
+  const summariesArrays: Summary[][] = [
+    ['s1', 's2'].map(createMockSummaryFromText),
+    ['s3', 's4'].map(createMockSummaryFromText),
+  ];
   const summariesQueries = summariesArrays.map(summaries => () => summaries);
   let querySummariesFactories;
   let combinedQuerySummariesFactories;
@@ -50,8 +54,15 @@ describe('combineQuerySummariesFactories', () => {
 
   describe('return', () => {
     it('should concatenate summaries.', () => {
-      const concatSummaries = ([] as string[]).concat(...summariesArrays);
+      const concatSummaries = ([] as Summary[]).concat(...summariesArrays);
       expect(combinedQuerySummariesFactories()()).toEqual(concatSummaries);
     });
   });
 });
+
+function createMockSummaryFromText(text): Summary {
+  return {
+    text,
+    validity: 0.5,
+  };
+}
