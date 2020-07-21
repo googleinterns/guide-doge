@@ -14,20 +14,22 @@ describe('membership', () => {
       expect(f).toEqual(jasmine.any(Function));
     });
 
-    it('should create membership function producing correct membership value.', () => {
-      for (const v of data) {
-        if (v < a) {
-          expect(f(v)).toBeCloseTo(0.0, 5);
-        } else if (a <= v && v < b) {
-          expect(f(v)).toBeCloseTo(interp(v, [a, b], [0, 1]), 5);
-        } else if (b <= v && v < c) {
-          expect(f(v)).toBeCloseTo(1.0, 5);
-        } else if (c <= v && v < d) {
-          expect(f(v)).toBeCloseTo(interp(v, [c, d], [1, 0]));
-        } else {
-          expect(f(v)).toBeCloseTo(0.0, 5);
+    describe('return', () => {
+      it('should return correct membership value.', () => {
+        for (const v of data) {
+          if (v < a) {
+            expect(f(v)).toBeCloseTo(0.0, 5);
+          } else if (a <= v && v < b) {
+            expect(f(v)).toBeCloseTo(interp(v, [a, b], [0, 1]), 5);
+          } else if (b <= v && v < c) {
+            expect(f(v)).toBeCloseTo(1.0, 5);
+          } else if (c <= v && v < d) {
+            expect(f(v)).toBeCloseTo(interp(v, [c, d], [1, 0]));
+          } else {
+            expect(f(v)).toBeCloseTo(0.0, 5);
+          }
         }
-      }
+      });
     });
   });
 
@@ -39,16 +41,19 @@ describe('membership', () => {
       expect(f).toEqual(jasmine.any(Function));
     });
 
-    it('should create membership function producing correct membership value.', () => {
-      for (const v of data) {
-        if (v < a) {
-          expect(f(v)).toBeCloseTo(0.0, 5);
-        } else if (a <= v && v < b) {
-          expect(f(v)).toBeCloseTo(interp(v, [a, b], [0, 1]), 5);
-        } else {
-          expect(f(v)).toBeCloseTo(1.0, 5);
+    describe('return', () => {
+      it('should return correct membership value.', () => {
+
+        for (const v of data) {
+          if (v < a) {
+            expect(f(v)).toBeCloseTo(0.0, 5);
+          } else if (a <= v && v < b) {
+            expect(f(v)).toBeCloseTo(interp(v, [a, b], [0, 1]), 5);
+          } else {
+            expect(f(v)).toBeCloseTo(1.0, 5);
+          }
         }
-      }
+      });
     });
   });
 
@@ -60,16 +65,18 @@ describe('membership', () => {
       expect(f).toEqual(jasmine.any(Function));
     });
 
-    it('should create membership function producing correct membership value.', () => {
-      for (const v of data) {
-        if (v < c) {
-          expect(f(v)).toBeCloseTo(1.0, 5);
-        } else if (c <= v && v < d) {
-          expect(f(v)).toBeCloseTo(interp(v, [c, d], [1, 0]));
-        } else {
-          expect(f(v)).toBeCloseTo(0.0, 5);
+    describe('return', () => {
+      it('should return correct membership value.', () => {
+        for (const v of data) {
+          if (v < c) {
+            expect(f(v)).toBeCloseTo(1.0, 5);
+          } else if (c <= v && v < d) {
+            expect(f(v)).toBeCloseTo(interp(v, [c, d], [1, 0]));
+          } else {
+            expect(f(v)).toBeCloseTo(0.0, 5);
+          }
         }
-      }
+      });
     });
   });
 });
