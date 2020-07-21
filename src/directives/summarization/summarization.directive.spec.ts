@@ -7,7 +7,7 @@ import { PreferenceService } from '../../services/preference/preference.service'
 import { A11yPlaceholderModule } from '../a11y-placeholder/a11y-placeholder.module';
 import { MatCardModule } from '@angular/material/card';
 
-describe('AudificationDirective', () => {
+describe('SummarizationDirective', () => {
   @Component({
     selector: 'app-wrapper',
     template: `
@@ -59,7 +59,7 @@ describe('AudificationDirective', () => {
     expect(directive.host).toBe(hostComponent);
   });
 
-  it('should attach or detach audification as the preference changes.', () => {
+  it('should attach or detach summarization as the preference changes.', () => {
     directive.ngOnInit();
 
     const summarizationPreference = preferenceService.summarization$.value;
@@ -78,13 +78,13 @@ describe('AudificationDirective', () => {
     expect(directive.detach).toHaveBeenCalled();
   });
 
-  it('should add a component to the a11y placeholder when attaching audification.', async () => {
+  it('should add a component to the a11y placeholder when attaching summarization.', async () => {
     spyOn(hostComponent.a11yPlaceholder, 'addComponent');
     await directive.attach(mockSummarizationPreference);
     expect(hostComponent.a11yPlaceholder.addComponent).toHaveBeenCalled();
   });
 
-  it('should remove a component from the a11y placeholder when detaching audification.', async () => {
+  it('should remove a component from the a11y placeholder when detaching summarization.', async () => {
     await directive.attach(mockSummarizationPreference);
     spyOn(hostComponent.a11yPlaceholder, 'removeComponent');
     directive.detach();
