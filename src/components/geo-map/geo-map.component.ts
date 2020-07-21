@@ -2,6 +2,8 @@ import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@ang
 import { GeoMapD3, RenderOptions } from '../../d3/geo-map.d3';
 import { A11yPlaceholderDirective } from '../../directives/a11y-placeholder/a11y-placeholder.directive';
 import { GeoMapMeta } from '../../datasets/metas/geo-map.meta';
+import { BehaviorSubject } from 'rxjs';
+import { GeoDatum } from '../../datasets/queries/geo.query';
 
 @Component({
   selector: 'app-geo-map',
@@ -14,8 +16,9 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
   @Input() meta: GeoMapMeta;
   @Input() height = 500;
   @Input() width = 800;
-  @Input() topoJsonUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-10m.json';
+  @Input() topoJsonUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
 
+  data$ = new BehaviorSubject<GeoDatum[]>([]);
   geoMapD3: GeoMapD3;
 
   constructor(
