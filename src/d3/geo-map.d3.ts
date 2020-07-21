@@ -195,5 +195,25 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
   }
 
   private updateData(data: GeoDatum[]) {
+    this.dataG.html('');
+
+    const { colorPrimary, minOpacity, accessValue } = GeoMapD3;
+
+    const { countries } = this.worldTopology.objects;
+    const maxValue = data.reduce((acc, datum) => Math.max(acc, accessValue(datum)), 0);
+
+    this.dataPaths = data.map(datum => {
+      const countryGeometryObject = countries.geometries.find(geometry => geometry.id === datum.id);
+      if (!countryGeometryObject) {
+        return null;
+      }
+      const valueRatio = accessValue(datum) / maxValue;
+      return this.dataG
+        .append('path')
+        .datum(topojson.feature(this.worldTopology, countryGeometryObject))
+        .attr('d', this.geoPath)
+        .attr('fill', colorPrimary)
+        .attr('opacity', minOpacity + valueRatio * (1 - minOpacity));
+    }).filter((dataPath): dataPath is d3.Selection<SVGPathElement, CountrySelectionDatum, null, undefined> => dataPath !== null);
   }
 }
