@@ -18,7 +18,7 @@ export class Hapticplot{
     this.hscale = d3.scaleLinear();
     this.hscale.domain([0, d3.max(this.data) as number])  // max of dataset
       .range([0, 100]);
-    this.setupPoints('blue', 0.1);                        // linear mapping of data set values to values from 0 to 10
+    this.setupPoints('blue', 0.05);                        // linear mapping of data set values to values from 0 to 10
     this.createSky();
     this.createGridPlane();
   }
@@ -52,15 +52,18 @@ export class Hapticplot{
       .attr('dropppable', '')
       // Adds listeners for state change events, which trigger a change in the
       // point's color property when a hover event occurs
-      .on('stateadded',  (d, i, g) => this.modifyColorOnStateChange(g[i], 'hovered', 'orange'))
-      .on('stateremoved',  (d, i, g) => this.modifyColorOnStateChange(g[i], 'hovered', 'green'));
+      .on('hover-start',  (d, i, g) => this.onHoverStart(g[i], 'orange'))
+      .on('hover-end',  (d, i, g) => this.onHoverEnd(g[i], 'green'));
 
   }
 
-  private modifyColorOnStateChange(entity, state , color){
-    if (d3.event.detail === state){
-      d3.select(entity).attr('color', color);
-    }
+  private onHoverStart(entity, color){
+    d3.event.detail.hand.components.haptics.pulse(0.5, 1000)
+    d3.select(entity).attr('color', color);
+  }
+
+  private onHoverEnd(entity, color){
+    d3.select(entity).attr('color', color);
   }
 
   // Generates a world space position for each data entity, based on ingested data
