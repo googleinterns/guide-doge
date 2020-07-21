@@ -15,6 +15,7 @@ import { DAY, WEEK } from '../../../utils/timeUnits';
 export function groupPointsByXWeek(points: TimeSeriesPoint[]): TimeSeriesPoint[][] {
   const weekStartOffset = 4 * DAY;
   const weekPoints: Record<string, TimeSeriesPoint[]> = {};
+  points.sort(({ x: a }, { x: b }) => a.getTime() - b.getTime());
   for (const point of points) {
     const week = Math.floor((point.x.getTime() - weekStartOffset) / WEEK);
     weekPoints[week] = [...(weekPoints[week] ?? []), point];

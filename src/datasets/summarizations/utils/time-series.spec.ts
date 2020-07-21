@@ -12,7 +12,7 @@ describe('groupPointsByXWeek', () => {
         y: i,
       });
     }
-    for (let i = 31; i >= 31; i--) {
+    for (let i = 31; i >= 1; i--) {
       points.push({
         x: new Date(2020, 7, i),
         y: i,
