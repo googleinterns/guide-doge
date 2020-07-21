@@ -14,17 +14,21 @@ export class Hapticplot{
   init(container: HTMLElement | null, data: number[]){
     this.data = data;
     this.container = container;
-    // create a scale so that there is correspondence between data set and screen render
+    // create a scale so that there is correspondence between data set and screen render,
+    // a linear mapping of data set values to values from 0 to 10
     this.hscale = d3.scaleLinear();
     this.hscale.domain([0, d3.max(this.data) as number])  // max of dataset
       .range([0, 100]);
-    this.setupPoints('blue', 0.05);                        // linear mapping of data set values to values from 0 to 10
+    this.setupPoints('green', 0.05);
     this.createSky();
     this.createGridPlane();
   }
 
-  // selects all entities of type this.shape
+
   private getShapes(){
+    /*
+    selects all entities of type this.shape
+    */
     return d3.select(this.container).selectAll('datapoint');
   }
 
@@ -52,26 +56,37 @@ export class Hapticplot{
       .attr('dropppable', '')
       // Adds listeners for state change events, which trigger a change in the
       // point's color property when a hover event occurs
-      .on('hover-start',  (d, i, g) => this.onHoverStart(g[i], 'orange'))
+      .on('hover-start',  (d, i, g) => this.onHoverStart(g[i], d, 'red'))
       .on('hover-end',  (d, i, g) => this.onHoverEnd(g[i], 'green'));
 
   }
 
-  private onHoverStart(entity, color){
-    d3.event.detail.hand.components.haptics.pulse(0.5, 1000)
-    d3.select(entity).attr('color', color);
-  }
-
-  private onHoverEnd(entity, color){
-    d3.select(entity).attr('color', color);
-  }
-
-  // Generates a world space position for each data entity, based on ingested data
   private generatePositions(data, index){
+    /*
+      Generates a world space position for each data entity, based on ingested data
+    */
     const x = index / 10;
     const y = data;
     const z = -1;
     return `${x} ${y} ${z}`;
+  }
+
+  private onHoverStart(entity, hapticIntensity, color){
+    /*
+    When an object begins being hovered by the controller entity
+     - triggers a haptic pulse
+     - changes the entities color to indicate a pulse has fired
+    */
+    d3.event.detail.hand.components.haptics.pulse(hapticIntensity, 1000);
+    d3.select(entity).attr('color', color);
+  }
+
+  private onHoverEnd(entity, color){
+    /*
+    When an object stops being hovered by the controller entity
+     - changes the entities color to indicate hovering has ended
+    */
+    d3.select(entity).attr('color', color);
   }
 
   private createSky(){
