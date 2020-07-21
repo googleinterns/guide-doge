@@ -1,4 +1,4 @@
-<div class="instructions">
+<div class="summaries">
   <ul *ngIf="this.hasSummaries; else elseBlock">
     <li *ngFor="let summary of summaries">
       ({{summary.validity | number: '1.2-2'}}) <p class="summary" [innerHTML]="summary.text"></p>
