@@ -16,7 +16,7 @@ describe('queryFactory', () => {
     summaries = querySummaries();
   });
 
-  it('should try all combinations of linguistic variables.', () => {
+  it('should return all combinations of linguistic variables.', () => {
     const nQuantifierOptions = 3;
     const nDayOptions = 2;
     const nTrafficOptions = 3;
