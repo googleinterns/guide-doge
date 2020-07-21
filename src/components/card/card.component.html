@@ -8,9 +8,9 @@
     </div>
   </div>
   <ng-container [ngSwitch]="currentChart.type">
-    <app-line-chart *ngSwitchCase="'line'"
+    <app-line-chart *ngSwitchCase="MetaType.LINE_CHART"
                     [meta]="currentChart" appAudification></app-line-chart>
-    <app-geo-map *ngSwitchCase="'geo-map'"
+    <app-geo-map *ngSwitchCase="MetaType.GEO_MAP"
                  [meta]="currentChart"></app-geo-map>
   </ng-container>
 </mat-card>

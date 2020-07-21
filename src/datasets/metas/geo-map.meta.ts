@@ -1,13 +1,13 @@
-import { DataMeta } from './types';
+import { DataMeta, MetaType } from './types';
 
-export type GeoMapMeta = DataMeta<'geo-map', () => null>;
+export type GeoMapMeta = DataMeta<MetaType.GEO_MAP, () => null>;
 
 export function createGeoMapMeta(
   title: string,
   queryData: () => null,
 ): GeoMapMeta {
   return {
-    type: 'geo-map',
+    type: MetaType.GEO_MAP,
     title,
     queryData,
   };
