@@ -23,10 +23,11 @@ export class Scatterplot{
   }
   init(container: HTMLElement | null, data: XYPoint<Date, number>[]){
     this.data = data;
+    console.log(data);
     this.container = container;
-    if (this.container !== null){
-      document.body.append(this.container);
-    }
+    // if (this.container !== null){
+    //   document.body.append(this.container);
+    // }
     this.generatePts();
     this.setColor('blue');
     this.createSky('gray');
@@ -41,7 +42,7 @@ export class Scatterplot{
     d3.select(this.container).selectAll(this.shape).attr('position', (d, i) => {
       const x = (d as XYPoint<Date, number>).y - (d as XYPoint<Date, number>).y;
       const y = i * 10;
-      const z = (-this.data[i] * 2);
+      const z = (-6);
       return `${x} ${y} ${z}`;
     });
   }

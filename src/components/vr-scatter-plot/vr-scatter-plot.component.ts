@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ElementRef, ViewChild } from '@angular/core';
 import { Scatterplot } from '../../d3/scatterplot.d3';
 import { PreferenceService } from '../../services/preference/preference.service';
 import { DataService } from '../../services/data/data.service';
@@ -34,6 +34,7 @@ export class VRScatterPlotComponent implements OnInit, OnChanges, OnDestroy{
   });
   private destroy$ = new Subject();
   dataService: DataService;
+  @ViewChild('ascene') ascene: ElementRef;
 
   constructor(
     private preferenceService: PreferenceService
@@ -73,10 +74,10 @@ export class VRScatterPlotComponent implements OnInit, OnChanges, OnDestroy{
     .pipe(takeUntil(this.destroy$))
     .pipe(map(queryOption => {
       // this.meta2.query(queryOption)[0]) has label, points, style and is of type BehaviorSubject<LineChartData>
-      return this.datasetPref.query(queryOption)[0];
+      return this.datasetPref.queryData(queryOption)[0];
     }))
     .subscribe(this.datum$);
-    this.vrScatterPlot.init(document.querySelector('a-scene'), this.datum$.value.points);
+    this.vrScatterPlot.init(this.ascene.nativeElement, this.datum$.value.points);
   }
 
   get datum() {
