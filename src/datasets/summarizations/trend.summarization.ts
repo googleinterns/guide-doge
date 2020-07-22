@@ -15,23 +15,18 @@ export function queryFactory(points: TimeSeriesPoint[]) {
   return cacheSummaries(() => {
     const MX = Math.PI / 2;
 
-    const trends = normalizedUniformPartiallyLinearEpsApprox(points, 0.025);
+    const trends = normalizedUniformPartiallyLinearEpsApprox(points, 0.01);
 
     const applyTrendAngleWithWeight = (f: MembershipFunction) => ({ pctSpan, cone }: TimeSeriesTrend) => {
       const avgAngleRad = (cone.endAngleRad + cone.startAngleRad) / 2;
       return f(avgAngleRad) * pctSpan * trends.length;
     };
-    console.log(trends)
-    console.log(trends.map(({cone}) => {
-      const avgAngleRad = (cone.endAngleRad + cone.startAngleRad) / 2;
-      return avgAngleRad / MX;
-    }));
 
-    const uQuicklyIncreasingTrend = applyTrendAngleWithWeight(trapmfL(MX / 2, MX * 3 / 4));
+    const uQuicklyIncreasingTrend = applyTrendAngleWithWeight(trapmfL(MX / 2, MX * 3 / 5));
     const uIncreasingTrend = applyTrendAngleWithWeight(trapmfL(MX / 8, MX / 4));
     const uConstantTrend = applyTrendAngleWithWeight(trapmf(-MX / 4, -MX / 8, MX / 8, MX / 4));
     const uDecreasingTrend = applyTrendAngleWithWeight(trapmfR(-MX / 4, -MX / 8));
-    const uQuicklyDecreasingTrend = applyTrendAngleWithWeight(trapmfR(-MX * 3 / 4, -MX / 2));
+    const uQuicklyDecreasingTrend = applyTrendAngleWithWeight(trapmfR(-MX * 3 / 5, -MX / 2));
 
     const uMostPercentage = trapmfL(0.6, 0.7);
     const uHalfPercentage = trapmf(0.3, 0.4, 0.6, 0.7);
@@ -56,7 +51,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       for (const [trend, uTrend] of uTrends) {
         const t = sigmaCountQA(trends, uPercentage, uTrend);
         summaries.push({
-          text: `trends that took <b>${quantifier}</b> of the time are ${trend}.`,
+          text: `trends that took <b>${quantifier}</b> of the time are <b>${trend}</b>.`,
           validity: t
         });
       }
