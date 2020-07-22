@@ -1,5 +1,6 @@
 import { Hapticplot } from './hapticplot.d3';
-import { resolve } from 'dns';
+import { $ } from 'protractor';
+
 
 describe('VR Haptic Plot', () => {
   const shape = 'a-sphere';
@@ -42,6 +43,20 @@ describe('VR Haptic Plot', () => {
     const result = getPosition(element, shape);
     expect(result).toEqual(expectedPosArray);
   });
+
+  it('places points for each element in a three element array, and checks their color property', () => {
+    hapticplot.init(element, [10, 20, 30]);
+    const expectedColorArray = ['green', 'green' , 'green'];
+    const result = getColor(element, shape);
+    expect(result).toEqual(expectedColorArray);
+  });
+
+  it('places points for each element in a three element array, and checks their size property', () => {
+    hapticplot.init(element, [10, 20, 30]);
+    const expectedSizeArray = ['0.05', '0.05', '0.05'];
+    const result = getRadius(element, shape);
+    expect(result).toEqual(expectedSizeArray);
+  });
 });
 
 // returns array of actual position vectors
@@ -52,4 +67,30 @@ function getPosition(element: HTMLElement, shape: string): Array<{x: number, y: 
     positionArray.push((child as any).components.position.attrValue);
   }
   return positionArray;
+}
+
+/*
+*
+Helper Functions
+*
+*/
+
+// returns array of each generated objects color
+function getColor(element: HTMLElement, shape: string): Array<string>{
+  const childrenArray = element.querySelectorAll(shape);
+  const colorArray: Array<string> = [];
+  for (const child of (childrenArray as any)){
+    colorArray.push((child as any).getAttribute('color'));
+  }
+  return colorArray;
+}
+
+// returns array of each generated objects radius
+function getRadius(element: HTMLElement, shape: string): Array<string>{
+  const childrenArray = element.querySelectorAll(shape);
+  const sizeArray: Array<string> = [];
+  for (const child of (childrenArray as any)){
+    sizeArray.push((child as any).getAttribute('radius'));
+  }
+  return sizeArray;
 }
