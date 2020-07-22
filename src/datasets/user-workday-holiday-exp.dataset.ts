@@ -9,6 +9,7 @@ import { DAY } from '../utils/timeUnits';
 import { combineQuerySummariesFactories } from './summarizations/utils/commons';
 import * as WorkdayHolidayAbsoluteSummarization from './summarizations/workday-holiday-absolute.summarization';
 import * as WorkdayHolidayRelativeSummarization from './summarizations/workday-holiday-relative.summarization';
+import * as TrendSummarization from './summarizations/trend.summarization';
 
 export interface Config {
   dailyWeightStd: number;
@@ -71,6 +72,7 @@ export function create(config: Config): Dataset {
   const visitCountQuerySummariesFactory = combineQuerySummariesFactories(
     WorkdayHolidayAbsoluteSummarization.queryFactory,
     WorkdayHolidayRelativeSummarization.queryFactory,
+    TrendSummarization.queryFactory,
   );
 
   const lineChartMeta = createLineChartMeta(

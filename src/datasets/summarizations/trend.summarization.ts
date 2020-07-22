@@ -1,0 +1,67 @@
+import { Summary } from './types';
+import { TimeSeriesPoint } from '../queries/time-series.query';
+import { cacheSummaries } from './utils/commons';
+import {
+  PointMembershipFunction,
+  MembershipFunction,
+  trapmf,
+  trapmfL,
+  trapmfR,
+  sigmaCountQA,
+} from './libs/protoform';
+import { normalizedUniformPartiallyLinearEpsApprox, TimeSeriesTrend } from './utils/time-series';
+
+export function queryFactory(points: TimeSeriesPoint[]) {
+  return cacheSummaries(() => {
+    const MX = Math.PI / 2;
+
+    const trends = normalizedUniformPartiallyLinearEpsApprox(points, 0.025);
+
+    const applyTrendAngleWithWeight = (f: MembershipFunction) => ({ pctSpan, cone }: TimeSeriesTrend) => {
+      const avgAngleRad = (cone.endAngleRad + cone.startAngleRad) / 2;
+      return f(avgAngleRad) * pctSpan * trends.length;
+    };
+    console.log(trends)
+    console.log(trends.map(({cone}) => {
+      const avgAngleRad = (cone.endAngleRad + cone.startAngleRad) / 2;
+      return avgAngleRad / MX;
+    }));
+
+    const uQuicklyIncreasingTrend = applyTrendAngleWithWeight(trapmfL(MX / 2, MX * 3 / 4));
+    const uIncreasingTrend = applyTrendAngleWithWeight(trapmfL(MX / 8, MX / 4));
+    const uConstantTrend = applyTrendAngleWithWeight(trapmf(-MX / 4, -MX / 8, MX / 8, MX / 4));
+    const uDecreasingTrend = applyTrendAngleWithWeight(trapmfR(-MX / 4, -MX / 8));
+    const uQuicklyDecreasingTrend = applyTrendAngleWithWeight(trapmfR(-MX * 3 / 4, -MX / 2));
+
+    const uMostPercentage = trapmfL(0.6, 0.7);
+    const uHalfPercentage = trapmf(0.3, 0.4, 0.6, 0.7);
+    const uFewPercentage = trapmf(0.1, 0.2, 0.3, 0.4);
+
+    const uPercentages: [string, MembershipFunction][] = [
+      ['most', uMostPercentage],
+      ['half', uHalfPercentage],
+      ['few', uFewPercentage],
+    ];
+
+    const uTrends: [string, PointMembershipFunction<TimeSeriesTrend>][] = [
+      ['quickly increasing', uQuicklyIncreasingTrend],
+      ['increasing', uIncreasingTrend],
+      ['constant', uConstantTrend],
+      ['decreasing', uDecreasingTrend],
+      ['quickly decreasing', uQuicklyDecreasingTrend],
+    ];
+
+    const summaries: Summary[] = [];
+    for (const [quantifier, uPercentage] of uPercentages) {
+      for (const [trend, uTrend] of uTrends) {
+        const t = sigmaCountQA(trends, uPercentage, uTrend);
+        summaries.push({
+          text: `trends that took <b>${quantifier}</b> of the time are ${trend}.`,
+          validity: t
+        });
+      }
+    }
+
+    return summaries;
+  });
+}

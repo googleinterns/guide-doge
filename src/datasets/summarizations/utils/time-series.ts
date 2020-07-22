@@ -39,7 +39,7 @@ export interface TimeSeriesTrend {
 
 export function normalizedUniformPartiallyLinearEpsApprox(points: TimeSeriesPoint[], eps: number): TimeSeriesTrend[] {
   const numPoints = points.map(timeSeriesPointToNumPoint);
-  const normalizedPoints = normalizeNumPoints(numPoints);
+  const normalizedPoints = normalizeNumPoints(numPoints, {}, { min: 0 });
 
   if (normalizedPoints.length <= 1) {
     return [];
