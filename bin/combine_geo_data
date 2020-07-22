@@ -6,23 +6,18 @@ const request = require('request');
 
 const countriesInputUrl = 'https://raw.githubusercontent.com/lukes/ISO-3166-Countries-with-Regional-Codes/master/all/all.json';
 const citiesInputPath = path.resolve(__dirname, 'simplemaps_worldcities_basicv1.6', 'worldcities.csv');
-const outputPath = path.resolve(__dirname, '..', 'src', 'assets', 'cities.json');
+const outputPath = path.resolve(__dirname, '..', 'src', 'assets', 'world.json');
 
 request(countriesInputUrl, { json: true }, (err, res, body) => {
   if (err) {
     throw err;
   }
 
-  // mapping from country id to country name
-  const countryNames = {};
-  const subcontinentNames = {};
-  const continentNames = {};
-
-  // mapping from country iso2 to country/subcontinent/continent ids
-  const countries = {};
+  const world = { continents: {} };
+  const iso2ToCountries = {};
 
   // initiate the mappings
-  body.forEach(country => {
+  body.forEach(rawCountry => {
     const {
       'country-code': countryId,
       'alpha-2': countryIso2,
@@ -31,28 +26,34 @@ request(countriesInputUrl, { json: true }, (err, res, body) => {
       'sub-region': subcontinentName,
       'region-code': continentId,
       'region': continentName,
-    } = country;
+    } = rawCountry;
 
-    countries[countryIso2] = {
-      countryId,
-      subcontinentId,
-      continentId,
+    const continent = world.continents[continentId] = {
+      name: continentName,
+      subcontinents: {},
+      ...(world.continents[continentId] || {}),
     };
 
-    countryNames[countryId] = countryName;
-    subcontinentNames[subcontinentId] = subcontinentName;
-    continentNames[continentId] = continentName;
-  });
+    const subcontinent = continent.subcontinents[subcontinentId] = {
+      name: subcontinentName,
+      countries: {},
+      ...(continent.subcontinents[subcontinentId] || {}),
+    };
 
-  // mapping from city id to city obj
-  const cities = {};
+    const country = subcontinent.countries[countryId] = {
+      name: countryName,
+      cities: {},
+    };
+
+    iso2ToCountries[countryIso2] = country;
+  });
 
   const citiesCsv = fs.readFileSync(citiesInputPath, 'utf8');
   csv2json(citiesCsv)
     .filter(city => city.population > 100_000)
     .forEach(city => {
-      cities[city.id] = {
-        ...countries[city.iso2],
+      const country = iso2ToCountries[city.iso2];
+      country.cities[city.id] = {
         name: city.city_ascii,
         lat: +city.lat,
         lng: +city.lng,
@@ -62,10 +63,7 @@ request(countriesInputUrl, { json: true }, (err, res, body) => {
 
   // write json
   const content = {
-    cities,
-    countryNames,
-    subcontinentNames,
-    continentNames,
+    world,
   };
   fs.writeFileSync(outputPath, JSON.stringify(content), 'utf8');
 });
