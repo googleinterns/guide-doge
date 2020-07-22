@@ -17,12 +17,14 @@ export class Scatterplot{
     private shape: string;
     private container: HTMLElement | null;
     private hscale: d3.ScaleLinear<number, number>;
+    dataType: string;
 
   constructor(shape: string) {
     this.shape = shape;
   }
-  init(container: HTMLElement | null, data: XYPoint<Date, number>[]){
+  init(container: HTMLElement | null, data: XYPoint<Date, number>[], dataType: string){
     this.data = data;
+    this.dataType = dataType;
     console.log(data);
     this.container = container;
     // if (this.container !== null){
