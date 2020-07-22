@@ -1,0 +1,13 @@
+<!-- Creates an embedded scene element.
+  - sets up controller tracking, models, and haptics.
+  -places an interactable box object in the scene
+-->
+<a-scene #theScene embedded style="position: absolute; height: 90vh;">
+  <a-assets></a-assets>
+  <a-entity>
+    <a-camera></a-camera>
+    <a-entity sphere-collider super-hands oculus-touch-controls="hand: left;" haptics="events: triggerdown; dur: 1000; force: 0.5"></a-entity>
+    <a-entity sphere-collider super-hands oculus-touch-controls="hand: right;" haptics="events: triggerdown; dur: 1000; force: 0.5"></a-entity>
+  </a-entity>
+  <a-box hoverable grabbable stretchable draggable dropppable color="green" position="-1 0 -1"></a-box>
+</a-scene>

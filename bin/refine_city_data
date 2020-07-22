@@ -4,7 +4,6 @@ const path = require('path');
 const fs = require('fs');
 const request = require('request');
 
-// TODO: include attributions on the UI
 const countriesInputUrl = 'https://raw.githubusercontent.com/lukes/ISO-3166-Countries-with-Regional-Codes/master/all/all.json';
 const citiesInputPath = path.resolve(__dirname, 'simplemaps_worldcities_basicv1.6', 'worldcities.csv');
 const outputPath = path.resolve(__dirname, '..', 'src', 'assets', 'cities.json');
