@@ -5,6 +5,7 @@ import { DAY } from '../utils/timeUnits';
 import { XYPoint } from './metas/types';
 import { createLineChartMeta } from './metas/line-chart.meta';
 import { TimeSeriesQueryOptions } from './queries/time-series.query';
+import * as TrendSummarization from './summarizations/trend.summarization';
 
 export interface Config {
   offset: number;
@@ -24,7 +25,7 @@ export function create(config: Config): Dataset {
   for (let i = 1; i <= 100; i++) {
     data.push({
       x: new Date(time.getTime() + i * DAY),
-      y: Math.exp(i / 10) + config.offset + rand(),
+      y: Math.exp(i / 10) + config.offset + rand() / 2,
     });
   }
 
@@ -33,6 +34,7 @@ export function create(config: Config): Dataset {
     (options: TimeSeriesQueryOptions) => [{
       label: 'Dummy Data',
       points: data,
+      querySummaries: TrendSummarization.queryFactory(data),
     }],
   );
 
