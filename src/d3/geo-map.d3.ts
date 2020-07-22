@@ -54,7 +54,7 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
       });
   }
 
-  async renderMap() {
+  private async renderMap() {
     const { height, width, topoJsonUrl } = this.renderOptions;
     const { initialLongitude, initialLatitude } = GeoMapD3;
 
@@ -87,6 +87,7 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
 
     this.landPath = this.svg
       .append('path')
+      .attr('class', 'geo_map-land')
       .datum(topojson.feature(this.worldTopology, land))
       .attr('d', this.geoPath)
       .attr('fill', '#EEE');
@@ -99,8 +100,6 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
       .attr('fill', 'none')
       .attr('stroke', '#FFF')
       .attr('stroke-width', '1px');
-
-    this.updateMap();
   }
 
   private getProjectionBounds() {
