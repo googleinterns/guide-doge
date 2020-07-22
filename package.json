@@ -48,6 +48,7 @@
     "three": "^0.117.1",
     "three-js": "^79.0.0",
     "tone": "^14.7.2",
+    "topojson": "^3.0.2",
     "tslib": "^1.10.0",
     "uuid": "^8.1.0",
     "zone.js": "~0.10.2"
@@ -63,6 +64,7 @@
     "@types/node": "^12.11.1",
     "@types/random": "^2.1.1",
     "@types/sprintf-js": "^1.1.2",
+    "@types/topojson": "^3.2.2",
     "@types/uuid": "^8.0.0",
     "codelyzer": "^5.1.2",
     "jasmine-core": "~3.5.0",
