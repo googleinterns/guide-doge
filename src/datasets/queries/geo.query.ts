@@ -9,26 +9,26 @@ export enum TerritoryLevel {
   CITY,
 }
 
-export interface Territory {
-  level: TerritoryLevel;
+export interface Territory<L extends TerritoryLevel> {
+  level: L;
   id: string;
 }
 
-export interface GeoQueryOptions {
+export interface GeoQueryOptions<L extends TerritoryLevel> {
   /** The date range to filter geo data with. */
   range: [Date, Date];
   /** The territory to filter geo data with. */
-  territory?: Territory;
+  territory?: Territory<TerritoryLevel>;
   /** The territory level of each geo datum. */
-  unit: TerritoryLevel;
+  unit: L;
 }
 
-export interface GeoDatum {
-  id: string;
+export interface GeoDatum<L extends TerritoryLevel = TerritoryLevel> {
+  territory: Territory<L>;
   values: MeasureValues;
 }
 
-export type GeoQuery = (options: GeoQueryOptions) => GeoDatum[];
+export type GeoQuery<L extends TerritoryLevel = TerritoryLevel> = (options: GeoQueryOptions<L>) => GeoDatum<L>[];
 
 export interface City {
   countryId: string;
@@ -47,11 +47,11 @@ export interface City {
  * @param measureNames The measures to query.
  * @param cities The mapping from city id to city object.
  */
-export function createGeoQuery<S>(
+export function createGeoQuery<L extends TerritoryLevel = TerritoryLevel>(
   dataCube: DataCube,
   measureNames: string[],
   cities: Record<string, City>,
-): GeoQuery {
+): GeoQuery<L> {
   return queryOptions => {
     const [startDate, endDate] = queryOptions.range;
 
@@ -85,11 +85,17 @@ export function createGeoQuery<S>(
       }
     }
 
-    return Object.entries(rowGroups).map(([id, values]) => ({ id, values }));
+    return Object.entries(rowGroups).map(([id, values]) => ({
+      territory: {
+        level: queryOptions.unit,
+        id,
+      },
+      values,
+    }));
   };
 }
 
-function getCityIds(cities: Record<string, City>, territory: Territory) {
+function getCityIds(cities: Record<string, City>, territory: Territory<TerritoryLevel>) {
   const idAccessor = getIdAccessor(territory.level);
   return Object.entries(cities)
     .filter(cityEntry => idAccessor(cityEntry) === territory.id)

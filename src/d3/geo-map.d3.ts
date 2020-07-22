@@ -3,20 +3,20 @@ import { BaseD3, RenderOptions as BaseRenderOptions } from './base.d3';
 import * as topojson from 'topojson';
 import { GeometryCollection, Topology } from 'topojson-specification';
 import { Observable } from 'rxjs';
-import { GeoDatum } from '../datasets/queries/geo.query';
+import { GeoDatum, TerritoryLevel } from '../datasets/queries/geo.query';
 import * as GeoJSON from 'geojson';
 import { linearScale } from '../utils/misc';
 
 type CountryGeometry = GeoJSON.Polygon | GeoJSON.MultiPolygon;
-type CountrySelectionDatum =
-  GeoJSON.Feature<GeoJSON.Geometry, CountryGeometry>
-  | GeoJSON.FeatureCollection<GeoJSON.Geometry, CountryGeometry>;
 type WorldTopology = Topology<{ land: GeometryCollection, countries: GeometryCollection<CountryGeometry> }>;
 
 export interface RenderOptions extends BaseRenderOptions {
   topoJsonUrl: string;
   data$: Observable<GeoDatum[]>;
 }
+
+type AppendTerritoryPathFunction<L extends TerritoryLevel> =
+  (datum: GeoDatum<L>, maxValue: number) => d3.Selection<SVGPathElement, any, null, undefined> | null;
 
 export class GeoMapD3 extends BaseD3<RenderOptions> {
   static minOpacity = .2;
@@ -33,7 +33,7 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
   private landPath: d3.Selection<SVGPathElement, GeoJSON.FeatureCollection<GeoJSON.Geometry, {}>, null, undefined>;
   private boundaryPath: d3.Selection<SVGPathElement, GeoJSON.MultiLineString, null, undefined>;
   private dataG: d3.Selection<SVGGElement, unknown, null, undefined>;
-  private dataPaths: d3.Selection<SVGPathElement, CountrySelectionDatum, null, undefined>[];
+  private territoryPaths: d3.Selection<SVGPathElement, any, null, undefined>[];
 
   private static accessValue(datum: GeoDatum) {
     return datum.values.activeUsers;
@@ -181,7 +181,7 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
 
     this.lastTransform = transform;
 
-    [this.landPath, this.boundaryPath, ...this.dataPaths]
+    [this.landPath, this.boundaryPath, ...this.territoryPaths]
       .forEach(dataPath => dataPath.attr('d', this.geoPath));
   }
 
@@ -190,29 +190,63 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
 
   private renderData() {
     this.dataG = this.svg.insert('g', '.geo_map-boundary');
-    this.dataPaths = [];
+    this.territoryPaths = [];
   }
 
-  private updateData(data: GeoDatum[]) {
+  private updateData<L extends TerritoryLevel>(data: GeoDatum<L>[]) {
     this.dataG.html('');
 
-    const { colorPrimary, minOpacity, accessValue } = GeoMapD3;
-
-    const { countries } = this.worldTopology.objects;
+    const { accessValue } = GeoMapD3;
     const maxValue = data.reduce((acc, datum) => Math.max(acc, accessValue(datum)), 0);
+    this.territoryPaths = data
+      .map(datum => this.appendTerritoryPath(datum, maxValue))
+      .filter((dataPath): dataPath is d3.Selection<SVGPathElement, any, null, undefined> => dataPath !== null);
+  }
 
-    this.dataPaths = data.map(datum => {
-      const countryGeometryObject = countries.geometries.find(geometry => geometry.id === datum.id);
-      if (!countryGeometryObject) {
-        return null;
-      }
-      const valueRatio = accessValue(datum) / maxValue;
-      return this.dataG
-        .append('path')
-        .datum(topojson.feature(this.worldTopology, countryGeometryObject))
-        .attr('d', this.geoPath)
+  private appendTerritoryPath<L extends TerritoryLevel>(datum: GeoDatum<L>, maxValue: number) {
+    const appendFunction = {
+      [TerritoryLevel.CONTINENT]: this.appendContinentPath,
+      [TerritoryLevel.SUBCONTINENT]: this.appendSubcontinentPath,
+      [TerritoryLevel.COUNTRY]: this.appendCountryPath,
+      [TerritoryLevel.CITY]: this.appendCityPath,
+    }[datum.territory.level] as AppendTerritoryPathFunction<L>;
+    return appendFunction.call(this, datum, maxValue);
+  }
+
+  private appendContinentPath: AppendTerritoryPathFunction<TerritoryLevel.CONTINENT> = (datum, maxValue) => {
+    return null;
+  };
+
+  private appendSubcontinentPath: AppendTerritoryPathFunction<TerritoryLevel.SUBCONTINENT> = (datum, maxValue) => {
+    return null;
+  };
+
+  private appendCountryPath: AppendTerritoryPathFunction<TerritoryLevel.COUNTRY> = (datum, maxValue) => {
+    const { accessValue } = GeoMapD3;
+    const { countries } = this.worldTopology.objects;
+    const countryGeometryObject = countries.geometries.find(geometry => geometry.id === datum.territory.id);
+    if (!countryGeometryObject) {
+      return null;
+    }
+    const valueRatio = accessValue(datum) / maxValue;
+    return this.dataG
+      .append('path')
+      .datum(topojson.feature(this.worldTopology, countryGeometryObject))
+      .attr('d', this.geoPath)
+      .call(this.styleTerritory(valueRatio));
+  };
+
+  private appendCityPath: AppendTerritoryPathFunction<TerritoryLevel.CITY> = (datum, maxValue) => {
+    return null;
+  };
+
+  private styleTerritory<T extends SVGGraphicsElement>(valueRatio: number) {
+    const { colorPrimary, minOpacity } = GeoMapD3;
+
+    return (selection: d3.Selection<SVGPathElement, any, null, undefined>) => {
+      selection
         .attr('fill', colorPrimary)
         .attr('opacity', minOpacity + valueRatio * (1 - minOpacity));
-    }).filter((dataPath): dataPath is d3.Selection<SVGPathElement, CountrySelectionDatum, null, undefined> => dataPath !== null);
+    };
   }
 }

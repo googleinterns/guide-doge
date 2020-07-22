@@ -105,8 +105,8 @@ export class LineChartD3 extends XYChartD3<LegendItemStyle> {
       ...LineChartD3.defaultLegendItemStyle,
       ...style ?? {},
     };
-    return (stylePath: d3.Selection<T, unknown, null, undefined>) => {
-      stylePath
+    return (selection: d3.Selection<T, unknown, null, undefined>) => {
+      selection
         .attr('stroke', color)
         .attr('stroke-width', width)
         .attr('opacity', opacity)
