@@ -77,20 +77,12 @@ export class VRScatterPlotComponent implements OnInit, OnChanges, OnDestroy{
       return this.datasetPref.queryData(queryOption)[0];
     }))
     .subscribe(this.datum$);
-    this.vrScatterPlot.init(this.ascene.nativeElement, this.datum$.value.points, this.datasetPref.type);   
+    // this.vrScatterPlot.init(this.ascene.nativeElement, this.datum$.value.points, this.datasetPref.type);   
+    this.vrScatterPlot.init(document.querySelector('a-scene'), this.datum$.value.points, this.datasetPref.type);   
+
   }
 
   get datum() {
     return this.datum$.value;
   }
-
-  sleep(milliseconds: number) {
-      const timeStart = new Date().getTime();
-      while (true) {
-        const elapsedTime = new Date().getTime() - timeStart;
-        if (elapsedTime > milliseconds) {
-          break;
-        }
-      }
-    }
 }

@@ -1,31 +1,21 @@
-// run `tsc Scatterplot.ts` to compile into Scatterplot.js file
-
-// for running on browser
-// import * as _d3 from 'd3';
-
-// declare global {
-// const d3: typeof _d3;
-// }
-
-// for running on unit tests
 import * as AFRAME from 'aframe';
 import * as d3 from 'd3';
 import { XYPoint } from '../datasets/metas/types';
+import { TimeSeriesPoint } from '../datasets/queries/time-series.query';
 
 export class Scatterplot{
-    private data: XYPoint<Date, number>[];
+    private data: TimeSeriesPoint[];
     private shape: string;
-    private container: HTMLElement | null;
+    private container: HTMLElement;
     private hscale: d3.ScaleLinear<number, number>;
     dataType: string;
 
   constructor(shape: string) {
     this.shape = shape;
   }
-  init(container: HTMLElement | null, data: XYPoint<Date, number>[], dataType: string){
+  init(container: HTMLElement, data: TimeSeriesPoint[], dataType: string){
     this.data = data;
     this.dataType = dataType;
-    console.log(data);
     this.container = container;
     // if (this.container !== null){
     //   document.body.append(this.container);
@@ -42,9 +32,9 @@ export class Scatterplot{
     // d is data at index, i within
     // select all shapes within given container
     d3.select(this.container).selectAll(this.shape).attr('position', (d, i) => {
-      const x = (d as XYPoint<Date, number>).y - (d as XYPoint<Date, number>).y;
+      const x = i * 10;
       const y = i * 10;
-      const z = (-6);
+      const z = i * 10;
       return `${x} ${y} ${z}`;
     });
   }
@@ -57,6 +47,7 @@ export class Scatterplot{
   {
     const xGrid = document.createElement('a-entity');
     xGrid.id = 'xGrid';
+    xGrid.className = 'grids';
     this.container!.appendChild(xGrid);
     xGrid.object3D.add(new AFRAME.THREE.GridHelper(50, 50, 0xffffff, 0xffffff));
     d3.select(this.container).select('#xGrid').attr('position', '0 0 0');
@@ -64,6 +55,7 @@ export class Scatterplot{
 
     const yGrid = document.createElement('a-entity');
     yGrid.id = 'yGrid';
+    yGrid.className = 'grids'
     this.container!.appendChild(yGrid);
     yGrid.setObject3D('grid', new AFRAME.THREE.GridHelper(50, 50, 0xffffff, 0xffffff));
     d3.select(this.container).select('#yGrid').attr('position', '0 0 0');
@@ -71,6 +63,7 @@ export class Scatterplot{
 
     const zGrid = document.createElement('a-entity');
     zGrid.id = 'zGrid';
+    zGrid.className = 'grids';
     this.container!.appendChild(zGrid);
     zGrid.object3D.add(new AFRAME.THREE.GridHelper(50, 50, 0xffffff, 0xffffff));
     d3.select(this.container).select('#zGrid').attr('position', '0 0 0');
