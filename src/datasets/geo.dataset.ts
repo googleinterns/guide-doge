@@ -46,7 +46,7 @@ export const configMeta: PreferenceMeta<Config> = {
   },
 };
 
-async function fetchWorld(): Promise<World> {
+export async function fetchWorld(): Promise<World> {
   const world: World = (await import('../assets/world.json')) as any;
 
   Object.entries(world.continents).forEach(([continentId, continent]) => {

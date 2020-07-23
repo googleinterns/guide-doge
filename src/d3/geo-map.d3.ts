@@ -228,6 +228,7 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
     const { world } = this.renderOptions;
     return this.dataG
       .append('path')
+      .attr('class', 'geo_map-territory')
       .datum(topojson.feature(world.topology, geometry))
       .attr('d', this.geoPath)
       .attr('fill', colorPrimary)
@@ -239,6 +240,7 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
     const { colorPrimary, minOpacity, maxOpacity, minRadius, maxRadius } = GeoMapD3;
     return this.dataG
       .append('circle')
+      .attr('class', 'geo_map-city')
       .datum(city)
       .attr('transform', this.geoTransform)
       .attr('r', linearScale(valueRatio, minRadius, maxRadius))

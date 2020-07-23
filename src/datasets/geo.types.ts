@@ -1,7 +1,6 @@
 import { GeometryCollection, MultiPolygon, Polygon, Topology } from 'topojson-specification';
 
 interface RawCity {
-  id: string;
   name: string;
   lat: number;
   lng: number;
@@ -9,20 +8,17 @@ interface RawCity {
 }
 
 interface RawCountry {
-  id: string;
   name: string;
   cities: Record<string, RawCity>;
   geometry?: Polygon | MultiPolygon;
 }
 
 interface RawSubcontinent {
-  id: string;
   name: string;
   countries: Record<string, RawCountry>;
 }
 
 interface RawContinent {
-  id: string;
   name: string;
   subcontinents: Record<string, RawSubcontinent>;
 }
