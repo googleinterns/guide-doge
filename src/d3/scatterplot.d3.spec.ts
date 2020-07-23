@@ -64,26 +64,20 @@ describe('Checking for presence of', () => {
   });
 
   it('GridHelper xGrid', () => {
-    expect(findGrids(grids, 'xGrid')).toEqual(true);
+    const xGridPresent = Array.from(grids).some((grid) => grid.id === 'xGrid');
+    expect(xGridPresent).toEqual(true);
   });
 
   it('GridHelper yGrid', () => {
-    expect(findGrids(grids, 'yGrid')).toEqual(true);
+    const yGridPresent = Array.from(grids).some((grid) => grid.id === 'yGrid');
+    expect(yGridPresent).toEqual(true);
   });
 
   it('GridHelper zGrid', () => {
-    expect(findGrids(grids, 'zGrid')).toEqual(true);
+    const zGridPresent = Array.from(grids).some((grid) => grid.id === 'zGrid');
+    expect(zGridPresent).toEqual(true);
   });
 });
-
-function findGrids(entities: HTMLCollectionOf<Element>, gridID: string): boolean{
-  for (const entity of (entities as any)){
-    if (entity.id === gridID){
-      return true;
-    }
-  }
-  return false;
-}
 
 // returns array of actual position vectors
 function getPosition(element: HTMLElement, shape: string): Array<{x: number, y: number, z: number}>{
