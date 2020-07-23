@@ -5,9 +5,19 @@ import { SimpleChange } from '@angular/core';
 import { ScreenReaderModule } from '../screen-reader/screen-reader.module';
 import { MatCardModule } from '@angular/material/card';
 import { createLineChartMeta } from '../../datasets/metas/line-chart.meta';
-import { mockData } from '../../utils/mocks.spec';
 
 describe('ChartSummarizationComponent', () => {
+  const nMockSummaries = 10;
+  const mockSummaries = [...Array(nMockSummaries).keys()].map(i => ({
+    text: `This is summary ${i}.`,
+    validity: i / nMockSummaries,
+  }));
+  const mockData = [{
+    label: `MockDatum`,
+    points: [],
+    querySummaries: () => mockSummaries,
+  }];
+  const validityThreshold = 0.5;
   let fixture: ComponentFixture<ChartSummarizationComponent>;
   let component: ChartSummarizationComponent;
 
@@ -44,13 +54,14 @@ describe('ChartSummarizationComponent', () => {
     // init component inputs
     component = fixture.componentInstance;
     component.enabled = true;
-    component.validityThreshold = 0.5;
+    component.validityThreshold = validityThreshold;
 
     host.ngOnInit();
     host.ngOnChanges({
       meta: new SimpleChange(null, host.meta, true),
     });
     component.ngOnInit();
+    fixture.detectChanges();
   });
 
   it('should instantiate.', () => {
@@ -73,6 +84,26 @@ describe('ChartSummarizationComponent', () => {
       const currentValidity = summaries[i].validity;
       const previousValidity = summaries[i - 1].validity;
       expect(currentValidity).toBeLessThanOrEqual(previousValidity);
+    }
+  });
+
+  it('should render summaries with validity greater than or equal to threshold.', () => {
+    const summarizationElement: HTMLElement = fixture.nativeElement;
+    const psummaries = Array.from(summarizationElement.querySelectorAll('p.summary'));
+    for (const summary of mockSummaries){
+      if (summary.validity >= validityThreshold) {
+        expect(psummaries.some(psummary => psummary.textContent?.includes(summary.text))).toBeTrue();
+      }
+    }
+  });
+
+  it('should not render summaries with validity less than threshold.', () => {
+    const summarizationElement: HTMLElement = fixture.nativeElement;
+    const psummaries = Array.from(summarizationElement.querySelectorAll('p.summary'));
+    for (const summary of mockSummaries){
+      if (summary.validity < validityThreshold) {
+        expect(psummaries.every(psummary => !psummary.textContent?.includes(summary.text))).toBeTrue();
+      }
     }
   });
 });
