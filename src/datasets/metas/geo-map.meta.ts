@@ -1,6 +1,6 @@
 import { DataMeta, MetaType } from './types';
 import { GeoQuery } from '../queries/geo.query';
-import { World } from '../geo.dataset';
+import { World } from '../geo.types';
 
 export interface GeoMapMeta extends DataMeta<MetaType.GEO_MAP, GeoQuery> {
   world: World;

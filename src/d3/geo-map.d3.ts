@@ -6,7 +6,7 @@ import { GeoDatum, TerritoryLevel } from '../datasets/queries/geo.query';
 import * as GeoJSON from 'geojson';
 import { GeometryCollection } from 'topojson-specification';
 import { isNotNullish, linearScale } from '../utils/misc';
-import { World } from '../datasets/geo.dataset';
+import { World } from '../datasets/geo.types';
 
 export interface RenderOptions extends BaseRenderOptions {
   world: World;

@@ -5,7 +5,7 @@ import { GeoMapMeta } from '../../datasets/metas/geo-map.meta';
 import { BehaviorSubject } from 'rxjs';
 import { GeoDatum, TerritoryLevel } from '../../datasets/queries/geo.query';
 import { DAY } from '../../utils/timeUnits';
-import { World } from '../../datasets/geo.dataset';
+import { World } from '../../datasets/geo.types';
 
 @Component({
   selector: 'app-geo-map',

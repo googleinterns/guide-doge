@@ -1,7 +1,7 @@
 import { betweenDates, inCities } from '../../models/data-cube/filters';
 import { DataCube } from '../../models/data-cube/data-cube.model';
 import { Filter, MeasureValues } from '../../models/data-cube/types';
-import { City } from '../geo.dataset';
+import { City } from '../geo.types';
 
 export enum TerritoryLevel {
   CONTINENT,
