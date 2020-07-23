@@ -2,32 +2,21 @@ import { Scatterplot } from './scatterplot.d3';
 import { TimeSeriesPoint } from '../datasets/queries/time-series.query';
 // import { VRTimeSeriesPoint } from '../datasets/queries/vr-time-series.query';
 
-const shape = 'a-sphere';
-let element: HTMLElement;
-let scatterplot: Scatterplot;
-let startDate: Date = new Date();
-
 describe('VR Scatter Plot', () => {
-  let lineChartData1: TimeSeriesPoint[]  = [];
+  const shape = 'a-sphere';
+  let element: HTMLElement;
+  let scatterplot: Scatterplot;
+  const lineChartData1: TimeSeriesPoint[]  = [];
   lineChartData1.push({x: new Date(), y: 0});
 
-  // let scatterPlotData1: VRTimeSeriesPoint[]  = [];
-  // scatterPlotData1.push({x: new Date(), y: 10, z: 10});
-
-  let lineChartData8: TimeSeriesPoint[] = [];
+  const lineChartData8: TimeSeriesPoint[] = [];
   for (let i = 0; i < 8; i++){
     lineChartData8.push({x: new Date(), y: i * 10});
   }
-  
-  // let scatterPlotData8: VRTimeSeriesPoint[] = [];
-  // for (let i = 0; i < 7; i++){
-  //   scatterPlotData8.push({x: new Date(), y: i * 10, z: i * 5});
-  // }
 
   beforeEach( () =>  {
     element = document.createElement('a-scene');
     scatterplot = new Scatterplot(shape);
-
   });
   it('places no points bc 1:1 correspondence with empty element array', () => {
     scatterplot.init(element, [], 'line');
@@ -35,7 +24,6 @@ describe('VR Scatter Plot', () => {
     const result = getPosition(element, shape);
     expect(result).toEqual(expectedPosArray);
   });
-
   it('places points for each element in a one element array', () => {
     scatterplot.init(element, lineChartData1, 'line');
     const expectedPosArray = [{ x: 0, y: 0, z: 0 }];
@@ -54,7 +42,7 @@ describe('VR Scatter Plot', () => {
   });
 });
 
-describe('Adding VR Grids/Sky', () => {
+describe('Checking for presence of', () => {
   let element: HTMLElement;
   let scatterplot: Scatterplot;
   let grids: HTMLCollectionOf<Element>;
@@ -65,7 +53,7 @@ describe('Adding VR Grids/Sky', () => {
     scatterplot.init(element, [], 'vrScatter');
     grids = element.getElementsByClassName('grids');
   });
-  it('Check for sky', () => {
+  it('aframe sky', () => {
     scatterplot.init(element, [], 'vrScatter');
     const sky = document.getElementsByTagName('a-sky');
     let skyPresent = false;
@@ -75,37 +63,27 @@ describe('Adding VR Grids/Sky', () => {
     expect(skyPresent).toEqual(true);
   });
 
-  it('Check for xGrid', () => {
-    let xGridPresent: boolean = false;
-    for (let i = 0; i < grids.length; i++){
-      if (grids[i].id === 'xGrid'){
-
-        xGridPresent = true;
-      }
-    }
-    expect(xGridPresent).toEqual(true);
+  it('GridHelper xGrid', () => {
+    expect(findGrids(grids, 'xGrid')).toEqual(true);
   });
 
-  it('Check for yGrid', () => {
-    let yGridPresent: boolean = false;
-    for (let i = 0; i < grids.length; i++){
-      if (grids[i].id === 'yGrid'){
-        yGridPresent = true;
-      }
-    }
-    expect(yGridPresent).toEqual(true);
+  it('GridHelper yGrid', () => {
+    expect(findGrids(grids, 'yGrid')).toEqual(true);
   });
 
-  it('Check for zGrid', () => {
-    let zGridPresent: boolean = false;
-    for (let i = 0; i < grids.length; i++){
-      if (grids[i].id === 'zGrid'){
-        zGridPresent = true;
-      }
-    }
-    expect(zGridPresent).toEqual(true);
+  it('GridHelper zGrid', () => {
+    expect(findGrids(grids, 'zGrid')).toEqual(true);
   });
 });
+
+function findGrids(entities: HTMLCollectionOf<Element>, gridID: string): boolean{
+  for (const entity of (entities as any)){
+    if (entity.id === gridID){
+      return true;
+    }
+  }
+  return false;
+}
 
 // returns array of actual position vectors
 function getPosition(element: HTMLElement, shape: string): Array<{x: number, y: number, z: number}>{

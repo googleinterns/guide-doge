@@ -31,16 +31,14 @@ describe('VRScatterplotComponent', () => {
         { provide: DataService, useValue: dataService },
       ]
     });
-    
     fixture = TestBed.createComponent(VRScatterPlotComponent);
     component = fixture.componentInstance;
     scatterplotD3 = component.vrScatterPlot;
   });
 
   it('should instantiate.', () => {
-    expect(component).toBeInstanceOf(VRScatterPlotComponent); 
+    expect(component).toBeInstanceOf(VRScatterPlotComponent);
   });
-
   it('should render d3 on init.', () => {
     spyOn(scatterplotD3, 'init');
     component.ngOnInit();

@@ -55,7 +55,7 @@ export class Scatterplot{
 
     const yGrid = document.createElement('a-entity');
     yGrid.id = 'yGrid';
-    yGrid.className = 'grids'
+    yGrid.className = 'grids';
     this.container!.appendChild(yGrid);
     yGrid.setObject3D('grid', new AFRAME.THREE.GridHelper(50, 50, 0xffffff, 0xffffff));
     d3.select(this.container).select('#yGrid').attr('position', '0 0 0');
