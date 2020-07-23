@@ -1,13 +1,4 @@
-// run `tsc Scatterplot.ts` to compile into Scatterplot.js file
-
-// for running on browser
-// import * as _d3 from 'd3';
-
-// declare global {
-// const d3: typeof _d3;
-// }
-
-// for running on unit tests
+import * as AFRAME from 'aframe';
 import * as d3 from 'd3';
 import * as AFRAME from 'aframe';
 import * as THREE from 'three';
@@ -24,13 +15,16 @@ export class Scatterplot{
     private shape: string;
     private container: HTMLElement | null;
     timeScale: d3.ScaleTime<number, number>;
+
     dataType: string;
 
   constructor(shape: string) {
     this.shape = shape;
   }
+  
   init(container: HTMLElement, data: VRTimeSeriesPoint[], dataType: string){
     this.data = data;
+    this.dataType = dataType;
     this.container = container;
     this.dataType = dataType;
     this.generatePts();
@@ -59,6 +53,7 @@ export class Scatterplot{
     // d is data at index, i within
     // select all shapes within given container
     d3.select(this.container).selectAll(this.shape).attr('position', (d, i) => {
+
       const x = (d as VRTimeSeriesPoint).x;
       const y = (d as VRTimeSeriesPoint).y;
       const z = (d as VRTimeSeriesPoint).z;
@@ -70,21 +65,13 @@ export class Scatterplot{
       return color;
     });
   }
-
-  private createSky(color: string | number){
-    const sky = document.createElement('a-sky');
-    sky.id = 'sky';
-    this.container?.appendChild(sky);
-    d3.select(this.container).selectAll('#sky').attr('color', () => {
-      return color;
-    });
-  }
  
   private createGridPlane()
   {
     const xGrid = document.createElement('a-entity');
     xGrid.className = 'grids';
     xGrid.id = 'xGrid';
+    xGrid.className = 'grids';
     this.container!.appendChild(xGrid);
     xGrid.object3D.add(new AFRAME.THREE.GridHelper(50, 50, 0xffffff, 0xffffff));
     d3.select(this.container).select('#xGrid').attr('position', '0 0 0');
@@ -93,6 +80,7 @@ export class Scatterplot{
     const yGrid = document.createElement('a-entity');
     yGrid.className = 'grids';
     yGrid.id = 'yGrid';
+    yGrid.className = 'grids';
     this.container!.appendChild(yGrid);
     yGrid.object3D.add(new AFRAME.THREE.GridHelper(50, 50, 0xffffff, 0xffffff));
     d3.select(this.container).select('#yGrid').attr('position', '0 0 0');
@@ -101,9 +89,19 @@ export class Scatterplot{
     const zGrid = document.createElement('a-entity');
     zGrid.className = 'grids';
     zGrid.id = 'zGrid';
+    zGrid.className = 'grids';
     this.container!.appendChild(zGrid);
     zGrid.object3D.add(new AFRAME.THREE.GridHelper(50, 50, 0xffffff, 0xffffff));
     d3.select(this.container).select('#zGrid').attr('position', '0 0 0');
     d3.select(this.container).select('#zGrid').attr('rotation', '-90 0 0');
+  }
+    
+  private createSky(color: string | number){
+    const sky = document.createElement('a-sky');
+    sky.id = 'sky';
+    this.container?.appendChild(sky);
+    d3.select(this.container).selectAll('#sky').attr('color', () => {
+      return color;
+    });
   }
 }
