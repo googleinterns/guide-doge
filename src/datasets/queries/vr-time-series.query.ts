@@ -9,10 +9,10 @@ export interface VRTimeSeriesQueryOptions {
   range: [Date, Date];
 }
 
-export type VRTimeSeriesPoint = XYZPoint<Date, number, number>;
+export type VRTimeSeriesPoint = XYZPoint<number, number, number>;
 
 export interface VRTimeSeriesDatum<S> {
-  label: string;
+  labels: string[];
   style?: Partial<S>;
   points: VRTimeSeriesPoint[];
 }
@@ -20,9 +20,9 @@ export interface VRTimeSeriesDatum<S> {
 export type VRTimeSeriesQuery<S> = (options: VRTimeSeriesQueryOptions) => VRTimeSeriesDatum<S>[];
 
 export type LegendItem<S> = {
-  label: string;
+  labels: string[];
   style?: Partial<S>;
-  measureName: string;
+  measureNames: string[];
   periodOffset?: number;
   windowSize?: number;
 };
@@ -30,7 +30,8 @@ export type LegendItem<S> = {
 export function createVRTimeSeriesQuery<S>(dataCube: DataCube, legendItems: LegendItem<S>[]): VRTimeSeriesQuery<S> {
   return queryOptions => {
     const [startDate, endDate] = queryOptions.range;
-    const measureNames = unique(legendItems.map(item => item.measureName));
+
+    const measureNames = unique(legendItems.map(item => item.measureNames));
 
     const windowSizes = legendItems
       .map(item => item.windowSize)
@@ -39,6 +40,7 @@ export function createVRTimeSeriesQuery<S>(dataCube: DataCube, legendItems: Lege
       .map(item => item.periodOffset)
       .filter(((v): v is number => v !== undefined));
 
+      console.log(legendItems);
     const dateCategoryName = 'date';
     const duration = endDate.getTime() - startDate.getTime();
     const maxWindowSize = Math.max(0, ...windowSizes);
@@ -51,8 +53,8 @@ export function createVRTimeSeriesQuery<S>(dataCube: DataCube, legendItems: Lege
     const dateFilter = inOneOfDateRanges(dateRanges, { excludeStart: true });
 
     const rows = dataCube.getDataFor({
-      categoryNames: [dateCategoryName],
-      measureNames,
+      categoryNames: ['browser', 'country', 'source'],
+      measureNames: ['activeUsers', 'revenue', 'eventCount'],
       filters: [dateFilter],
       sortBy: [dateCategoryName],
     });
@@ -63,8 +65,8 @@ export function createVRTimeSeriesQuery<S>(dataCube: DataCube, legendItems: Lege
 
 function createVRTimeSeriesDatum<S>(rows: ResultRow[], startDate: Date, endDate: Date, item: LegendItem<S>): VRTimeSeriesDatum<S> {
   const {
-    label,
-    measureName,
+    labels,
+    measureNames,
     periodOffset = 0,
     windowSize = DAY,
     style,
@@ -72,49 +74,29 @@ function createVRTimeSeriesDatum<S>(rows: ResultRow[], startDate: Date, endDate:
 
   // shift the datum points reversely by `periodOffset`
   const shiftedPoints: VRTimeSeriesPoint[] = rows.map(row => ({
-    x: new Date(row.categories.date.getTime() - periodOffset),
-    y: row.values[measureName],
-    z: row.values[measureName]
+    x: row.values[measureNames[0]],
+    y: row.values[measureNames[1]],
+    z: row.values[measureNames[2]]
   }));
 
   // get the head point and tail points of which lie between (`startDate`, `endDate`]
-  const [headPoint, ...tailPoints] = shiftedPoints.filter(point => startDate < point.x && point.x <= endDate);
-  const points: VRTimeSeriesPoint[] = [];
+  const points: VRTimeSeriesPoint[] = shiftedPoints;
 
-  if (!headPoint) {
-    return {
-      label,
-      style,
-      points,
-    };
-  }
-
+    
+  
   // pre-calculate the sum of the window for the very first point
-  const windowStart = headPoint.x.getTime() - windowSize;
-  let startIndex = shiftedPoints.findIndex(point => windowStart < point.x.getTime());
-  let endIndex = shiftedPoints.indexOf(headPoint);
-  let sum = shiftedPoints
-    .slice(startIndex, endIndex + 1)
-    .reduce((acc, point) => acc + point.y, 0);
-  points.push({
-    x: headPoint.x,
-    y: sum,
-    z: sum
-  });
+  
+  // points.push({
+  //   x: 10,
+  //   y: 10,
+  //   z: 10
+  // });
 
   // slide the window for the rest of the points
-  for (const point of tailPoints) {
-    sum += shiftedPoints[++endIndex].y;
-    sum -= shiftedPoints[startIndex++].y;
-    points.push({
-      x: point.x,
-      y: sum,
-      z: sum
-    });
-  }
+  
 
   return {
-    label,
+    labels,
     style,
     points,
   };

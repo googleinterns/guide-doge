@@ -4,7 +4,7 @@ import { PreferenceService } from '../../services/preference/preference.service'
 import { DataService } from '../../services/data/data.service';
 import { Meta } from '../../datasets/metas/types';
 import { LineChartDatum} from '../line-chart/line-chart.component';
-import { LegendItemStyle as LineChartLegendItemStyle } from '../../d3/line-chart.d3';
+import { ScatterPlotStyle as ScatterPlotLegendItemStyle } from '../../d3/scatterplot.d3';
 import { VRScatterplotMeta } from '../../datasets/metas/vr-scatter-plot.meta';
 import { LineChartMeta } from '../../datasets/metas/line-chart.meta';
 import { TimeSeriesDatum, TimeSeriesQueryOptions } from '../../datasets/queries/time-series.query';
@@ -16,7 +16,7 @@ import { DATA_PREFERENCE } from '../../i18n';
 import 'aframe';
 import { datasets } from '../../datasets';
 
-export type VRScatterplotDatum = VRTimeSeriesDatum<LineChartLegendItemStyle>;
+export type VRScatterplotDatum = VRTimeSeriesDatum<ScatterPlotLegendItemStyle>;
 
 
 @Component({
@@ -27,17 +27,17 @@ export type VRScatterplotDatum = VRTimeSeriesDatum<LineChartLegendItemStyle>;
 export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges, OnDestroy{
   endDate = new Date();
   startDate = new Date(this.endDate.getTime() - 30 * DAY);
-  datasetPref: VRScatterplotMeta | LineChartMeta;
+  datasetPref: VRScatterplotMeta;
   dataset$ = this.preferenceService.dataset$;
   DATA_PREFERENCE = DATA_PREFERENCE;
   vrScatterPlot: Scatterplot;
   componentMetas: Meta[];
   exitVR: boolean = false;
-  queryOptions$ = new BehaviorSubject<VRTimeSeriesQueryOptions | TimeSeriesQueryOptions>({
+  queryOptions$ = new BehaviorSubject<VRTimeSeriesQueryOptions>({
     range: [this.startDate, this.endDate],
   });
-  datum$ = new BehaviorSubject<VRScatterplotDatum | LineChartDatum>({
-    label: '',
+  datum$ = new BehaviorSubject<VRScatterplotDatum>({
+    labels: [],
     points: [],
   });
   private destroy$ = new Subject();
@@ -59,15 +59,16 @@ export class VRScatterPlotComponent<T extends Meta>implements OnInit, OnChanges,
       // dataset.metas[0].type = 'tabbed' and dataset.metas[1] = 'line' if chosen UserWhiteNoise
       // dataset.metas[0] - 'line' if Dummy chosen
 
-      if ((dataset.metas[0] as Meta).type === 'tabbed') {
-         this.datasetPref = (dataset.metas[0] as any).metas[0];
-        // this.exitVR = true;
-       } else { 
-           if ((dataset.metas[0] as Meta).type === 'line')
-             this.datasetPref = dataset.metas[0] as LineChartMeta;
+      // if ((dataset.metas[0] as Meta).type === 'tabbed') {
+      //    this.datasetPref = (dataset.metas[0] as any).metas[0];
+      //   // this.exitVR = true;
+      //  } 
+      //  else { 
+      //      if ((dataset.metas[0] as Meta).type === 'line')
+      //        this.datasetPref = dataset.metas[0] as LineChartMeta;
            if ((dataset.metas[0] as Meta).type === 'vrScatter')
              this.datasetPref = dataset.metas[0] as VRScatterplotMeta;
-      } 
+      // } 
         this.init();
     });
   }

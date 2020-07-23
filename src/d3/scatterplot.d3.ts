@@ -14,8 +14,13 @@ import * as THREE from 'three';
 import { TimeSeriesPoint } from '../datasets/queries/time-series.query';
 import { VRTimeSeriesPoint } from '../datasets/queries/vr-time-series.query';
 
+export interface ScatterPlotStyle {
+  color: string | number;
+  shape: string
+}
+
 export class Scatterplot{
-    private data: TimeSeriesPoint[] | VRTimeSeriesPoint[];
+    private data: VRTimeSeriesPoint[];
     private shape: string;
     private container: HTMLElement | null;
     timeScale: d3.ScaleTime<number, number>;
@@ -24,12 +29,11 @@ export class Scatterplot{
   constructor(shape: string) {
     this.shape = shape;
   }
-  init(container: HTMLElement, data: TimeSeriesPoint[] | VRTimeSeriesPoint[], dataType: string){
+  init(container: HTMLElement, data: VRTimeSeriesPoint[], dataType: string){
     console.log(data);
     this.data = data;
     this.container = container;
     this.dataType = dataType;
-    document.body.append(this.container);
    this.generatePts();
    this.setColor('blue');
    this.createSky('gray');

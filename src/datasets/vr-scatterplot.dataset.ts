@@ -65,8 +65,8 @@ export function create(config: Config): Dataset {
   const vrScatterplotMeta = createVRScatterplotMeta(
       'VR Scatterplot',
       createVRTimeSeriesQuery(dataCube, [{
-          label: 'Active User',
-          measureName: 'activeUsers',
+          labels: ['Active User', 'Revenue', 'Event Count'],
+          measureNames: ['activeUsers', 'revenue', 'eventCount'],
       }])
   )
   
