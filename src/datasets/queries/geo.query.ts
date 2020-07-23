@@ -1,6 +1,7 @@
 import { betweenDates, inCities } from '../../models/data-cube/filters';
 import { DataCube } from '../../models/data-cube/data-cube.model';
 import { Filter, MeasureValues } from '../../models/data-cube/types';
+import { City } from '../geo.dataset';
 
 export enum TerritoryLevel {
   CONTINENT,
@@ -29,16 +30,6 @@ export interface GeoDatum<L extends TerritoryLevel = TerritoryLevel> {
 }
 
 export type GeoQuery<L extends TerritoryLevel = TerritoryLevel> = (options: GeoQueryOptions<L>) => GeoDatum<L>[];
-
-export interface City {
-  countryId: string;
-  subcontinentId: string;
-  continentId: string;
-  name: string;
-  lat: number;
-  lng: number;
-  population: number;
-}
 
 /**
  * Create a geo query function. The query function takes GeoQueryOptions and returns an array of GeoDatum.

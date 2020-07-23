@@ -2,36 +2,41 @@
 
 const path = require('path');
 const fs = require('fs');
-const request = require('request');
+const axios = require('axios');
 
-const countriesInputUrl = 'https://raw.githubusercontent.com/lukes/ISO-3166-Countries-with-Regional-Codes/master/all/all.json';
-const citiesInputPath = path.resolve(__dirname, 'simplemaps_worldcities_basicv1.6', 'worldcities.csv');
+const topologyUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
+const countryDataUrl = 'https://raw.githubusercontent.com/lukes/ISO-3166-Countries-with-Regional-Codes/master/all/all.json';
+const cityDataPath = path.resolve(__dirname, 'simplemaps_worldcities_basicv1.6', 'worldcities.csv');
 const outputPath = path.resolve(__dirname, '..', 'src', 'assets', 'world.json');
 
-request(countriesInputUrl, { json: true }, (err, res, body) => {
-  if (err) {
-    throw err;
-  }
+(async function () {
+  const { data: topology } = await axios.get(topologyUrl);
+  const { data: countryData } = await axios.get(countryDataUrl);
 
-  const world = { continents: {} };
+  const countryGeometries = topology.objects.countries.geometries;
+  delete topology.objects.countries;
+
+  const continents = {};
   const iso2ToCountries = {};
 
-  // initiate the mappings
-  body.forEach(rawCountry => {
-    const {
-      'country-code': countryId,
-      'alpha-2': countryIso2,
-      'name': countryName,
-      'sub-region-code': subcontinentId,
-      'sub-region': subcontinentName,
-      'region-code': continentId,
-      'region': continentName,
-    } = rawCountry;
+  for (const {
+    'country-code': countryId,
+    'alpha-2': countryIso2,
+    'name': countryName,
+    'sub-region-code': subcontinentId,
+    'sub-region': subcontinentName,
+    'region-code': continentId,
+    'region': continentName,
+  } of countryData) {
+    const geometry = countryGeometries.find(geometry => geometry.id === countryId);
+    if (geometry) {
+      delete geometry.properties;
+    }
 
-    const continent = world.continents[continentId] = {
+    const continent = continents[continentId] = {
       name: continentName,
       subcontinents: {},
-      ...(world.continents[continentId] || {}),
+      ...(continents[continentId] || {}),
     };
 
     const subcontinent = continent.subcontinents[subcontinentId] = {
@@ -43,12 +48,13 @@ request(countriesInputUrl, { json: true }, (err, res, body) => {
     const country = subcontinent.countries[countryId] = {
       name: countryName,
       cities: {},
+      geometry,
     };
 
     iso2ToCountries[countryIso2] = country;
-  });
+  }
 
-  const citiesCsv = fs.readFileSync(citiesInputPath, 'utf8');
+  const citiesCsv = fs.readFileSync(cityDataPath, 'utf8');
   csv2json(citiesCsv)
     .filter(city => city.population > 100_000)
     .forEach(city => {
@@ -62,11 +68,9 @@ request(countriesInputUrl, { json: true }, (err, res, body) => {
     });
 
   // write json
-  const content = {
-    world,
-  };
-  fs.writeFileSync(outputPath, JSON.stringify(content), 'utf8');
-});
+  const world = { continents, topology };
+  fs.writeFileSync(outputPath, JSON.stringify(world), 'utf8');
+})().catch(console.error);
 
 // convert csv to json
 function csv2json(csv) {
@@ -86,3 +90,4 @@ function csv2json(csv) {
       return dictionary;
     });
 }
+

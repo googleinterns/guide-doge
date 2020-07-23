@@ -1,17 +1,15 @@
 import * as d3 from 'd3';
 import { BaseD3, RenderOptions as BaseRenderOptions } from './base.d3';
 import * as topojson from 'topojson';
-import { GeometryCollection, Topology } from 'topojson-specification';
 import { Observable } from 'rxjs';
 import { GeoDatum, TerritoryLevel } from '../datasets/queries/geo.query';
 import * as GeoJSON from 'geojson';
-import { linearScale } from '../utils/misc';
-
-type CountryGeometry = GeoJSON.Polygon | GeoJSON.MultiPolygon;
-type WorldTopology = Topology<{ land: GeometryCollection, countries: GeometryCollection<CountryGeometry> }>;
+import { GeometryCollection } from 'topojson-specification';
+import { isNotNullish, linearScale } from '../utils/misc';
+import { World } from '../datasets/geo.dataset';
 
 export interface RenderOptions extends BaseRenderOptions {
-  topoJsonUrl: string;
+  world: World;
   data$: Observable<GeoDatum[]>;
 }
 
@@ -26,7 +24,6 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
 
   private projection: d3.GeoProjection;
   private geoPath: d3.GeoPath;
-  private worldTopology: WorldTopology;
   private centerY: number;
   private lastTransform: d3.ZoomTransform | null;
   private zoom: d3.ZoomBehavior<SVGSVGElement, unknown>;
@@ -55,7 +52,7 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
   }
 
   private async renderMap() {
-    const { height, width, topoJsonUrl } = this.renderOptions;
+    const { height, width, world } = this.renderOptions;
     const { initialLongitude, initialLatitude } = GeoMapD3;
 
     this.projection = d3.geoMercator()
@@ -82,20 +79,22 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
     this.geoPath = d3.geoPath()
       .projection(this.projection);
 
-    this.worldTopology = await d3.json(topoJsonUrl) as WorldTopology;
-    const { land, countries } = this.worldTopology.objects;
-
     this.landPath = this.svg
       .append('path')
       .attr('class', 'geo_map-land')
-      .datum(topojson.feature(this.worldTopology, land))
+      .datum(topojson.feature(world.topology, world.topology.objects.land))
       .attr('d', this.geoPath)
       .attr('fill', '#EEE');
+
+    const countryGeometryCollection: GeometryCollection = {
+      type: 'GeometryCollection',
+      geometries: Object.values(world.countries).map(country => country.geometry).filter(isNotNullish),
+    };
 
     this.boundaryPath = this.svg
       .append('path')
       .attr('class', 'geo_map-boundary')
-      .datum(topojson.mesh(this.worldTopology, countries, (a, b) => a !== b))
+      .datum(topojson.mesh(world.topology, countryGeometryCollection, (a, b) => a !== b))
       .attr('d', this.geoPath)
       .attr('fill', 'none')
       .attr('stroke', '#FFF')
@@ -223,15 +222,15 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
 
   private appendCountryPath: AppendTerritoryPathFunction<TerritoryLevel.COUNTRY> = (datum, maxValue) => {
     const { accessValue } = GeoMapD3;
-    const { countries } = this.worldTopology.objects;
-    const countryGeometryObject = countries.geometries.find(geometry => geometry.id === datum.territory.id);
-    if (!countryGeometryObject) {
+    const { world } = this.renderOptions;
+    const countryGeometry = world.countries[datum.territory.id].geometry;
+    if (!countryGeometry) {
       return null;
     }
     const valueRatio = accessValue(datum) / maxValue;
     return this.dataG
       .append('path')
-      .datum(topojson.feature(this.worldTopology, countryGeometryObject))
+      .datum(topojson.feature(world.topology, countryGeometry))
       .attr('d', this.geoPath)
       .call(this.styleTerritory(valueRatio));
   };

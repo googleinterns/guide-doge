@@ -5,6 +5,7 @@ import { GeoMapMeta } from '../../datasets/metas/geo-map.meta';
 import { BehaviorSubject } from 'rxjs';
 import { GeoDatum, TerritoryLevel } from '../../datasets/queries/geo.query';
 import { DAY } from '../../utils/timeUnits';
+import { World } from '../../datasets/geo.dataset';
 
 @Component({
   selector: 'app-geo-map',
@@ -19,8 +20,8 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnChanges, OnDest
   @Input() meta: GeoMapMeta;
   @Input() height = 500;
   @Input() width = 800;
-  @Input() topoJsonUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
 
+  world: World;
   data$ = new BehaviorSubject<GeoDatum[]>([]);
   geoMapD3: GeoMapD3;
 
@@ -31,6 +32,7 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnChanges, OnDest
   }
 
   ngOnInit() {
+    this.world = this.meta.world;
     this.geoMapD3.render();
   }
 

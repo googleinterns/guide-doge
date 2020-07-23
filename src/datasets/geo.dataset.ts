@@ -6,6 +6,7 @@ import { createDefault } from '../utils/preferences';
 import { generateCube } from '../models/data-cube/generation';
 import { Category } from '../models/data-cube/types';
 import { createGeoQuery } from './queries/geo.query';
+import { GeometryCollection, MultiPolygon, Polygon, Topology } from 'topojson-specification';
 
 export interface Config {
   avgHits: number;
@@ -14,6 +15,47 @@ export interface Config {
   userStdDev: number;
   avgSessionsPerUser: number;
   sessionsPerUserStdDev: number;
+}
+
+export interface City {
+  id: string;
+  countryId: string;
+  subcontinentId: string;
+  continentId: string;
+  name: string;
+  lat: number;
+  lng: number;
+  population: number;
+}
+
+export interface Country {
+  id: string;
+  subcontinentId: string;
+  continentId: string;
+  name: string;
+  cities: Record<string, City>;
+  geometry?: Polygon | MultiPolygon;
+}
+
+export interface Subcontinent {
+  id: string;
+  continentId: string;
+  name: string;
+  countries: Record<string, Country>;
+}
+
+export interface Continent {
+  id: string;
+  name: string;
+  subcontinents: Record<string, Subcontinent>;
+}
+
+export interface World {
+  continents: Record<string, Continent>;
+  subcontinents: Record<string, Subcontinent>;
+  countries: Record<string, Country>;
+  cities: Record<string, City>;
+  topology: Topology<{ land: GeometryCollection }>;
 }
 
 export const configMeta: PreferenceMeta<Config> = {
@@ -43,11 +85,46 @@ export const configMeta: PreferenceMeta<Config> = {
   },
 };
 
+async function fetchWorld(): Promise<World> {
+  const world: World = (await import('../assets/world.json')) as any;
+
+  Object.entries(world.continents).forEach(([continentId, continent]) => {
+    Object.entries(continent.subcontinents).forEach(([subcontinentId, subcontinent]) => {
+      subcontinent.continentId = continentId;
+      Object.entries(subcontinent.countries).forEach(([countryId, country]) => {
+        country.subcontinentId = subcontinentId;
+        country.continentId = continentId;
+        Object.values(country.cities).forEach(city => {
+          city.countryId = countryId;
+          city.subcontinentId = subcontinentId;
+          city.continentId = continentId;
+        });
+      });
+    });
+  });
+
+  function merge<T, K extends keyof T>(parentObject: Record<string, T>, key: K) {
+    return Object.values(parentObject).reduce((acc, object) => ({ ...acc, ...object[key] }), {} as T[K]);
+  }
+
+  const subcontinents = merge(world.continents, 'subcontinents');
+  const countries = merge(subcontinents, 'countries');
+  const cities = merge(countries, 'cities');
+
+  return {
+    ...world,
+    subcontinents,
+    countries,
+    cities,
+  };
+}
+
 export async function create(config: Config): Promise<Dataset> {
-  const { cities } = await import('../assets/cities.json');
+  const world = await fetchWorld();
+
   const cityCategory: Category = {
     name: 'city',
-    values: Object.entries(cities).map(([cityId, city]) => ({
+    values: Object.entries(world.cities).map(([cityId, city]) => ({
       name: cityId,
       weight: city.population,
     })),
@@ -67,8 +144,9 @@ export async function create(config: Config): Promise<Dataset> {
     createGeoQuery(
       dataCube,
       measures.map(measure => measure.name),
-      cities,
+      world.cities,
     ),
+    world,
   );
 
   const metas = [
