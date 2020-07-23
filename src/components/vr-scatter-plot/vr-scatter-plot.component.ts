@@ -10,6 +10,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { DAY } from '../../utils/timeUnits';
 import { map, takeUntil } from 'rxjs/operators';
 import { DATA_PREFERENCE } from '../../i18n';
+import { MetaType} from '../../datasets/metas/types';
 
 @Component({
   selector: 'app-vr-scatter-plot',
@@ -51,9 +52,9 @@ export class VRScatterPlotComponent implements OnInit {
       this.componentMetas = dataset.metas;
       // dataset.metas[0].type = 'tabbed' and dataset.metas[1] = 'line' if chosen UserWhiteNoise
       // dataset.metas[0] - 'line' if Dummy chosen
-      if (dataset.metas[0].type === 'tabbed') {
+      if (dataset.metas[0].type === MetaType.TABBED_CHARTS) {
         this.datasetPref = (dataset.metas[0] as any).metas[0];
-      } else if (dataset.metas[0].type === 'line') {
+      } else if (dataset.metas[0].type === MetaType.LINE_CHART) {
         this.datasetPref = dataset.metas[0] as LineChartMeta;
       }
       this.setDataOnD3();
@@ -69,7 +70,8 @@ export class VRScatterPlotComponent implements OnInit {
     }))
     .subscribe(this.datum$);
     // this.vrScatterPlot.init(this.ascene.nativeElement, this.datum$.value.points, this.datasetPref.type);
-    this.vrScatterPlot.init(document.querySelector('a-scene'), this.datum$.value.points, this.datasetPref.type);
+    this.vrScatterPlot.init(document.querySelector('a-scene'), this.datum$.value.points, 'line');
+    console.log(this.datasetPref.type);
 
   }
 
