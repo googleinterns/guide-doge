@@ -6,6 +6,24 @@ import { DAY, WEEK } from '../../../utils/timeUnits';
  * The first day of the week is Monday when computing the week number of
  * a date.
  *
+ * For example, let the parameter `points` be:
+ * ```
+ * points = [
+ *   { x: new Date('2020-7-19'), y: 1},
+ *   { x: new Date('2020-7-21'), y: 3},
+ *   { x: new Date('2020-7-20'), y: 2},
+ * ];
+ * ```
+ * the return will be:
+ * ```
+ * [
+ *   [{ x: new Date('2020-7-19'), y: 1}],
+ *   [{ x: new Date('2020-7-20'), y: 2}, { x: new Date('2020-7-21'), y: 3}]
+ * ]
+ * ```
+ * where points with x-values (date) in the same week are sorted and placed in
+ * the same subarray in the return.
+ *
  * @param points The array of time-series point to group
  * @return The group result. Each of the element in the returned array is an
  * array of time-series points which have the x-values (date) in the same week.
