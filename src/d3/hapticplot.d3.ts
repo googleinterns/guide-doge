@@ -50,10 +50,6 @@ export class Hapticplot{
       .attr('radius', size)
       // Enables controller interaction with points using superhands' tags
       .attr('hoverable', '')
-      .attr('grabbable', '')
-      .attr('stretchable', '')
-      .attr('draggable', '')
-      .attr('dropppable', '')
       // Adds listeners for state change events, which trigger a change in the
       // point's color property when a hover event occurs
       .on('hover-start',  (d, i, g) => this.onHoverStart(g[i], d, 'red'))
@@ -77,7 +73,9 @@ export class Hapticplot{
      - triggers a haptic pulse
      - changes the entities color to indicate a pulse has fired
     */
-    d3.event.detail.hand.components.haptics.pulse(hapticIntensity, 1000);
+    if (d3.event.detail !== undefined && d3.event.detail.hand !== undefined){
+      d3.event.detail.hand.components.haptics.pulse(hapticIntensity, 1000);
+    }
     d3.select(entity).attr('color', color);
   }
 

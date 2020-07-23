@@ -1,5 +1,4 @@
 import { Hapticplot } from './hapticplot.d3';
-import { $ } from 'protractor';
 
 
 describe('VR Haptic Plot', () => {
@@ -57,7 +56,27 @@ describe('VR Haptic Plot', () => {
     const result = getRadius(element, shape);
     expect(result).toEqual(expectedSizeArray);
   });
+
+  it('places points for each element in a three element array, and checks their hoverable property', () => {
+    hapticplot.init(element, [10, 20, 30]);
+    const expectedSizeArray = ['hoverable', 'hoverable', 'hoverable'];
+    const result = getHoverable(element, shape);
+    expect(result).toEqual(expectedSizeArray);
+  });
+
+  it('places points for each element in a three element array, and checks their color after a hover-start event', () => {
+    hapticplot.init(element, [10, 20, 30]);
+    const expectedSizeArray = ['red', 'red', 'red'];
+    const result = getHoveredColor(element, shape);
+    expect(result).toEqual(expectedSizeArray);
+  });
 });
+
+/*
+*
+Helper Functions
+*
+*/
 
 // returns array of actual position vectors
 function getPosition(element: HTMLElement, shape: string): Array<{x: number, y: number, z: number}>{
@@ -69,28 +88,43 @@ function getPosition(element: HTMLElement, shape: string): Array<{x: number, y: 
   return positionArray;
 }
 
-/*
-*
-Helper Functions
-*
-*/
-
 // returns array of each generated objects color
 function getColor(element: HTMLElement, shape: string): Array<string>{
   const childrenArray = element.querySelectorAll(shape);
-  const colorArray: Array<string> = [];
+  const attrArray: Array<string> = [];
   for (const child of (childrenArray as any)){
-    colorArray.push((child as any).getAttribute('color'));
+    attrArray.push((child as any).getAttribute('color'));
   }
-  return colorArray;
+  return attrArray;
 }
 
 // returns array of each generated objects radius
 function getRadius(element: HTMLElement, shape: string): Array<string>{
   const childrenArray = element.querySelectorAll(shape);
-  const sizeArray: Array<string> = [];
+  const attrArray: Array<string> = [];
   for (const child of (childrenArray as any)){
-    sizeArray.push((child as any).getAttribute('radius'));
+    attrArray.push((child as any).getAttribute('radius'));
   }
-  return sizeArray;
+  return attrArray;
+}
+
+// returns array of each generated objects hover property
+function getHoverable(element: HTMLElement, shape: string): Array<string>{
+  const childrenArray = element.querySelectorAll(shape);
+  const attrArray: Array<string> = [];
+  for (const child of (childrenArray as any)){
+    attrArray.push((child as any).components.hoverable.attrName);
+  }
+  return attrArray;
+}
+
+// returns array of each generated objects color, after a hover event has occured
+function getHoveredColor(element: HTMLElement, shape: string): Array<string>{
+  const childrenArray = element.querySelectorAll(shape);
+  const attrArray: Array<string> = [];
+  for (const child of (childrenArray as any)){
+    (child as any).dispatchEvent(new Event('hover-start'));
+    attrArray.push((child as any).getAttribute('color'));
+  }
+  return attrArray;
 }
