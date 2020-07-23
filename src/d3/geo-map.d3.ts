@@ -2,22 +2,22 @@ import * as d3 from 'd3';
 import { BaseD3, RenderOptions as BaseRenderOptions } from './base.d3';
 import * as topojson from 'topojson';
 import { Observable } from 'rxjs';
-import { GeoDatum, TerritoryLevel } from '../datasets/queries/geo.query';
+import { GeoDatum, Territory, TerritoryLevel } from '../datasets/queries/geo.query';
 import * as GeoJSON from 'geojson';
-import { GeometryCollection } from 'topojson-specification';
+import { GeometryCollection, MultiPolygon, Polygon } from 'topojson-specification';
 import { isNotNullish, linearScale } from '../utils/misc';
-import { World } from '../datasets/geo.types';
+import { City, World } from '../datasets/geo.types';
 
 export interface RenderOptions extends BaseRenderOptions {
   world: World;
   data$: Observable<GeoDatum[]>;
 }
 
-type AppendTerritoryPathFunction<L extends TerritoryLevel> =
-  (datum: GeoDatum<L>, maxValue: number) => d3.Selection<SVGPathElement, any, null, undefined> | null;
-
 export class GeoMapD3 extends BaseD3<RenderOptions> {
   static minOpacity = .2;
+  static maxOpacity = .8;
+  static minRadius = 5;
+  static maxRadius = 30;
   static latitudeBounds = [-84, 84];
   static initialLatitude = (GeoMapD3.latitudeBounds[0] + GeoMapD3.latitudeBounds[1]) / 2;
   static initialLongitude = 0;
@@ -31,6 +31,11 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
   private boundaryPath: d3.Selection<SVGPathElement, GeoJSON.MultiLineString, null, undefined>;
   private dataG: d3.Selection<SVGGElement, unknown, null, undefined>;
   private territoryPaths: d3.Selection<SVGPathElement, any, null, undefined>[];
+  private territoryCircles: d3.Selection<SVGCircleElement, any, null, undefined>[];
+
+  private get geoTransform() {
+    return datum => `translate(${this.projection([datum.lng, datum.lat])})`;
+  }
 
   private static accessValue(datum: GeoDatum) {
     return datum.values.activeUsers;
@@ -159,10 +164,10 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
 
       const deltaX = cursorX - width / 2;
       const pivotLongitude = longitude + getDeltaLongitude(deltaX);
-      longitude = linearScale(longitude, pivotLongitude, scaleRatio);
+      longitude = linearScale(scaleRatio, pivotLongitude, longitude);
 
       const pivotY = this.centerY + (cursorY - height / 2) * (minScale / scale);
-      translationY = linearScale(translationY, pivotY, scaleRatio);
+      translationY = linearScale(scaleRatio, pivotY, translationY);
     } else {
       const deltaX = x - lastX;
       const deltaY = y - lastY;
@@ -181,71 +186,76 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
     this.lastTransform = transform;
 
     [this.landPath, this.boundaryPath, ...this.territoryPaths]
-      .forEach(dataPath => dataPath.attr('d', this.geoPath));
+      .forEach(path => path.attr('d', this.geoPath));
+    this.territoryCircles
+      .forEach(circle => circle.attr('transform', this.geoTransform));
   }
 
   private updateMap() {
   }
 
   private renderData() {
-    this.dataG = this.svg.insert('g', '.geo_map-boundary');
+    this.dataG = this.svg.append('g');
     this.territoryPaths = [];
+    this.territoryCircles = [];
   }
 
-  private updateData<L extends TerritoryLevel>(data: GeoDatum<L>[]) {
+  private updateData(data: GeoDatum[]) {
     this.dataG.html('');
+    this.territoryPaths = [];
+    this.territoryCircles = [];
 
-    const { accessValue } = GeoMapD3;
-    const maxValue = data.reduce((acc, datum) => Math.max(acc, accessValue(datum)), 0);
-    this.territoryPaths = data
-      .map(datum => this.appendTerritoryPath(datum, maxValue))
-      .filter((dataPath): dataPath is d3.Selection<SVGPathElement, any, null, undefined> => dataPath !== null);
-  }
-
-  private appendTerritoryPath<L extends TerritoryLevel>(datum: GeoDatum<L>, maxValue: number) {
-    const appendFunction = {
-      [TerritoryLevel.CONTINENT]: this.appendContinentPath,
-      [TerritoryLevel.SUBCONTINENT]: this.appendSubcontinentPath,
-      [TerritoryLevel.COUNTRY]: this.appendCountryPath,
-      [TerritoryLevel.CITY]: this.appendCityPath,
-    }[datum.territory.level] as AppendTerritoryPathFunction<L>;
-    return appendFunction.call(this, datum, maxValue);
-  }
-
-  private appendContinentPath: AppendTerritoryPathFunction<TerritoryLevel.CONTINENT> = (datum, maxValue) => {
-    return null;
-  };
-
-  private appendSubcontinentPath: AppendTerritoryPathFunction<TerritoryLevel.SUBCONTINENT> = (datum, maxValue) => {
-    return null;
-  };
-
-  private appendCountryPath: AppendTerritoryPathFunction<TerritoryLevel.COUNTRY> = (datum, maxValue) => {
     const { accessValue } = GeoMapD3;
     const { world } = this.renderOptions;
-    const countryGeometry = world.countries[datum.territory.id].geometry;
-    if (!countryGeometry) {
-      return null;
+    const maxValue = data.reduce((acc, datum) => Math.max(acc, accessValue(datum)), 0);
+    for (const datum of data) {
+      const geometry = this.getGeometry(datum.territory);
+      const valueRatio = accessValue(datum) / maxValue;
+      if (geometry) {
+        const territoryPath = this.appendTerritoryPath(geometry, valueRatio);
+        this.territoryPaths.push(territoryPath);
+      } else {
+        const territoryCircle = this.appendCityCircle(world.cities[datum.territory.id], valueRatio);
+        this.territoryCircles.push(territoryCircle);
+      }
     }
-    const valueRatio = accessValue(datum) / maxValue;
+  }
+
+  private appendTerritoryPath(geometry: Polygon | MultiPolygon, valueRatio: number) {
+    const { colorPrimary, minOpacity, maxOpacity } = GeoMapD3;
+    const { world } = this.renderOptions;
     return this.dataG
       .append('path')
-      .datum(topojson.feature(world.topology, countryGeometry))
+      .datum(topojson.feature(world.topology, geometry))
       .attr('d', this.geoPath)
-      .call(this.styleTerritory(valueRatio));
-  };
+      .attr('fill', colorPrimary)
+      .attr('opacity', linearScale(valueRatio, minOpacity, maxOpacity))
+      .attr('stroke', '#FFF');
+  }
 
-  private appendCityPath: AppendTerritoryPathFunction<TerritoryLevel.CITY> = (datum, maxValue) => {
-    return null;
-  };
+  private appendCityCircle(city: City, valueRatio: number) {
+    const { colorPrimary, minOpacity, maxOpacity, minRadius, maxRadius } = GeoMapD3;
+    return this.dataG
+      .append('circle')
+      .datum(city)
+      .attr('transform', this.geoTransform)
+      .attr('r', linearScale(valueRatio, minRadius, maxRadius))
+      .attr('opacity', linearScale(valueRatio, minOpacity, maxOpacity))
+      .attr('fill', colorPrimary)
+      .attr('stroke', '#FFF');
+  }
 
-  private styleTerritory<T extends SVGGraphicsElement>(valueRatio: number) {
-    const { colorPrimary, minOpacity } = GeoMapD3;
-
-    return (selection: d3.Selection<SVGPathElement, any, null, undefined>) => {
-      selection
-        .attr('fill', colorPrimary)
-        .attr('opacity', minOpacity + valueRatio * (1 - minOpacity));
-    };
+  private getGeometry(territory: Territory) {
+    const { world } = this.renderOptions;
+    switch (territory.level) {
+      case TerritoryLevel.CONTINENT:
+        return world.continents[territory.id].geometry;
+      case TerritoryLevel.SUBCONTINENT:
+        return world.subcontinents[territory.id].geometry;
+      case TerritoryLevel.COUNTRY:
+        return world.countries[territory.id].geometry;
+      default:
+        return null;
+    }
   }
 }

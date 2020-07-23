@@ -7,6 +7,8 @@ import { generateCube } from '../models/data-cube/generation';
 import { Category } from '../models/data-cube/types';
 import { createGeoQuery } from './queries/geo.query';
 import { World } from './geo.types';
+import { isNotNullish } from '../utils/misc';
+import * as topojson from 'topojson';
 
 export interface Config {
   avgHits: number;
@@ -59,7 +61,11 @@ async function fetchWorld(): Promise<World> {
           city.continentId = continentId;
         });
       });
+      const countryGeometries = Object.values(subcontinent.countries).map(country => country.geometry).filter(isNotNullish);
+      subcontinent.geometry = countryGeometries.length ? topojson.mergeArcs(world.topology, countryGeometries) : undefined;
     });
+    const subcontinentGeometries = Object.values(continent.subcontinents).map(subcontinent => subcontinent.geometry).filter(isNotNullish);
+    continent.geometry = subcontinentGeometries.length ? topojson.mergeArcs(world.topology, subcontinentGeometries) : undefined;
   });
 
   function merge<T, K extends keyof T>(parentObject: Record<string, T>, key: K) {

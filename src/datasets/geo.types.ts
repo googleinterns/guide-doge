@@ -47,10 +47,12 @@ export interface Country extends RawCountry {
 export interface Subcontinent extends RawSubcontinent {
   continentId: string;
   countries: Record<string, Country>;
+  geometry?: MultiPolygon;
 }
 
 export interface Continent extends RawContinent {
   subcontinents: Record<string, Subcontinent>;
+  geometry?: MultiPolygon;
 }
 
 export interface World extends RawWorld {

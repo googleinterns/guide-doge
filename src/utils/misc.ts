@@ -44,8 +44,8 @@ export function waitFor(duration: number, cancel$?: Subject<unknown>) {
   });
 }
 
-export function linearScale(value: number, pivotValue: number, ratio: number) {
-  return (value - pivotValue) * ratio + pivotValue;
+export function linearScale(ratio: number, min: number, max: number) {
+  return (max - min) * ratio + min;
 }
 
 export function isNotNullish<T>(value: T): value is NonNullable<T> {

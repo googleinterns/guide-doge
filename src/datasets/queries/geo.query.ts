@@ -10,26 +10,26 @@ export enum TerritoryLevel {
   CITY,
 }
 
-export interface Territory<L extends TerritoryLevel> {
-  level: L;
+export interface Territory {
+  level: TerritoryLevel;
   id: string;
 }
 
-export interface GeoQueryOptions<L extends TerritoryLevel> {
+export interface GeoQueryOptions {
   /** The date range to filter geo data with. */
   range: [Date, Date];
   /** The territory to filter geo data with. */
-  territory?: Territory<TerritoryLevel>;
+  territory?: Territory;
   /** The territory level of each geo datum. */
-  unit: L;
+  unit: TerritoryLevel;
 }
 
-export interface GeoDatum<L extends TerritoryLevel = TerritoryLevel> {
-  territory: Territory<L>;
+export interface GeoDatum {
+  territory: Territory;
   values: MeasureValues;
 }
 
-export type GeoQuery<L extends TerritoryLevel = TerritoryLevel> = (options: GeoQueryOptions<L>) => GeoDatum<L>[];
+export type GeoQuery = (options: GeoQueryOptions) => GeoDatum[];
 
 /**
  * Create a geo query function. The query function takes GeoQueryOptions and returns an array of GeoDatum.
@@ -42,7 +42,7 @@ export function createGeoQuery<L extends TerritoryLevel = TerritoryLevel>(
   dataCube: DataCube,
   measureNames: string[],
   cities: Record<string, City>,
-): GeoQuery<L> {
+): GeoQuery {
   return queryOptions => {
     const [startDate, endDate] = queryOptions.range;
 
@@ -86,7 +86,7 @@ export function createGeoQuery<L extends TerritoryLevel = TerritoryLevel>(
   };
 }
 
-function getCityIds(cities: Record<string, City>, territory: Territory<TerritoryLevel>) {
+function getCityIds(cities: Record<string, City>, territory: Territory) {
   const idAccessor = getIdAccessor(territory.level);
   return Object.entries(cities)
     .filter(cityEntry => idAccessor(cityEntry) === territory.id)
