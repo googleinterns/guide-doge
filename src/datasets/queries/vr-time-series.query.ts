@@ -2,14 +2,14 @@ import { XYZPoint } from '../metas/types';
 import { inOneOfDateRanges } from '../../models/data-cube/filters';
 import { DAY } from '../../utils/timeUnits';
 import { DataCube } from '../../models/data-cube/data-cube.model';
-import { ResultRow } from '../../models/data-cube/types';
+import { ResultRow, Category } from '../../models/data-cube/types';
 import { unique } from '../../utils/misc';
 
 export interface VRTimeSeriesQueryOptions {
   range: [Date, Date];
 }
 
-export type VRTimeSeriesPoint = XYZPoint<number, number, number>;
+export type VRTimeSeriesPoint = XYZPoint<Category[], number, number, number>;
 
 export interface VRTimeSeriesDatum<S> {
   labels: string[];
@@ -39,8 +39,6 @@ export function createVRTimeSeriesQuery<S>(dataCube: DataCube, legendItems: Lege
     const periodOffsets = legendItems
       .map(item => item.periodOffset)
       .filter(((v): v is number => v !== undefined));
-
-      console.log(legendItems);
     const dateCategoryName = 'date';
     const duration = endDate.getTime() - startDate.getTime();
     const maxWindowSize = Math.max(0, ...windowSizes);
@@ -74,10 +72,12 @@ function createVRTimeSeriesDatum<S>(rows: ResultRow[], startDate: Date, endDate:
 
   // shift the datum points reversely by `periodOffset`
   const shiftedPoints: VRTimeSeriesPoint[] = rows.map(row => ({
+    categories: (row.categories as unknown as Category[]),
     x: row.values[measureNames[0]],
     y: row.values[measureNames[1]],
     z: row.values[measureNames[2]]
   }));
+ 
 
   // get the head point and tail points of which lie between (`startDate`, `endDate`]
   const points: VRTimeSeriesPoint[] = shiftedPoints;

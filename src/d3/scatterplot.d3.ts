@@ -30,13 +30,12 @@ export class Scatterplot{
     this.shape = shape;
   }
   init(container: HTMLElement, data: VRTimeSeriesPoint[], dataType: string){
-    console.log(data);
     this.data = data;
     this.container = container;
     this.dataType = dataType;
-   this.generatePts();
-   this.setColor('blue');
-   this.createSky('gray');
+    this.generatePts();
+    this.setColor('blue');
+    this.createSky('gray');
     this.createGridPlane();
   }
   private scaleTime(date: Date): number{
@@ -60,9 +59,9 @@ export class Scatterplot{
     // d is data at index, i within
     // select all shapes within given container
     d3.select(this.container).selectAll(this.shape).attr('position', (d, i) => {
-      const x = (d as VRTimeSeriesPoint).y - (d as VRTimeSeriesPoint).y;
-      const y = i * 5;
-      const z = -i * 10;
+      const x = (d as VRTimeSeriesPoint).x;
+      const y = (d as VRTimeSeriesPoint).y;
+      const z = (d as VRTimeSeriesPoint).z;
       return `${x} ${y} ${z}`;
     });
   }

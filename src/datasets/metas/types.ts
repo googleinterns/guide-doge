@@ -1,6 +1,7 @@
 import { LineChartMeta } from './line-chart.meta';
 import { TabbedChartsMeta } from './tabbed-charts.meta';
 import { VRScatterplotMeta } from './vr-scatter-plot.meta';
+import { Scene } from 'three';
 
 export interface BaseMeta<T extends string> {
   type: T;
@@ -27,7 +28,8 @@ export interface XYZChartMeta<T extends string, QueryT> extends DataMeta<T, Quer
   zLabel?: string;
 }
 
-export interface XYZPoint<T, U, V> {
+export interface XYZPoint<S, T, U, V> {
+  categories: S;
   x: T;
   y: U;
   z: V;
