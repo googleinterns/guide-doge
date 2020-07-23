@@ -83,6 +83,7 @@ export class Scatterplot{
   private createGridPlane()
   {
     const xGrid = document.createElement('a-entity');
+    xGrid.className = 'grids';
     xGrid.id = 'xGrid';
     this.container!.appendChild(xGrid);
     xGrid.object3D.add(new AFRAME.THREE.GridHelper(50, 50, 0xffffff, 0xffffff));
@@ -90,6 +91,7 @@ export class Scatterplot{
     d3.select(this.container).select('#xGrid').attr('rotation', '0 0 0');
 
     const yGrid = document.createElement('a-entity');
+    yGrid.className = 'grids';
     yGrid.id = 'yGrid';
     this.container!.appendChild(yGrid);
     yGrid.object3D.add(new AFRAME.THREE.GridHelper(50, 50, 0xffffff, 0xffffff));
@@ -97,6 +99,7 @@ export class Scatterplot{
     d3.select(this.container).select('#yGrid').attr('rotation', '0 0 -90');
 
     const zGrid = document.createElement('a-entity');
+    zGrid.className = 'grids';
     zGrid.id = 'zGrid';
     this.container!.appendChild(zGrid);
     zGrid.object3D.add(new AFRAME.THREE.GridHelper(50, 50, 0xffffff, 0xffffff));

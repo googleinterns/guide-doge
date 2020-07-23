@@ -30,15 +30,18 @@ describe('VR Scatter Plot', () => {
   });
 });
 
-describe('Adding VR Grids/Sky', () => {
+describe('Checking for presence of', () => {
   let element: HTMLElement;
   let scatterplot: Scatterplot;
+  let grids: HTMLCollectionOf<Element>;
 
   beforeEach( () =>  {
     element = document.createElement('a-scene');
     scatterplot = new Scatterplot('a-sphere');
+    scatterplot.init(element, [], 'vrScatter');
+    grids = element.getElementsByClassName('grids');
   });
-  it('Check for sky', () => {
+  it('aframe sky', () => {
     scatterplot.init(element, [], 'vrScatter');
     const sky = document.getElementsByTagName('a-sky');
     let skyPresent = false;
@@ -47,31 +50,19 @@ describe('Adding VR Grids/Sky', () => {
     }
     expect(skyPresent).toEqual(true);
   });
-  it('Check for xGrid', () => {
-    scatterplot.init(element, [], 'vrScatter');
-    const xGrid = document.getElementById('xGrid');
-    let xGridPresent = false;
-    if (xGrid !== null){
-      xGridPresent = true;
-    }
+
+  it('GridHelper xGrid', () => {
+    const xGridPresent = Array.from(grids).some((grid) => grid.id === 'xGrid');
     expect(xGridPresent).toEqual(true);
   });
-  it('Check for yGrid', () => {
-    scatterplot.init(element, [], 'vrScatter');
-    const yGrid = document.getElementById('yGrid');
-    let yGridPresent = false;
-    if (yGrid !== null){
-      yGridPresent = true;
-    }
+
+  it('GridHelper yGrid', () => {
+    const yGridPresent = Array.from(grids).some((grid) => grid.id === 'yGrid');
     expect(yGridPresent).toEqual(true);
   });
-  it('Check for zGrid', () => {
-    scatterplot.init(element, [], 'vrScatter');
-    const zGrid = document.getElementById('zGrid');
-    let zGridPresent = false;
-    if (zGrid !== null){
-      zGridPresent = true;
-    }
+
+  it('GridHelper zGrid', () => {
+    const zGridPresent = Array.from(grids).some((grid) => grid.id === 'zGrid');
     expect(zGridPresent).toEqual(true);
   });
 });
