@@ -14,7 +14,7 @@ export function cacheSummaries(f: () => Summary[]): () => Summary[] {
  * Create a query-summary-factory which returns the concatenation of summaries returned
  * by the input query factories. The returned function does not pre-compute the returned
  * summaries from the input queryFactories, and it does not cache the concatenated
- * sumaries. The cache and lazy evaluation need to be implemented in each input
+ * sumaries. The cache and lazy evaluation need to be implemented by each input
  * query-summary-factory individually.
  */
 export function combineQuerySummariesFactories<PointT>(
