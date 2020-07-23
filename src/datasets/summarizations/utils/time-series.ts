@@ -13,12 +13,16 @@ import { DAY, WEEK } from '../../../utils/timeUnits';
  * are sorted by the x-value (date) in ascending order.
  */
 export function groupPointsByXWeek(points: TimeSeriesPoint[]): TimeSeriesPoint[][] {
-  const weekStartOffset = 4 * DAY;
   const weekPoints: Record<string, TimeSeriesPoint[]> = {};
   points.sort(({ x: a }, { x: b }) => a.getTime() - b.getTime());
   for (const point of points) {
-    const week = Math.floor((point.x.getTime() - weekStartOffset) / WEEK);
-    weekPoints[week] = [...(weekPoints[week] ?? []), point];
+    // `weekNo` is the week number, which is computed by taking the number of
+    // weeks since `new Date(0)`. Because `new Date(0)` is Wednesday and we
+    // consider the first day of the week to be Monday, the time must be subtracted
+    // by four days when computing the week number.
+    const weekStartOffset = 4 * DAY;
+    const weekNo = Math.floor((point.x.getTime() - weekStartOffset) / WEEK);
+    weekPoints[weekNo] = [...(weekPoints[weekNo] ?? []), point];
   }
   const sortedWeekPointPairs = Object.entries(weekPoints).sort(([wa], [wb]) => Number(wa) - Number(wb));
   return sortedWeekPointPairs.map(([_, currentWeekPoints]) => currentWeekPoints);
