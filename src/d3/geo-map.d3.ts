@@ -133,7 +133,7 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
   }
 
   private handleZoomAndPan() {
-    const { width, height, data$ } = this.renderOptions;
+    const { width, height } = this.renderOptions;
     const event = d3.event as d3.D3ZoomEvent<SVGSVGElement, unknown>;
     const { transform } = event;
 
@@ -208,13 +208,15 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
     const { accessValue } = GeoMapD3;
     const { world } = this.renderOptions;
     const maxValue = data.reduce((acc, datum) => Math.max(acc, accessValue(datum)), 0);
+
     for (const datum of data) {
       const geometry = this.getGeometry(datum.territory);
       const valueRatio = accessValue(datum) / maxValue;
-      if (geometry) {
+
+      if (geometry) { // for continents, subcontinents, and countries
         const territoryPath = this.appendTerritoryPath(geometry, valueRatio);
         this.territoryPaths.push(territoryPath);
-      } else {
+      } else { // for cities
         const territoryCircle = this.appendCityCircle(world.cities[datum.territory.id], valueRatio);
         this.territoryCircles.push(territoryCircle);
       }

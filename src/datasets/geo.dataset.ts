@@ -6,7 +6,7 @@ import { createDefault } from '../utils/preferences';
 import { generateCube } from '../models/data-cube/generation';
 import { Category } from '../models/data-cube/types';
 import { createGeoQuery } from './queries/geo.query';
-import { World } from './geo.types';
+import { City, Country, Subcontinent, World } from './geo.types';
 import { isNotNullish } from '../utils/misc';
 import * as topojson from 'topojson';
 
@@ -51,30 +51,40 @@ async function fetchWorld(): Promise<World> {
 
   Object.entries(world.continents).forEach(([continentId, continent]) => {
     Object.entries(continent.subcontinents).forEach(([subcontinentId, subcontinent]) => {
+      // add ids of superordinate territories
       subcontinent.continentId = continentId;
+
       Object.entries(subcontinent.countries).forEach(([countryId, country]) => {
+        // add ids of superordinate territories
         country.subcontinentId = subcontinentId;
         country.continentId = continentId;
+
         Object.values(country.cities).forEach(city => {
+          // add ids of superordinate territories
           city.countryId = countryId;
           city.subcontinentId = subcontinentId;
           city.continentId = continentId;
         });
       });
+
+      // merge geometries of subordinate territories
       const countryGeometries = Object.values(subcontinent.countries).map(country => country.geometry).filter(isNotNullish);
       subcontinent.geometry = countryGeometries.length ? topojson.mergeArcs(world.topology, countryGeometries) : undefined;
     });
+
+    // merge geometries of subordinate territories
     const subcontinentGeometries = Object.values(continent.subcontinents).map(subcontinent => subcontinent.geometry).filter(isNotNullish);
     continent.geometry = subcontinentGeometries.length ? topojson.mergeArcs(world.topology, subcontinentGeometries) : undefined;
   });
 
-  function merge<T, K extends keyof T>(parentObject: Record<string, T>, key: K) {
+  function unwind<T, K extends keyof T>(parentObject: Record<string, T>, key: K) {
     return Object.values(parentObject).reduce((acc, object) => ({ ...acc, ...object[key] }), {} as T[K]);
   }
 
-  const subcontinents = merge(world.continents, 'subcontinents');
-  const countries = merge(subcontinents, 'countries');
-  const cities = merge(countries, 'cities');
+  // flatten hierarchical data for each dimension
+  const subcontinents: Record<string, Subcontinent> = unwind(world.continents, 'subcontinents');
+  const countries: Record<string, Country> = unwind(subcontinents, 'countries');
+  const cities: Record<string, City> = unwind(countries, 'cities');
 
   return {
     ...world,

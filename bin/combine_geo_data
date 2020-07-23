@@ -67,12 +67,10 @@ const outputPath = path.resolve(__dirname, '..', 'src', 'assets', 'world.json');
       };
     });
 
-  // write json
   const world = { continents, topology };
   fs.writeFileSync(outputPath, JSON.stringify(world), 'utf8');
 })().catch(console.error);
 
-// convert csv to json
 function csv2json(csv) {
   const [headerRow, ...rows] = csv
     .split('\r\n')

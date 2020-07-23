@@ -44,6 +44,7 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnChanges, OnDest
     if (['startDate', 'endDate', 'meta'].some(key => key in changes)) {
       const data = this.meta.queryData({
         range: [this.startDate, this.endDate],
+        // these hard-coded options will be replaced in the following PR
         territory: {
           level: TerritoryLevel.SUBCONTINENT,
           id: '151',

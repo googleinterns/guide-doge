@@ -38,7 +38,7 @@ export type GeoQuery = (options: GeoQueryOptions) => GeoDatum[];
  * @param measureNames The measures to query.
  * @param cities The mapping from city id to city object.
  */
-export function createGeoQuery<L extends TerritoryLevel = TerritoryLevel>(
+export function createGeoQuery(
   dataCube: DataCube,
   measureNames: string[],
   cities: Record<string, City>,
