@@ -24,7 +24,7 @@ export interface XYPoint<T, U> {
   y: U;
 }
 
-export interface XYZChartMeta<T extends string, QueryT> extends DataMeta<T, QueryT> {
+export interface XYZChartMeta<T extends MetaType, QueryT> extends DataMeta<T, QueryT> {
   xLabel?: string;
   yLabel?: string;
   zLabel?: string;

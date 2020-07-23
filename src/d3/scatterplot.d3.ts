@@ -1,8 +1,5 @@
 import * as AFRAME from 'aframe';
 import * as d3 from 'd3';
-import * as AFRAME from 'aframe';
-import * as THREE from 'three';
-import { TimeSeriesPoint } from '../datasets/queries/time-series.query';
 import { VRTimeSeriesPoint } from '../datasets/queries/vr-time-series.query';
 
 export interface ScatterPlotStyle {
@@ -23,6 +20,7 @@ export class Scatterplot{
   }
   
   init(container: HTMLElement, data: VRTimeSeriesPoint[], dataType: string){
+    console.log(data);
     this.data = data;
     this.dataType = dataType;
     this.container = container;

@@ -12,7 +12,7 @@ describe('VR Scatter Plot', () => {
   scatterPlotData1.push({categories: [], x: 0, y: 0, z: 0});
   
   let scatterPlotData8: VRTimeSeriesPoint[] = [];
-  for (let i = 0; i < 7; i++){
+  for (let i = 0; i < 8; i++){
     scatterPlotData8.push({categories: [],x: i * 20, y: i * 10, z: i * 5});
   }
   beforeEach( () =>  {

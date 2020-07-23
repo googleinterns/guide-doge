@@ -28,7 +28,7 @@ import { MetaType} from '../../datasets/metas/types';
 export class VRScatterPlotComponent implements OnInit {
   @Input() endDate = new Date();
   @Input() startDate = new Date(this.endDate.getTime() - 30 * DAY);
-  @Input() datasetPref: LineChartMeta;
+  @Input() datasetPref: VRScatterplotMeta;
   dataset$ = this.preferenceService.dataset$;
   DATA_PREFERENCE = DATA_PREFERENCE;
   vrScatterPlot: Scatterplot;
@@ -48,6 +48,7 @@ export class VRScatterPlotComponent implements OnInit {
     private preferenceService: PreferenceService
   ) {
     this.preferenceService = preferenceService;
+  }
 
   ngOnInit() {
     this.vrScatterPlot = new Scatterplot('a-sphere');
@@ -71,8 +72,12 @@ export class VRScatterPlotComponent implements OnInit {
       // }
       if (dataset.metas[0].type === MetaType.TABBED_CHARTS) {
         this.datasetPref = (dataset.metas[0] as any).metas[0];
-      } else if (dataset.metas[0].type === MetaType.LINE_CHART) {
-        this.datasetPref = dataset.metas[0] as LineChartMeta;
+      } 
+      // else if (dataset.metas[0].type === MetaType.LINE_CHART) {
+      //   this.datasetPref = dataset.metas[0] as LineChartMeta;
+      // } 
+      else if (dataset.metas[0].type === MetaType.SCATTER_PLOT){
+        this.datasetPref = dataset.metas[0] as VRScatterplotMeta;
       }
       this.setDataOnD3();
     });
