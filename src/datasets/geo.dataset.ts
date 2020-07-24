@@ -5,8 +5,8 @@ import { activeUserMeasure, eventCountMeasure, revenueMeasure } from '../models/
 import { createDefault } from '../utils/preferences';
 import { generateCube } from '../models/data-cube/generation';
 import { Category } from '../models/data-cube/types';
-import { createGeoQuery, TerritoryLevel } from './queries/geo.query';
-import { City, Continent, Country, RawWorld, Subcontinent, Territory, World } from './geo.types';
+import { createGeoQuery } from './queries/geo.query';
+import { City, Continent, Country, RawWorld, Subcontinent, Territory, TerritoryLevel, World } from './geo.types';
 import { isNotNullish } from '../utils/misc';
 import * as topojson from 'topojson';
 
@@ -18,6 +18,8 @@ export interface Config {
   avgSessionsPerUser: number;
   sessionsPerUserStdDev: number;
 }
+
+const { CONTINENT, SUBCONTINENT, COUNTRY, CITY } = TerritoryLevel;
 
 export const configMeta: PreferenceMeta<Config> = {
   avgHits: {
@@ -47,8 +49,6 @@ export const configMeta: PreferenceMeta<Config> = {
 };
 
 export async function fetchWorld(): Promise<World> {
-  const { CONTINENT, SUBCONTINENT, COUNTRY, CITY } = TerritoryLevel;
-
   const rawWorld = (await import('../assets/world.json')) as unknown as RawWorld;
   const world: World = {
     topology: rawWorld.topology,

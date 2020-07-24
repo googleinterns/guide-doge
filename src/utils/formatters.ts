@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { TerritoryLevel } from '../datasets/queries/geo.query';
+import { TerritoryLevel } from '../datasets/geo.types';
 
 export const formatX = d3.timeFormat('%B %d');
 

@@ -1,15 +1,8 @@
 import { betweenDates, inCities } from '../../models/data-cube/filters';
 import { DataCube } from '../../models/data-cube/data-cube.model';
 import { MeasureValues } from '../../models/data-cube/types';
-import { City, Territory, World } from '../geo.types';
+import { City, Territory, TerritoryLevel, World } from '../geo.types';
 import { isNotNullish } from '../../utils/misc';
-
-export enum TerritoryLevel {
-  CONTINENT,
-  SUBCONTINENT,
-  COUNTRY,
-  CITY,
-}
 
 export interface GeoQueryOptions {
   /** The date range to filter geo data with. */
@@ -27,6 +20,8 @@ export interface GeoDatum {
 
 export type GeoQuery = (options: GeoQueryOptions) => GeoDatum[];
 
+const { CONTINENT, SUBCONTINENT, COUNTRY, CITY } = TerritoryLevel;
+
 /**
  * Create a geo query function. The query function takes GeoQueryOptions and returns an array of GeoDatum.
  *
@@ -39,7 +34,7 @@ export function createGeoQuery(
   measureNames: string[],
   world: World,
 ): GeoQuery {
-  const cities = world[TerritoryLevel.CITY];
+  const cities = world[CITY];
   return queryOptions => {
     const [startDate, endDate] = queryOptions.range;
 
@@ -91,10 +86,10 @@ function getIdAccessor(level: TerritoryLevel): (city: City) => string {
   return city => {
     let territory: Territory = city;
     let nestedCount = [
-      TerritoryLevel.CITY,
-      TerritoryLevel.COUNTRY,
-      TerritoryLevel.SUBCONTINENT,
-      TerritoryLevel.CONTINENT,
+      CITY,
+      COUNTRY,
+      SUBCONTINENT,
+      CONTINENT,
     ].indexOf(level);
     while (nestedCount-- > 0) {
       territory = territory.parent;

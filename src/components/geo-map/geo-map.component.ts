@@ -3,17 +3,19 @@ import { GeoMapD3, RenderOptions } from '../../d3/geo-map.d3';
 import { A11yPlaceholderDirective } from '../../directives/a11y-placeholder/a11y-placeholder.directive';
 import { GeoMapMeta } from '../../datasets/metas/geo-map.meta';
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
-import { GeoDatum, TerritoryLevel } from '../../datasets/queries/geo.query';
+import { GeoDatum } from '../../datasets/queries/geo.query';
 import { DAY } from '../../utils/timeUnits';
-import { Territory, World } from '../../datasets/geo.types';
+import { Territory, TerritoryLevel, World } from '../../datasets/geo.types';
 import { humanizeMeasureName, humanizeTerritoryLevel } from '../../utils/formatters';
 import { filter, map, takeUntil } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 
 type TerritoryGroup = { level: TerritoryLevel, territories: Territory[] };
 
+const { CONTINENT, SUBCONTINENT, COUNTRY, CITY } = TerritoryLevel;
+
 const defaultDateRange: [Date, Date] = [new Date(Date.now() - 30 * DAY), new Date()];
-const defaultUnit = TerritoryLevel.COUNTRY;
+const defaultUnit = COUNTRY;
 
 @Component({
   selector: 'app-geo-map',
@@ -23,7 +25,7 @@ const defaultUnit = TerritoryLevel.COUNTRY;
 export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
   humanizeMeasureName = humanizeMeasureName;
   humanizeTerritoryLevel = humanizeTerritoryLevel;
-  territoryLevels = [TerritoryLevel.CONTINENT, TerritoryLevel.SUBCONTINENT, TerritoryLevel.COUNTRY, TerritoryLevel.CITY];
+  territoryLevels = [CONTINENT, SUBCONTINENT, COUNTRY, CITY];
 
   @ViewChild(A11yPlaceholderDirective, { static: true }) a11yPlaceholder: A11yPlaceholderDirective<GeoMapComponent>;
 

@@ -1,5 +1,11 @@
 import { GeometryCollection, MultiPolygon, Polygon, Topology } from 'topojson-specification';
-import { TerritoryLevel } from './queries/geo.query';
+
+export enum TerritoryLevel {
+  CONTINENT,
+  SUBCONTINENT,
+  COUNTRY,
+  CITY,
+}
 
 interface RawCity {
   name: string;
