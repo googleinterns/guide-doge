@@ -19,7 +19,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const smoothedPoints = exponentialMovingAverage(points);
     const trends = normalizedUniformPartiallyLinearEpsApprox(smoothedPoints, 0.01);
 
-    const applyTrendAngleWithWeight = (f: MembershipFunction) => ({ pctSpan, cone }: TimeSeriesTrend) => {
+    const applyTrendAngleWithWeight = (f: MembershipFunction) => ({ cone }: TimeSeriesTrend) => {
       const avgAngleRad = (cone.endAngleRad + cone.startAngleRad) / 2;
       return f(avgAngleRad);
     };
@@ -80,13 +80,13 @@ export function queryFactory(points: TimeSeriesPoint[]) {
           if (text === 'increasing') {
             const diff = Math.abs(points[trend.idxEnd].y - points[trend.idxStart].y);
             return {
-              text: `The traffic from ${timeStart} to ${timeEnd} incrased by ${diff}.`,
+              text: `The traffic from <b>${timeStart}</b> to <b>${timeEnd}</b> <b>increased by ${diff.toFixed(2)}</b>.`,
               validity: 1.0,
             };
           } else if (text === 'decreasing') {
             const diff = Math.abs(points[trend.idxEnd].y - points[trend.idxStart].y);
             return {
-              text: `The traffic from ${timeStart} to ${timeEnd} decreased by ${diff}.`,
+              text: `The traffic from <b>${timeStart}</b> to <b>${timeEnd}</b> <b>decreased by ${diff.toFixed(2)}</b>.`,
               validity: 1.0,
             };
           } else {
@@ -96,7 +96,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
             }
             avg /= trend.idxEnd - trend.idxStart + 1;
             return {
-              text: `The traffic from ${timeStart} to ${timeEnd} is constant around ${avg}.`,
+              text: `The traffic from <b>${timeStart}</b> to <b>${timeEnd}</b> is <b>constant around ${avg.toFixed(2)}</b>.`,
               validity: 1.0,
             };
           }
