@@ -5,8 +5,9 @@ import { Observable } from 'rxjs';
 import { GeoDatum } from '../datasets/queries/geo.query';
 import * as GeoJSON from 'geojson';
 import { GeometryCollection, MultiPolygon, Polygon } from 'topojson-specification';
-import { isNotNullish, linearScale } from '../utils/misc';
-import { City, TerritoryLevel, World } from '../datasets/geo.types';
+import { isNotNullish, linearScale, linearSquaredScale } from '../utils/misc';
+import { City, Territory, TerritoryLevel, World } from '../datasets/geo.types';
+import * as chroma from 'chroma-js';
 
 export interface RenderOptions extends BaseRenderOptions {
   world: World;
@@ -16,13 +17,14 @@ export interface RenderOptions extends BaseRenderOptions {
 const { CONTINENT, SUBCONTINENT, COUNTRY, CITY } = TerritoryLevel;
 
 export class GeoMapD3 extends BaseD3<RenderOptions> {
+  static colorBorder = '#FFFFFF';
+  static colorLand = '#EEEEEE';
   static minOpacity = .2;
   static maxOpacity = .8;
   static minRadius = 5;
   static maxRadius = 30;
   static latitudeBounds = [-84, 84];
-  static initialLatitude = (GeoMapD3.latitudeBounds[0] + GeoMapD3.latitudeBounds[1]) / 2;
-  static initialLongitude = 0;
+  static paddingScale = .9;
 
   private projection: d3.GeoProjection;
   private geoPath: d3.GeoPath;
@@ -43,12 +45,18 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
     return datum.values.activeUsers;
   }
 
-  async render() {
+  private static getColor(valueRatio: number) {
+    const { colorPrimary, colorBorder, minOpacity, maxOpacity } = GeoMapD3;
+    const opacity = linearScale(valueRatio, minOpacity, maxOpacity);
+    return chroma.scale([colorBorder, colorPrimary])(opacity).hex('rgb');
+  }
+
+  render() {
     super.render();
 
     const { data$ } = this.renderOptions;
 
-    await this.renderMap();
+    this.renderMap();
     this.renderData();
 
     data$
@@ -58,40 +66,15 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
       });
   }
 
-  private async renderMap() {
+  private renderMap() {
     const { height, width, world } = this.renderOptions;
-    const { initialLongitude, initialLatitude } = GeoMapD3;
-
-    this.projection = d3.geoMercator()
-      .rotate([-initialLongitude, 0])
-      .scale(1)
-      .translate([width / 2, height / 2]);
-
-    const { minX, maxX, minY, maxY } = this.getProjectionBounds();
-    const minScaleFactor = width / (maxX - minX);
-    this.centerY = (minY + maxY) / 2;
-
-    this.lastTransform = null;
-
-    this.zoom = d3.zoom<SVGSVGElement, unknown>().scaleExtent([minScaleFactor, 50 * minScaleFactor]);
-    this.zoom.scaleTo(this.svg, minScaleFactor);
-    this.zoom.on('zoom', this.handleZoomAndPan.bind(this));
-    this.svg.call(this.zoom);
-
-    this.projection
-      .center([initialLongitude, initialLatitude])
-      .scale(minScaleFactor);
-    this.adjustOutOfProjectionBounds();
-
-    this.geoPath = d3.geoPath()
-      .projection(this.projection);
+    const { colorLand } = GeoMapD3;
 
     this.landPath = this.svg
       .append('path')
       .attr('class', 'geo_map-land')
       .datum(topojson.feature(world.topology, world.topology.objects.land))
-      .attr('d', this.geoPath)
-      .attr('fill', '#EEE');
+      .attr('fill', colorLand);
 
     const countryGeometryCollection: GeometryCollection = {
       type: 'GeometryCollection',
@@ -102,10 +85,30 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
       .append('path')
       .attr('class', 'geo_map-boundary')
       .datum(topojson.mesh(world.topology, countryGeometryCollection, (a, b) => a !== b))
-      .attr('d', this.geoPath)
       .attr('fill', 'none')
       .attr('stroke', '#FFF')
       .attr('stroke-width', '1px');
+
+    this.projection = d3.geoMercator()
+      .scale(1)
+      .translate([width / 2, height / 2]);
+
+    const { minX, maxX, minY, maxY } = this.getProjectionBounds();
+    const minScale = width / (maxX - minX);
+    this.centerY = (minY + maxY) / 2;
+
+    this.projection
+      .rotate([0, 0])
+      .translate([width / 2, height / 2])
+      .scale(minScale);
+    this.lastTransform = null;
+
+    this.zoom = d3.zoom<SVGSVGElement, unknown>().scaleExtent([minScale, 50 * minScale]);
+    this.zoom.scaleTo(this.svg, minScale);
+    this.zoom.on('zoom', this.handleZoomAndPan.bind(this));
+    this.svg.call(this.zoom);
+
+    this.geoPath = d3.geoPath(this.projection);
   }
 
   private getProjectionBounds() {
@@ -139,61 +142,64 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
     const event = d3.event as d3.D3ZoomEvent<SVGSVGElement, unknown>;
     const { transform } = event;
 
-    const {
-      k: scale,
-      x,
-      y,
-    } = transform;
-    const {
-      k: lastScale,
-      x: lastX,
-      y: lastY,
-    } = this.lastTransform ?? transform;
-    const [minScale] = this.zoom.scaleExtent();
+    if (this.lastTransform) {
+      const {
+        k: scale,
+        x,
+        y,
+      } = transform;
+      const {
+        k: lastScale,
+        x: lastX,
+        y: lastY,
+      } = this.lastTransform;
+      const [minScale] = this.zoom.scaleExtent();
 
-    const translation = this.projection.translate();
-    const translationX = translation[0];
-    let translationY = translation[1];
-    let [longitude] = this.projection.rotate();
+      const translation = this.projection.translate();
+      const translationX = translation[0];
+      let translationY = translation[1];
+      let [longitude] = this.projection.rotate();
 
-    function getDeltaLongitude(deltaX: number) {
-      return 360 * (deltaX / width) * (minScale / scale);
+      function getDeltaLongitude(deltaX: number) {
+        return 360 * (deltaX / width) * (minScale / scale);
+      }
+
+      if (scale !== lastScale) {
+        const [cursorX, cursorY] = d3.mouse(this.svgElement);
+        const scaleRatio = scale / lastScale;
+
+        const deltaX = cursorX - width / 2;
+        const pivotLongitude = longitude + getDeltaLongitude(deltaX);
+        longitude = linearScale(scaleRatio, pivotLongitude, longitude);
+
+        const pivotY = this.centerY + (cursorY - height / 2) * (minScale / scale);
+        translationY = linearScale(scaleRatio, pivotY, translationY);
+      } else {
+        const deltaX = x - lastX;
+        const deltaY = y - lastY;
+
+        longitude += getDeltaLongitude(deltaX);
+        translationY += deltaY;
+      }
+
+      this.projection
+        .rotate([longitude, 0])
+        .translate([translationX, translationY])
+        .scale(scale);
     }
-
-    if (scale !== lastScale) {
-      const [cursorX, cursorY] = d3.mouse(this.svgElement);
-      const scaleRatio = scale / lastScale;
-
-      const deltaX = cursorX - width / 2;
-      const pivotLongitude = longitude + getDeltaLongitude(deltaX);
-      longitude = linearScale(scaleRatio, pivotLongitude, longitude);
-
-      const pivotY = this.centerY + (cursorY - height / 2) * (minScale / scale);
-      translationY = linearScale(scaleRatio, pivotY, translationY);
-    } else {
-      const deltaX = x - lastX;
-      const deltaY = y - lastY;
-
-      longitude += getDeltaLongitude(deltaX);
-      translationY += deltaY;
-    }
-
-    this.projection
-      .rotate([longitude, 0])
-      .translate([translationX, translationY])
-      .scale(scale);
 
     this.adjustOutOfProjectionBounds();
-
+    this.updateMap();
     this.lastTransform = transform;
-
-    [this.landPath, this.boundaryPath, ...this.territoryPaths]
-      .forEach(path => path.attr('d', this.geoPath));
-    this.territoryCircles
-      .forEach(circle => circle.attr('transform', this.geoTransform));
   }
 
   private updateMap() {
+    [
+      this.landPath,
+      this.boundaryPath,
+      ...(this.territoryPaths ?? []),
+    ].forEach(path => path.attr('d', this.geoPath));
+    this.territoryCircles?.forEach(circle => circle.attr('transform', this.geoTransform));
   }
 
   private renderData() {
@@ -228,28 +234,26 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
   }
 
   private appendTerritoryPath(geometry: Polygon | MultiPolygon, valueRatio: number) {
-    const { colorPrimary, minOpacity, maxOpacity } = GeoMapD3;
+    const { colorBorder } = GeoMapD3;
     const { world } = this.renderOptions;
     return this.dataG
       .append('path')
       .attr('class', 'geo_map-territory')
       .datum(topojson.feature(world.topology, geometry))
       .attr('d', this.geoPath)
-      .attr('fill', colorPrimary)
-      .attr('opacity', linearScale(valueRatio, minOpacity, maxOpacity))
-      .attr('stroke', '#FFF');
+      .attr('fill', GeoMapD3.getColor(valueRatio))
+      .attr('stroke', colorBorder);
   }
 
   private appendCityCircle(city: City, valueRatio: number) {
-    const { colorPrimary, minOpacity, maxOpacity, minRadius, maxRadius } = GeoMapD3;
+    const { colorBorder, minRadius, maxRadius } = GeoMapD3;
     return this.dataG
       .append('circle')
       .attr('class', 'geo_map-city')
       .datum(city)
       .attr('transform', this.geoTransform)
-      .attr('r', linearScale(valueRatio, minRadius, maxRadius))
-      .attr('opacity', linearScale(valueRatio, minOpacity, maxOpacity))
-      .attr('fill', colorPrimary)
-      .attr('stroke', '#FFF');
+      .attr('r', linearSquaredScale(valueRatio, minRadius, maxRadius))
+      .attr('fill', GeoMapD3.getColor(valueRatio))
+      .attr('stroke', colorBorder);
   }
 }
