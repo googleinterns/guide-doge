@@ -3,11 +3,12 @@
 :host {
   display: flex;
   flex-direction: column;
+  border-radius: 2px;
+  overflow: hidden;
 
   .svg-wrapper {
     box-sizing: content-box;
     position: relative;
-    margin: 1.5rem;
 
     svg {
       display: block;
