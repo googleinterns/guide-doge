@@ -25,6 +25,38 @@ export function groupPointsByXWeek(points: TimeSeriesPoint[]): TimeSeriesPoint[]
   return sortedWeekPointPairs.map(([_, currentWeekPoints]) => currentWeekPoints);
 }
 
+export function exponentialMovingAverage(points: TimeSeriesPoint[], alpha = 0.4): TimeSeriesPoint[] {
+  const N = points.length;
+  const ys = points.map(({ y }) => y);
+
+  const Ss = new Array(N).fill(0);
+  for (let i = 0; i < N; i++) {
+    Ss[i] = alpha * ys[i] + (1.0 - alpha) * (Ss[i - 1] ?? ys[i]);
+  }
+
+  const smoothedPoints = Ss.map((S, i) => ({
+    x: points[i].x,
+    y: S,
+  }));
+  return smoothedPoints;
+}
+
+export function cumulativeMovingAverage(points: TimeSeriesPoint[]): TimeSeriesPoint[] {
+  const N = points.length;
+  const ys = points.map(({ y }) => y);
+
+  const cmas = new Array(N).fill(0);
+  for (let i = 0; i < N; i++) {
+    cmas[i] = (ys[i] + i * (cmas[i - 1] ?? 0)) / (i + 1);
+  }
+
+  const smoothedPoints = cmas.map((cma, i) => ({
+    x: points[i].x,
+    y: cmas[i],
+  }));
+  return smoothedPoints;
+}
+
 export function kalmanSmoothing(points: TimeSeriesPoint[]): TimeSeriesPoint[] {
   const N = points.length;
   const zs = points.map(({ y }) => y);
