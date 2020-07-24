@@ -114,14 +114,16 @@ export interface Row {
   values: number[];
 }
 
+export type MeasureValues = Record<string, number>;
+
 /**
  * The data returned from a query to a cube. The category and measure values
  * are stored in a map keyed on the name of the respective category or
  * dimension.
  */
 export interface ResultRow {
-  categories: Record<string, string | number | Date> & { date: Date };
-  values: Record<string, number>;
+  categories: Record<string, string | number | Date> & { date: Date, city: string };
+  values: MeasureValues;
 }
 
 export interface QueryOptions {

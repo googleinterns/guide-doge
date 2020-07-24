@@ -1,6 +1,9 @@
 import * as d3 from 'd3';
 import { BaseD3, RenderOptions as BaseRenderOptions } from './base.d3';
 import * as topojson from 'topojson';
+import { GeometryCollection, Topology } from 'topojson-specification';
+
+type WorldTopology = Topology<{ land: GeometryCollection, countries: GeometryCollection }>;
 
 export interface RenderOptions extends BaseRenderOptions {
   topoJsonUrl: string;
@@ -24,7 +27,7 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
       .projection(projection);
     const graticule = d3.geoGraticule();
 
-    const world = await d3.json(topoJsonUrl);
+    const world = await d3.json(topoJsonUrl) as WorldTopology;
 
     const landPath = this.svg
       .append('path')
