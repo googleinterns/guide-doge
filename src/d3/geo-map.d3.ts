@@ -5,8 +5,9 @@ import { Observable } from 'rxjs';
 import { GeoDatum } from '../datasets/queries/geo.query';
 import * as GeoJSON from 'geojson';
 import { GeometryCollection, MultiPolygon, Polygon } from 'topojson-specification';
-import { isNotNullish, linearScale } from '../utils/misc';
+import { isNotNullish, linearScale, linearSquaredScale } from '../utils/misc';
 import { City, TerritoryLevel, World } from '../datasets/geo.types';
+import * as chroma from 'chroma-js';
 
 export interface RenderOptions extends BaseRenderOptions {
   world: World;
@@ -16,6 +17,8 @@ export interface RenderOptions extends BaseRenderOptions {
 const { CONTINENT, SUBCONTINENT, COUNTRY, CITY } = TerritoryLevel;
 
 export class GeoMapD3 extends BaseD3<RenderOptions> {
+  static colorBorder = '#FFFFFF';
+  static colorLand = '#EEEEEE';
   static minOpacity = .2;
   static maxOpacity = .8;
   static minRadius = 5;
@@ -60,7 +63,7 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
 
   private async renderMap() {
     const { height, width, world } = this.renderOptions;
-    const { initialLongitude, initialLatitude } = GeoMapD3;
+    const { colorLand, initialLongitude, initialLatitude } = GeoMapD3;
 
     this.projection = d3.geoMercator()
       .rotate([-initialLongitude, 0])
@@ -91,7 +94,7 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
       .attr('class', 'geo_map-land')
       .datum(topojson.feature(world.topology, world.topology.objects.land))
       .attr('d', this.geoPath)
-      .attr('fill', '#EEE');
+      .attr('fill', colorLand);
 
     const countryGeometryCollection: GeometryCollection = {
       type: 'GeometryCollection',
@@ -228,28 +231,32 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
   }
 
   private appendTerritoryPath(geometry: Polygon | MultiPolygon, valueRatio: number) {
-    const { colorPrimary, minOpacity, maxOpacity } = GeoMapD3;
+    const { colorBorder } = GeoMapD3;
     const { world } = this.renderOptions;
     return this.dataG
       .append('path')
       .attr('class', 'geo_map-territory')
       .datum(topojson.feature(world.topology, geometry))
       .attr('d', this.geoPath)
-      .attr('fill', colorPrimary)
-      .attr('opacity', linearScale(valueRatio, minOpacity, maxOpacity))
-      .attr('stroke', '#FFF');
+      .attr('fill', this.getColor(valueRatio))
+      .attr('stroke', colorBorder);
   }
 
   private appendCityCircle(city: City, valueRatio: number) {
-    const { colorPrimary, minOpacity, maxOpacity, minRadius, maxRadius } = GeoMapD3;
+    const { colorBorder, minRadius, maxRadius } = GeoMapD3;
     return this.dataG
       .append('circle')
       .attr('class', 'geo_map-city')
       .datum(city)
       .attr('transform', this.geoTransform)
-      .attr('r', linearScale(valueRatio, minRadius, maxRadius))
-      .attr('opacity', linearScale(valueRatio, minOpacity, maxOpacity))
-      .attr('fill', colorPrimary)
-      .attr('stroke', '#FFF');
+      .attr('r', linearSquaredScale(valueRatio, minRadius, maxRadius))
+      .attr('fill', this.getColor(valueRatio))
+      .attr('stroke', colorBorder);
+  }
+
+  private getColor(valueRatio: number) {
+    const { colorPrimary, colorBorder, minOpacity, maxOpacity } = GeoMapD3;
+    const opacity = linearScale(valueRatio, minOpacity, maxOpacity);
+    return chroma.scale([colorBorder, colorPrimary])(opacity).hex('rgb');
   }
 }
