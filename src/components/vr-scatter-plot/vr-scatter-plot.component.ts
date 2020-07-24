@@ -44,12 +44,12 @@ export class VRScatterPlotComponent implements OnInit {
     private preferenceService: PreferenceService
   ) {
     this.preferenceService = preferenceService;
+    this.vrScatterPlot = new Scatterplot('a-sphere');
+    this.dataService = new DataService(this.preferenceService);
   }
 
   ngOnInit() {
-    this.vrScatterPlot = new Scatterplot('a-sphere');
-    const dataService = new DataService(this.preferenceService);
-    dataService.dataset$
+    this.dataService.dataset$
     .pipe(takeUntil(this.destroy$))
     .subscribe(dataset => {
       // componentMetas is initialized to different dataset metas - will help funnel dataset
@@ -74,7 +74,7 @@ export class VRScatterPlotComponent implements OnInit {
     }))
     .subscribe(this.datum$);
     // this.vrScatterPlot.init(this.ascene.nativeElement, this.datum$.value.points, this.datasetPref.type);
-    this.vrScatterPlot.init(document.querySelector('a-scene'), this.datum$.value.points, 'line');
+    this.vrScatterPlot.init(document.querySelector('a-scene'), this.datum$.value.points, MetaType.SCATTER_PLOT);
     console.log(this.datasetPref.type);
   }
 

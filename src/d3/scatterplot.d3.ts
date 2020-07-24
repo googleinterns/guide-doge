@@ -1,6 +1,8 @@
 import * as AFRAME from 'aframe';
 import * as d3 from 'd3';
 import { VRPoint } from '../datasets/queries/vr.query';
+import { MetaType } from '../datasets/metas/types';
+
 
 export interface ScatterPlotStyle {
   color: string | number;
@@ -12,14 +14,12 @@ export class Scatterplot{
     private shape: string;
     private container: HTMLElement | null;
     timeScale: d3.ScaleTime<number, number>;
-
-    dataType: string;
+    dataType: MetaType;
 
   constructor(shape: string) {
     this.shape = shape;
   }
-  init(container: HTMLElement, data: VRPoint[], dataType: string){
-    console.log(data);
+  init(container: HTMLElement, data: VRPoint[], dataType: MetaType){
     this.data = data;
     this.dataType = dataType;
     this.container = container;
