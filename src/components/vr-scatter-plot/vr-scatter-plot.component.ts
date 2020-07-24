@@ -3,19 +3,15 @@ import { Scatterplot } from '../../d3/scatterplot.d3';
 import { PreferenceService } from '../../services/preference/preference.service';
 import { DataService } from '../../services/data/data.service';
 import { Meta } from '../../datasets/metas/types';
-import { LineChartDatum} from '../line-chart/line-chart.component';
 import { ScatterPlotStyle as ScatterPlotLegendItemStyle } from '../../d3/scatterplot.d3';
 import { VRScatterplotMeta } from '../../datasets/metas/vr-scatter-plot.meta';
-import { LineChartMeta } from '../../datasets/metas/line-chart.meta';
-import { TimeSeriesDatum, TimeSeriesQueryOptions } from '../../datasets/queries/time-series.query';
-import { VRTimeSeriesDatum,VRTimeSeriesQueryOptions } from '../../datasets/queries/vr-time-series.query';
+import { VRDatum, VRQueryOptions } from '../../datasets/queries/vr.query';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { DAY } from '../../utils/timeUnits';
 import { map, takeUntil } from 'rxjs/operators';
 import { DATA_PREFERENCE } from '../../i18n';
 import 'aframe';
-import { datasets } from '../../datasets';
-export type VRScatterplotDatum = VRTimeSeriesDatum<ScatterPlotLegendItemStyle>;
+export type VRScatterplotDatum = VRDatum<ScatterPlotLegendItemStyle>;
 import { MetaType} from '../../datasets/metas/types';
 
 
@@ -28,12 +24,12 @@ import { MetaType} from '../../datasets/metas/types';
 export class VRScatterPlotComponent implements OnInit {
   @Input() endDate = new Date();
   @Input() startDate = new Date(this.endDate.getTime() - 30 * DAY);
-  @Input() datasetPref: VRScatterplotMeta;
+  datasetPref: VRScatterplotMeta;
+  vrScatterPlot: Scatterplot;
   dataset$ = this.preferenceService.dataset$;
   DATA_PREFERENCE = DATA_PREFERENCE;
-  vrScatterPlot: Scatterplot;
   componentMetas: Meta[];
-  queryOptions$ = new BehaviorSubject<VRTimeSeriesQueryOptions>({
+  queryOptions$ = new BehaviorSubject<VRQueryOptions>({
     range: [this.startDate, this.endDate],
   });
   datum$ = new BehaviorSubject<VRScatterplotDatum>({
@@ -60,23 +56,9 @@ export class VRScatterPlotComponent implements OnInit {
       this.componentMetas = dataset.metas;
       // dataset.metas[0].type = 'tabbed' and dataset.metas[1] = 'line' if chosen UserWhiteNoise
       // dataset.metas[0] - 'line' if Dummy chosen
-      // if ((dataset.metas[0] as Meta).type === 'tabbed') {
-      //    this.datasetPref = (dataset.metas[0] as any).metas[0];
-      //   // this.exitVR = true;
-      //  } 
-      //  else { 
-      //      if ((dataset.metas[0] as Meta).type === 'line')
-      //        this.datasetPref = dataset.metas[0] as LineChartMeta;
-//            if ((dataset.metas[0] as Meta).type === 'vrScatter')
-//              this.datasetPref = dataset.metas[0] as VRScatterplotMeta;
-      // }
       if (dataset.metas[0].type === MetaType.TABBED_CHARTS) {
         this.datasetPref = (dataset.metas[0] as any).metas[0];
-      } 
-      // else if (dataset.metas[0].type === MetaType.LINE_CHART) {
-      //   this.datasetPref = dataset.metas[0] as LineChartMeta;
-      // } 
-      else if (dataset.metas[0].type === MetaType.SCATTER_PLOT){
+      } else if (dataset.metas[0].type === MetaType.SCATTER_PLOT){
         this.datasetPref = dataset.metas[0] as VRScatterplotMeta;
       }
       this.setDataOnD3();

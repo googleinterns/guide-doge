@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { VRScatterPlotComponent } from './vr-scatter-plot.component';
-import { MatCardModule } from '@angular/material/card';
 import { Scatterplot } from '../../d3/scatterplot.d3';
 import { DataService } from '../../services/data/data.service';
 import { PreferenceService } from '../../services/preference/preference.service';
@@ -8,7 +7,7 @@ import { PreferenceService } from '../../services/preference/preference.service'
 describe('VRScatterplotComponent', () => {
   let fixture: ComponentFixture<VRScatterPlotComponent>;
   let component: VRScatterPlotComponent;
-  let scatterplotD3: Scatterplot;
+  let scatterPlotD3: Scatterplot;
   let preferenceService: PreferenceService;
   let dataService: DataService;
 
@@ -17,9 +16,6 @@ describe('VRScatterplotComponent', () => {
     dataService = new DataService(preferenceService);
 
     TestBed.configureTestingModule({
-      imports: [
-        MatCardModule,
-      ],
       declarations: [
         VRScatterPlotComponent,
       ],
@@ -30,15 +26,15 @@ describe('VRScatterplotComponent', () => {
     });
     fixture = TestBed.createComponent(VRScatterPlotComponent);
     component = fixture.componentInstance;
-    scatterplotD3 = component.vrScatterPlot;
+    // tslint:disable-next-line:no-string-literal
+    scatterPlotD3 = component['vrScatterPlot'];
   });
-
   it('should instantiate.', () => {
     expect(component).toBeInstanceOf(VRScatterPlotComponent);
   });
   it('should render d3 on init.', () => {
-    spyOn(scatterplotD3, 'init');
+    spyOn(scatterPlotD3, 'init');
     component.ngOnInit();
-    expect(scatterplotD3.init).toHaveBeenCalled();
+    expect(scatterPlotD3.init).toHaveBeenCalled();
   });
 });

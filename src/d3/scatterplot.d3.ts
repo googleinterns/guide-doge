@@ -1,14 +1,14 @@
 import * as AFRAME from 'aframe';
 import * as d3 from 'd3';
-import { VRTimeSeriesPoint } from '../datasets/queries/vr-time-series.query';
+import { VRPoint } from '../datasets/queries/vr.query';
 
 export interface ScatterPlotStyle {
   color: string | number;
-  shape: string
+  shape: string;
 }
 
 export class Scatterplot{
-    private data: VRTimeSeriesPoint[];
+    private data: VRPoint[];
     private shape: string;
     private container: HTMLElement | null;
     timeScale: d3.ScaleTime<number, number>;
@@ -18,8 +18,7 @@ export class Scatterplot{
   constructor(shape: string) {
     this.shape = shape;
   }
-  
-  init(container: HTMLElement, data: VRTimeSeriesPoint[], dataType: string){
+  init(container: HTMLElement, data: VRPoint[], dataType: string){
     console.log(data);
     this.data = data;
     this.dataType = dataType;
@@ -31,30 +30,21 @@ export class Scatterplot{
     this.createGridPlane();
   }
   private scaleTime(date: Date): number{
-    console.log(this.data[0].x);
-    console.log(this.data[this.data.length -1].x);
     const startTime = this.data[0].x;
-    const endTime = this.data[this.data.length -1].x;
+    const endTime = this.data[this.data.length - 1].x;
     this.timeScale = d3.scaleTime().domain([startTime, endTime]).rangeRound([0, 31]);
-    console.log(this.timeScale(date)); 
     return this.timeScale(date);
   }
 
   private generatePts() {
-    // create a scale so that there is correspondence between data set and screen render
-    // const hscale = d3.scaleLinear();
-    // hscale needs to be reassessed - this.data not of type number - need to write function to return max of each dimension
-    // hscale.domain([0, d3.max(this.data)]       // max of dataset
-    // .range([0, 10]);                                      // linear mapping of data set values to values from 0 to 10
      // enter identifies any DOM elements to be added when # array elements doesn't match
     d3.select(this.container).selectAll(this.shape).data(this.data).enter().append(this.shape);
     // d is data at index, i within
     // select all shapes within given container
     d3.select(this.container).selectAll(this.shape).attr('position', (d, i) => {
-
-      const x = (d as VRTimeSeriesPoint).x;
-      const y = (d as VRTimeSeriesPoint).y;
-      const z = (d as VRTimeSeriesPoint).z;
+      const x = (d as VRPoint).x;
+      const y = (d as VRPoint).y;
+      const z = (d as VRPoint).z;
       return `${x} ${y} ${z}`;
     });
   }
@@ -63,7 +53,6 @@ export class Scatterplot{
       return color;
     });
   }
- 
   private createGridPlane()
   {
     const xGrid = document.createElement('a-entity');
@@ -93,7 +82,6 @@ export class Scatterplot{
     d3.select(this.container).select('#zGrid').attr('position', '0 0 0');
     d3.select(this.container).select('#zGrid').attr('rotation', '-90 0 0');
   }
-    
   private createSky(color: string | number){
     const sky = document.createElement('a-sky');
     sky.id = 'sky';

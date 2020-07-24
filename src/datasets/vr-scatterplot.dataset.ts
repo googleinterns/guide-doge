@@ -9,7 +9,7 @@ import {
 } from '../models/data-cube/presets';
 import { generateCube } from '../models/data-cube/generation';
 import { humanizeMeasureName } from '../utils/formatters';
-import { createVRTimeSeriesQuery } from './queries/vr-time-series.query';
+import { createVRQuery } from './queries/vr.query';
 import { createVRScatterplotMeta } from './metas/vr-scatter-plot.meta';
 import { createTabbedChartsMeta } from './metas/tabbed-charts.meta';
 import { PreferenceMeta } from '../services/preference/types';
@@ -64,12 +64,11 @@ export function create(config: Config): Dataset {
 
   const vrScatterplotMeta = createVRScatterplotMeta(
       'VR Scatterplot',
-      createVRTimeSeriesQuery(dataCube, [{
+      createVRQuery(dataCube, [{
           labels: ['Active User', 'Revenue', 'Event Count'],
           measureNames: ['activeUsers', 'revenue', 'eventCount'],
       }])
-  )
-  
+  );
   const metas = [
     vrScatterplotMeta
   ];

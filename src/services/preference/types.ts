@@ -24,7 +24,9 @@ export type PreferenceMeta<T> = {
   [K in keyof T]: PreferenceItemMeta;
 };
 
-export type DatasetPreference = UserWGNDatasetPreference | DummyDatasetPreference | VRScatterplotPreference | BaseDatasetPreference<string, Preference>;
+export type DatasetPreference =
+  UserWGNDatasetPreference | DummyDatasetPreference |
+  VRScatterplotPreference | BaseDatasetPreference<string, Preference>;
 
 export type BaseDatasetPreference<T extends string, U> = { name: T } & U;
 
