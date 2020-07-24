@@ -6,7 +6,7 @@ import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
 import { GeoDatum } from '../../datasets/queries/geo.query';
 import { DAY } from '../../utils/timeUnits';
 import { Territory, TerritoryLevel, World } from '../../datasets/geo.types';
-import { humanizeMeasureName, humanizeTerritoryLevel } from '../../utils/formatters';
+import { formatY, humanizeMeasureName, humanizeTerritoryLevel } from '../../utils/formatters';
 import { filter, map, takeUntil } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 
@@ -25,6 +25,7 @@ const defaultUnit = COUNTRY;
 export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
   humanizeMeasureName = humanizeMeasureName;
   humanizeTerritoryLevel = humanizeTerritoryLevel;
+  formatY = formatY;
   territoryLevels = [CONTINENT, SUBCONTINENT, COUNTRY, CITY];
 
   @ViewChild(A11yPlaceholderDirective, { static: true }) a11yPlaceholder: A11yPlaceholderDirective<GeoMapComponent>;
@@ -110,6 +111,14 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
   getTerritoryName = (territory: Territory) => {
     return territory?.name;
   };
+
+  handleClickRow(datum: GeoDatum) {
+    const { territory } = datum;
+    this.territory = territory;
+    if (territory.level === this.unit) {
+      this.unit = Math.min(this.unit + 1, CITY);
+    }
+  }
 
   async ngOnInit() {
     this.world = this.meta.world;

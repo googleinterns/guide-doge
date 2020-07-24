@@ -21,7 +21,7 @@
       <input type="text" matInput placeholder="Filter by Name" [matAutocomplete]="autoGroup"
              [formControl]="keywordControl">
       <mat-autocomplete #autoGroup="matAutocomplete" [displayWith]="getTerritoryName"
-                        (optionSelected)="territory=$event.option.value" autoActiveFirstOption>
+                        (optionSelected)="territory = $event.option.value" autoActiveFirstOption>
         <mat-optgroup *ngFor="let territoryGroup of filteredTerritoryGroups$ | async"
                       [label]="humanizeTerritoryLevel(territoryGroup.level)">
           <mat-option *ngFor="let territory of territoryGroup.territories"
@@ -34,16 +34,22 @@
   </div>
   <table mat-table [dataSource]="data" class="table">
     <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef>{{TERRITORY_LEVEL}}</th>
+      <th mat-header-cell *matHeaderCellDef>
+        {{TERRITORY_LEVEL}}
+      </th>
       <td mat-cell *matCellDef="let datum">
-        <a (click)="territory = datum.territory">
+        <a (click)="handleClickRow(datum)">
           {{datum.territory.name}}
         </a>
       </td>
     </ng-container>
     <ng-container *ngFor="let measureName of measureNames" [matColumnDef]="measureName">
-      <th mat-header-cell *matHeaderCellDef>{{humanizeMeasureName(measureName)}}</th>
-      <td mat-cell *matCellDef="let datum">{{datum.values[measureName]}}</td>
+      <th mat-header-cell *matHeaderCellDef>
+        {{humanizeMeasureName(measureName)}}
+      </th>
+      <td mat-cell *matCellDef="let datum">
+        {{formatY(datum.values[measureName])}}
+      </td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let datum; columns: displayedColumns;"></tr>

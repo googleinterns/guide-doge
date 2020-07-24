@@ -68,10 +68,12 @@ export function createGeoQuery(
       }
     }
 
-    return Object.entries(rowGroups).map(([id, values]) => ({
-      territory: world[queryOptions.unit][id],
-      values,
-    }));
+    return Object.entries(rowGroups)
+      .map(([id, values]) => ({
+        territory: world[queryOptions.unit][id],
+        values,
+      }))
+      .sort((a, b) => b.values.activeUsers - a.values.activeUsers);
   };
 }
 
