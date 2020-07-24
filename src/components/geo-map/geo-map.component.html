@@ -1,9 +1,9 @@
 <div class="hierarchy-wrapper">
-  <a class="hierarchy-territory" (click)="territory = null">
+  <a class="hierarchy-territory" (click)="filteringTerritory = null">
     All
   </a>
   <a class="hierarchy-territory" *ngFor="let hierarchyTerritory of hierarchyTerritories"
-     (click)="territory = hierarchyTerritory">
+     (click)="filteringTerritory = hierarchyTerritory">
     {{hierarchyTerritory.name}}
   </a>
 </div>
@@ -21,7 +21,7 @@
       <input type="text" matInput placeholder="Filter by Name" [matAutocomplete]="autoGroup"
              [formControl]="keywordControl">
       <mat-autocomplete #autoGroup="matAutocomplete" [displayWith]="getTerritoryName"
-                        (optionSelected)="territory = $event.option.value" autoActiveFirstOption>
+                        (optionSelected)="filteringTerritory = $event.option.value" autoActiveFirstOption>
         <mat-optgroup *ngFor="let territoryGroup of filteredTerritoryGroups$ | async"
                       [label]="humanizeTerritoryLevel(territoryGroup.level)">
           <mat-option *ngFor="let territory of territoryGroup.territories"

@@ -41,7 +41,7 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
   data$ = new BehaviorSubject<GeoDatum[]>([]);
   geoMapD3: GeoMapD3;
   range$ = new BehaviorSubject(defaultDateRange);
-  territory$ = new BehaviorSubject<Territory | null>(null);
+  filteringTerritory$ = new BehaviorSubject<Territory | null>(null);
   unit$ = new BehaviorSubject(defaultUnit);
   private destroy$ = new Subject();
 
@@ -82,30 +82,30 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
     this.unit$.next(unit);
   }
 
-  get territory() {
-    return this.territory$.value;
+  get filteringTerritory() {
+    return this.filteringTerritory$.value;
   }
 
-  set territory(territory: Territory | null) {
-    this.territory$.next(territory);
+  set filteringTerritory(territory: Territory | null) {
+    this.filteringTerritory$.next(territory);
   }
 
   get hierarchyTerritories() {
     const territories: Territory[] = [];
-    let { territory } = this;
-    while (territory) {
-      territories.unshift(territory);
-      territory = territory.parent;
+    let { filteringTerritory } = this;
+    while (filteringTerritory) {
+      territories.unshift(filteringTerritory);
+      filteringTerritory = filteringTerritory.parent;
     }
     return territories;
   }
 
   get subordinateTerritoryLevels() {
-    const { territory } = this;
-    if (!territory) {
+    const { filteringTerritory } = this;
+    if (!filteringTerritory) {
       return this.territoryLevels;
     }
-    return this.territoryLevels.filter(level => level >= territory.level);
+    return this.territoryLevels.filter(level => level >= filteringTerritory.level);
   }
 
   getTerritoryName = (territory: Territory) => {
@@ -114,13 +114,13 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
 
   handleClickRow(datum: GeoDatum) {
     const { territory } = datum;
-    this.territory = territory;
+    this.filteringTerritory = territory;
     if (territory.level === this.unit) {
       this.unit = Math.min(this.unit + 1, CITY);
     }
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.world = this.meta.world;
 
     const maxSuggestionsPerLevel = 10;
@@ -138,8 +138,8 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
       }));
 
     this.geoMapD3 = new GeoMapD3(this);
-    await this.geoMapD3.render();
-    combineLatest([this.range$, this.territory$, this.unit$])
+    this.geoMapD3.render();
+    combineLatest([this.range$, this.filteringTerritory$, this.unit$])
       .pipe(takeUntil(this.destroy$))
       .pipe(map(([range, territory, unit]) => this.meta.queryData({ range, territory, unit })))
       .subscribe(this.data$);
