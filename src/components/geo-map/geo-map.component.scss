@@ -6,7 +6,23 @@
   border-radius: 2px;
   overflow: hidden;
 
+  .hierarchy-wrapper {
+    @include card-section;
+    //padding: .5rem 1.5rem;
+
+    .hierarchy-territory {
+      &:not(:last-child):after {
+        white-space: pre;
+        content: " > ";
+        color: $color-font;
+        font-weight: 300;
+      }
+    }
+  }
+
   .svg-wrapper {
+    @include card-section;
+    padding: 0;
     box-sizing: content-box;
     position: relative;
 
@@ -17,7 +33,7 @@
     }
   }
 
-  .table-container {
+  .table-wrapper {
     @include card-section;
     display: flex;
     flex-direction: column;
@@ -43,9 +59,5 @@
     display: flex;
     flex-direction: column;
     font-size: $font-size-small;
-
-    a {
-      color: mat-color($guide-doge-primary);
-    }
   }
 }

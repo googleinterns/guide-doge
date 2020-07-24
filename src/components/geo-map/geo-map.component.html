@@ -1,7 +1,16 @@
+<div class="hierarchy-wrapper">
+  <a class="hierarchy-territory" (click)="territory = null">
+    All
+  </a>
+  <a class="hierarchy-territory" *ngFor="let hierarchyTerritory of hierarchyTerritories"
+     (click)="territory = hierarchyTerritory">
+    {{hierarchyTerritory.name}}
+  </a>
+</div>
 <div class="svg-wrapper">
   <svg></svg>
 </div>
-<div class="table-container">
+<div class="table-wrapper">
   <div class="navigator">
     <mat-chip-list aria-label="Territory Unit">
       <mat-chip *ngFor="let level of territoryLevels" [selected]="unit === level" (click)="unit = level">
@@ -9,7 +18,7 @@
       </mat-chip>
     </mat-chip-list>
     <mat-form-field class="filter">
-      <input type="text" matInput placeholder="Filter by Name" required [matAutocomplete]="autoGroup"
+      <input type="text" matInput placeholder="Filter by Name" [matAutocomplete]="autoGroup"
              [formControl]="keywordControl">
       <mat-autocomplete #autoGroup="matAutocomplete" [displayWith]="getTerritoryName"
                         (optionSelected)="territory=$event.option.value" autoActiveFirstOption>
@@ -26,14 +35,18 @@
   <table mat-table [dataSource]="data" class="table">
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef>{{TERRITORY_LEVEL}}</th>
-      <td mat-cell *matCellDef="let datum">{{datum.territory.name}}</td>
+      <td mat-cell *matCellDef="let datum">
+        <a (click)="territory = datum.territory">
+          {{datum.territory.name}}
+        </a>
+      </td>
     </ng-container>
     <ng-container *ngFor="let measureName of measureNames" [matColumnDef]="measureName">
       <th mat-header-cell *matHeaderCellDef>{{humanizeMeasureName(measureName)}}</th>
-      <td mat-cell *matCellDef="let datum"> {{datum.values[measureName]}} </td>
+      <td mat-cell *matCellDef="let datum">{{datum.values[measureName]}}</td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-row *matRowDef="let datum; columns: displayedColumns;"></tr>
   </table>
 </div>
 <ng-template appA11yPlaceholder></ng-template>

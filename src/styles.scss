@@ -60,3 +60,9 @@ kbd {
   padding: 2px 4px;
   white-space: nowrap;
 }
+
+a {
+  color: mat-color($guide-doge-primary);
+  font-weight: 500;
+  cursor: pointer;
+}

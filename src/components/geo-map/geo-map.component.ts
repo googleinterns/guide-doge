@@ -93,7 +93,7 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
     const territories: Territory[] = [];
     let { territory } = this;
     while (territory) {
-      territories.push(territory);
+      territories.unshift(territory);
       territory = territory.parent;
     }
     return territories;
