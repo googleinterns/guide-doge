@@ -30,7 +30,7 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
   private geoPath: d3.GeoPath;
   private centerY: number;
   private lastTransform: d3.ZoomTransform | null;
-  private zoom: d3.ZoomBehavior<SVGSVGElement, unknown>;
+  protected zoom: d3.ZoomBehavior<SVGSVGElement, unknown>;
   private landPath: d3.Selection<SVGPathElement, GeoJSON.FeatureCollection<GeoJSON.Geometry, {}>, null, undefined>;
   private boundaryPath: d3.Selection<SVGPathElement, GeoJSON.MultiLineString, null, undefined>;
   private dataG: d3.Selection<SVGGElement, unknown, null, undefined>;

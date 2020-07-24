@@ -12,10 +12,20 @@ interface SubjectRenderOptions extends RenderOptions {
 const { CONTINENT, SUBCONTINENT, COUNTRY, CITY } = TerritoryLevel;
 
 describe('GeoMapD3', () => {
+  class MockGeoMapD3 extends GeoMapD3 {
+    scaleTo(scale) {
+      this.zoom.scaleTo(this.svg, scale);
+    }
+
+    translateBy(x, y) {
+      this.zoom.translateBy(this.svg, x, y);
+    }
+  }
+
   let containerElement: HTMLElement;
   let svgElement: HTMLElement;
   let renderOptions: SubjectRenderOptions;
-  let geoMapD3: GeoMapD3;
+  let geoMapD3: MockGeoMapD3;
   let world: World;
 
   beforeEach(async () => {
@@ -30,7 +40,7 @@ describe('GeoMapD3', () => {
       world,
       data$: new Subject<GeoDatum[]>(),
     };
-    geoMapD3 = new GeoMapD3(renderOptions);
+    geoMapD3 = new MockGeoMapD3(renderOptions);
   });
 
   afterEach(() => {
@@ -57,9 +67,7 @@ describe('GeoMapD3', () => {
     const landElement = svgElement.querySelector('.geo_map-land')!;
     const dAttribute = landElement.getAttribute('d');
 
-    // TODO: better way?
-    // tslint:disable-next-line:no-string-literal
-    geoMapD3['zoom'].scaleTo(geoMapD3['svg'], 100);
+    geoMapD3.scaleTo(100);
 
     const newDAttribute = landElement.getAttribute('d');
     expect(newDAttribute).not.toBe(dAttribute);
@@ -71,9 +79,7 @@ describe('GeoMapD3', () => {
     const landElement = svgElement.querySelector('.geo_map-land')!;
     const dAttribute = landElement.getAttribute('d');
 
-    // TODO: better way?
-    // tslint:disable-next-line:no-string-literal
-    geoMapD3['zoom'].translateBy(geoMapD3['svg'], 10, 10);
+    geoMapD3.translateBy(10, 10);
 
     const newDAttribute = landElement.getAttribute('d');
     expect(newDAttribute).not.toBe(dAttribute);
