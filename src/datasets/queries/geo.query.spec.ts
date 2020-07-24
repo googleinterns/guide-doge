@@ -14,9 +14,10 @@ describe('GeoQuery', () => {
 
   beforeEach(async () => {
     world = await fetchWorld();
+    const cities = world[TerritoryLevel.CITY];
     const cityCategory: Category = {
       name: 'city',
-      values: Object.entries(world.cities).map(([cityId, city]) => ({
+      values: Object.entries(cities).map(([cityId, city]) => ({
         name: cityId,
         weight: city.population,
       })),
@@ -25,7 +26,7 @@ describe('GeoQuery', () => {
     const measures = [activeUserMeasure, revenueMeasure, eventCountMeasure];
     const dataCube = generateCube(categories, measures);
     const measureNames = measures.map(measure => measure.name);
-    geoQuery = createGeoQuery(dataCube, measureNames, world.cities);
+    geoQuery = createGeoQuery(dataCube, measureNames, cities);
   });
 
   describe('should query geo data in the following unit:', () => {
@@ -35,7 +36,7 @@ describe('GeoQuery', () => {
         unit: TerritoryLevel.CITY,
       });
       expect(geoData.length > 0).toBeTrue();
-      expect(geoData.every(geoDatum => geoDatum.territory.id in world.cities)).toBeTrue();
+      expect(geoData.every(geoDatum => geoDatum.territory.id in world[TerritoryLevel.CITY])).toBeTrue();
     });
 
     it('Country', () => {
@@ -44,7 +45,7 @@ describe('GeoQuery', () => {
         unit: TerritoryLevel.COUNTRY,
       });
       expect(geoData.length > 0).toBeTrue();
-      expect(geoData.every(geoDatum => geoDatum.territory.id in world.countries)).toBeTrue();
+      expect(geoData.every(geoDatum => geoDatum.territory.id in world[TerritoryLevel.COUNTRY])).toBeTrue();
     });
 
     it('Subcontinent', () => {
@@ -53,7 +54,7 @@ describe('GeoQuery', () => {
         unit: TerritoryLevel.SUBCONTINENT,
       });
       expect(geoData.length > 0).toBeTrue();
-      expect(geoData.every(geoDatum => geoDatum.territory.id in world.subcontinents)).toBeTrue();
+      expect(geoData.every(geoDatum => geoDatum.territory.id in world[TerritoryLevel.SUBCONTINENT])).toBeTrue();
     });
 
     it('Continent', () => {
@@ -62,7 +63,7 @@ describe('GeoQuery', () => {
         unit: TerritoryLevel.CONTINENT,
       });
       expect(geoData.length > 0).toBeTrue();
-      expect(geoData.every(geoDatum => geoDatum.territory.id in world.continents)).toBeTrue();
+      expect(geoData.every(geoDatum => geoDatum.territory.id in world[TerritoryLevel.CONTINENT])).toBeTrue();
     });
   });
 
@@ -91,7 +92,7 @@ describe('GeoQuery', () => {
         unit: TerritoryLevel.CITY,
       });
       expect(geoData.length > 0).toBeTrue();
-      expect(geoData.every(geoDatum => world.cities[geoDatum.territory.id].countryId === southKoreaCountryId)).toBeTrue();
+      expect(geoData.every(geoDatum => world[TerritoryLevel.CITY][geoDatum.territory.id].countryId === southKoreaCountryId)).toBeTrue();
     });
 
     it('Eastern Europe (Subcontinent)', () => {
@@ -105,7 +106,8 @@ describe('GeoQuery', () => {
         unit: TerritoryLevel.CITY,
       });
       expect(geoData.length > 0).toBeTrue();
-      expect(geoData.every(geoDatum => world.cities[geoDatum.territory.id].subcontinentId === easternEuropeSubcontinentId)).toBeTrue();
+      expect(geoData.every(geoDatum => world[TerritoryLevel.CITY][geoDatum.territory.id].subcontinentId === easternEuropeSubcontinentId))
+        .toBeTrue();
     });
 
     it('Oceania (Continent)', () => {
@@ -119,7 +121,7 @@ describe('GeoQuery', () => {
         unit: TerritoryLevel.CITY,
       });
       expect(geoData.length > 0).toBeTrue();
-      expect(geoData.every(geoDatum => world.cities[geoDatum.territory.id].continentId === oceaniaContinentId)).toBeTrue();
+      expect(geoData.every(geoDatum => world[TerritoryLevel.CITY][geoDatum.territory.id].continentId === oceaniaContinentId)).toBeTrue();
     });
   });
 });
