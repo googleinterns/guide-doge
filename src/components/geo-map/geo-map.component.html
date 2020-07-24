@@ -13,7 +13,7 @@
 <div class="table-wrapper">
   <div class="navigator">
     <mat-chip-list aria-label="Territory Unit">
-      <mat-chip *ngFor="let level of territoryLevels" [selected]="unit === level" (click)="unit = level">
+      <mat-chip *ngFor="let level of subordinateTerritoryLevels" [selected]="unit === level" (click)="unit = level">
         {{humanizeTerritoryLevel(level)}}
       </mat-chip>
     </mat-chip-list>

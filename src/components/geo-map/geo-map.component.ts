@@ -99,6 +99,14 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
     return territories;
   }
 
+  get subordinateTerritoryLevels() {
+    const { territory } = this;
+    if (!territory) {
+      return this.territoryLevels;
+    }
+    return this.territoryLevels.filter(level => level >= territory.level);
+  }
+
   getTerritoryName = (territory: Territory) => {
     return territory?.name;
   };
