@@ -10,9 +10,13 @@ export interface ScatterPlotStyle {
 }
 
 export class Scatterplot{
+    readonly AILERON_FONT = 'https://cdn.aframe.io/fonts/Aileron-Semibold.fnt';
+    readonly DATA_PT_RADIUS = .5;
     private data: VRPoint[];
     private shape: string;
     private container: HTMLElement | null;
+    private dataPointContainer: HTMLElement;
+    private dataTextContainer: HTMLElement;
     private TIME_MAX = 31;
     timeScale: d3.ScaleTime<number, number>;
     dataType: MetaType;
@@ -25,7 +29,14 @@ export class Scatterplot{
     this.dataType = dataType;
     this.container = container;
     this.dataType = dataType;
+    this.dataPointContainer = document.createElement('a-entity');
+    this.dataPointContainer.className = 'dataPts';
+    this.dataTextContainer = document.createElement('a-entity');
+    this.dataTextContainer.className = 'dataTxt';
+    container.appendChild(this.dataPointContainer);
+    container.appendChild(this.dataTextContainer);
     this.generatePts();
+    this.generateText();
     this.setColor('blue');
     this.createSky('gray');
     this.createGridPlane();
@@ -39,15 +50,39 @@ export class Scatterplot{
   }
   private generatePts() {
      // enter identifies any DOM elements to be added when # array elements doesn't match
-    d3.select(this.container).selectAll(this.shape).data(this.data).enter().append(this.shape);
+    d3.select(this.dataPointContainer).selectAll(this.shape).data(this.data).enter().append(this.shape);
     // d is data at index, i within
     // select all shapes within given container
-    d3.select(this.container).selectAll(this.shape).attr('radius', .5).attr('position', (d, i) => {
+    d3.select(this.dataPointContainer).selectAll(this.shape).attr('radius', this.DATA_PT_RADIUS).attr('position', (d, i) => {
       const x = (d as VRPoint).x;
       const y = (d as VRPoint).y;
       const z = (d as VRPoint).z;
-      return `${x} ${y} ${z}`;
+      return `${0} ${0} ${-i}`;
     });
+  }
+  private generateText(){
+       // enter identifies any DOM elements to be added when # array elements doesn't match
+       d3.select(this.dataTextContainer).selectAll('a-entity').data(this.data).enter().append('a-entity');
+       // d is data at index, i within
+       // select all shapes within given container
+       d3.select(this.dataTextContainer).selectAll('a-entity')
+         .attr('text', (d, i) => {
+            const x = (d as VRPoint).x;
+            const y = (d as VRPoint).y;
+            const z = (d as VRPoint).z;
+            return `
+            value: POSITION:
+            \n\tx: ${0}
+            \n\ty: ${0}
+            \n\tz:${-i}`;
+        })
+          .attr('text', `font: ${this.AILERON_FONT}`)
+         .attr('position', (d, i) => {
+         const x = (d as VRPoint).x;
+         const y = (d as VRPoint).y;
+         const z = (d as VRPoint).z;
+         return `${this.DATA_PT_RADIUS} ${2 * this.DATA_PT_RADIUS} ${-i}`;
+       });
   }
   private setColor(color) {
     d3.select(this.container).selectAll(this.shape).attr('color', () => {
