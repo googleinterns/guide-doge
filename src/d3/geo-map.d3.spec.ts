@@ -1,13 +1,15 @@
 import { ElementRef } from '@angular/core';
 import { Subject } from 'rxjs';
 import { GeoMapD3, RenderOptions } from './geo-map.d3';
-import { GeoDatum, TerritoryLevel } from '../datasets/queries/geo.query';
+import { GeoDatum } from '../datasets/queries/geo.query';
 import { fetchWorld } from '../datasets/geo.dataset';
-import { World } from '../datasets/geo.types';
+import { TerritoryLevel, World } from '../datasets/geo.types';
 
 interface SubjectRenderOptions extends RenderOptions {
   data$: Subject<GeoDatum[]>;
 }
+
+const { CONTINENT, SUBCONTINENT, COUNTRY, CITY } = TerritoryLevel;
 
 describe('GeoMapD3', () => {
   let containerElement: HTMLElement;
@@ -81,10 +83,7 @@ describe('GeoMapD3', () => {
     await geoMapD3.render();
 
     const data = [{
-      territory: {
-        level: TerritoryLevel.COUNTRY,
-        id: '410',
-      },
+      territory: world[COUNTRY]['410'],
       values: { activeUser: 123 },
     }];
     renderOptions.data$.next(data);
@@ -98,10 +97,7 @@ describe('GeoMapD3', () => {
     await geoMapD3.render();
 
     const data = [{
-      territory: {
-        level: TerritoryLevel.CITY,
-        id: '1840013660',
-      },
+      territory: world[CITY]['1840013660'],
       values: { activeUser: 234 },
     }];
     renderOptions.data$.next(data);
