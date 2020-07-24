@@ -13,6 +13,7 @@ export class Scatterplot{
     private data: VRPoint[];
     private shape: string;
     private container: HTMLElement | null;
+    private TIME_MAX = 31;
     timeScale: d3.ScaleTime<number, number>;
     dataType: MetaType;
 
@@ -29,19 +30,19 @@ export class Scatterplot{
     this.createSky('gray');
     this.createGridPlane();
   }
+
   private scaleTime(date: Date): number{
     const startTime = this.data[0].x;
     const endTime = this.data[this.data.length - 1].x;
-    this.timeScale = d3.scaleTime().domain([startTime, endTime]).rangeRound([0, 31]);
+    this.timeScale = d3.scaleTime().domain([startTime, endTime]).rangeRound([0, this.TIME_MAX]);
     return this.timeScale(date);
   }
-
   private generatePts() {
      // enter identifies any DOM elements to be added when # array elements doesn't match
     d3.select(this.container).selectAll(this.shape).data(this.data).enter().append(this.shape);
     // d is data at index, i within
     // select all shapes within given container
-    d3.select(this.container).selectAll(this.shape).attr('position', (d, i) => {
+    d3.select(this.container).selectAll(this.shape).attr('radius', .5).attr('position', (d, i) => {
       const x = (d as VRPoint).x;
       const y = (d as VRPoint).y;
       const z = (d as VRPoint).z;

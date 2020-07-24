@@ -34,7 +34,6 @@ describe('VRScatterplotComponent', () => {
     fixture = TestBed.createComponent(VRScatterPlotComponent);
     component = fixture.componentInstance;
     scatterplotD3 = component.vrScatterPlot;
-    console.log(component);
   });
 
   it('should instantiate.', () => {

@@ -22,8 +22,9 @@ import { MetaType} from '../../datasets/metas/types';
 })
 
 export class VRScatterPlotComponent implements OnInit {
+  private TIME_MAX = 31;
   @Input() endDate = new Date();
-  @Input() startDate = new Date(this.endDate.getTime() - 30 * DAY);
+  @Input() startDate = new Date(this.endDate.getTime() - this.TIME_MAX * DAY);
   datasetPref: VRScatterplotMeta;
   vrScatterPlot: Scatterplot;
   dataset$ = this.preferenceService.dataset$;
@@ -41,7 +42,7 @@ export class VRScatterPlotComponent implements OnInit {
   @ViewChild('ascene') ascene: ElementRef;
 
   constructor(
-    private preferenceService: PreferenceService
+    private readonly preferenceService: PreferenceService
   ) {
     this.preferenceService = preferenceService;
     this.vrScatterPlot = new Scatterplot('a-sphere');
@@ -56,10 +57,19 @@ export class VRScatterPlotComponent implements OnInit {
       this.componentMetas = dataset.metas;
       // dataset.metas[0].type = 'tabbed' and dataset.metas[1] = 'line' if chosen UserWhiteNoise
       // dataset.metas[0] - 'line' if Dummy chosen
-      if (dataset.metas[0].type === MetaType.TABBED_CHARTS) {
-        this.datasetPref = (dataset.metas[0] as any).metas[0];
-      } else if (dataset.metas[0].type === MetaType.SCATTER_PLOT){
-        this.datasetPref = dataset.metas[0] as VRScatterplotMeta;
+      switch (dataset.metas[0].type){
+        case MetaType.SCATTER_PLOT: {
+          this.datasetPref = dataset.metas[0] as VRScatterplotMeta;
+          break;
+        }
+        // TODO: write error handling for cases outside of SCATTER_PLOT
+        case MetaType.TABBED_CHARTS: {
+          this.datasetPref = (dataset.metas[0] as any).metas[0];
+          break;
+        }
+        case MetaType.LINE_CHART: {
+          break;
+        }
       }
       this.setDataOnD3();
     });
