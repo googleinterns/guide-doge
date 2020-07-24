@@ -14,7 +14,8 @@ import { createVRScatterplotMeta } from './metas/vr-scatter-plot.meta';
 import { createTabbedChartsMeta } from './metas/tabbed-charts.meta';
 import { PreferenceMeta } from '../services/preference/types';
 import { createDefault } from '../utils/preferences';
-export interface Config{};
+// tslint:disable-next-line
+export interface Config{}
 export const configMeta: PreferenceMeta<Config> = {};
 
 export function create(config: Config): Dataset {
