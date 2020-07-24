@@ -25,6 +25,57 @@ export function groupPointsByXWeek(points: TimeSeriesPoint[]): TimeSeriesPoint[]
   return sortedWeekPointPairs.map(([_, currentWeekPoints]) => currentWeekPoints);
 }
 
+export function kalmanSmoothing(points: TimeSeriesPoint[]): TimeSeriesPoint[] {
+  const N = points.length;
+  const zs = points.map(({ y }) => y);
+
+  // Kalman Filter
+  const F = 1.0;
+  const Q = 0.0;
+  const H = 1.0;
+  const R = 0.00001;
+
+  const xinit = zs[0];
+  const Pinit = 10;
+
+  const xs: number[] = [...new Array(N).fill(0)];
+  const Ps: [number, number][] = [...new Array(N).fill([0, 0])];
+  for (let k = 0; k < N; k++) {
+    const z = zs[k];
+    if (k === 0) {
+      xs[k] = xinit;
+      Ps[k] = [Pinit, Pinit];
+    } else {
+      const Pk = F * Ps[k - 1][1] * F + Q;
+      const S = R + H * Pk * H;
+      const K = Pk * H * (1 / S);
+      const Pkk = (1.0 - K * H) * Pk;
+      const xk = F * xs[k - 1] + K * (z - H * F * xs[k - 1]);
+
+      Ps[k] = [Pk, Pkk];
+      xs[k] = xk;
+    }
+  }
+
+  // Rauch–Tung–Striebel (RTS) smoother
+  const xps: number[] = new Array(xs.length).fill(0);
+  for (let k = N - 1; k >= 0; k--) {
+    if (k === N - 1) {
+      xps[k] = xs[k];
+    } else {
+      const C = Ps[k][1] * F * (1 / Ps[k + 1][0]);
+      xps[k] = xs[k] + C * (xps[k + 1] - xs[k + 1]);
+    }
+  }
+
+  const smoothedPoints = xps.map((xp, i) => ({
+    x: points[i].x,
+    y: xp,
+  }));
+
+  return smoothedPoints;
+}
+
 export interface Cone2D {
   startAngleRad: number;
   endAngleRad: number;
@@ -123,7 +174,7 @@ interface ChartAxisLimit {
   max?: number;
 }
 
-function normalizeNumPointsX(points: NumPoint[], xlim: ChartAxisLimit = {}): NumPoint[] {
+export function normalizePointsX<T>(points: XYPoint<number, T>[], xlim: ChartAxisLimit = {}): XYPoint<number, T>[] {
   const xValues = points.map(({ x }) => x);
   const {
     min: xmin = Math.min(...xValues),
@@ -136,7 +187,7 @@ function normalizeNumPointsX(points: NumPoint[], xlim: ChartAxisLimit = {}): Num
   }));
 }
 
-function normalizeNumPointsY(points: NumPoint[], ylim: ChartAxisLimit = {}): NumPoint[] {
+export function normalizePointsY<T>(points: XYPoint<T, number>[], ylim: ChartAxisLimit = {}): XYPoint<T, number>[] {
   const yValues = points.map(({ y }) => y);
   const {
     min: ymin = Math.min(...yValues),
@@ -149,6 +200,6 @@ function normalizeNumPointsY(points: NumPoint[], ylim: ChartAxisLimit = {}): Num
   }));
 }
 
-function normalizeNumPoints(points: NumPoint[], xlim: ChartAxisLimit = {}, ylim: ChartAxisLimit = {}): NumPoint[] {
-  return normalizeNumPointsY(normalizeNumPointsX(points, xlim), ylim);
+export function normalizeNumPoints(points: NumPoint[], xlim: ChartAxisLimit = {}, ylim: ChartAxisLimit = {}): NumPoint[] {
+  return normalizePointsY(normalizePointsX(points, xlim), ylim);
 }
