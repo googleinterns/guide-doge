@@ -89,7 +89,7 @@ function getCityIds(cities: Record<string, City>, territory: Territory) {
 
 function getIdAccessor(level: TerritoryLevel): (city: City) => string {
   return city => {
-    let territoryObject: Territory = city;
+    let territory: Territory = city;
     let nestedCount = [
       TerritoryLevel.CITY,
       TerritoryLevel.COUNTRY,
@@ -97,8 +97,8 @@ function getIdAccessor(level: TerritoryLevel): (city: City) => string {
       TerritoryLevel.CONTINENT,
     ].indexOf(level);
     while (nestedCount-- > 0) {
-      territoryObject = territoryObject.parent;
+      territory = territory.parent;
     }
-    return territoryObject.id;
+    return territory.id;
   };
 }

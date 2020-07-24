@@ -206,22 +206,20 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
     this.territoryCircles = [];
 
     const { accessValue } = GeoMapD3;
-    const { world } = this.renderOptions;
     const maxValue = data.reduce((acc, datum) => Math.max(acc, accessValue(datum)), 0);
 
     for (const datum of data) {
       const { territory } = datum;
-      const territoryObject = world[territory.level][territory.id];
       const valueRatio = accessValue(datum) / maxValue;
 
-      if ('geometry' in territoryObject) { // for continents, subcontinents, and countries
-        const { geometry } = territoryObject;
+      if ('geometry' in territory) { // for continents, subcontinents, and countries
+        const { geometry } = territory;
         if (geometry) {
           const territoryPath = this.appendTerritoryPath(geometry, valueRatio);
           this.territoryPaths.push(territoryPath);
         }
       } else { // for cities
-        const territoryCircle = this.appendCityCircle(territoryObject, valueRatio);
+        const territoryCircle = this.appendCityCircle(territory, valueRatio);
         this.territoryCircles.push(territoryCircle);
       }
     }

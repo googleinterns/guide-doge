@@ -32,7 +32,7 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
   @Input() width = 800;
 
   keywordControl = new FormControl();
-  filteredTerritoryGroupEntries$ = new Observable<TerritoryGroup[]>();
+  filteredTerritoryGroups$ = new Observable<TerritoryGroup[]>();
 
   world: World;
   data$ = new BehaviorSubject<GeoDatum[]>([]);
@@ -45,7 +45,6 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
   constructor(
     public elementRef: ElementRef<HTMLElement>,
   ) {
-    this.getTerritoryName = this.getTerritoryName.bind(this);
   }
 
   get data() {
@@ -98,15 +97,15 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
     return territories;
   }
 
-  getTerritoryName(territory: Territory) {
-    return territory && this.world[territory.level][territory.id].name;
-  }
+  getTerritoryName = (territory: Territory) => {
+    return territory?.name;
+  };
 
   async ngOnInit() {
     this.world = this.meta.world;
 
     const maxSuggestionsPerLevel = 10;
-    this.filteredTerritoryGroupEntries$ = this.keywordControl.valueChanges
+    this.filteredTerritoryGroups$ = this.keywordControl.valueChanges
       .pipe(filter(keyword => typeof keyword === 'string'))
       .pipe(map(keyword => {
         const lowerCasedKeyword = keyword.toLowerCase();

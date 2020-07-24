@@ -13,11 +13,11 @@
              [formControl]="keywordControl">
       <mat-autocomplete #autoGroup="matAutocomplete" [displayWith]="getTerritoryName"
                         (optionSelected)="territory=$event.option.value" autoActiveFirstOption>
-        <mat-optgroup *ngFor="let groupEntry of filteredTerritoryGroupEntries$ | async"
-                      [label]="humanizeTerritoryLevel(groupEntry[0])">
-          <mat-option *ngFor="let objectEntry of groupEntry[1]"
-                      [value]="{level: groupEntry[0], id: objectEntry[0]}">
-            {{objectEntry[1].name}}
+        <mat-optgroup *ngFor="let territoryGroup of filteredTerritoryGroups$ | async"
+                      [label]="humanizeTerritoryLevel(territoryGroup.level)">
+          <mat-option *ngFor="let territory of territoryGroup.territories"
+                      [value]="territory">
+            {{territory.name}}
           </mat-option>
         </mat-optgroup>
       </mat-autocomplete>
@@ -26,7 +26,7 @@
   <table mat-table [dataSource]="data" class="table">
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef>{{TERRITORY_LEVEL}}</th>
-      <td mat-cell *matCellDef="let datum">{{getTerritoryName(datum.territory)}}</td>
+      <td mat-cell *matCellDef="let datum">{{datum.territory.name}}</td>
     </ng-container>
     <ng-container *ngFor="let measureName of measureNames" [matColumnDef]="measureName">
       <th mat-header-cell *matHeaderCellDef>{{humanizeMeasureName(measureName)}}</th>
