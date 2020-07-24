@@ -1,15 +1,54 @@
 <div class="svg-wrapper">
   <svg></svg>
 </div>
-<div class="attribution-container">
-  <div class="attribution">
-    World Cities Database by <a href="https://simplemaps.com/data/world-cities" target="_blank">SimpleMaps.com</a>. Data have been transformed.
+<div class="table-container">
+  <div class="navigator">
+    <mat-chip-list aria-label="Territory Unit">
+      <mat-chip *ngFor="let level of territoryLevels" [selected]="unit === level" (click)="unit = level">
+        {{humanizeTerritoryLevel(level)}}
+      </mat-chip>
+    </mat-chip-list>
+    <mat-form-field class="filter">
+      <input type="text" matInput placeholder="Filter by Name" required [matAutocomplete]="autoGroup"
+             [formControl]="keywordControl">
+      <mat-autocomplete #autoGroup="matAutocomplete" [displayWith]="getTerritoryName"
+                        (optionSelected)="territory=$event.option.value" autoActiveFirstOption>
+        <mat-optgroup *ngFor="let groupEntry of filteredTerritoryGroupEntries$ | async"
+                      [label]="humanizeTerritoryLevel(groupEntry[0])">
+          <mat-option *ngFor="let objectEntry of groupEntry[1]"
+                      [value]="{level: groupEntry[0], id: objectEntry[0]}">
+            {{objectEntry[1].name}}
+          </mat-option>
+        </mat-optgroup>
+      </mat-autocomplete>
+    </mat-form-field>
   </div>
-  <div class="attribution">
-    Country and Dependent Territories Lists by <a href="https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes" target="_blank">Luke Duncalfe on GitHub</a>. Data have been transformed.
-  </div>
-  <div class="attribution">
-    World Atlas TopoJSON by <a href="https://github.com/topojson/world-atlas" target="_blank">TopoJSON on GitHub</a>. Data have been transformed.
-  </div>
+  <table mat-table [dataSource]="data" class="table">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>{{TERRITORY_LEVEL}}</th>
+      <td mat-cell *matCellDef="let datum">{{getTerritoryName(datum.territory)}}</td>
+    </ng-container>
+    <ng-container *ngFor="let measureName of measureNames" [matColumnDef]="measureName">
+      <th mat-header-cell *matHeaderCellDef>{{humanizeMeasureName(measureName)}}</th>
+      <td mat-cell *matCellDef="let datum"> {{datum.values[measureName]}} </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
 </div>
 <ng-template appA11yPlaceholder></ng-template>
+<div class="attribution-container">
+  <div class="attribution">
+    World Cities Database by <a href="https://simplemaps.com/data/world-cities" target="_blank">SimpleMaps.com</a>.
+    Data have been transformed.
+  </div>
+  <div class="attribution">
+    Country and Dependent Territories Lists by <a href="https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes"
+                                                  target="_blank">Luke Duncalfe on GitHub</a>.
+    Data have been transformed.
+  </div>
+  <div class="attribution">
+    World Atlas TopoJSON by <a href="https://github.com/topojson/world-atlas" target="_blank">TopoJSON on GitHub</a>.
+    Data have been transformed.
+  </div>
+</div>

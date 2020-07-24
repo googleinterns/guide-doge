@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 import { BaseD3, RenderOptions as BaseRenderOptions } from './base.d3';
 import * as topojson from 'topojson';
 import { Observable } from 'rxjs';
-import { GeoDatum, Territory, TerritoryLevel } from '../datasets/queries/geo.query';
+import { GeoDatum, TerritoryLevel } from '../datasets/queries/geo.query';
 import * as GeoJSON from 'geojson';
 import { GeometryCollection, MultiPolygon, Polygon } from 'topojson-specification';
 import { isNotNullish, linearScale } from '../utils/misc';
@@ -93,7 +93,7 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
 
     const countryGeometryCollection: GeometryCollection = {
       type: 'GeometryCollection',
-      geometries: Object.values(world.countries).map(country => country.geometry).filter(isNotNullish),
+      geometries: Object.values(world[TerritoryLevel.COUNTRY]).map(country => country.geometry).filter(isNotNullish),
     };
 
     this.boundaryPath = this.svg
@@ -210,14 +210,18 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
     const maxValue = data.reduce((acc, datum) => Math.max(acc, accessValue(datum)), 0);
 
     for (const datum of data) {
-      const geometry = this.getGeometry(datum.territory);
+      const { territory } = datum;
+      const territoryObject = world[territory.level][territory.id];
       const valueRatio = accessValue(datum) / maxValue;
 
-      if (geometry) { // for continents, subcontinents, and countries
-        const territoryPath = this.appendTerritoryPath(geometry, valueRatio);
-        this.territoryPaths.push(territoryPath);
+      if ('geometry' in territoryObject) { // for continents, subcontinents, and countries
+        const { geometry } = territoryObject;
+        if (geometry) {
+          const territoryPath = this.appendTerritoryPath(geometry, valueRatio);
+          this.territoryPaths.push(territoryPath);
+        }
       } else { // for cities
-        const territoryCircle = this.appendCityCircle(world.cities[datum.territory.id], valueRatio);
+        const territoryCircle = this.appendCityCircle(territoryObject, valueRatio);
         this.territoryCircles.push(territoryCircle);
       }
     }
@@ -247,19 +251,5 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
       .attr('opacity', linearScale(valueRatio, minOpacity, maxOpacity))
       .attr('fill', colorPrimary)
       .attr('stroke', '#FFF');
-  }
-
-  private getGeometry(territory: Territory) {
-    const { world } = this.renderOptions;
-    switch (territory.level) {
-      case TerritoryLevel.CONTINENT:
-        return world.continents[territory.id].geometry;
-      case TerritoryLevel.SUBCONTINENT:
-        return world.subcontinents[territory.id].geometry;
-      case TerritoryLevel.COUNTRY:
-        return world.countries[territory.id].geometry;
-      default:
-        return null;
-    }
   }
 }

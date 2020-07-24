@@ -28,7 +28,7 @@ const outputPath = path.resolve(__dirname, '..', 'src', 'assets', 'world.json');
     'region-code': continentId,
     'region': continentName,
   } of countryData) {
-    const geometry = countryGeometries.find(geometry => geometry.id === countryId);
+    const geometry = countryGeometries.find(geometry => geometry.id === countryId) ?? null;
     if (geometry) {
       delete geometry.properties;
     }
