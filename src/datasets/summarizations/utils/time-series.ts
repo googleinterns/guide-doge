@@ -25,7 +25,7 @@ export function groupPointsByXWeek(points: TimeSeriesPoint[]): TimeSeriesPoint[]
   return sortedWeekPointPairs.map(([_, currentWeekPoints]) => currentWeekPoints);
 }
 
-export function exponentialMovingAverage(points: TimeSeriesPoint[], alpha = 0.4): TimeSeriesPoint[] {
+export function exponentialMovingAverage(points: TimeSeriesPoint[], alpha = 0.3): TimeSeriesPoint[] {
   const N = points.length;
   const ys = points.map(({ y }) => y);
 
