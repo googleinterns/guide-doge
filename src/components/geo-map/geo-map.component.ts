@@ -3,21 +3,16 @@ import { GeoMapD3, RenderOptions } from '../../d3/geo-map.d3';
 import { A11yPlaceholderDirective } from '../../directives/a11y-placeholder/a11y-placeholder.directive';
 import { GeoMapMeta } from '../../datasets/metas/geo-map.meta';
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
-import { GeoDatum, Territory, TerritoryLevel } from '../../datasets/queries/geo.query';
+import { GeoDatum, TerritoryLevel } from '../../datasets/queries/geo.query';
 import { DAY } from '../../utils/timeUnits';
-import { TerritoryObject, World } from '../../datasets/geo.types';
+import { Territory, World } from '../../datasets/geo.types';
 import { humanizeMeasureName, humanizeTerritoryLevel } from '../../utils/formatters';
 import { filter, map, takeUntil } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 
-type TerritoryObjectEntry = [string, TerritoryObject];
-type TerritoryGroupEntry = [TerritoryLevel, TerritoryObjectEntry[]];
+type TerritoryGroup = { level: TerritoryLevel, territories: Territory[] };
 
 const defaultDateRange: [Date, Date] = [new Date(Date.now() - 30 * DAY), new Date()];
-const defaultTerritory: Territory = {
-  level: TerritoryLevel.SUBCONTINENT,
-  id: '151',
-};
 const defaultUnit = TerritoryLevel.COUNTRY;
 
 @Component({
@@ -37,13 +32,13 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
   @Input() width = 800;
 
   keywordControl = new FormControl();
-  filteredTerritoryGroupEntries$ = new Observable<TerritoryGroupEntry[]>();
+  filteredTerritoryGroupEntries$ = new Observable<TerritoryGroup[]>();
 
   world: World;
   data$ = new BehaviorSubject<GeoDatum[]>([]);
   geoMapD3: GeoMapD3;
   range$ = new BehaviorSubject(defaultDateRange);
-  territory$ = new BehaviorSubject<Territory | undefined>(defaultTerritory);
+  territory$ = new BehaviorSubject<Territory | null>(null);
   unit$ = new BehaviorSubject(defaultUnit);
   private destroy$ = new Subject();
 
@@ -85,8 +80,22 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
     this.unit$.next(unit);
   }
 
-  set territory(territory) {
+  get territory() {
+    return this.territory$.value;
+  }
+
+  set territory(territory: Territory | null) {
     this.territory$.next(territory);
+  }
+
+  get hierarchyTerritories() {
+    const territories: Territory[] = [];
+    let { territory } = this;
+    while (territory) {
+      territories.push(territory);
+      territory = territory.parent;
+    }
+    return territories;
   }
 
   getTerritoryName(territory: Territory) {
@@ -96,16 +105,18 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
   async ngOnInit() {
     this.world = this.meta.world;
 
+    const maxSuggestionsPerLevel = 10;
     this.filteredTerritoryGroupEntries$ = this.keywordControl.valueChanges
       .pipe(filter(keyword => typeof keyword === 'string'))
       .pipe(map(keyword => {
         const lowerCasedKeyword = keyword.toLowerCase();
-        const territoryGroupEntries = this.territoryLevels.map(level => {
-          const territoryObjectEntries = Object.entries(this.world[level])
-            .filter(([, territoryObject]) => territoryObject.name.toLowerCase().startsWith(lowerCasedKeyword));
-          return [level, territoryObjectEntries] as TerritoryGroupEntry;
+        const territoryGroups = this.territoryLevels.map(level => {
+          const territories = Object.values(this.world[level])
+            .filter(territory => territory.name.toLowerCase().startsWith(lowerCasedKeyword))
+            .slice(0, maxSuggestionsPerLevel);
+          return { level, territories };
         });
-        return territoryGroupEntries.filter(([, territoryObjectEntries]) => territoryObjectEntries.length > 0);
+        return territoryGroups.filter(({ territories }) => territories.length > 0);
       }));
 
     this.geoMapD3 = new GeoMapD3(this);
