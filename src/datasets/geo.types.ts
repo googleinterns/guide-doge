@@ -1,5 +1,11 @@
 import { GeometryCollection, MultiPolygon, Polygon, Topology } from 'topojson-specification';
-import { TerritoryLevel } from './queries/geo.query';
+
+export enum TerritoryLevel {
+  CONTINENT,
+  SUBCONTINENT,
+  COUNTRY,
+  CITY,
+}
 
 interface RawCity {
   name: string;
@@ -29,30 +35,33 @@ export interface RawWorld {
   topology: Topology<{ land: GeometryCollection }>;
 }
 
-export interface City extends RawCity {
-  countryId: string;
-  subcontinentId: string;
-  continentId: string;
+interface BaseTerritory<Parent, Child, Level extends TerritoryLevel> {
+  level: Level;
+  id: string;
+  parent: Parent;
+  children: Record<string, Child>;
+  name: string;
 }
 
-export interface Country extends RawCountry {
-  subcontinentId: string;
-  continentId: string;
-  cities: Record<string, City>;
+export interface City extends BaseTerritory<Country, null, TerritoryLevel.CITY> {
+  lat: number;
+  lng: number;
+  population: number;
 }
 
-export interface Subcontinent extends RawSubcontinent {
-  continentId: string;
-  countries: Record<string, Country>;
+export interface Country extends BaseTerritory<Subcontinent, City, TerritoryLevel.COUNTRY> {
+  geometry: Polygon | MultiPolygon | null;
+}
+
+export interface Subcontinent extends BaseTerritory<Continent, Country, TerritoryLevel.SUBCONTINENT> {
   geometry: MultiPolygon | null;
 }
 
-export interface Continent extends RawContinent {
-  subcontinents: Record<string, Subcontinent>;
+export interface Continent extends BaseTerritory<null, Subcontinent, TerritoryLevel.CONTINENT> {
   geometry: MultiPolygon | null;
 }
 
-export type TerritoryObject = Continent | Subcontinent | Country | City;
+export type Territory = Continent | Subcontinent | Country | City;
 
 export interface World {
   [TerritoryLevel.CONTINENT]: Record<string, Continent>;

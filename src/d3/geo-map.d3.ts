@@ -2,16 +2,18 @@ import * as d3 from 'd3';
 import { BaseD3, RenderOptions as BaseRenderOptions } from './base.d3';
 import * as topojson from 'topojson';
 import { Observable } from 'rxjs';
-import { GeoDatum, TerritoryLevel } from '../datasets/queries/geo.query';
+import { GeoDatum } from '../datasets/queries/geo.query';
 import * as GeoJSON from 'geojson';
 import { GeometryCollection, MultiPolygon, Polygon } from 'topojson-specification';
 import { isNotNullish, linearScale } from '../utils/misc';
-import { City, World } from '../datasets/geo.types';
+import { City, TerritoryLevel, World } from '../datasets/geo.types';
 
 export interface RenderOptions extends BaseRenderOptions {
   world: World;
   data$: Observable<GeoDatum[]>;
 }
+
+const { CONTINENT, SUBCONTINENT, COUNTRY, CITY } = TerritoryLevel;
 
 export class GeoMapD3 extends BaseD3<RenderOptions> {
   static minOpacity = .2;
@@ -93,7 +95,7 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
 
     const countryGeometryCollection: GeometryCollection = {
       type: 'GeometryCollection',
-      geometries: Object.values(world[TerritoryLevel.COUNTRY]).map(country => country.geometry).filter(isNotNullish),
+      geometries: Object.values(world[COUNTRY]).map(country => country.geometry).filter(isNotNullish),
     };
 
     this.boundaryPath = this.svg
@@ -206,22 +208,20 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
     this.territoryCircles = [];
 
     const { accessValue } = GeoMapD3;
-    const { world } = this.renderOptions;
     const maxValue = data.reduce((acc, datum) => Math.max(acc, accessValue(datum)), 0);
 
     for (const datum of data) {
       const { territory } = datum;
-      const territoryObject = world[territory.level][territory.id];
       const valueRatio = accessValue(datum) / maxValue;
 
-      if ('geometry' in territoryObject) { // for continents, subcontinents, and countries
-        const { geometry } = territoryObject;
+      if ('geometry' in territory) { // for continents, subcontinents, and countries
+        const { geometry } = territory;
         if (geometry) {
           const territoryPath = this.appendTerritoryPath(geometry, valueRatio);
           this.territoryPaths.push(territoryPath);
         }
       } else { // for cities
-        const territoryCircle = this.appendCityCircle(territoryObject, valueRatio);
+        const territoryCircle = this.appendCityCircle(territory, valueRatio);
         this.territoryCircles.push(territoryCircle);
       }
     }

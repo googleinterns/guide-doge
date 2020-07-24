@@ -3,9 +3,9 @@ import { GeoMapD3, RenderOptions } from '../../d3/geo-map.d3';
 import { A11yPlaceholderDirective } from '../../directives/a11y-placeholder/a11y-placeholder.directive';
 import { GeoMapMeta } from '../../datasets/metas/geo-map.meta';
 import { BehaviorSubject } from 'rxjs';
-import { GeoDatum, TerritoryLevel } from '../../datasets/queries/geo.query';
+import { GeoDatum } from '../../datasets/queries/geo.query';
 import { DAY } from '../../utils/timeUnits';
-import { World } from '../../datasets/geo.types';
+import { TerritoryLevel, World } from '../../datasets/geo.types';
 
 @Component({
   selector: 'app-geo-map',
@@ -44,11 +44,7 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnChanges, OnDest
     if (['startDate', 'endDate', 'meta'].some(key => key in changes)) {
       const data = this.meta.queryData({
         range: [this.startDate, this.endDate],
-        // these hard-coded options will be replaced in the following PR
-        territory: {
-          level: TerritoryLevel.SUBCONTINENT,
-          id: '151',
-        },
+        territory: null,
         unit: TerritoryLevel.COUNTRY,
       });
       this.data$.next(data);
