@@ -14,42 +14,8 @@ import { createVRScatterplotMeta } from './metas/vr-scatter-plot.meta';
 import { createTabbedChartsMeta } from './metas/tabbed-charts.meta';
 import { PreferenceMeta } from '../services/preference/types';
 import { createDefault } from '../utils/preferences';
-
-export interface Config {
-  avgHits: number;
-  hitStdDev: number;
-  avgUsers: number;
-  userStdDev: number;
-  avgSessionsPerUser: number;
-  sessionsPerUserStdDev: number;
-}
-
-export const configMeta: PreferenceMeta<Config> = {
-  avgHits: {
-    type: 'number',
-    defaultValue: 10000,
-  },
-  hitStdDev: {
-    type: 'number',
-    defaultValue: 100,
-  },
-  avgUsers: {
-    type: 'number',
-    defaultValue: 100,
-  },
-  userStdDev: {
-    type: 'number',
-    defaultValue: 1,
-  },
-  avgSessionsPerUser: {
-    type: 'number',
-    defaultValue: 5,
-  },
-  sessionsPerUserStdDev: {
-    type: 'number',
-    defaultValue: 3,
-  },
-};
+export interface Config{};
+export const configMeta: PreferenceMeta<Config> = {};
 
 export function create(config: Config): Dataset {
   const categories = [countryCategory, browserCategory, sourceCategory];
