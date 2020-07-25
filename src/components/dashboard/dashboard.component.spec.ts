@@ -35,7 +35,7 @@ describe('DashboardComponent', () => {
   });
 
   it('should have preference objects.', () => {
-    for (const key of ['dataset$', 'audification$', 'dataTable$', 'textSummary$']) {
+    for (const key of ['dataset$', 'audification$', 'dataTable$', 'summarization$']) {
       const preference = component[key];
       expect(preference).toBeInstanceOf(Object);
     }
