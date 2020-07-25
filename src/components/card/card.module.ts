@@ -13,7 +13,9 @@ import { AudificationModule } from '../../directives/audification/audification.m
   ],
   imports: [
     LineChartModule,
+    GeoMapModule,
     AudificationModule,
+    SummarizationModule,
     CommonModule,
     MatCardModule,
   ],
