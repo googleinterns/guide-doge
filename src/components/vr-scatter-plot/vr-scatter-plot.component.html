@@ -1,1 +1,8 @@
-<a-scene></a-scene>
+<a-scene #ascene embedded style="position: absolute;">
+</a-scene>
+<aside class="sidebar">
+    <h2 class="sidebar-title">Customization</h2>
+    <app-preference-group [preference$]="dataset$" [i18n]="DATA_PREFERENCE" alwaysEnabled="true">
+    </app-preference-group>
+</aside>
+

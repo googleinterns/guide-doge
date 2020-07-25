@@ -35,8 +35,9 @@ export class DataService implements OnDestroy {
       }))
       // TODO: Deep object comparison
       .pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)))
-      .subscribe(preference => {
-        this.dataset$.next(datasets[preference.name].create(preference));
+      .subscribe(async preference => {
+        const dataset = await datasets[preference.name].create(preference);
+        this.dataset$.next(dataset);
       });
 
     this.preferenceService.dataset$
