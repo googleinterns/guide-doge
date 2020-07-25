@@ -38,3 +38,8 @@ export const mockData = createMockData();
 export const [mockDatum] = createMockData(1);
 
 export const mockMeasureName = activeUserMeasure.name;
+
+export const atlantaCityId = '1840013660';
+export const southKoreaCountryId = '410';
+export const easternEuropeSubcontinentId = '151';
+export const oceaniaContinentId = '009';

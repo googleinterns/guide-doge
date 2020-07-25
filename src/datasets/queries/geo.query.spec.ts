@@ -5,6 +5,7 @@ import { createGeoQuery, GeoQuery } from './geo.query';
 import { DAY } from '../../utils/timeUnits';
 import { TerritoryLevel, World } from '../geo.types';
 import { fetchWorld } from '../geo.dataset';
+import { atlantaCityId, easternEuropeSubcontinentId, oceaniaContinentId, southKoreaCountryId } from '../../utils/mocks.spec';
 
 const { CONTINENT, SUBCONTINENT, COUNTRY, CITY } = TerritoryLevel;
 
@@ -75,7 +76,6 @@ describe('GeoQuery', () => {
 
   describe('should filter with the following territory:', () => {
     it('Atlanta (City)', () => {
-      const atlantaCityId = '1840013660';
       const geoData = geoQuery({
         range: [startDate, endDate],
         territory: world[CITY][atlantaCityId],
@@ -85,7 +85,6 @@ describe('GeoQuery', () => {
     });
 
     it('South Korea (Country)', () => {
-      const southKoreaCountryId = '410';
       const geoData = geoQuery({
         range: [startDate, endDate],
         territory: world[COUNTRY][southKoreaCountryId],
@@ -96,7 +95,6 @@ describe('GeoQuery', () => {
     });
 
     it('Eastern Europe (Subcontinent)', () => {
-      const easternEuropeSubcontinentId = '151';
       const geoData = geoQuery({
         range: [startDate, endDate],
         territory: world[SUBCONTINENT][easternEuropeSubcontinentId],
@@ -108,7 +106,6 @@ describe('GeoQuery', () => {
     });
 
     it('Oceania (Continent)', () => {
-      const oceaniaContinentId = '009';
       const geoData = geoQuery({
         range: [startDate, endDate],
         territory: world[CONTINENT][oceaniaContinentId],
