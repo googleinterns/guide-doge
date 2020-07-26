@@ -21,7 +21,7 @@
       <input type="text" matInput placeholder="Filter by Name" [matAutocomplete]="autoGroup"
              [formControl]="keywordControl">
       <mat-autocomplete #autoGroup="matAutocomplete" [displayWith]="getTerritoryName"
-                        (optionSelected)="filteringTerritory = $event.option.value" autoActiveFirstOption>
+                        (optionSelected)="handleSearch($event.option.value)" autoActiveFirstOption>
         <mat-optgroup *ngFor="let territoryGroup of filteredTerritoryGroups$ | async"
                       [label]="humanizeTerritoryLevel(territoryGroup.level)">
           <mat-option *ngFor="let territory of territoryGroup.territories"

@@ -141,11 +141,11 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
     }
   }
 
-  private fit(filteringTerritory: Territory | null) {
+  private fit(territory: Territory | null) {
     const { paddingScale } = GeoMapD3;
     const { width, height, world } = this.renderOptions;
 
-    if (!filteringTerritory) {
+    if (!territory) {
       const [minScale] = this.zoom.scaleExtent();
       this.projection
         .rotate([0, 0])
@@ -153,15 +153,15 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
         .scale(minScale);
       this.lastTransform = null;
       this.zoom.scaleTo(this.svg, minScale);
-    } else if (filteringTerritory.level === CITY) {
-      this.fit(filteringTerritory.parent);
-    } else if (filteringTerritory.geometry) {
+    } else if (territory.level === CITY) {
+      this.fit(territory.parent);
+    } else if (territory.geometry) {
       const rawProjection = d3.geoMercator()
         .scale(1)
         .translate([0, 0]);
       const rawGeoPath = d3.geoPath(rawProjection);
 
-      const feature = topojson.feature(world.topology, filteringTerritory.geometry);
+      const feature = topojson.feature(world.topology, territory.geometry);
       const [[left, top], [right, bottom]] = rawGeoPath.bounds(feature);
       const boundingWidth = right - left;
       const boundingHeight = bottom - top;

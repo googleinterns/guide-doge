@@ -124,6 +124,11 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
     }
   }
 
+  handleSearch(territory: Territory) {
+    this.filteringTerritory = territory;
+    this.unit = Math.max(this.unit, territory.level);
+  }
+
   ngOnInit() {
     const maxSuggestionsPerLevel = 10;
     this.filteredTerritoryGroups$ = this.keywordControl.valueChanges
