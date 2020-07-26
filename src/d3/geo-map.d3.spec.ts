@@ -96,7 +96,7 @@ describe('GeoMapD3', () => {
     }];
     renderOptions.data$.next(data);
 
-    const territoryCount = svgElement.querySelectorAll('.geo_map-territory').length;
+    const territoryCount = svgElement.querySelectorAll('path.geo_map-territory').length;
 
     expect(territoryCount).toBe(data.length);
   });
@@ -110,7 +110,7 @@ describe('GeoMapD3', () => {
     }];
     renderOptions.data$.next(data);
 
-    const cityCount = svgElement.querySelectorAll('.geo_map-city').length;
+    const cityCount = svgElement.querySelectorAll('circle.geo_map-territory').length;
 
     expect(cityCount).toBe(data.length);
   });

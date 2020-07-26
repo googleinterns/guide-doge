@@ -48,6 +48,11 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
     public elementRef: ElementRef<HTMLElement>,
   ) {
     this.geoMapD3 = new GeoMapD3(this);
+    this.filteringTerritory$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(territory => {
+        this.unit = territory ? Math.min(territory.level + 1, CITY) : COUNTRY;
+      });
   }
 
   get world() {
@@ -91,7 +96,6 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
   }
 
   set filteringTerritory(territory: Territory | null) {
-    this.unit = territory ? Math.min(territory.level + 1, CITY) : COUNTRY;
     this.filteringTerritory$.next(territory);
   }
 

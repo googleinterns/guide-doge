@@ -1,10 +1,10 @@
 import * as d3 from 'd3';
 import { BaseD3, RenderOptions as BaseRenderOptions } from './base.d3';
 import * as topojson from 'topojson';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { GeoDatum } from '../datasets/queries/geo.query';
 import * as GeoJSON from 'geojson';
-import { GeometryCollection, MultiPolygon, Polygon } from 'topojson-specification';
+import { GeometryCollection } from 'topojson-specification';
 import { isNotNullish, linearScale, linearSquaredScale } from '../utils/misc';
 import { City, Territory, TerritoryLevel, World } from '../datasets/geo.types';
 import * as chroma from 'chroma-js';
@@ -14,7 +14,7 @@ import { easing } from 'transition-timing';
 export interface RenderOptions extends BaseRenderOptions {
   world: World;
   data$: Observable<GeoDatum[]>;
-  filteringTerritory$: Observable<Territory | null>;
+  filteringTerritory$: Subject<Territory | null>;
 }
 
 const { CONTINENT, SUBCONTINENT, COUNTRY, CITY } = TerritoryLevel;
@@ -24,7 +24,6 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
   static animDuration = SECOND;
   static animTimingFunction = easing('easeInOut');
   static colorBorder = '#FFFFFF';
-  static colorLand = '#EEEEEE';
   static minOpacity = .2;
   static maxOpacity = .8;
   static minRadius = 1;
@@ -85,13 +84,11 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
 
   private renderMap() {
     const { height, width, world } = this.renderOptions;
-    const { colorLand } = GeoMapD3;
 
     this.landPath = this.svg
       .append('path')
       .attr('class', 'geo_map-land')
-      .datum(topojson.feature(world.topology, world.topology.objects.land))
-      .attr('fill', colorLand);
+      .datum(topojson.feature(world.topology, world.topology.objects.land));
 
     const countryGeometryCollection: GeometryCollection = {
       type: 'GeometryCollection',
@@ -101,10 +98,7 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
     this.boundaryPath = this.svg
       .append('path')
       .attr('class', 'geo_map-boundary')
-      .datum(topojson.mesh(world.topology, countryGeometryCollection, (a, b) => a !== b))
-      .attr('fill', 'none')
-      .attr('stroke', '#FFF')
-      .attr('stroke-width', '1px');
+      .datum(topojson.mesh(world.topology, countryGeometryCollection, (a, b) => a !== b));
 
     this.projection = d3.geoMercator()
       .scale(1)
@@ -294,9 +288,8 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
       const valueRatio = accessValue(datum) / maxValue;
 
       if ('geometry' in territory) { // for continents, subcontinents, and countries
-        const { geometry } = territory;
-        if (geometry) {
-          const territoryPath = this.appendTerritoryPath(geometry, valueRatio);
+        const territoryPath = this.appendTerritoryPath(territory, valueRatio);
+        if (territoryPath) {
           this.territoryPaths.push(territoryPath);
         }
       } else { // for cities
@@ -306,27 +299,38 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
     }
   }
 
-  private appendTerritoryPath(geometry: Polygon | MultiPolygon, valueRatio: number) {
-    const { colorBorder } = GeoMapD3;
-    const { world } = this.renderOptions;
-    return this.dataG
+  private appendTerritoryPath(territory: Exclude<Territory, City>, valueRatio: number) {
+    if (!territory.geometry) {
+      return;
+    }
+    const { filteringTerritory$, world } = this.renderOptions;
+    const territoryPath = this.dataG
       .append('path')
       .attr('class', 'geo_map-territory')
-      .datum(topojson.feature(world.topology, geometry))
+      .datum(topojson.feature(world.topology, territory.geometry))
       .attr('d', this.geoPath)
       .attr('fill', GeoMapD3.getColor(valueRatio))
-      .attr('stroke', colorBorder);
+      .on('click', () => {
+        filteringTerritory$.next(territory);
+      })
+      .on('mouseover', () => {
+        territoryPath.raise();
+      });
+    return territoryPath;
   }
 
   private appendCityCircle(city: City, valueRatio: number) {
-    const { colorBorder, minRadius, maxRadius } = GeoMapD3;
+    const { filteringTerritory$ } = this.renderOptions;
+    const { minRadius, maxRadius } = GeoMapD3;
     return this.dataG
       .append('circle')
-      .attr('class', 'geo_map-city')
+      .attr('class', 'geo_map-territory')
       .datum(city)
       .attr('transform', this.geoTransform)
       .attr('r', linearSquaredScale(valueRatio, minRadius, maxRadius))
       .attr('fill', GeoMapD3.getColor(valueRatio))
-      .attr('stroke', colorBorder);
+      .on('click', () => {
+        filteringTerritory$.next(city);
+      });
   }
 }
