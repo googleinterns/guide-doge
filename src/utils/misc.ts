@@ -48,11 +48,11 @@ export function linearScale(ratio: number, min: number, max: number) {
   return (max - min) * ratio + min;
 }
 
-export function linearSquaredScale(ratio: number, min: number, max: number) {
+export function squaredLinearScale(ratio: number, min: number, max: number) {
   return Math.sqrt(linearScale(ratio, min * min, max * max));
 }
 
-export function logarithmicScale(ratio: number, min: number, max: number) {
+export function logScale(ratio: number, min: number, max: number) {
   return linearScale(Math.log(linearScale(ratio, 1, Math.E)), min, max);
 }
 

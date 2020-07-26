@@ -5,7 +5,7 @@ import { Observable, Subject } from 'rxjs';
 import { GeoDatum } from '../datasets/queries/geo.query';
 import * as GeoJSON from 'geojson';
 import { GeometryCollection } from 'topojson-specification';
-import { isNotNullish, linearScale, linearSquaredScale } from '../utils/misc';
+import { isNotNullish, linearScale, squaredLinearScale, logScale } from '../utils/misc';
 import { City, Territory, TerritoryLevel, World } from '../datasets/geo.types';
 import * as chroma from 'chroma-js';
 import { SECOND } from '../utils/timeUnits';
@@ -23,8 +23,7 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
   static animFPS = 30;
   static animDuration = SECOND;
   static animTimingFunction = easing('easeInOut');
-  static colorBorder = '#FFFFFF';
-  static minOpacity = .2;
+  static minOpacity = .1;
   static maxOpacity = .8;
   static minRadius = 1;
   static maxRadius = 30;
@@ -56,9 +55,9 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
   }
 
   private static getColor(valueRatio: number) {
-    const { colorPrimary, colorBorder, minOpacity, maxOpacity } = GeoMapD3;
-    const opacity = linearScale(valueRatio, minOpacity, maxOpacity);
-    return chroma.scale([colorBorder, colorPrimary])(opacity).hex('rgb');
+    const { colorPrimary, minOpacity, maxOpacity } = GeoMapD3;
+    const opacity = logScale(valueRatio, minOpacity, maxOpacity);
+    return chroma.scale(['#FFFFFF', colorPrimary])(opacity).hex('rgb');
   }
 
   render() {
@@ -329,7 +328,7 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
       .attr('class', 'geo_map-territory')
       .datum(city)
       .attr('transform', this.geoTransform)
-      .attr('r', linearSquaredScale(valueRatio, minRadius, maxRadius))
+      .attr('r', squaredLinearScale(valueRatio, minRadius, maxRadius))
       .attr('fill', GeoMapD3.getColor(valueRatio))
       .on('click', () => {
         filteringTerritory$.next(city);
