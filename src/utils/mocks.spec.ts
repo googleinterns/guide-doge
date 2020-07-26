@@ -2,6 +2,7 @@ import { AudificationPreference, Preference } from '../services/preference/types
 import { TimeSeriesPoint } from '../datasets/queries/time-series.query';
 import { activeUserMeasure } from '../models/data-cube/presets';
 import { LineChartDatum } from '../components/line-chart/line-chart.component';
+import { Summary } from '../datasets/summarizations/types';
 import { DAY } from './timeUnits';
 
 export const mockPreference: Preference = {
@@ -31,6 +32,14 @@ function createMockData(length = 5): LineChartDatum[] {
   return new Array(length).fill(0).map((_, i) => ({
     label: `Datum ${i}`,
     points: createMockPoints(),
+    querySummaries: () => createMockSummaries(),
+  }));
+}
+
+function createMockSummaries(length = 10): Summary[] {
+  return new Array(length).fill(0).map((_, i) => ({
+    text: `This is summary ${i}.`,
+    validity: i / length,
   }));
 }
 
