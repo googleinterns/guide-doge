@@ -91,6 +91,7 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
   }
 
   set filteringTerritory(territory: Territory | null) {
+    this.unit = territory ? Math.min(territory.level + 1, CITY) : COUNTRY;
     this.filteringTerritory$.next(territory);
   }
 
@@ -119,14 +120,10 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
   handleClickRow(datum: GeoDatum) {
     const { territory } = datum;
     this.filteringTerritory = territory;
-    if (territory.level === this.unit) {
-      this.unit = Math.min(this.unit + 1, CITY);
-    }
   }
 
   handleSearch(territory: Territory) {
     this.filteringTerritory = territory;
-    this.unit = Math.max(this.unit, territory.level);
   }
 
   ngOnInit() {
