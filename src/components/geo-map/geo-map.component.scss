@@ -8,7 +8,6 @@
 
   .hierarchy-wrapper {
     @include card-section;
-    //padding: .5rem 1.5rem;
 
     .hierarchy-territory {
       &:not(:last-child):after {

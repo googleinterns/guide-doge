@@ -22,7 +22,7 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
   static colorLand = '#EEEEEE';
   static minOpacity = .2;
   static maxOpacity = .8;
-  static minRadius = 5;
+  static minRadius = 1;
   static maxRadius = 30;
   static latitudeBounds = [-84, 84];
   static paddingScale = .9;

@@ -73,6 +73,7 @@ export function createGeoQuery(
         territory: world[queryOptions.unit][id],
         values,
       }))
+      .filter(datum => datum.values.activeUsers > 0)
       .sort((a, b) => b.values.activeUsers - a.values.activeUsers);
   };
 }
