@@ -5,7 +5,7 @@ import { GeoMapMeta } from '../../datasets/metas/geo-map.meta';
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
 import { GeoDatum } from '../../datasets/queries/geo.query';
 import { DAY } from '../../utils/timeUnits';
-import { Territory, TerritoryLevel, World } from '../../datasets/geo.types';
+import { Territory, TerritoryLevel } from '../../datasets/geo.types';
 import { formatY, humanizeMeasureName, humanizeTerritoryLevel } from '../../utils/formatters';
 import { filter, map, takeUntil } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
@@ -37,7 +37,6 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
   keywordControl = new FormControl();
   filteredTerritoryGroups$ = new Observable<TerritoryGroup[]>();
 
-  world: World;
   data$ = new BehaviorSubject<GeoDatum[]>([]);
   geoMapD3: GeoMapD3;
   range$ = new BehaviorSubject(defaultDateRange);
@@ -48,6 +47,11 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
   constructor(
     public elementRef: ElementRef<HTMLElement>,
   ) {
+    this.geoMapD3 = new GeoMapD3(this);
+  }
+
+  get world() {
+    return this.meta.world;
   }
 
   get data() {
@@ -121,8 +125,6 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.world = this.meta.world;
-
     const maxSuggestionsPerLevel = 10;
     this.filteredTerritoryGroups$ = this.keywordControl.valueChanges
       .pipe(filter(keyword => typeof keyword === 'string'))
@@ -137,7 +139,6 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
         return territoryGroups.filter(({ territories }) => territories.length > 0);
       }));
 
-    this.geoMapD3 = new GeoMapD3(this);
     this.geoMapD3.render();
     combineLatest([this.range$, this.filteringTerritory$, this.unit$])
       .pipe(takeUntil(this.destroy$))
