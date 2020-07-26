@@ -8,6 +8,8 @@ import { GeometryCollection, MultiPolygon, Polygon } from 'topojson-specificatio
 import { isNotNullish, linearScale, linearSquaredScale } from '../utils/misc';
 import { City, Territory, TerritoryLevel, World } from '../datasets/geo.types';
 import * as chroma from 'chroma-js';
+import { SECOND } from '../utils/timeUnits';
+import { easing } from 'transition-timing';
 
 export interface RenderOptions extends BaseRenderOptions {
   world: World;
@@ -18,6 +20,9 @@ export interface RenderOptions extends BaseRenderOptions {
 const { CONTINENT, SUBCONTINENT, COUNTRY, CITY } = TerritoryLevel;
 
 export class GeoMapD3 extends BaseD3<RenderOptions> {
+  static animFPS = 30;
+  static animDuration = SECOND;
+  static animTimingFunction = easing('easeInOut');
   static colorBorder = '#FFFFFF';
   static colorLand = '#EEEEEE';
   static minOpacity = .2;
@@ -26,12 +31,17 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
   static maxRadius = 30;
   static latitudeBounds = [-84, 84];
   static paddingScale = .9;
+  static rawProjection = d3.geoMercator()
+    .scale(1)
+    .translate([0, 0]);
+  static rawGeoPath = d3.geoPath(GeoMapD3.rawProjection);
 
+  protected zoom: d3.ZoomBehavior<SVGSVGElement, unknown>;
+  private animationId?: number;
   private projection: d3.GeoProjection;
   private geoPath: d3.GeoPath;
   private centerY: number;
   private lastTransform: d3.ZoomTransform | null;
-  protected zoom: d3.ZoomBehavior<SVGSVGElement, unknown>;
   private landPath: d3.Selection<SVGPathElement, GeoJSON.FeatureCollection<GeoJSON.Geometry, {}>, null, undefined>;
   private boundaryPath: d3.Selection<SVGPathElement, GeoJSON.MultiLineString, null, undefined>;
   private dataG: d3.Selection<SVGGElement, unknown, null, undefined>;
@@ -142,24 +152,15 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
   }
 
   private fit(territory: Territory | null) {
-    const { paddingScale } = GeoMapD3;
+    const { rawGeoPath, rawProjection, paddingScale } = GeoMapD3;
     const { width, height, world } = this.renderOptions;
 
     if (!territory) {
       const [minScale] = this.zoom.scaleExtent();
-      this.projection
-        .rotate([0, 0])
-        .translate([width / 2, height / 2])
-        .scale(minScale);
-      this.lastTransform = null;
-      this.zoom.scaleTo(this.svg, minScale);
+      this.animate(0, height / 2, minScale);
     } else if (territory.level === CITY) {
       this.fit(territory.parent);
     } else if (territory.geometry) {
-      const rawProjection = d3.geoMercator()
-        .scale(1)
-        .translate([0, 0]);
-      const rawGeoPath = d3.geoPath(rawProjection);
 
       const feature = topojson.feature(world.topology, territory.geometry);
       const [[left, top], [right, bottom]] = rawGeoPath.bounds(feature);
@@ -167,20 +168,46 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
       const boundingHeight = bottom - top;
       const boundingCenterX = boundingWidth / 2 + left;
       const boundingCenterY = boundingHeight / 2 + top;
-      const scale = Math.min(width / boundingWidth, height / boundingHeight) * paddingScale;
 
+      const [minScale] = this.zoom.scaleExtent();
+      const scale = Math.max(minScale, Math.min(width / boundingWidth, height / boundingHeight) * paddingScale);
       const [longitude, latitude] = rawProjection.invert!([boundingCenterX, boundingCenterY])!;
+      const y = this.centerY - rawProjection([longitude, latitude])![1] * scale;
 
-      const [translationX] = this.projection.translate();
-      const translationY = this.centerY - rawProjection([longitude, latitude])![1] * scale;
+      this.animate(longitude, y, scale);
+    }
+  }
 
+  private animate(newLongitude, newY, newScale) {
+    if (this.animationId !== undefined) {
+      window.clearInterval(this.animationId);
+      this.animationId = undefined;
+    }
+
+    const { animDuration, animTimingFunction, animFPS } = GeoMapD3;
+
+    const oldLongitude = -this.projection.rotate()[0];
+    const [x, oldY] = this.projection.translate();
+    const oldScale = this.projection.scale();
+
+    const animStartedAt = Date.now();
+    this.animationId = window.setInterval(() => {
+      let timingRatio = (Date.now() - animStartedAt) / animDuration;
+      if (timingRatio >= 1) {
+        timingRatio = 1;
+        window.clearInterval(this.animationId);
+      }
+      const animRatio = animTimingFunction(timingRatio);
+      const longitude = linearScale(animRatio, oldLongitude, newLongitude);
+      const y = linearScale(animRatio, oldY, newY);
+      const scale = linearScale(animRatio, oldScale, newScale);
       this.projection
         .rotate([-longitude, 0])
-        .translate([translationX, translationY])
+        .translate([x, y])
         .scale(scale);
       this.lastTransform = null;
       this.zoom.scaleTo(this.svg, scale);
-    }
+    }, SECOND / animFPS);
   }
 
   private handleZoomAndPan() {

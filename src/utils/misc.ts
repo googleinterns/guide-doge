@@ -52,6 +52,10 @@ export function linearSquaredScale(ratio: number, min: number, max: number) {
   return Math.sqrt(linearScale(ratio, min * min, max * max));
 }
 
+export function logarithmicScale(ratio: number, min: number, max: number) {
+  return linearScale(Math.log(linearScale(ratio, 1, Math.E)), min, max);
+}
+
 export function isNotNullish<T>(value: T): value is NonNullable<T> {
   return value !== undefined && value !== null;
 }
