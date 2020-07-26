@@ -113,7 +113,9 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
     this.zoom = d3.zoom<SVGSVGElement, unknown>().scaleExtent([minScale, 50 * minScale]);
     this.zoom.scaleTo(this.svg, minScale);
     this.zoom.on('zoom', this.handleZoomAndPan.bind(this));
-    this.svg.call(this.zoom);
+    this.svg
+      .call(this.zoom)
+      .on('dblclick.zoom', null);
 
     this.geoPath = d3.geoPath(this.projection);
     this.fit(null);
