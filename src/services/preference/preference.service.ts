@@ -5,7 +5,7 @@ import {
   DatasetPreference,
   DataTablePreference,
   Preference,
-  TextSummaryPreference,
+  SummarizationPreference,
   PreferenceMeta,
   PreferenceWithMeta,
   SelectPreferenceItemMeta,
@@ -60,12 +60,16 @@ export class PreferenceService {
     },
   }, 'data_table');
 
-  textSummary$ = this.createPreference<TextSummaryPreference>({
+  summarization$ = this.createPreference<SummarizationPreference>({
     enabled: {
       type: 'boolean',
       defaultValue: true,
     },
-  }, 'text_summary');
+    validityThreshold: {
+      type: 'number',
+      defaultValue: 0.5,
+    },
+  }, 'summarization');
 
   private createPreference<T extends Preference>(preferenceMeta: PreferenceMeta<T>, cookieKeySuffix: string) {
     const defaultPreference = createDefault(preferenceMeta);
