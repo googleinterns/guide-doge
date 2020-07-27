@@ -17,6 +17,8 @@ export interface AudificationPreference extends Preference {
 
 export type DataTablePreference = Preference;
 
+export type GeoMapNavigationPreference = Preference;
+
 export interface SummarizationPreference extends Preference {
   validityThreshold: number;
 }
@@ -30,7 +32,7 @@ export type DatasetPreference = UserWGNDatasetPreference | DummyDatasetPreferenc
 export type BaseDatasetPreference<T extends string, U> = { name: T } & U;
 
 export type UserWGNDatasetPreference = BaseDatasetPreference<'UserWhiteNoiseDataset', UserWhiteNoiseDataset.Config & Preference>;
-export type DummyDatasetPreference =  BaseDatasetPreference<'DummyDataset', DummyDataset.Config & Preference>;
+export type DummyDatasetPreference = BaseDatasetPreference<'DummyDataset', DummyDataset.Config & Preference>;
 
 export type PreferenceItemMeta = NumberPreferenceItemMeta | BoolPreferenceItemMeta | SelectPreferenceItemMeta;
 

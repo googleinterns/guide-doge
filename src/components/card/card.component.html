@@ -12,6 +12,7 @@
                     [meta]="currentChart"
                     appSummarization appAudification></app-line-chart>
     <app-geo-map *ngSwitchCase="MetaType.GEO_MAP"
-                 [meta]="currentChart"></app-geo-map>
+                 [meta]="currentChart"
+                 appGeoMapNavigation></app-geo-map>
   </ng-container>
 </mat-card>

@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { GeoMapModule } from '../geo-map/geo-map.module';
 import { AudificationModule } from '../../directives/audification/audification.module';
+import { GeoMapNavigationModule } from '../../directives/geo-map-navigation/geo-map-navigation.module';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { AudificationModule } from '../../directives/audification/audification.m
     SummarizationModule,
     CommonModule,
     MatCardModule,
+    GeoMapNavigationModule,
   ],
   exports: [
     CardComponent,
