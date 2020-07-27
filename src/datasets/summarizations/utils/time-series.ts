@@ -198,9 +198,9 @@ function intersectCone(c1: Cone2D, c2: Cone2D): Cone2D | null {
   }
 }
 
-type NumPoint = XYPoint<number, number>;
+export type NumPoint = XYPoint<number, number>;
 
-function timeSeriesPointToNumPoint(point: TimeSeriesPoint) {
+export function timeSeriesPointToNumPoint(point: TimeSeriesPoint) {
   return {
     x: point.x.getTime(),
     y: point.y,
