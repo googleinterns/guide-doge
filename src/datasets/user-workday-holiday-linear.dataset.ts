@@ -116,26 +116,37 @@ function generateDateCategory(
 ): Category {
   const dailyThunk = random.normal(0, dailyVariance);
   const values: CategoryValue[] = [];
-  const date = new Date(startDate);
 
   const holidayWeightMean = 1;
   const workdayWeightMean = workdayToHolidayUserActiveRatio * holidayWeightMean;
   const normalizeFactor = 1 / (holidayWeightMean * 2 + workdayWeightMean * 5);
 
+  const date = new Date(startDate);
   for (let i = 0; date <= endDate; i++) {
+    let weight = Math.pow(i, Math.abs(linearIncreasingFactor));
+
     if (date.getDay() === 0 || date.getDay() === 6) {
-      values.push({
-        name: date.getTime(),
-        weight: Math.max(holidayWeightMean + dailyThunk(), 0) * Math.pow(i, linearIncreasingFactor),
-      });
+      weight *= Math.max(holidayWeightMean + dailyThunk(), 0) * normalizeFactor;
     } else {
-      values.push({
-        name: date.getTime(),
-        weight: Math.max(workdayWeightMean + dailyThunk()) * Math.pow(i, linearIncreasingFactor),
-      });
+      weight *= Math.max(workdayWeightMean + dailyThunk()) * normalizeFactor;
     }
+
+    values.push({
+      name: date.getTime(),
+      weight
+    });
     date.setTime(date.getTime() + DAY);
   }
+
+  if (linearIncreasingFactor < 0) {
+    for (let i = 0; i < values.length / 2; i++) {
+      const j = values.length - i - 1;
+      const t =  values[j].weight;
+      values[j].weight = values[i].weight;
+      values[i].weight = t;
+    }
+  }
+
 
   return {
     name: 'date',
