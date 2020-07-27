@@ -71,23 +71,20 @@ export class VRScatterPlotComponent implements OnInit {
           break;
         }
       }
-      this.setDataOnD3();
-    });
-  }
-
-  setDataOnD3(){
-    this.queryOptions$
+      this.queryOptions$
     .pipe(takeUntil(this.destroy$))
     .pipe(map(queryOption => {
       // this.meta2.query(queryOption)[0]) has label, points, style and is of type BehaviorSubject<LineChartData>
       return this.datasetPref.queryData(queryOption)[0];
     }))
     .subscribe(this.datum$);
-    // this.vrScatterPlot.init(this.ascene.nativeElement, this.datum$.value.points, this.datasetPref.type);
-    this.vrScatterPlot.init(document.querySelector('a-scene'), this.datum$.value.points, MetaType.SCATTER_PLOT);
-    console.log(this.datasetPref.type);
+    this.callD3();
+    });
   }
 
+  callD3(){
+    this.vrScatterPlot.init(document.querySelector('a-scene'), this.datum$.value.points, MetaType.SCATTER_PLOT);
+  }
 
   get datum() {
     return this.datum$.value;
