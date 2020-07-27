@@ -23,13 +23,25 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const summaries: Summary[] = [];
     const normalizedPoints = normalizeNumPoints(points.map(timeSeriesPointToNumPoint));
     const weekdayWeekendEqualValidity = calWeekdayWeekendEqualValidity(points);
+    const weekdayNormalizedPoints = normalizedPoints.filter((_, i) => isWeekday(points[i]));
+    const weekendNormalizedPoints = normalizedPoints.filter((_, i) => isWeekend(points[i]));
 
-    const HPI = Math.PI / 2;
-    const uQuicklyIncreasingLinearTrend = trapmfL(HPI / 2, HPI * 3 / 5);
-    const uIncreasingLinearTrend = trapmfL(HPI / 8, HPI / 4);
-    const uConstantLinearTrend = trapmf(-HPI / 4, -HPI / 8, HPI / 8, HPI / 4);
-    const uDecreasingLinearTrend = trapmfR(-HPI / 4, -HPI / 8);
-    const uQuicklyDecreasingLinearTrend = trapmfR(-HPI * 3 / 5, -HPI / 2);
+    const overallLinearModel = regression.linear(normalizedPoints.map(pointToPair));
+    const overallLinearTrendValidity = calLinearTrendValidity(normalizedPoints, overallLinearModel);
+
+    const weekdayLinearModel = regression.linear(weekdayNormalizedPoints.map(pointToPair));
+    const weekdayLinearTrendValidity = calLinearTrendValidity(weekdayNormalizedPoints, weekdayLinearModel);
+
+    const weekendLinearModel = regression.linear(weekendNormalizedPoints.map(pointToPair));
+    const weekendLinearTrendValidity = calLinearTrendValidity(weekendNormalizedPoints, weekendLinearModel);
+
+    // The size of the chart is fixed to 800 * 500
+    const ANGMX = Math.atan(500 / 800);
+    const uQuicklyIncreasingLinearTrend = trapmfL(ANGMX * 3 / 8, ANGMX / 2);
+    const uIncreasingLinearTrend = trapmf(ANGMX / 8, ANGMX / 4, ANGMX * 3 / 8, ANGMX / 2);
+    const uConstantLinearTrend = trapmf(-ANGMX / 4, -ANGMX / 8, ANGMX / 8, ANGMX / 4);
+    const uDecreasingLinearTrend = trapmf(-ANGMX / 2, -ANGMX * 3 / 8, -ANGMX / 4, -ANGMX / 8);
+    const uQuicklyDecreasingLinearTrend = trapmfR(-ANGMX / 2, -ANGMX * 3 / 8);
 
     const uLinearTrends: [string, MembershipFunction][] = [
       ['quickly increasing', uQuicklyIncreasingLinearTrend],
@@ -39,56 +51,72 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       ['quickly decreasing', uQuicklyDecreasingLinearTrend],
     ];
 
-    const overallLinearModel = regression.linear(normalizedPoints.map(pointToPair));
-    const overallLinearTrendValidity = calLinearTrendValidity(normalizedPoints, overallLinearModel);
+    const overallLinearTrendSummariesValidity = Math.max(
+      weekdayWeekendEqualValidity,
+      ...uLinearTrends.map(([_, uLinearTrend]) =>
+        Math.min(
+          overallLinearTrendValidity,
+          uLinearTrend(getLinearModelAngle(overallLinearModel)),
+          weekdayLinearTrendValidity,
+          uLinearTrend(getLinearModelAngle(weekdayLinearModel)),
+          weekendLinearTrendValidity,
+          uLinearTrend(getLinearModelAngle(weekendLinearModel)),
+        )),
+    );
+
     for (const [linearTrend, uLinearTrend] of uLinearTrends) {
-      const linearModelAngleRad = Math.atan(overallLinearModel.equation[0]);
       const validity = Math.min(
-        weekdayWeekendEqualValidity,
+        overallLinearTrendSummariesValidity,
         overallLinearTrendValidity,
-        uLinearTrend(linearModelAngleRad),
+        uLinearTrend(getLinearModelAngle(overallLinearModel)),
       );
+      const text = `The <b>overall</b> trend is <b>${linearTrend === 'constant' ? '' : 'linearly '}${linearTrend}</b>.`;
       summaries.push({
         validity,
-        text: `The <b>overall</b> trend is <b>${linearTrend === 'constant' ? '' : 'linearly '}${linearTrend}</b>.`,
+        text,
       });
     }
 
-    const weekdayNormalizedPoints = normalizedPoints.filter((_, i) => isWeekday(points[i]));
-    const weekdayLinearModel = regression.linear(weekdayNormalizedPoints.map(pointToPair));
-    const weekdayLinearTrendValidity = calLinearTrendValidity(weekdayNormalizedPoints, weekdayLinearModel);
     for (const [linearTrend, uLinearTrend] of uLinearTrends) {
-      const linearModelAngleRad = Math.atan(weekdayLinearModel.equation[0]);
       const validity = Math.min(
-        1.0 - weekdayWeekendEqualValidity,
+        1.0 - overallLinearTrendSummariesValidity,
         weekdayLinearTrendValidity,
-        uLinearTrend(linearModelAngleRad),
+        uLinearTrend(getLinearModelAngle(weekdayLinearModel)),
       );
+      const text = `The <b>weekday</b> trend is <b>${linearTrend === 'constant' ? '' : 'linearly '}${linearTrend}</b>.`;
       summaries.push({
         validity,
-        text: `The <b>weekday</b> trend is <b>${linearTrend === 'constant' ? '' : 'linearly '}${linearTrend}</b>.`,
+        text,
       });
     }
 
-
-    const weekendNormalizedPoints = normalizedPoints.filter((_, i) => isWeekend(points[i]));
-    const weekendLinearModel = regression.linear(weekendNormalizedPoints.map(pointToPair));
-    const weekendLinearTrendValidity = calLinearTrendValidity(weekendNormalizedPoints, weekendLinearModel);
     for (const [linearTrend, uLinearTrend] of uLinearTrends) {
-      const linearModelAngleRad = Math.atan(weekendLinearModel.equation[0]);
       const validity = Math.min(
-        1.0 - weekdayWeekendEqualValidity,
+        1.0 - overallLinearTrendSummariesValidity,
         weekendLinearTrendValidity,
-        uLinearTrend(linearModelAngleRad),
+        uLinearTrend(getLinearModelAngle(weekendLinearModel)),
       );
+      const text = `The <b>weekend</b> trend is <b>${linearTrend === 'constant' ? '' : 'linearly '}${linearTrend}</b>.`;
       summaries.push({
         validity,
-        text: `The <b>weekend</b> trend is <b>${linearTrend === 'constant' ? '' : 'linearly '}${linearTrend}</b>.`,
+        text,
       });
     }
 
     return summaries;
   });
+}
+
+function pointToPair<X, Y>(p: XYPoint<X, Y>): [X, Y] {
+  return [p.x, p.y];
+}
+
+function getLinearModelAngle(model: { equation: [number, number] }) {
+  return Math.atan(getLinearModelGardient(model));
+}
+
+function getLinearModelGardient(model: { equation: [number, number] }) {
+  return model.equation[0];
 }
 
 function calLinearTrendValidity(points: NumPoint[], model: { equation: [number, number] }) {
@@ -101,10 +129,6 @@ function calLinearTrendValidity(points: NumPoint[], model: { equation: [number, 
   const std = math.std(errors);
 
   return uSmallRegressionError(std);
-}
-
-function pointToPair<X, Y>(p: XYPoint<X, Y>): [X, Y] {
-  return [p.x, p.y];
 }
 
 function uSmallRegressionError(v) {
