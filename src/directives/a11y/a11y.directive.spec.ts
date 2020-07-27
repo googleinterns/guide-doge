@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AudificationDirective } from './audification.directive';
+import { A11yDirective } from './a11y.directive';
 import { Component, ViewChild } from '@angular/core';
-import { AudificationModule } from './audification.module';
+import { A11yModule } from './a11y.module';
 import { LineChartComponent } from '../../components/line-chart/line-chart.component';
 import { mockAudificationPreference } from '../../utils/mocks.spec';
 import { PreferenceService } from '../../services/preference/preference.service';
@@ -16,21 +16,21 @@ describe('AudificationDirective', () => {
   })
   class WrapperComponent {
     @ViewChild(LineChartComponent, { static: true }) hostComponent: LineChartComponent;
-    @ViewChild(AudificationDirective, { static: true }) directive: AudificationDirective;
+    @ViewChild(A11yDirective, { static: true }) directive: A11yDirective;
   }
 
   let preferenceService: PreferenceService;
   let fixture: ComponentFixture<WrapperComponent>;
   let wrapperComponent: WrapperComponent;
   let hostComponent: LineChartComponent;
-  let directive: AudificationDirective;
+  let directive: A11yDirective;
 
   beforeEach(() => {
     preferenceService = new PreferenceService();
 
     TestBed.configureTestingModule({
       imports: [
-        AudificationModule,
+        A11yModule,
         A11yPlaceholderModule,
         MatCardModule,
       ],
@@ -49,7 +49,7 @@ describe('AudificationDirective', () => {
   });
 
   it('should instantiate.', () => {
-    expect(directive).toBeInstanceOf(AudificationDirective);
+    expect(directive).toBeInstanceOf(A11yDirective);
   });
 
   it('should get the host correctly.', () => {
