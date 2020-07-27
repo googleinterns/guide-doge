@@ -108,7 +108,7 @@ function pointToPair<X, Y>(p: XYPoint<X, Y>): [X, Y] {
 }
 
 function uSmallRegressionError(v) {
-  return trapmfR(0.09, 0.13)(v * 2);
+  return trapmfR(0.15, 0.2)(v * 2);
 }
 
 function calWeekdayWeekendEqualValidity(points: TimeSeriesPoint[]): number {
