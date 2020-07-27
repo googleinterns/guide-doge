@@ -1,15 +1,15 @@
 import { ComponentRef, Directive, Host, OnDestroy, OnInit, Optional, Self } from '@angular/core';
 import { LineChartComponent } from '../../components/line-chart/line-chart.component';
 import { PreferenceService } from '../../services/preference/preference.service';
-import { AudificationPreference } from '../../services/preference/types';
+import { SummarizationPreference } from '../../services/preference/types';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Directive({
-  selector: '[appAudification]',
+  selector: '[appSummarization]',
 })
-export class AudificationDirective implements OnInit, OnDestroy {
-  private audificationComponentRef: ComponentRef<unknown> | null;
+export class SummarizationDirective implements OnInit, OnDestroy {
+  private summarizationComponentRef: ComponentRef<unknown> | null;
   private destroy$ = new Subject();
 
   constructor(
@@ -25,13 +25,13 @@ export class AudificationDirective implements OnInit, OnDestroy {
     // TODO: support multiple component types when available in `this.lineChartComponent || this.barChartComponent || ...`
     const component = this.lineChartComponent;
     if (!component) {
-      throw new Error('The component does not support audification.');
+      throw new Error('The component does not support summarization.');
     }
     return component;
   }
 
   ngOnInit() {
-    this.preferenceService.audification$
+    this.preferenceService.summarization$
       .pipe(takeUntil(this.destroy$))
       .subscribe(async preference => {
         if (preference.enabled) {
@@ -48,18 +48,18 @@ export class AudificationDirective implements OnInit, OnDestroy {
     this.detach();
   }
 
-  async attach(preference: AudificationPreference) {
+  async attach(preference: SummarizationPreference) {
     this.detach();
 
     const { host } = this;
-    const { LineChartAudificationModule } = await import('../../components/line-chart-audification/line-chart-audification.module');
-    this.audificationComponentRef = await host.a11yPlaceholder.addComponent(LineChartAudificationModule, host, preference);
+    const { ChartSummarizationModule } = await import('../../components/chart-summarization/chart-summarization.module');
+    this.summarizationComponentRef = await host.a11yPlaceholder.addComponent(ChartSummarizationModule, host, preference);
   }
 
   detach() {
-    if (this.audificationComponentRef) {
-      this.host.a11yPlaceholder.removeComponent(this.audificationComponentRef);
-      this.audificationComponentRef = null;
+    if (this.summarizationComponentRef) {
+      this.host.a11yPlaceholder.removeComponent(this.summarizationComponentRef);
+      this.summarizationComponentRef = null;
     }
   }
 }

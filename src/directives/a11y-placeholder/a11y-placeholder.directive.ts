@@ -14,8 +14,6 @@ export class A11yPlaceholderDirective<Host> {
   }
 
   async addComponent<Component>(A11yModule: Type<LazyA11yModule<Component>>, host: Host, preference: Preference) {
-    this.viewContainerRef.clear();
-
     // compile the asynchronously imported module to resolve the dependencies of the a11y component
     const moduleFactory = await this.compiler.compileModuleAsync(A11yModule);
     const moduleRef = moduleFactory.create(null);
@@ -29,7 +27,7 @@ export class A11yPlaceholderDirective<Host> {
       }],
     });
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(module.A11yComponent);
-    const componentRef = this.viewContainerRef.createComponent(componentFactory, 0, injector);
+    const componentRef = this.viewContainerRef.createComponent(componentFactory, undefined, injector);
     const component = componentRef.instance;
     Object.assign(component, preference);
     return componentRef;

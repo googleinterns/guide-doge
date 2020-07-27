@@ -9,7 +9,8 @@
   </div>
   <ng-container [ngSwitch]="currentChart.type">
     <app-line-chart *ngSwitchCase="MetaType.LINE_CHART"
-                    [meta]="currentChart" appAudification></app-line-chart>
+                    [meta]="currentChart"
+                    appSummarization appAudification></app-line-chart>
     <app-geo-map *ngSwitchCase="MetaType.GEO_MAP"
                  [meta]="currentChart"></app-geo-map>
   </ng-container>
