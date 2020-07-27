@@ -30,7 +30,7 @@ export const configMeta: PreferenceMeta<Config> = {
   },
   linearIncreasingFactor: {
     type: 'number',
-    defaultValue: 100,
+    defaultValue: 5,
   },
 };
 
