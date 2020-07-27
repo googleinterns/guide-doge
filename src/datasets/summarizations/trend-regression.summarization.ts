@@ -37,11 +37,11 @@ export function queryFactory(points: TimeSeriesPoint[]) {
 
     // The size of the chart is fixed to 800 * 500
     const ANGMX = Math.atan(500 / 800);
-    const uQuicklyIncreasingLinearTrend = trapmfL(ANGMX * 3 / 8, ANGMX / 2);
-    const uIncreasingLinearTrend = trapmf(ANGMX / 8, ANGMX / 4, ANGMX * 3 / 8, ANGMX / 2);
+    const uQuicklyIncreasingLinearTrend = trapmfL(ANGMX / 2, ANGMX * 5 / 8);
+    const uIncreasingLinearTrend = trapmf(ANGMX / 8, ANGMX / 4, ANGMX / 2, ANGMX * 5 / 8);
     const uConstantLinearTrend = trapmf(-ANGMX / 4, -ANGMX / 8, ANGMX / 8, ANGMX / 4);
-    const uDecreasingLinearTrend = trapmf(-ANGMX / 2, -ANGMX * 3 / 8, -ANGMX / 4, -ANGMX / 8);
-    const uQuicklyDecreasingLinearTrend = trapmfR(-ANGMX / 2, -ANGMX * 3 / 8);
+    const uDecreasingLinearTrend = trapmf(-ANGMX * 5 / 8, -ANGMX / 2, -ANGMX / 4, -ANGMX / 8);
+    const uQuicklyDecreasingLinearTrend = trapmfR(-ANGMX * 5 / 8, -ANGMX / 2);
 
     const uLinearTrends: [string, MembershipFunction][] = [
       ['quickly increasing', uQuicklyIncreasingLinearTrend],
