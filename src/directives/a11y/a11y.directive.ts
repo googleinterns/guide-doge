@@ -60,8 +60,7 @@ export class A11yDirective implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe(preference => {
           if (preference.enabled) {
-            this.attach(module, preference)
-              .catch(console.error);
+            this.attach(module, preference);
           } else {
             this.detach(module);
           }

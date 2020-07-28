@@ -3,16 +3,16 @@ import { A11yDirective } from './a11y.directive';
 import { Component, ViewChild } from '@angular/core';
 import { A11yModule } from './a11y.module';
 import { LineChartComponent } from '../../components/line-chart/line-chart.component';
-import { mockAudificationPreference } from '../../utils/mocks.spec';
 import { PreferenceService } from '../../services/preference/preference.service';
-import { A11yPlaceholderModule } from '../a11y-placeholder/a11y-placeholder.module';
-import { MatCardModule } from '@angular/material/card';
+import { LineChartModule } from '../../components/line-chart/line-chart.module';
+import { importAudificationModule } from '../../components/line-chart-audification/line-chart-audification.importer';
+import { importSummarizationModule } from '../../components/chart-summarization/chart-summarization.importer';
 
 describe('AudificationDirective', () => {
   @Component({
     selector: 'app-wrapper',
     template: `
-      <app-line-chart appAudification></app-line-chart>`,
+      <app-line-chart [appA11y]></app-line-chart>`,
   })
   class WrapperComponent {
     @ViewChild(LineChartComponent, { static: true }) hostComponent: LineChartComponent;
@@ -31,14 +31,12 @@ describe('AudificationDirective', () => {
     TestBed.configureTestingModule({
       imports: [
         A11yModule,
-        A11yPlaceholderModule,
-        MatCardModule,
+        LineChartModule,
       ],
       providers: [
-        { provide: PreferenceService, useValue: preferenceService }
+        { provide: PreferenceService, useValue: preferenceService },
       ],
       declarations: [
-        LineChartComponent,
         WrapperComponent,
       ],
     });
@@ -52,12 +50,13 @@ describe('AudificationDirective', () => {
     expect(directive).toBeInstanceOf(A11yDirective);
   });
 
-  it('should get the host correctly.', () => {
-    expect(directive.host).toBe(hostComponent);
+  it('should get the host component correctly.', () => {
+    expect(directive.hostComponent).toBe(hostComponent);
   });
 
-  it('should attach or detach audification as the preference changes.', () => {
-    directive.ngOnInit();
+  it('should attach or detach audification as the preference changes.', async () => {
+    directive.a11yModuleImporters = [importAudificationModule, importSummarizationModule];
+    await directive.ngOnInit();
 
     const audificationPreference = preferenceService.audification$.value;
     spyOn(directive, 'attach');
@@ -73,18 +72,5 @@ describe('AudificationDirective', () => {
       enabled: false,
     });
     expect(directive.detach).toHaveBeenCalled();
-  });
-
-  it('should add a component to the a11y placeholder when attaching audification.', async () => {
-    spyOn(hostComponent.a11yPlaceholder, 'addComponent');
-    await directive.attach(mockAudificationPreference);
-    expect(hostComponent.a11yPlaceholder.addComponent).toHaveBeenCalled();
-  });
-
-  it('should remove a component from the a11y placeholder when detaching audification.', async () => {
-    await directive.attach(mockAudificationPreference);
-    spyOn(hostComponent.a11yPlaceholder, 'removeComponent');
-    directive.detach();
-    expect(hostComponent.a11yPlaceholder.removeComponent).toHaveBeenCalled();
   });
 });
