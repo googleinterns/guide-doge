@@ -1,5 +1,6 @@
 import { Hapticplot } from './hapticplot.d3';
 import { Entity } from 'aframe';
+import { Vector3 } from 'three';
 
 
 describe('VR Haptic Plot', () => {
@@ -21,25 +22,14 @@ describe('VR Haptic Plot', () => {
 
   it('places points for each datum in a one datum array', () => {
     hapticplot.init(scene, [10]);
-    const expectedPosArray = [{ x: 0, y: 10, z: -1 }];
+    const expectedPosArray = [new Vector3(0, 10, -1)];
     const result = getPosition(scene, shape);
     expect(result).toEqual(expectedPosArray);
   });
 
-  it('places points for each datum in a two datum array', () => {
-    hapticplot.init(scene, [10, 10]);
-    const expectedPosArray = [{ x: 0, y: 10, z: -1 }, { x: 0.1, y: 10, z: -1 }];
-    const result = getPosition(scene, shape);
-    expect(result).toEqual(expectedPosArray);
-  });
-
-  it('places points for each datum in a eight datum array', () => {
-    hapticplot.init(scene, [10, 10, 20, 20, 30, 30, 40, 40]);
-    const expectedPosArray = [
-      { x: 0, y: 10, z: -1 }, { x: 0.10, y: 10, z: -1 },
-      { x: 0.2, y: 20, z: -1 }, { x: 0.3, y: 20, z: -1 },
-      { x: 0.4, y: 30, z: -1 }, { x: 0.5, y: 30, z: -1 },
-     { x: 0.6, y: 40, z: -1 }, { x: 0.7, y: 40, z: -1 }];
+  it('places points for each datum in a three datum array', () => {
+    hapticplot.init(scene, [0, 10, 20]);
+    const expectedPosArray = [new Vector3(0, 0, -1), new Vector3(0.1, 10, -1), new Vector3(0.2, 20, -1)];
     const result = getPosition(scene, shape);
     expect(result).toEqual(expectedPosArray);
   });
@@ -76,13 +66,15 @@ describe('VR Haptic Plot', () => {
 // Helper Functions
 
 // returns array of actual position vectors
-function getPosition(scene: HTMLElement, shape: string): Array<{x: number, y: number, z: number}>{
-  const childrenArray = scene.querySelectorAll(shape);
-  const positionArray: Array<{x: number, y: number, z: number}> = [];
-  for (const child of (childrenArray as any)){
-    positionArray.push((child as any).components.position.attrValue);
-  }
-  return positionArray;
+function getPosition(scene: HTMLElement, shape: string): Vector3[]{
+  const attrArray: Vector3[] = [];
+  Array.from(scene.querySelectorAll(shape)).forEach((child) => {
+    attrArray.push(new Vector3(
+      (child as Entity).object3D.position.x,
+      (child as Entity).object3D.position.y,
+      (child as Entity).object3D.position.z));
+  });
+  return attrArray;
 }
 
 // returns array of each generated objects color

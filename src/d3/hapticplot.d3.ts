@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import * as THREE from 'three';
+import { Entity } from 'aframe';
 
 export class Hapticplot{
     private data: number[];
@@ -49,7 +50,7 @@ export class Hapticplot{
       //    elements & # DOM elements don't match
       .data(this.data).enter().append(this.shape).classed('datapoint', true)
       // Updates points positions based on ingested data
-      .attr('position', (d, i) =>  this.generatePositions(d, i))
+      .each((d, i , g) => this.generatePositions(d, i, g[i]))
       // Adds given color property to all points
       .attr('color', defaultColor)
       // Sets points radius property
@@ -68,11 +69,11 @@ export class Hapticplot{
    * @param data Ingested Data
    * @param index Crrent index in data array
    */
-  private generatePositions(data, index){
+  private generatePositions(data, index, entity){
     const x = index / 10;
     const y = data;
     const z = -1;
-    return `${x} ${y} ${z}`;
+    (entity as Entity).object3D.position.set(x, y, z);
   }
 
   /**
