@@ -1,4 +1,4 @@
 export async function importSummarizationModule() {
-  const { ChartSummarizationModule } = await import('../../components/chart-summarization/chart-summarization.module');
+  const { ChartSummarizationModule } = await import('./chart-summarization.module');
   return ChartSummarizationModule;
 }
