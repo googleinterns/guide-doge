@@ -1,6 +1,6 @@
 import * as AFRAME from 'aframe';
 import * as d3 from 'd3';
-import { VRPoint } from '../datasets/queries/vr.query';
+import { VRScatterPoint } from '../datasets/queries/vr.query';
 import { MetaType } from '../datasets/metas/types';
 
 
@@ -10,7 +10,7 @@ export interface ScatterPlotStyle {
 }
 
 export class Scatterplot{
-    private data: VRPoint[];
+    private data: VRScatterPoint[];
     private shape: string;
     private container: HTMLElement | null;
     private TIME_MAX = 31;
@@ -20,7 +20,8 @@ export class Scatterplot{
   constructor(shape: string) {
     this.shape = shape;
   }
-  init(container: HTMLElement, data: VRPoint[], dataType: MetaType){
+  init(container: HTMLElement, data: VRScatterPoint[], dataType: MetaType){
+    // console.log(data[0].categories.browser);
     this.data = data;
     this.dataType = dataType;
     this.container = container;
@@ -43,9 +44,9 @@ export class Scatterplot{
     // d is data at index, i within
     // select all shapes within given container
     d3.select(this.container).selectAll(this.shape).attr('radius', .5).attr('position', (d, i) => {
-      const x = (d as VRPoint).x;
-      const y = (d as VRPoint).y;
-      const z = (d as VRPoint).z;
+      const x = (d as VRScatterPoint).x;
+      const y = (d as VRScatterPoint).y;
+      const z = (d as VRScatterPoint).z;
       return `${x} ${y} ${z}`;
     });
   }

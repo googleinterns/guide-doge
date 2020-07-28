@@ -41,7 +41,7 @@ describe('VRScatterplotComponent', () => {
   });
   it('should call d3 on init.', () => {
     spyOn(scatterplotD3, 'init').and.callThrough();
-    component.callD3();
+    component.initD3ScatterPlot();
     expect(scatterplotD3.init).toHaveBeenCalled();
   });
 });
