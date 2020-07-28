@@ -1,12 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CardComponent } from './card.component';
 import { LineChartModule } from '../line-chart/line-chart.module';
-import { SummarizationModule } from '../../directives/summarization/summarization.module';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { GeoMapModule } from '../geo-map/geo-map.module';
-import { AudificationModule } from '../../directives/audification/audification.module';
-import { GeoMapNavigationModule } from '../../directives/geo-map-navigation/geo-map-navigation.module';
+import { A11yModule } from '../../directives/a11y/a11y.module';
 
 @NgModule({
   declarations: [
@@ -15,11 +13,9 @@ import { GeoMapNavigationModule } from '../../directives/geo-map-navigation/geo-
   imports: [
     LineChartModule,
     GeoMapModule,
-    AudificationModule,
-    SummarizationModule,
+    A11yModule,
     CommonModule,
     MatCardModule,
-    GeoMapNavigationModule,
   ],
   exports: [
     CardComponent,
