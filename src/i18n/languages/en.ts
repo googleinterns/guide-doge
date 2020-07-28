@@ -1,7 +1,8 @@
 import {
   AUDIFICATION,
   AUDIFICATION_PREFERENCE,
-  DATA_PREFERENCE, GEO_MAP_NAVIGATION,
+  DATA_PREFERENCE,
+  GEO_MAP_NAVIGATION,
   GEO_MAP_NAVIGATION_PREFERENCE,
   GUIDE_DOGE,
   I18n,
@@ -58,10 +59,6 @@ export const en: I18n = {
   [PUNCTUATION.QUESTION_MARK]: 'QUESTION MARK',
 
   [GEO_MAP_NAVIGATION.INSTRUCTIONS]: [
-    'Hold down <kbd>SPACE</kbd> to play the audified melody and <kbd>SHIFT</kbd> + <kbd>SPACE</kbd> to play it backward.',
-    'Press <kbd>X</kbd> or <kbd>Y</kbd> to read out the domain or range respectively.',
-    'Press <kbd>L</kbd> to read out the legend items.',
-    'Press <kbd>UP</kbd> or <kbd>DOWN</kbd> to switch among the legend items.',
-    'Press <kbd>0</kbd> ... <kbd>9</kbd> to move playhead.',
+    'Press <kbd>1</kbd> ... <kbd>5</kbd> to change the territory unit from city to continent.',
   ].join(' <br/>'),
 };
