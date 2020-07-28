@@ -8,7 +8,7 @@ import { LineChartModule } from '../../components/line-chart/line-chart.module';
 import { importAudificationModule } from '../../components/line-chart-audification/line-chart-audification.importer';
 import { importSummarizationModule } from '../../components/chart-summarization/chart-summarization.importer';
 
-describe('AudificationDirective', () => {
+describe('A11yDirective', () => {
   @Component({
     selector: 'app-wrapper',
     template: `
