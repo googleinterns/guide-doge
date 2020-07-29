@@ -89,26 +89,37 @@ export class GeoMapNavigationComponent implements GeoMapNavigationPreference, On
     }
     $event.preventDefault();
     $event.stopPropagation();
-    if (key === '-' || key === '_') {
-      this.unit = Math.max(this.unit - 1, this.filteringTerritory?.level ?? 0);
-    } else if (key === '+' || key === '=') {
-      this.unit = Math.min(this.unit + 1, CITY);
-    } else if (key === 'Enter') {
-      if (shiftKey) {
-        this.filteringTerritory = this.filteringTerritory?.parent ?? null;
-      } else if (this.activeDatumIndex >= 0) {
-        this.filteringTerritory = this.data[this.activeDatumIndex]?.territory ?? null;
-      }
-    } else if (key === '/') {
-      this.keywordElement.focus();
-    } else if (key === 'ArrowDown') {
-      this.activeDatumIndex = Math.min(this.activeDatumIndex + 1, this.data.length - 1);
-    } else if (key === 'ArrowUp') {
-      this.activeDatumIndex = Math.max(this.activeDatumIndex - 1, 0);
-    } else if (key === 'ArrowRight') {
-      this.activeMeasureIndex = Math.min(this.activeMeasureIndex + 1, this.host.measureNames.length - 1);
-    } else if (key === 'ArrowLeft') {
-      this.activeMeasureIndex = Math.max(this.activeMeasureIndex - 1, 0);
+    switch (key) {
+      case '-':
+      case '_':
+        this.unit = Math.max(this.unit - 1, this.filteringTerritory?.level ?? 0);
+        break;
+      case '+':
+      case '=':
+        this.unit = Math.min(this.unit + 1, CITY);
+        break;
+      case 'Enter':
+        if (shiftKey) {
+          this.filteringTerritory = this.filteringTerritory?.parent ?? null;
+        } else if (this.activeDatumIndex >= 0) {
+          this.filteringTerritory = this.data[this.activeDatumIndex].territory;
+        }
+        break;
+      case '/':
+        this.keywordElement.focus();
+        break;
+      case 'ArrowDown':
+        this.activeDatumIndex = Math.min(this.activeDatumIndex + 1, this.data.length - 1);
+        break;
+      case 'ArrowUp':
+        this.activeDatumIndex = Math.max(this.activeDatumIndex - 1, 0);
+        break;
+      case 'ArrowRight':
+        this.activeMeasureIndex = Math.min(this.activeMeasureIndex + 1, this.host.measureNames.length - 1);
+        break;
+      case 'ArrowLeft':
+        this.activeMeasureIndex = Math.max(this.activeMeasureIndex - 1, 0);
+        break;
     }
     return false;
   }
