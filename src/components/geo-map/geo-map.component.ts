@@ -78,7 +78,7 @@ export class GeoMapComponent extends A11yHostComponent implements RenderOptions,
   }
 
   get displayedColumns() {
-    return ['id', ...this.measureNames];
+    return ['ranking', 'id', ...this.measureNames];
   }
 
   get TERRITORY_LEVEL() {

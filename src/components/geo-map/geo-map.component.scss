@@ -55,13 +55,15 @@
 
       .mat-header-cell,
       .mat-cell {
-        &:not(:first-child) {
-          padding-left: 12px;
-        }
+        padding-left: 12px;
       }
 
       .mat-row.active .mat-cell.active {
         font-weight: 500;
+      }
+
+      .mat-column-ranking {
+        text-align: right;
       }
     }
   }
