@@ -38,7 +38,7 @@ export class GeoMapComponent extends A11yHostComponent implements RenderOptions,
 
   keywordControl = new FormControl();
   filteredTerritoryGroups$ = new Observable<TerritoryGroup[]>();
-  activeMeasureIndex = 0;
+  activeMeasureIndex = -1;
 
   data$ = new BehaviorSubject<GeoDatum[]>([]);
   activeDatumIndex$ = new BehaviorSubject(-1);
@@ -105,7 +105,7 @@ export class GeoMapComponent extends A11yHostComponent implements RenderOptions,
     this.filteringTerritory$.next(territory);
   }
 
-  get hierarchyTerritories() {
+  get hierarchicalTerritories() {
     const territories: Territory[] = [];
     let { filteringTerritory } = this;
     while (filteringTerritory) {

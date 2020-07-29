@@ -30,10 +30,10 @@ export const en: I18n = {
       `The current legend item is '%(label)s'.`,
       en[AUDIFICATION.DOMAIN],
       en[AUDIFICATION.RANGE],
-      'Press <kbd>?</kbd> to read out the instructions.',
     ].join(' <br/>');
   },
   [AUDIFICATION.DOMAIN_UNIT_DAY]: 'a day',
+  [AUDIFICATION.BREAK_SILENCE]: 'Press <kbd>?</kbd> to read out the instructions.',
 
   [DATA_PREFERENCE.enabled]: 'Data Generator',
   [DATA_PREFERENCE.name]: 'Dataset',
@@ -66,4 +66,6 @@ export const en: I18n = {
     'Press <kbd>UP</kbd> or <kbd>DOWN</kbd> to switch among subordinate territories.',
     'Press <kbd>LEFT</kbd> or <kbd>RIGHT</kbd> to switch among measures.',
   ].join(' <br/>'),
+  [GEO_MAP_NAVIGATION.UNIT_AND_FILTERING_TERRITORY]: '%(unit)s in %(hierarchical_territories)s.',
+  [GEO_MAP_NAVIGATION.BREAK_SILENCE]: 'Press <kbd>?</kbd> to read out the instructions.',
 };

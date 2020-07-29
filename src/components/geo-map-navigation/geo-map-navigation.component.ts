@@ -1,11 +1,12 @@
 import { Component, ElementRef, HostBinding, HostListener, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { GEO_MAP_NAVIGATION, t, tA11y } from '../../i18n';
+import { AUDIFICATION, GEO_MAP_NAVIGATION, t, tA11y } from '../../i18n';
 import { GeoMapNavigationPreference } from '../../services/preference/types';
 import { ScreenReaderComponent } from '../screen-reader/screen-reader.component';
 import { GeoMapComponent } from '../geo-map/geo-map.component';
 import { TerritoryLevel } from '../../datasets/geo.types';
 import { fromEvent, merge, Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
+import { humanizeTerritoryLevel } from '../../utils/formatters';
 
 const { CONTINENT, SUBCONTINENT, COUNTRY, CITY } = TerritoryLevel;
 
@@ -93,21 +94,23 @@ export class GeoMapNavigationComponent implements GeoMapNavigationPreference, On
       case '-':
       case '_':
         this.unit = Math.max(this.unit - 1, this.filteringTerritory?.level ?? 0);
-        break;
+        return this.readOutUnitAndFilteringTerritory();
       case '+':
       case '=':
         this.unit = Math.min(this.unit + 1, CITY);
-        break;
+        return this.readOutUnitAndFilteringTerritory();
       case 'Enter':
         if (shiftKey) {
           this.filteringTerritory = this.filteringTerritory?.parent ?? null;
         } else if (this.activeDatumIndex >= 0) {
           this.filteringTerritory = this.data[this.activeDatumIndex].territory;
+        } else {
+          break;
         }
-        break;
+        return this.readOutUnitAndFilteringTerritory();
       case '/':
         this.keywordElement.focus();
-        break;
+        return true;
       case 'ArrowDown':
         this.activeDatumIndex = Math.min(this.activeDatumIndex + 1, this.data.length - 1);
         break;
@@ -120,19 +123,26 @@ export class GeoMapNavigationComponent implements GeoMapNavigationPreference, On
       case 'ArrowLeft':
         this.activeMeasureIndex = Math.max(this.activeMeasureIndex - 1, 0);
         break;
+      case '?':
+        return this.readOutInstructions();
     }
     return false;
   }
 
   @HostListener('focus', ['$event'])
   handleFocus() {
+    this.activeMeasureIndex = 0;
+    return this.readOutUnitAndFilteringTerritory();
   }
 
   @HostListener('blur', ['$event'])
   handleBlur() {
+    this.activeMeasureIndex = -1;
   }
 
   ngOnInit() {
+    this.screenReaderComponent.breakSilence(tA11y(AUDIFICATION.BREAK_SILENCE), 3000);
+
     merge(
       this.host.filteringTerritory$
         .pipe(takeUntil(this.destroy$)),
@@ -147,6 +157,19 @@ export class GeoMapNavigationComponent implements GeoMapNavigationPreference, On
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  private readOutUnitAndFilteringTerritory() {
+    const { hierarchicalTerritories } = this.host;
+    return this.screenReaderComponent.readOut(t(GEO_MAP_NAVIGATION.UNIT_AND_FILTERING_TERRITORY, {
+      unit: humanizeTerritoryLevel(this.unit, true),
+      hierarchical_territories: hierarchicalTerritories.length > 0
+        ? hierarchicalTerritories
+          .reverse()
+          .map(territory => territory.name)
+          .join(', ')
+        : 'the world',
+    }));
   }
 
   private readOutInstructions() {

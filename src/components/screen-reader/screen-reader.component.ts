@@ -2,6 +2,7 @@ import { Component, Input, OnDestroy } from '@angular/core';
 import { waitFor } from '../../utils/misc';
 import { Subject } from 'rxjs';
 import * as numbered from 'numbered';
+import { debounceTime, filter, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-screen-reader',
@@ -12,20 +13,27 @@ export class ScreenReaderComponent implements OnDestroy {
   @Input() repetitionDelay = 500; // duration (in ms) for which empty the live text when the same text needs to be read out consequently
 
   liveText: string | null = null;
+  private shouldBreakSilence = false;
+  private silence$ = new Subject();
   private cancel$ = new Subject();
+  private destroy$ = new Subject();
 
   ngOnDestroy() {
     this.cancel$.next();
     this.cancel$.complete();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   /**
    * Makes a screen-reader software read out the text.
    *
    * @param text The text to read out.
+   * @param shouldBreakSilence Whether to break silence or not after reading out the text.
    * @return The promise to be fulfilled with true after reading out finishes. If cancelled, it will be immediately fulfilled with false.
    */
-  async readOut(text: string): Promise<boolean> {
+  async readOut(text: string, shouldBreakSilence = true): Promise<boolean> {
+    this.shouldBreakSilence = shouldBreakSilence;
     this.cancel();
     const repetitive = this.liveText === text;
     if (repetitive) {
@@ -36,7 +44,12 @@ export class ScreenReaderComponent implements OnDestroy {
       }
     }
     this.liveText = text;
-    return waitFor(this.estimateDuration(text), this.cancel$);
+
+    const read = await waitFor(this.estimateDuration(text), this.cancel$);
+    if (read) {
+      this.silence$.next();
+    }
+    return read;
   }
 
   /**
@@ -44,6 +57,22 @@ export class ScreenReaderComponent implements OnDestroy {
    */
   cancel() {
     this.cancel$.next();
+  }
+
+  /**
+   * Read out the text after nothing has been read for the given duration.
+   *
+   * @param text The text to read out.
+   * @param silenceDuration The duration of silence.
+   */
+  breakSilence(text: string, silenceDuration: number) {
+    return this.silence$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(debounceTime(silenceDuration))
+      .pipe(filter(() => this.shouldBreakSilence))
+      .subscribe(() => {
+        this.liveText = text;
+      });
   }
 
   /**

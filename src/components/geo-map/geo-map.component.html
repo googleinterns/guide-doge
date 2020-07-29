@@ -2,7 +2,7 @@
   <a class="hierarchy-territory" (click)="filteringTerritory = null">
     All
   </a>
-  <a class="hierarchy-territory" *ngFor="let hierarchyTerritory of hierarchyTerritories"
+  <a class="hierarchy-territory" *ngFor="let hierarchyTerritory of hierarchicalTerritories"
      (click)="filteringTerritory = hierarchyTerritory">
     {{hierarchyTerritory.name}}
   </a>
