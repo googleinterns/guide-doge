@@ -1,42 +1,43 @@
 import { Scatterplot } from './scatterplot.d3';
 import { TimeSeriesPoint } from '../datasets/queries/time-series.query';
-// import { VRTimeSeriesPoint } from '../datasets/queries/vr-time-series.query';
+import { VRScatterPoint } from '../datasets/queries/vr.query';
+import { MetaType } from '../datasets/metas/types';
+import { Vector3 } from 'three';
 
 describe('VR Scatter Plot', () => {
   const shape = 'a-sphere';
   let element: HTMLElement;
   let scatterplot: Scatterplot;
-  const lineChartData1: TimeSeriesPoint[]  = [];
-  lineChartData1.push({x: new Date(), y: 0});
-
-  const lineChartData8: TimeSeriesPoint[] = [];
+  const scatterPlotData1: VRScatterPoint[]  = [];
+  scatterPlotData1.push({categories: {}, x: 0, y: 0, z: 0});
+  const scatterPlotData8: VRScatterPoint[] = [];
   for (let i = 0; i < 8; i++){
-    lineChartData8.push({x: new Date(), y: i * 10});
+    scatterPlotData8.push({categories: {}, x: i * 20, y: i * 10, z: i * 5});
   }
-
   beforeEach( () =>  {
     element = document.createElement('a-scene');
     scatterplot = new Scatterplot(shape);
+
   });
   it('places no points bc 1:1 correspondence with empty element array', () => {
-    scatterplot.init(element, [], 'line');
+    scatterplot.init(element, [], MetaType.SCATTER_PLOT);
     const expectedPosArray = [];
     const result = getPosition(element, shape);
     expect(result).toEqual(expectedPosArray);
   });
   it('places points for each element in a one element array', () => {
-    scatterplot.init(element, lineChartData1, 'line');
+    scatterplot.init(element, scatterPlotData1, MetaType.SCATTER_PLOT);
     const expectedPosArray = [{ x: 0, y: 0, z: 0 }];
     const result = getPosition(element, shape);
     expect(result).toEqual(expectedPosArray);
   });
   it('places points for each element in a eight element array', () => {
-    scatterplot.init(element, lineChartData8, 'line');
+    scatterplot.init(element, scatterPlotData8, MetaType.SCATTER_PLOT);
     const expectedPosArray = [
-      { x: 0, y: 0, z: 0 }, { x: 10, y: 10, z: 10 },
-      { x: 20, y: 20, z: 20 }, { x: 30, y: 30, z: 30 },
-      { x: 40, y: 40, z: 40 }, { x: 50, y: 50, z: 50 },
-     { x: 60, y: 60, z: 60 }, { x: 70, y: 70, z: 70 }];
+      { x: 0, y: 0, z: 0 }, { x: 20, y: 10, z: 5 },
+      { x: 40, y: 20, z: 10 }, { x: 60, y: 30, z: 15 },
+      { x: 80, y: 40, z: 20 }, { x: 100, y: 50, z: 25 },
+     { x: 120, y: 60, z: 30 }, { x: 140, y: 70, z: 35 }];
     const result = getPosition(element, shape);
     expect(result).toEqual(expectedPosArray);
   });
@@ -50,11 +51,11 @@ describe('Checking for presence of', () => {
   beforeEach( () =>  {
     element = document.createElement('a-scene');
     scatterplot = new Scatterplot('a-sphere');
-    scatterplot.init(element, [], 'vrScatter');
+    scatterplot.init(element, [], MetaType.SCATTER_PLOT);
     grids = element.getElementsByClassName('grids');
   });
   it('aframe sky', () => {
-    scatterplot.init(element, [], 'vrScatter');
+    scatterplot.init(element, [], MetaType.SCATTER_PLOT);
     const sky = document.getElementsByTagName('a-sky');
     let skyPresent = false;
     if (sky !== null){

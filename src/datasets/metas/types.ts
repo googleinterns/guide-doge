@@ -1,6 +1,8 @@
 import { LineChartMeta } from './line-chart.meta';
 import { TabbedChartsMeta } from './tabbed-charts.meta';
+import { VRScatterplotMeta } from './vr-scatter-plot.meta';
 import { GeoMapMeta } from './geo-map.meta';
+
 
 export interface BaseMeta<T extends MetaType> {
   type: T;
@@ -21,10 +23,24 @@ export interface XYPoint<T, U> {
   y: U;
 }
 
-export type Meta = LineChartMeta | TabbedChartsMeta | GeoMapMeta;
+export interface ScatterPlotMeta<T extends MetaType, QueryT> extends DataMeta<T, QueryT> {
+  xLabel?: string;
+  yLabel?: string;
+  zLabel?: string;
+}
+
+export interface ScatterPoint<S> {
+  categories: S;
+  x: number;
+  y: number;
+  z: number;
+}
+
+export type Meta = LineChartMeta | TabbedChartsMeta | GeoMapMeta | VRScatterplotMeta;
 
 export enum MetaType {
   TABBED_CHARTS,
   LINE_CHART,
   GEO_MAP,
+  SCATTER_PLOT
 }
