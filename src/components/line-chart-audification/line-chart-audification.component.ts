@@ -84,7 +84,7 @@ export class LineChartAudificationComponent implements AudificationPreference, O
   }
 
   ngOnInit() {
-    this.screenReaderComponent.breakSilence(tA11y(AUDIFICATION.BREAK_SILENCE), 3000);
+    this.screenReaderComponent.breakSilence(tA11y(AUDIFICATION.BREAK_SILENCE));
 
     combineLatest([
       this.host.data$,

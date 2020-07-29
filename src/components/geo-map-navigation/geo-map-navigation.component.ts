@@ -141,7 +141,7 @@ export class GeoMapNavigationComponent implements GeoMapNavigationPreference, On
   }
 
   ngOnInit() {
-    this.screenReaderComponent.breakSilence(tA11y(AUDIFICATION.BREAK_SILENCE), 3000);
+    this.screenReaderComponent.breakSilence(tA11y(AUDIFICATION.BREAK_SILENCE));
 
     merge(
       this.host.filteringTerritory$

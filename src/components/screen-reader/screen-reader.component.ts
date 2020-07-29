@@ -4,6 +4,8 @@ import { Subject } from 'rxjs';
 import * as numbered from 'numbered';
 import { debounceTime, filter, takeUntil } from 'rxjs/operators';
 
+const defaultSilenceDuration = 5000;
+
 @Component({
   selector: 'app-screen-reader',
   templateUrl: './screen-reader.component.html',
@@ -65,7 +67,7 @@ export class ScreenReaderComponent implements OnDestroy {
    * @param text The text to read out.
    * @param silenceDuration The duration of silence.
    */
-  breakSilence(text: string, silenceDuration: number) {
+  breakSilence(text: string, silenceDuration = defaultSilenceDuration) {
     return this.silence$
       .pipe(takeUntil(this.destroy$))
       .pipe(debounceTime(silenceDuration))
