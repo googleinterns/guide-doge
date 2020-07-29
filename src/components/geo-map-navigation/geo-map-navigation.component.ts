@@ -6,7 +6,7 @@ import { GeoMapComponent } from '../geo-map/geo-map.component';
 import { TerritoryLevel } from '../../datasets/geo.types';
 import { fromEvent, merge, Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
-import { humanizeTerritoryLevel } from '../../utils/formatters';
+import { formatY, humanizeMeasureName, humanizeTerritoryLevel } from '../../utils/formatters';
 
 const { CONTINENT, SUBCONTINENT, COUNTRY, CITY } = TerritoryLevel;
 
@@ -78,6 +78,23 @@ export class GeoMapNavigationComponent implements GeoMapNavigationPreference, On
     this.host.activeMeasureIndex = activeMeasureIndex;
   }
 
+  get measureNames() {
+    return this.host.measureNames;
+  }
+
+  private get i18nActiveDatumArgs() {
+    const activeDatum = this.data[this.activeDatumIndex];
+    if (!activeDatum) {
+      return null;
+    }
+    const measureName = this.measureNames[this.activeMeasureIndex];
+    return {
+      territory: activeDatum.territory.name,
+      value: formatY(activeDatum.values[measureName]),
+      measure: humanizeMeasureName(measureName),
+    };
+  }
+
   focus() {
     this.elementRef.nativeElement.focus();
   }
@@ -113,16 +130,16 @@ export class GeoMapNavigationComponent implements GeoMapNavigationPreference, On
         return true;
       case 'ArrowDown':
         this.activeDatumIndex = Math.min(this.activeDatumIndex + 1, this.data.length - 1);
-        break;
+        return this.readOutActiveDatum();
       case 'ArrowUp':
         this.activeDatumIndex = Math.max(this.activeDatumIndex - 1, 0);
-        break;
+        return this.readOutActiveDatum();
       case 'ArrowRight':
-        this.activeMeasureIndex = Math.min(this.activeMeasureIndex + 1, this.host.measureNames.length - 1);
-        break;
+        this.activeMeasureIndex = Math.min(this.activeMeasureIndex + 1, this.measureNames.length - 1);
+        return this.readOutActiveMeasure();
       case 'ArrowLeft':
         this.activeMeasureIndex = Math.max(this.activeMeasureIndex - 1, 0);
-        break;
+        return this.readOutActiveMeasure();
       case '?':
         return this.readOutInstructions();
     }
@@ -131,12 +148,12 @@ export class GeoMapNavigationComponent implements GeoMapNavigationPreference, On
 
   @HostListener('focus', ['$event'])
   handleFocus() {
-    this.activeMeasureIndex = 0;
     return this.readOutUnitAndFilteringTerritory();
   }
 
   @HostListener('blur', ['$event'])
   handleBlur() {
+    this.activeDatumIndex = -1;
     this.activeMeasureIndex = -1;
   }
 
@@ -170,6 +187,23 @@ export class GeoMapNavigationComponent implements GeoMapNavigationPreference, On
           .join(', ')
         : 'the world',
     }));
+  }
+
+  private async readOutActiveDatum() {
+    const { i18nActiveDatumArgs } = this;
+    if (i18nActiveDatumArgs === null) {
+      return false;
+    }
+    return this.screenReaderComponent.readOut(t(GEO_MAP_NAVIGATION.ACTIVE_DATUM, i18nActiveDatumArgs));
+  }
+
+  private async readOutActiveMeasure() {
+    const { i18nActiveDatumArgs } = this;
+    if (i18nActiveDatumArgs === null) {
+      const measureName = this.measureNames[this.activeMeasureIndex];
+      return this.screenReaderComponent.readOut(humanizeMeasureName(measureName));
+    }
+    return this.screenReaderComponent.readOut(t(GEO_MAP_NAVIGATION.ACTIVE_MEASURE, i18nActiveDatumArgs));
   }
 
   private readOutInstructions() {

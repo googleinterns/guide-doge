@@ -71,4 +71,6 @@ export const en: I18n = {
   ].join(' <br/>'),
   [GEO_MAP_NAVIGATION.UNIT_AND_FILTERING_TERRITORY]: '%(unit)s in %(hierarchical_territories)s.',
   [GEO_MAP_NAVIGATION.BREAK_SILENCE]: 'Press <kbd>?</kbd> to read out the instructions.',
+  [GEO_MAP_NAVIGATION.ACTIVE_DATUM]: '%(territory)s has %(value)f %(measure)s.',
+  [GEO_MAP_NAVIGATION.ACTIVE_MEASURE]: '%(measure)s of %(value)f in %(territory)s.',
 };

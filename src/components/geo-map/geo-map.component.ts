@@ -124,11 +124,14 @@ export class GeoMapComponent extends A11yHostComponent implements RenderOptions,
   }
 
   get activeDatumIndex() {
-    return this.activeDatumIndex$.value ?? -1;
+    return this.activeDatumIndex$.value;
   }
 
   set activeDatumIndex(activeDatumIndex) {
     this.activeDatumIndex$.next(activeDatumIndex);
+    if (activeDatumIndex >= 0 && this.activeMeasureIndex < 0) {
+      this.activeMeasureIndex = 0;
+    }
   }
 
   getTerritoryName = (territory: Territory) => {
