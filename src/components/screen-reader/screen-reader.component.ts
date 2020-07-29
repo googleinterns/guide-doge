@@ -35,8 +35,9 @@ export class ScreenReaderComponent implements OnDestroy {
    * @return The promise to be fulfilled with true after reading out finishes. If cancelled, it will be immediately fulfilled with false.
    */
   async readOut(text: string, shouldBreakSilence = true): Promise<boolean> {
-    this.shouldBreakSilence = shouldBreakSilence;
+    this.shouldBreakSilence = false;
     this.cancel();
+
     const repetitive = this.liveText === text;
     if (repetitive) {
       this.liveText = null;
@@ -49,6 +50,7 @@ export class ScreenReaderComponent implements OnDestroy {
 
     const read = await waitFor(this.estimateDuration(text), this.cancel$);
     if (read) {
+      this.shouldBreakSilence = shouldBreakSilence;
       this.silence$.next();
     }
     return read;
