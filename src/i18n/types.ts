@@ -48,6 +48,9 @@ export enum SUMMARIZATION_PREFERENCE {
 
 export enum PUNCTUATION {
   QUESTION_MARK = 0x700,
+  SLASH,
+  PLUS,
+  HYPHEN,
 }
 
 export enum GEO_MAP_NAVIGATION {

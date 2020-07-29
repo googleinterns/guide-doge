@@ -57,6 +57,9 @@ export const en: I18n = {
   [SUMMARIZATION_PREFERENCE.enabled]: 'Text Summarization',
 
   [PUNCTUATION.QUESTION_MARK]: 'QUESTION MARK',
+  [PUNCTUATION.SLASH]: 'SLASH',
+  [PUNCTUATION.PLUS]: 'PLUS',
+  [PUNCTUATION.HYPHEN]: 'MINUS',
 
   [GEO_MAP_NAVIGATION.INSTRUCTIONS]: [
     'Press <kbd>/</kbd> to search a territory name.',
