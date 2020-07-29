@@ -3,7 +3,7 @@
 $color-land: #EEEEEE;
 $color-boundary: #DDDDDD;
 $color-border: #CCCCCC;
-$color-active: #BBBBBB;
+$color-active: #AAAAAA;
 
 .geo_map-land {
   fill: $color-land;
@@ -19,7 +19,7 @@ $color-active: #BBBBBB;
   stroke: $color-border;
   cursor: pointer;
 
-  &:hover {
+  &.active {
     stroke: $color-active;
     stroke-width: 2px;
   }

@@ -30,6 +30,7 @@ export class GeoMapComponent extends A11yHostComponent implements RenderOptions,
   territoryLevels = [CONTINENT, SUBCONTINENT, COUNTRY, CITY];
 
   @ViewChild(A11yPlaceholderDirective, { static: true }) a11yPlaceholder: A11yPlaceholderDirective;
+  @ViewChild('keyword', { static: true }) keywordRef: ElementRef<HTMLInputElement>;
 
   @Input() meta: GeoMapMeta;
   @Input() height = 500;
@@ -37,12 +38,15 @@ export class GeoMapComponent extends A11yHostComponent implements RenderOptions,
 
   keywordControl = new FormControl();
   filteredTerritoryGroups$ = new Observable<TerritoryGroup[]>();
+  activeMeasureIndex = 0;
 
   data$ = new BehaviorSubject<GeoDatum[]>([]);
+  activeDatumIndex$ = new BehaviorSubject(-1);
   geoMapD3: GeoMapD3;
   range$ = new BehaviorSubject(defaultDateRange);
   filteringTerritory$ = new BehaviorSubject<Territory | null>(null);
   unit$ = new BehaviorSubject(defaultUnit);
+
   private destroy$ = new Subject();
 
   constructor(
@@ -119,6 +123,14 @@ export class GeoMapComponent extends A11yHostComponent implements RenderOptions,
     return this.territoryLevels.filter(level => level >= filteringTerritory.level);
   }
 
+  get activeDatumIndex() {
+    return this.activeDatumIndex$.value ?? -1;
+  }
+
+  set activeDatumIndex(activeDatumIndex) {
+    this.activeDatumIndex$.next(activeDatumIndex);
+  }
+
   getTerritoryName = (territory: Territory) => {
     return territory?.name;
   };
@@ -151,7 +163,10 @@ export class GeoMapComponent extends A11yHostComponent implements RenderOptions,
     combineLatest([this.range$, this.filteringTerritory$, this.unit$])
       .pipe(takeUntil(this.destroy$))
       .pipe(map(([range, territory, unit]) => this.meta.queryData({ range, territory, unit })))
-      .subscribe(this.data$);
+      .subscribe(data => {
+        this.activeDatumIndex = -1;
+        this.data$.next(data);
+      });
   }
 
   ngOnDestroy() {

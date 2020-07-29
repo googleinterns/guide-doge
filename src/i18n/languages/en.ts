@@ -59,6 +59,11 @@ export const en: I18n = {
   [PUNCTUATION.QUESTION_MARK]: 'QUESTION MARK',
 
   [GEO_MAP_NAVIGATION.INSTRUCTIONS]: [
-    'Press <kbd>1</kbd> ... <kbd>5</kbd> to change the territory unit from city to continent.',
+    'Press <kbd>/</kbd> to search a territory name.',
+    'Press <kbd>+</kbd> or <kbd>-</kbd> to change the primary dimension.',
+    'Press <kbd>ENTER</kbd> to enter the selected subordinate territory.',
+    'Press <kbd>SHIFT</kbd> + <kbd>ENTER</kbd> to exit to the superordinate territory.',
+    'Press <kbd>UP</kbd> or <kbd>DOWN</kbd> to switch among subordinate territories.',
+    'Press <kbd>LEFT</kbd> or <kbd>RIGHT</kbd> to switch among measures.',
   ].join(' <br/>'),
 };
