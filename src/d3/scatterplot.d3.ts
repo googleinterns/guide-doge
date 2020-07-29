@@ -55,9 +55,9 @@ export class Scatterplot{
     // d is data at index, i within
     // select all shapes within given container
     d3.select(this.dataPointContainer).selectAll(this.shape).attr('radius', this.DATA_PT_RADIUS).attr('position', (d, i) => {
-      const x = (d as VRPoint).x;
-      const y = (d as VRPoint).y;
-      const z = (d as VRPoint).z;
+      const x = (d as VRScatterPoint).x;
+      const y = (d as VRScatterPoint).y;
+      const z = (d as VRScatterPoint).z;
       return `${0} ${0} ${-i}`;
     });
   }
@@ -68,9 +68,9 @@ export class Scatterplot{
        // select all shapes within given container
        d3.select(this.dataTextContainer).selectAll('a-entity')
          .attr('text', (d, i) => {
-            const x = (d as VRPoint).x;
-            const y = (d as VRPoint).y;
-            const z = (d as VRPoint).z;
+            const x = (d as VRScatterPoint).x;
+            const y = (d as VRScatterPoint).y;
+            const z = (d as VRScatterPoint).z;
             return `
             value: POSITION:
             \n\tx: ${0}
@@ -79,9 +79,9 @@ export class Scatterplot{
         })
           .attr('text', `font: ${this.AILERON_FONT}`)
          .attr('position', (d, i) => {
-         const x = (d as VRPoint).x;
-         const y = (d as VRPoint).y;
-         const z = (d as VRPoint).z;
+         const x = (d as VRScatterPoint).x;
+         const y = (d as VRScatterPoint).y;
+         const z = (d as VRScatterPoint).z;
          return `${this.DATA_PT_RADIUS} ${2 * this.DATA_PT_RADIUS} ${-i}`;
        });
   }
