@@ -39,9 +39,9 @@ describe('VRScatterplotComponent', () => {
   it('should instantiate.', () => {
     expect(component).toBeInstanceOf(VRScatterPlotComponent);
   });
-  it('should render d3 on init.', () => {
-    spyOn(scatterplotD3, 'init');
-    component.ngOnInit();
+  it('should call d3 on init.', () => {
+    spyOn(scatterplotD3, 'init').and.callThrough();
+    component.initD3ScatterPlot();
     expect(scatterplotD3.init).toHaveBeenCalled();
   });
 });

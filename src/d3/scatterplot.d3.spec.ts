@@ -1,17 +1,18 @@
 import { Scatterplot } from './scatterplot.d3';
 import { TimeSeriesPoint } from '../datasets/queries/time-series.query';
-import { VRPoint } from '../datasets/queries/vr.query';
+import { VRScatterPoint } from '../datasets/queries/vr.query';
 import { MetaType } from '../datasets/metas/types';
+import { Vector3 } from 'three';
 
 describe('VR Scatter Plot', () => {
   const shape = 'a-sphere';
   let element: HTMLElement;
   let scatterplot: Scatterplot;
-  const scatterPlotData1: VRPoint[]  = [];
-  scatterPlotData1.push({categories: [], x: 0, y: 0, z: 0});
-  const scatterPlotData8: VRPoint[] = [];
+  const scatterPlotData1: VRScatterPoint[]  = [];
+  scatterPlotData1.push({categories: {}, x: 0, y: 0, z: 0});
+  const scatterPlotData8: VRScatterPoint[] = [];
   for (let i = 0; i < 8; i++){
-    scatterPlotData8.push({categories: [], x: i * 20, y: i * 10, z: i * 5});
+    scatterPlotData8.push({categories: {}, x: i * 20, y: i * 10, z: i * 5});
   }
   beforeEach( () =>  {
     element = document.createElement('a-scene');

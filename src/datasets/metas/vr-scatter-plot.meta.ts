@@ -1,8 +1,8 @@
 import { VRQuery } from '../queries/vr.query';
 import { ScatterPlotStyle as ScatterPlotLegendItemStyle } from '../../d3/scatterplot.d3';
-import { XYZChartMeta, MetaType } from './types';
+import { ScatterPlotMeta, MetaType } from './types';
 
-export type VRScatterplotMeta = XYZChartMeta<MetaType.SCATTER_PLOT, VRQuery<ScatterPlotLegendItemStyle>>;
+export type VRScatterplotMeta = ScatterPlotMeta<MetaType.SCATTER_PLOT, VRQuery<ScatterPlotLegendItemStyle>>;
 
 export function createVRScatterplotMeta(
   title: string,

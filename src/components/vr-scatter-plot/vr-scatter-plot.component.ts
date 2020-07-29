@@ -5,13 +5,13 @@ import { DataService } from '../../services/data/data.service';
 import { Meta } from '../../datasets/metas/types';
 import { ScatterPlotStyle as ScatterPlotLegendItemStyle } from '../../d3/scatterplot.d3';
 import { VRScatterplotMeta } from '../../datasets/metas/vr-scatter-plot.meta';
-import { VRDatum, VRQueryOptions } from '../../datasets/queries/vr.query';
+import { VRData, VRQueryOptions } from '../../datasets/queries/vr.query';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { DAY } from '../../utils/timeUnits';
 import { map, takeUntil } from 'rxjs/operators';
 import { DATA_PREFERENCE } from '../../i18n';
 import 'aframe';
-export type VRScatterplotDatum = VRDatum<ScatterPlotLegendItemStyle>;
+export type VRScatterplotData = VRData<ScatterPlotLegendItemStyle>;
 import { MetaType} from '../../datasets/metas/types';
 
 
@@ -33,7 +33,7 @@ export class VRScatterPlotComponent implements OnInit {
   queryOptions$ = new BehaviorSubject<VRQueryOptions>({
     range: [this.startDate, this.endDate],
   });
-  datum$ = new BehaviorSubject<VRScatterplotDatum>({
+  datum$ = new BehaviorSubject<VRScatterplotData>({
     labels: [],
     points: [],
   });
@@ -71,23 +71,19 @@ export class VRScatterPlotComponent implements OnInit {
           break;
         }
       }
-      this.setDataOnD3();
+      this.queryOptions$
+        .pipe(takeUntil(this.destroy$))
+        .pipe(map(queryOption => {
+        // this.meta2.query(queryOption)[0]) has label, points, style and is of type BehaviorSubject<LineChartData>
+        return this.datasetPref.queryData(queryOption)[0];
+      })).subscribe(this.datum$);
+      this.initD3ScatterPlot();
     });
   }
 
-  setDataOnD3(){
-    this.queryOptions$
-    .pipe(takeUntil(this.destroy$))
-    .pipe(map(queryOption => {
-      // this.meta2.query(queryOption)[0]) has label, points, style and is of type BehaviorSubject<LineChartData>
-      return this.datasetPref.queryData(queryOption)[0];
-    }))
-    .subscribe(this.datum$);
-    // this.vrScatterPlot.init(this.ascene.nativeElement, this.datum$.value.points, this.datasetPref.type);
+  initD3ScatterPlot(){
     this.vrScatterPlot.init(document.querySelector('a-scene'), this.datum$.value.points, MetaType.SCATTER_PLOT);
-    console.log(this.datasetPref.type);
   }
-
 
   get datum() {
     return this.datum$.value;

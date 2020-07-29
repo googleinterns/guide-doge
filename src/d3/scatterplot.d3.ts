@@ -1,6 +1,6 @@
 import * as AFRAME from 'aframe';
 import * as d3 from 'd3';
-import { VRPoint } from '../datasets/queries/vr.query';
+import { VRScatterPoint } from '../datasets/queries/vr.query';
 import { MetaType } from '../datasets/metas/types';
 
 
@@ -12,7 +12,7 @@ export interface ScatterPlotStyle {
 export class Scatterplot{
     readonly AILERON_FONT = 'https://cdn.aframe.io/fonts/Aileron-Semibold.fnt';
     readonly DATA_PT_RADIUS = .5;
-    private data: VRPoint[];
+    private data: VRScatterPoint[];
     private shape: string;
     private container: HTMLElement | null;
     private dataPointContainer: HTMLElement;
@@ -24,7 +24,8 @@ export class Scatterplot{
   constructor(shape: string) {
     this.shape = shape;
   }
-  init(container: HTMLElement, data: VRPoint[], dataType: MetaType){
+  init(container: HTMLElement, data: VRScatterPoint[], dataType: MetaType){
+    // console.log(data[0].categories.browser);
     this.data = data;
     this.dataType = dataType;
     this.container = container;
