@@ -20,6 +20,7 @@ export class Scatterplot{
     private TIME_MAX = 31;
     timeScale: d3.ScaleTime<number, number>;
     dataType: MetaType;
+    userCamera: HTMLElement;
 
   constructor(shape: string) {
     this.shape = shape;
@@ -36,11 +37,29 @@ export class Scatterplot{
     this.dataTextContainer.className = 'dataTxt';
     container.appendChild(this.dataPointContainer);
     container.appendChild(this.dataTextContainer);
+    //this.initCamera();
     this.generatePts();
     this.generateText();
     this.setColor('blue');
     this.createSky('gray');
     this.createGridPlane();
+  }
+
+  private initCamera(){
+    // this.userCamera = document.querySelector('[camera]');
+    // this.userCamera.id = 'userCamera';
+    // console.log(this.userCamera);
+
+    AFRAME.registerComponent('cameraPosition', {
+      init: function (){
+        //define userCamera as default aframe camera
+        this.userCamera = document.querySelector('[camera]');
+      },
+      tick: function(){
+        let camPos = this.userCamera.object3D.position;
+        let dataPos = this
+      }
+    })
   }
 
   private scaleTime(date: Date): number{
@@ -54,12 +73,57 @@ export class Scatterplot{
     d3.select(this.dataPointContainer).selectAll(this.shape).data(this.data).enter().append(this.shape);
     // d is data at index, i within
     // select all shapes within given container
-    d3.select(this.dataPointContainer).selectAll(this.shape).attr('radius', this.DATA_PT_RADIUS).attr('position', (d, i) => {
+    d3.select(this.dataPointContainer).selectAll(this.shape)
+    .attr('radius', this.DATA_PT_RADIUS)
+    .attr('position', (d, i) => {
       const x = (d as VRScatterPoint).x;
       const y = (d as VRScatterPoint).y;
       const z = (d as VRScatterPoint).z;
       return `${0} ${0} ${-i}`;
+    })
+    .each(function (d, i){
+      AFRAME.registerComponent('camera_position', {
+        init: function (){
+          //define userCamera as default aframe camera
+          this.userCamera = document.querySelector('[camera]');
+        },
+        tick: function(){
+          let camPos = this.userCamera.object3D.position
+          let dataPositions = d3.select(this.dataPointContainer).selectAll(this.shape)
+          for (let dataPos of (dataPositions as any)){
+            let distance = camPos.distanceTo(dataPos)
+            console.log(distance)
+            if (distance < 5){
+              console.log('close!');
+            }
+          }
+          
+        }
+      });
     });
+    this.userCamera = document.querySelector('[camera]');
+
+
+    // AFRAME.registerComponent('camera_position', {
+    //   init: function (){
+    //     //define userCamera as default aframe camera
+    //     this.userCamera = document.querySelector('[camera]');
+    //   },
+    //   tick: function(){
+    //     let camPos = this.userCamera.object3D.position
+    //     let dataPositions = d3.select(this.dataPointContainer).selectAll(this.shape)
+    //     for (let dataPos of (dataPositions as any)){
+    //       let distance = camPos.distanceTo(dataPos)
+    //       console.log(distance)
+    //       if (distance < 5){
+    //         console.log('close!');
+    //       }
+    //     }
+        
+    //   }
+    // });
+    document.querySelector('[camera]').setAttribute('camera_position', '');
+    console.log(this.userCamera);
   }
   private generateText(){
        // enter identifies any DOM elements to be added when # array elements doesn't match
