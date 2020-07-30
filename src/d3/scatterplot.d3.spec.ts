@@ -102,7 +102,7 @@ function scalePosition(posArray: Array<{x: number, y: number, z: number}>): Arra
   const yScale = d3.scaleLinear().domain([0, posArray[posArray.length - 1].y]).range([0, scaleFactor]);
   const zScale = d3.scaleLinear().domain([0, posArray[posArray.length - 1].z]).range([0, scaleFactor]);
   const scaledPosArray: Array<{x: number, y: number, z: number}> = [];
-  for (let pt of posArray){
+  for (const pt of posArray){
     scaledPosArray.push({x: xScale(pt.x), y: yScale(pt.y), z: zScale(pt.z)});
   }
   return scaledPosArray;
