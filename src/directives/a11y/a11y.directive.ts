@@ -26,7 +26,7 @@ export interface LazyA11yModule<Component = any> {
   selector: '[appA11y]',
 })
 export class A11yDirective implements OnInit, OnDestroy {
-  @Input('appA11y') a11yModuleImporters: (() => Promise<Type<LazyA11yModule>>)[];
+  @Input('appA11y') a11yModuleImporters?: (() => Promise<Type<LazyA11yModule>>)[];
 
   private destroy$ = new Subject();
 
@@ -47,7 +47,7 @@ export class A11yDirective implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    for (const moduleImporter of this.a11yModuleImporters) {
+    for (const moduleImporter of this.a11yModuleImporters ?? []) {
       const Module = await moduleImporter();
 
       // compile the asynchronously imported module to resolve the dependencies of the a11y component
