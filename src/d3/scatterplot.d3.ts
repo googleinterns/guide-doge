@@ -11,22 +11,25 @@ export interface ScatterPlotStyle {
 
 export class Scatterplot{
     readonly AILERON_FONT = 'https://cdn.aframe.io/fonts/Aileron-Semibold.fnt';
-    readonly DATA_PT_RADIUS = .5;
+    readonly DATA_PT_RADIUS = .1;
+    private GRID_BOUND = 50;
     private data: VRScatterPoint[];
     private shape: string;
     private container: HTMLElement | null;
     private dataPointContainer: HTMLElement;
     private dataTextContainer: HTMLElement;
-    private TIME_MAX = 31;
-    timeScale: d3.ScaleTime<number, number>;
+    xScale: d3.ScaleLinear<number, number>;
+    yScale: d3.ScaleLinear<number, number>;
+    zScale: d3.ScaleLinear<number, number>;
     dataType: MetaType;
+
 
   constructor(shape: string) {
     this.shape = shape;
   }
   init(container: HTMLElement, data: VRScatterPoint[], dataType: MetaType){
-    // console.log(data[0].categories.browser);
     this.data = data;
+    console.log(data);
     this.dataType = dataType;
     this.container = container;
     this.dataType = dataType;
@@ -42,23 +45,34 @@ export class Scatterplot{
     this.createSky('gray');
     this.createGridPlane();
   }
-
-  private scaleTime(date: Date): number{
-    const startTime = this.data[0].x;
-    const endTime = this.data[this.data.length - 1].x;
-    this.timeScale = d3.scaleTime().domain([startTime, endTime]).rangeRound([0, this.TIME_MAX]);
-    return this.timeScale(date);
+  private scalePosition(){
+    let maxXValue = this.data[0].x;
+    let maxYValue = this.data[0].y;
+    let maxZValue = this.data[0].z;
+    for (let pt of this.data){
+      if (pt.x > maxXValue)
+        maxXValue = pt.x;
+      if (pt.y > maxYValue)
+        maxYValue = pt.y;
+      if (pt.z > maxZValue)
+        maxZValue = pt.z;
+    }
+    // scale positions based on largest value found in xyz to absVal(maxGridDimension)
+    this.xScale = d3.scaleLinear().domain([0, maxXValue]).range([0, this.GRID_BOUND]);
+    this.yScale = d3.scaleLinear().domain([0, maxYValue]).range([0, this.GRID_BOUND]);
+    this.zScale = d3.scaleLinear().domain([0, maxZValue]).range([0, this.GRID_BOUND]);
   }
   private generatePts() {
+    this.scalePosition();
      // enter identifies any DOM elements to be added when # array elements doesn't match
     d3.select(this.dataPointContainer).selectAll(this.shape).data(this.data).enter().append(this.shape);
     // d is data at index, i within
     // select all shapes within given container
     d3.select(this.dataPointContainer).selectAll(this.shape).attr('radius', this.DATA_PT_RADIUS).attr('position', (d, i) => {
-      const x = (d as VRScatterPoint).x;
-      const y = (d as VRScatterPoint).y;
-      const z = (d as VRScatterPoint).z;
-      return `${0} ${0} ${-i}`;
+      const x = this.xScale((d as VRScatterPoint).x);
+      const y = this.yScale((d as VRScatterPoint).y);
+      const z = this.zScale((d as VRScatterPoint).z);
+      return `${x} ${y} ${z}`;
     });
   }
   private generateText(){
@@ -73,16 +87,16 @@ export class Scatterplot{
             const z = (d as VRScatterPoint).z;
             return `
             value: POSITION:
-            \n\tx: ${0}
-            \n\ty: ${0}
-            \n\tz:${-i}`;
+            \n\tx: ${x}
+            \n\ty: ${y}
+            \n\tz:${z}`;
         })
           .attr('text', `font: ${this.AILERON_FONT}`)
          .attr('position', (d, i) => {
-         const x = (d as VRScatterPoint).x;
-         const y = (d as VRScatterPoint).y;
-         const z = (d as VRScatterPoint).z;
-         return `${this.DATA_PT_RADIUS} ${2 * this.DATA_PT_RADIUS} ${-i}`;
+         const x = this.xScale((d as VRScatterPoint).x);
+         const y = this.yScale((d as VRScatterPoint).y);
+         const z = this.zScale((d as VRScatterPoint).z);
+         return `${x + this.DATA_PT_RADIUS} ${y + 2 * this.DATA_PT_RADIUS} ${z}`;
        });
   }
   private setColor(color) {
@@ -97,7 +111,7 @@ export class Scatterplot{
     xGrid.id = 'xGrid';
     xGrid.className = 'grids';
     this.container!.appendChild(xGrid);
-    xGrid.object3D.add(new AFRAME.THREE.GridHelper(50, 50, 0xffffff, 0xffffff));
+    xGrid.object3D.add(new AFRAME.THREE.GridHelper(this.GRID_BOUND * 2, this.GRID_BOUND * 2, 0xffffff, 0xffffff));
     d3.select(this.container).select('#xGrid').attr('position', '0 0 0');
     d3.select(this.container).select('#xGrid').attr('rotation', '0 0 0');
 
@@ -106,7 +120,7 @@ export class Scatterplot{
     yGrid.id = 'yGrid';
     yGrid.className = 'grids';
     this.container!.appendChild(yGrid);
-    yGrid.object3D.add(new AFRAME.THREE.GridHelper(50, 50, 0xffffff, 0xffffff));
+    yGrid.object3D.add(new AFRAME.THREE.GridHelper(this.GRID_BOUND * 2, this.GRID_BOUND * 2, 0xffffff, 0xffffff));
     d3.select(this.container).select('#yGrid').attr('position', '0 0 0');
     d3.select(this.container).select('#yGrid').attr('rotation', '0 0 -90');
 
@@ -115,7 +129,7 @@ export class Scatterplot{
     zGrid.id = 'zGrid';
     zGrid.className = 'grids';
     this.container!.appendChild(zGrid);
-    zGrid.object3D.add(new AFRAME.THREE.GridHelper(50, 50, 0xffffff, 0xffffff));
+    zGrid.object3D.add(new AFRAME.THREE.GridHelper(this.GRID_BOUND * 2, this.GRID_BOUND * 2, 0xffffff, 0xffffff));
     d3.select(this.container).select('#zGrid').attr('position', '0 0 0');
     d3.select(this.container).select('#zGrid').attr('rotation', '-90 0 0');
   }
