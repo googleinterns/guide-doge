@@ -54,10 +54,6 @@ export class GeoMapNavigationComponent implements GeoMapNavigationPreference, On
     this.host.filteringTerritory = filteringTerritory;
   }
 
-  get meta() {
-    return this.host.meta;
-  }
-
   get keywordElement() {
     return this.host.keywordRef.nativeElement;
   }
@@ -122,7 +118,7 @@ export class GeoMapNavigationComponent implements GeoMapNavigationPreference, On
         } else if (this.activeDatumIndex >= 0) {
           this.filteringTerritory = this.data[this.activeDatumIndex].territory;
         } else {
-          break;
+          return this.readOutNothingSelected();
         }
         return this.readOutUnitAndFilteringTerritory();
       case '/':
@@ -174,6 +170,10 @@ export class GeoMapNavigationComponent implements GeoMapNavigationPreference, On
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  private readOutNothingSelected() {
+    return this.screenReaderComponent.readOut(t(GEO_MAP_NAVIGATION.NOTHING_SELECTED));
   }
 
   private readOutUnitAndFilteringTerritory() {

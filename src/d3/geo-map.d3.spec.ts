@@ -34,11 +34,14 @@ describe('GeoMapD3', () => {
   let geoMapD3: MockGeoMapD3;
   let world: World;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
+    world = await fetchWorld();
+  });
+
+  beforeEach(() => {
     svgElement = document.createElement('svg');
     containerElement = document.createElement('div');
     containerElement.appendChild(svgElement);
-    world = await fetchWorld();
     renderOptions = {
       elementRef: new ElementRef<HTMLElement>(containerElement),
       width: 256,

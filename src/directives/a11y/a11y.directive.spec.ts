@@ -54,7 +54,7 @@ describe('A11yDirective', () => {
     expect(directive.hostComponent).toBe(hostComponent);
   });
 
-  it('should attach or detach audification as the preference changes.', async () => {
+  it('should attach or detach an a11y component as the preference changes.', async () => {
     directive.a11yModuleImporters = [importAudificationModule, importSummarizationModule];
     await directive.ngOnInit();
 

@@ -59,6 +59,7 @@ export enum GEO_MAP_NAVIGATION {
   BREAK_SILENCE,
   ACTIVE_DATUM,
   ACTIVE_MEASURE,
+  NOTHING_SELECTED,
 }
 
 export type I18nKey =
