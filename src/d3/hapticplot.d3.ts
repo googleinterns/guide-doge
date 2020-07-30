@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import * as THREE from 'three';
+import { Entity } from 'aframe';
 
 export class Hapticplot{
     private data: number[];
@@ -12,69 +13,94 @@ export class Hapticplot{
   }
 
   init(container: HTMLElement | null, data: number[]){
+    const POINT_SIZE = 0.05;
+    const DEFAULT_COLOR = 'green';
+    const HOVER_COLOR = 'red';
+
     this.data = data;
     this.container = container;
-    // create a scale so that there is correspondence between data set and screen render
+    // create a scale so that there is correspondence between data set and screen render,
+    // a linear mapping of data set values to values from 0 to 10
     this.hscale = d3.scaleLinear();
     this.hscale.domain([0, d3.max(this.data) as number])  // max of dataset
       .range([0, 100]);
-    this.setupPoints('blue', 0.1);                        // linear mapping of data set values to values from 0 to 10
+    this.setupPoints(DEFAULT_COLOR, HOVER_COLOR, POINT_SIZE);
     this.createSky();
     this.createGridPlane();
   }
 
-  // selects all entities of type this.shape
+  /**
+   * selects all entities of type datapoint
+   */
   private getShapes(){
     return d3.select(this.container).selectAll('datapoint');
   }
 
-  private setupPoints(color, size) {
-    /*
-    Generates points in the scene based on initilization data
-      - represented in scene as this.shape type entities
-    */
+  /**
+   * Generates points in the scene based on initilization data
+   *   - represented in scene as this.shape type entities
+   * @param defaultColor Points default color
+   * @param hoverColor Points color when hovered
+   * @param size Size of each point
+   */
+  private setupPoints(defaultColor, hoverColor, size) {
     this.getShapes()
       // Adds points of type this.shape to the scene
       //  - "enter" identifies any DOM elements to be added when # array
       //    elements & # DOM elements don't match
       .data(this.data).enter().append(this.shape).classed('datapoint', true)
       // Updates points positions based on ingested data
-      .attr('position', (d, i) =>  this.generatePositions(d, i))
+      .each((d, i , g) => this.setPosition(d, i, g[i]))
       // Adds given color property to all points
-      .attr('color', color)
+      .attr('color', defaultColor)
       // Sets points radius property
       .attr('radius', size)
       // Enables controller interaction with points using superhands' tags
       .attr('hoverable', '')
-      .attr('grabbable', '')
-      .attr('stretchable', '')
-      .attr('draggable', '')
-      .attr('dropppable', '')
       // Adds listeners for state change events, which trigger a change in the
       // point's color property when a hover event occurs
-      .on('stateadded',  (d, i, g) => this.modifyColorOnStateChange(g[i], 'hovered', 'orange'))
-      .on('stateremoved',  (d, i, g) => this.modifyColorOnStateChange(g[i], 'hovered', 'green'));
+      .on('hover-start',  (d, i, g) => this.onHoverStart(g[i], d, hoverColor))
+      .on('hover-end',  (d, i, g) => this.onHoverEnd(g[i], defaultColor));
 
   }
 
-  private modifyColorOnStateChange(entity, state , color){
-    if (d3.event.detail === state){
-      d3.select(entity).attr('color', color);
-    }
-  }
-
-  // Generates a world space position for each data entity, based on ingested data
-  private generatePositions(data, index){
+  /**
+   * Generates a world space position for each data entity, based on ingested data
+   * @param data Ingested Data
+   * @param index Crrent index in data array
+   */
+  private setPosition(data, index, entity){
     const x = index / 10;
     const y = data;
     const z = -1;
-    return `${x} ${y} ${z}`;
+    (entity as Entity).object3D.position.set(x, y, z);
   }
 
+  /**
+   * When a data entity begins being hovered by the controller entity
+   *  - triggers a haptic pulse
+   *  - changes the entities color to indicate a pulse has fired
+   * @param entity The entity being hovered
+   * @param hapticIntensity A points haptic intensity, based on is associated data
+   * @param hoverColor The colorthe entity takes on while hoverec
+   */
+  private onHoverStart(entity, hapticIntensity, hoverColor){
+    d3.event.detail?.hand?.components.haptics.pulse(hapticIntensity, 1000);
+    d3.select(entity).attr('color', hoverColor);
+  }
+
+  /**
+   * When an object stops being hovered by the controller entity
+   *  - changes the entities color to indicate hovering has ended
+   * @param entity The data entity which is no longer hovered
+   * @param defaultColor The default color of unhovered entities
+   */
+  private onHoverEnd(entity, defaultColor){
+    d3.select(entity).attr('color', defaultColor);
+  }
+
+  // Creates and adds a sky box to the scene
   private createSky(){
-    /*
-    creates and adds a sky box to the scene
-    */
     const aSky = document.createElement('a-sky');
     this.container!.appendChild(aSky);
     d3.select(this.container).selectAll('a-sky').attr('color', () => {
@@ -82,11 +108,9 @@ export class Hapticplot{
     });
   }
 
+  // Creates and adds grid 3D grid lines to the scene
   private createGridPlane()
   {
-    /*
-    creates and adds grid 3D grid lines to the scene
-    */
     const xGrid = document.createElement('a-entity');
     xGrid.id = 'xGrid';
     this.container!.appendChild(xGrid);
