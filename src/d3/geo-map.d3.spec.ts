@@ -40,6 +40,7 @@ describe('GeoMapD3', () => {
       height: 256,
       world,
       data$: new Subject<GeoDatum[]>(),
+      activeDatumIndex$: new Subject<number>(),
       filteringTerritory$: new Subject<Territory | null>(),
     };
     geoMapD3 = new MockGeoMapD3(renderOptions);
