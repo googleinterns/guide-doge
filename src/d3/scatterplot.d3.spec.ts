@@ -2,6 +2,8 @@ import { Scatterplot } from './scatterplot.d3';
 import { TimeSeriesPoint } from '../datasets/queries/time-series.query';
 import { VRScatterPoint } from '../datasets/queries/vr.query';
 import { MetaType } from '../datasets/metas/types';
+import * as d3 from 'd3';
+
 import { Vector3 } from 'three';
 
 describe('VR Scatter Plot', () => {
@@ -9,7 +11,7 @@ describe('VR Scatter Plot', () => {
   let element: HTMLElement;
   let scatterplot: Scatterplot;
   const scatterPlotData1: VRScatterPoint[]  = [];
-  scatterPlotData1.push({categories: {}, x: 0, y: 0, z: 0});
+  scatterPlotData1.push({categories: {}, x: 20, y: 10, z: 5});
   const scatterPlotData8: VRScatterPoint[] = [];
   for (let i = 0; i < 8; i++){
     scatterPlotData8.push({categories: {}, x: i * 20, y: i * 10, z: i * 5});
@@ -27,17 +29,19 @@ describe('VR Scatter Plot', () => {
   });
   it('places points for each element in a one element array', () => {
     scatterplot.init(element, scatterPlotData1, MetaType.SCATTER_PLOT);
-    const expectedPosArray = [{ x: 0, y: 0, z: 0 }];
+    const posArray = [{ x: 20, y: 10, z: 5 }];
+    const expectedPosArray = scalePosition(posArray);
     const result = getPosition(element, shape);
     expect(result).toEqual(expectedPosArray);
   });
   it('places points for each element in a eight element array', () => {
     scatterplot.init(element, scatterPlotData8, MetaType.SCATTER_PLOT);
-    const expectedPosArray = [
+    const posArray = [
       { x: 0, y: 0, z: 0 }, { x: 20, y: 10, z: 5 },
       { x: 40, y: 20, z: 10 }, { x: 60, y: 30, z: 15 },
       { x: 80, y: 40, z: 20 }, { x: 100, y: 50, z: 25 },
      { x: 120, y: 60, z: 30 }, { x: 140, y: 70, z: 35 }];
+    const expectedPosArray = scalePosition(posArray);
     const result = getPosition(element, shape);
     expect(result).toEqual(expectedPosArray);
   });
@@ -88,4 +92,18 @@ function getPosition(element: HTMLElement, shape: string): Array<{x: number, y: 
     positionArray.push((child as any).components.position.attrValue);
   }
   return positionArray;
+}
+
+function scalePosition(posArray: Array<{x: number, y: number, z: number}>): Array<{x: number, y: number, z: number}>{
+  // scaleFactor based on GRID_BOUND in scatterplot.d3.ts
+  const scaleFactor = 50;
+  // largest number in each dimension is last element
+  const xScale = d3.scaleLinear().domain([0, posArray[posArray.length - 1].x]).range([0, scaleFactor]);
+  const yScale = d3.scaleLinear().domain([0, posArray[posArray.length - 1].y]).range([0, scaleFactor]);
+  const zScale = d3.scaleLinear().domain([0, posArray[posArray.length - 1].z]).range([0, scaleFactor]);
+  const scaledPosArray: Array<{x: number, y: number, z: number}> = [];
+  for (let pt of posArray){
+    scaledPosArray.push({x: xScale(pt.x), y: yScale(pt.y), z: zScale(pt.z)});
+  }
+  return scaledPosArray;
 }

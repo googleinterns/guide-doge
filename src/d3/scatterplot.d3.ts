@@ -11,7 +11,7 @@ export interface ScatterPlotStyle {
 
 export class Scatterplot{
     readonly AILERON_FONT = 'https://cdn.aframe.io/fonts/Aileron-Semibold.fnt';
-    readonly DATA_PT_RADIUS = .1;
+    readonly DATA_PT_RADIUS = .05;
     private GRID_BOUND = 50;
     private data: VRScatterPoint[];
     private shape: string;
@@ -39,9 +39,11 @@ export class Scatterplot{
     this.dataTextContainer.className = 'dataTxt';
     container.appendChild(this.dataPointContainer);
     container.appendChild(this.dataTextContainer);
-    this.generatePts();
-    this.generateText();
-    this.setColor('blue');
+    if (this.data.length > 0){
+      this.generatePts();
+      this.generateText();
+      this.setColor('blue');
+    }
     this.createSky('gray');
     this.createGridPlane();
   }
@@ -49,13 +51,16 @@ export class Scatterplot{
     let maxXValue = this.data[0].x;
     let maxYValue = this.data[0].y;
     let maxZValue = this.data[0].z;
-    for (let pt of this.data){
-      if (pt.x > maxXValue)
+    for (const pt of this.data){
+      if (pt.x > maxXValue){
         maxXValue = pt.x;
-      if (pt.y > maxYValue)
+      }
+      if (pt.y > maxYValue){
         maxYValue = pt.y;
-      if (pt.z > maxZValue)
+      }
+      if (pt.z > maxZValue){
         maxZValue = pt.z;
+      }
     }
     // scale positions based on largest value found in xyz to absVal(maxGridDimension)
     this.xScale = d3.scaleLinear().domain([0, maxXValue]).range([0, this.GRID_BOUND]);
@@ -78,6 +83,16 @@ export class Scatterplot{
   private generateText(){
        // enter identifies any DOM elements to be added when # array elements doesn't match
        d3.select(this.dataTextContainer).selectAll('a-entity').data(this.data).enter().append('a-entity');
+       d3.select(this.dataTextContainer).selectAll('a-plane').data(this.data).enter().append('a-plane')
+       .attr('position', (d, i) => {
+        const x = this.xScale((d as VRScatterPoint).x);
+        const y = this.yScale((d as VRScatterPoint).y);
+        const z = this.zScale((d as VRScatterPoint).z);
+        return `${x - 6 * this.DATA_PT_RADIUS} ${y + 2 * this.DATA_PT_RADIUS} ${z}`;
+       })
+       .attr('width', .5)
+       .attr('height', .5)
+       .attr('color', 'black');
        // d is data at index, i within
        // select all shapes within given container
        d3.select(this.dataTextContainer).selectAll('a-entity')
@@ -91,13 +106,13 @@ export class Scatterplot{
             \n\ty: ${y}
             \n\tz:${z}`;
         })
-          .attr('text', `font: ${this.AILERON_FONT}`)
-         .attr('position', (d, i) => {
-         const x = this.xScale((d as VRScatterPoint).x);
-         const y = this.yScale((d as VRScatterPoint).y);
-         const z = this.zScale((d as VRScatterPoint).z);
-         return `${x + this.DATA_PT_RADIUS} ${y + 2 * this.DATA_PT_RADIUS} ${z}`;
-       });
+        .attr('text', `font: ${this.AILERON_FONT}`)
+        .attr('position', (d, i) => {
+          const x = this.xScale((d as VRScatterPoint).x);
+          const y = this.yScale((d as VRScatterPoint).y);
+          const z = this.zScale((d as VRScatterPoint).z);
+          return `${x + this.DATA_PT_RADIUS} ${y + 2 * this.DATA_PT_RADIUS} ${z}`;
+        });
   }
   private setColor(color) {
     d3.select(this.container).selectAll(this.shape).attr('color', () => {
