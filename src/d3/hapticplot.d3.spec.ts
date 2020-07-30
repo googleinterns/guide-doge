@@ -65,7 +65,7 @@ describe('VR Haptic Plot', () => {
 
 // Helper Functions
 
-// returns array of actual position vectors
+// Returns an array of actual position vectors
 function getPosition(scene: HTMLElement, shape: string): Vector3[]{
   const attrArray: Vector3[] = [];
   Array.from(scene.querySelectorAll(shape)).forEach((child) => {
@@ -77,25 +77,26 @@ function getPosition(scene: HTMLElement, shape: string): Vector3[]{
   return attrArray;
 }
 
-// returns array of each generated objects color
+// Returns an array of each generated objects color
 function getColor(scene: HTMLElement, shape: string): (string | null)[]{
   return Array.from(scene.querySelectorAll(shape)).map((point: Element) => point.getAttribute('color'));
 }
 
-// returns array of each generated objects radius
+// Returns an array of each generated objects radius
 function getRadius(scene: HTMLElement, shape: string): (string | null)[]{
   return Array.from(scene.querySelectorAll(shape)).map((point: Element) => point.getAttribute('radius'));
 }
 
-// returns array of each generated objects hover property
+// Returns an array of each generated objects hover property
 function getHoverable(scene: HTMLElement, shape: string): (string | undefined)[]{
-  const attrArray: (string | undefined)[] = [];
-  Array.from(scene.querySelectorAll(shape)).forEach((child) => { attrArray.push((child as Entity).components.hoverable.attrName); });
-  return attrArray;
+  return Array.from(scene.querySelectorAll(shape)).map((point: Element) => (point as Entity).components.hoverable.attrName);
 }
 
-// returns array of each generated objects color, after a hover event has occured
+// Returns an array of each generated objects color, after a hover event has occured
 function getHoveredColor(scene: HTMLElement, shape: string): (string | null)[]{
-  Array.from(scene.querySelectorAll(shape)).forEach((child) => { child.dispatchEvent(new Event('hover-start')); });
+  const shapes = scene.querySelectorAll(shape);
+  for (const point of Array.from(shapes)){
+    point.dispatchEvent(new Event('hover-start'));
+  }
   return Array.from(scene.querySelectorAll(shape)).map((point: Element) => point.getAttribute('color'));
 }

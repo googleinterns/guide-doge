@@ -50,7 +50,7 @@ export class Hapticplot{
       //    elements & # DOM elements don't match
       .data(this.data).enter().append(this.shape).classed('datapoint', true)
       // Updates points positions based on ingested data
-      .each((d, i , g) => this.generatePositions(d, i, g[i]))
+      .each((d, i , g) => this.setPosition(d, i, g[i]))
       // Adds given color property to all points
       .attr('color', defaultColor)
       // Sets points radius property
@@ -69,7 +69,7 @@ export class Hapticplot{
    * @param data Ingested Data
    * @param index Crrent index in data array
    */
-  private generatePositions(data, index, entity){
+  private setPosition(data, index, entity){
     const x = index / 10;
     const y = data;
     const z = -1;
@@ -99,9 +99,7 @@ export class Hapticplot{
     d3.select(entity).attr('color', defaultColor);
   }
 
-  /**
-   * creates and adds a sky box to the scene
-   */
+  // Creates and adds a sky box to the scene
   private createSky(){
     const aSky = document.createElement('a-sky');
     this.container!.appendChild(aSky);
@@ -110,9 +108,7 @@ export class Hapticplot{
     });
   }
 
-  /**
-   * creates and adds grid 3D grid lines to the scene
-   */
+  // Creates and adds grid 3D grid lines to the scene
   private createGridPlane()
   {
     const xGrid = document.createElement('a-entity');
