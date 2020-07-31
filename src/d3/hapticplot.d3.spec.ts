@@ -86,7 +86,7 @@ describe('VR Haptic Plot', () => {
 function getPositions(scene: HTMLElement, shape: string): Vector3[]{
   const attrArray: Vector3[] = [];
   const shapes = scene.querySelectorAll(shape);
-  for (const point of Array.from(shapes)){
+  for (const point of shapes){
     attrArray.push(new Vector3(
       (point as Entity).object3D.position.x,
       (point as Entity).object3D.position.y,
@@ -113,7 +113,7 @@ function getHoverable(scene: HTMLElement, shape: string): (string | undefined)[]
 // Returns an array of each generated objects color, after a hover event has occured
 function getHoveredColor(scene: HTMLElement, shape: string): (string | null)[]{
   const shapes = scene.querySelectorAll(shape);
-  for (const point of Array.from(shapes)){
+  for (const point of shapes){
     point.dispatchEvent(new Event('hover-start'));
   }
   return Array.from(scene.querySelectorAll(shape)).map((point: Element) => point.getAttribute('color'));
