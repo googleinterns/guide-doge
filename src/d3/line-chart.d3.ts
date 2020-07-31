@@ -17,7 +17,7 @@ interface LinePath {
 
 export class LineChartD3 extends XYChartD3<LegendItemStyle> {
   static defaultLegendItemStyle: LegendItemStyle = {
-    color: LineChartD3.colorPrimary,
+    color: LineChartD3.primaryColor,
     width: 2,
     opacity: 1,
     dashes: [],
@@ -73,7 +73,7 @@ export class LineChartD3 extends XYChartD3<LegendItemStyle> {
       .append('circle')
       .attr('class', 'line_chart-active_point')
       .attr('r', 4)
-      .attr('fill', LineChartD3.colorPrimary);
+      .attr('fill', LineChartD3.primaryColor);
   }
 
   protected updateActivePoint(activePoint: TimeSeriesPoint | null) {

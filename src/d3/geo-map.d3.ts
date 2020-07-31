@@ -55,9 +55,9 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
   }
 
   private static getColor(valueRatio: number) {
-    const { colorPrimary, minOpacity, maxOpacity } = GeoMapD3;
+    const { primaryColor, minOpacity, maxOpacity } = GeoMapD3;
     const opacity = logScale(valueRatio, minOpacity, maxOpacity);
-    return chroma.scale(['#FFFFFF', colorPrimary])(opacity).hex('rgb');
+    return chroma.scale(['#FFFFFF', primaryColor])(opacity).hex('rgb');
   }
 
   render() {

@@ -10,7 +10,7 @@ export interface RenderOptions {
 }
 
 export abstract class BaseD3<T extends RenderOptions> {
-  static colorPrimary = 'rgb(33, 150, 243)';
+  static primaryColor = 'rgb(33, 150, 243)';
 
   private clear$?: Subject<undefined>;
 
