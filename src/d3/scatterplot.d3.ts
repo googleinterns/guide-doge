@@ -2,6 +2,8 @@ import * as AFRAME from 'aframe';
 import * as d3 from 'd3';
 import { VRScatterPoint } from '../datasets/queries/vr.query';
 import { MetaType } from '../datasets/metas/types';
+import 'aframe-extras/src/controls/qz-keyboard-controls';
+
 
 
 export interface ScatterPlotStyle {
@@ -46,33 +48,9 @@ export class Scatterplot{
     }
     this.createSky('gray');
     this.createGridPlane();
-    this.setYMovementKeys();
-    document.querySelector('[camera]').setAttribute('qz-keyboard-controls', '');
+    //this.setYMovementKeys();
   }
-  private setYMovementKeys(){
-    AFRAME.registerComponent('qz-keyboard-controls', {
-      getVelocityDelta: function () {
-        var data = this.data,
-            keys = this.getKeys();
-    
-        this.dVelocity.set(0, 0, 0);
-        if (data.enabled) {
-          if (keys.KeyW || keys.ArrowUp)    { this.dVelocity.z -= 1; }
-          if (keys.KeyA || keys.ArrowLeft)  { this.dVelocity.x -= 1; }
-          if (keys.KeyS || keys.ArrowDown)  { this.dVelocity.z += 1; }
-          if (keys.KeyD || keys.ArrowRight) { this.dVelocity.x += 1; }
-    
-          // NEW STUFF HERE
-          if (keys.KeyQ)  { this.dVelocity.y += 1; }
-          if (keys.KeyZ) { this.dVelocity.y -= 1; }
-        }
-    
-        return this.dVelocity.clone();
-      },
-    
-      // ...
-    });
-  }
+ 
   private scalePosition(){
     let maxXValue = this.data[0].x;
     let maxYValue = this.data[0].y;
@@ -105,6 +83,15 @@ export class Scatterplot{
       const z = this.zScale((d as VRScatterPoint).z);
       return `${x} ${y} ${z}`;
     });
+    
+    window.onload = function(){
+      console.log(document.querySelector('[camera]').getAttribute('keyboard-controls'));
+      document.querySelector('[camera]').setAttribute('wasd-controls', 'fly: true');
+      document.querySelector('[camera]').setAttribute('wasd-controls', 'wsAxis: y');
+      // document.querySelector('[camera]').setAttribute('universal-controls', 'movementControls');
+      console.log(document.querySelector('[camera]').getAttribute('wasd-controls'));
+      console.log(document.querySelector('[camera]'));
+    };
   }
   private generateText(){
        // enter identifies any DOM elements to be added when # array elements doesn't match
