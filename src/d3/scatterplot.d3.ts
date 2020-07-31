@@ -46,6 +46,32 @@ export class Scatterplot{
     }
     this.createSky('gray');
     this.createGridPlane();
+    this.setYMovementKeys();
+    document.querySelector('[camera]').setAttribute('qz-keyboard-controls', '');
+  }
+  private setYMovementKeys(){
+    AFRAME.registerComponent('qz-keyboard-controls', {
+      getVelocityDelta: function () {
+        var data = this.data,
+            keys = this.getKeys();
+    
+        this.dVelocity.set(0, 0, 0);
+        if (data.enabled) {
+          if (keys.KeyW || keys.ArrowUp)    { this.dVelocity.z -= 1; }
+          if (keys.KeyA || keys.ArrowLeft)  { this.dVelocity.x -= 1; }
+          if (keys.KeyS || keys.ArrowDown)  { this.dVelocity.z += 1; }
+          if (keys.KeyD || keys.ArrowRight) { this.dVelocity.x += 1; }
+    
+          // NEW STUFF HERE
+          if (keys.KeyQ)  { this.dVelocity.y += 1; }
+          if (keys.KeyZ) { this.dVelocity.y -= 1; }
+        }
+    
+        return this.dVelocity.clone();
+      },
+    
+      // ...
+    });
   }
   private scalePosition(){
     let maxXValue = this.data[0].x;
