@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const path = require('path');
-const fs = require('fs');
+const fs = require('fs').promises;
 const axios = require('axios');
 
 const topologyUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
@@ -54,7 +54,7 @@ const outputPath = path.resolve(__dirname, '..', 'src', 'assets', 'world.json');
     iso2ToCountries[countryIso2] = country;
   }
 
-  const citiesCsv = fs.readFileSync(cityDataPath, 'utf8');
+  const citiesCsv = await fs.readFile(cityDataPath, 'utf8');
   csv2json(citiesCsv)
     .filter(city => city.population > 100_000)
     .forEach(city => {
@@ -68,7 +68,7 @@ const outputPath = path.resolve(__dirname, '..', 'src', 'assets', 'world.json');
     });
 
   const world = { continents, topology };
-  fs.writeFileSync(outputPath, JSON.stringify(world), 'utf8');
+  await fs.writeFile(outputPath, JSON.stringify(world), 'utf8');
 })().catch(console.error);
 
 function csv2json(csv) {
