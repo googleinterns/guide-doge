@@ -17,8 +17,8 @@ export interface RenderOptions extends BaseRenderOptions {
 const { CONTINENT, SUBCONTINENT, COUNTRY, CITY } = TerritoryLevel;
 
 export class GeoMapD3 extends BaseD3<RenderOptions> {
-  static colorBorder = '#FFFFFF';
-  static colorLand = '#EEEEEE';
+  static borderColor = '#FFFFFF';
+  static landColor = '#EEEEEE';
   static minOpacity = .2;
   static maxOpacity = .8;
   static minRadius = 5;
@@ -46,9 +46,9 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
   }
 
   private static getColor(valueRatio: number) {
-    const { colorPrimary, colorBorder, minOpacity, maxOpacity } = GeoMapD3;
+    const { primaryColor, borderColor, minOpacity, maxOpacity } = GeoMapD3;
     const opacity = linearScale(valueRatio, minOpacity, maxOpacity);
-    return chroma.scale([colorBorder, colorPrimary])(opacity).hex('rgb');
+    return chroma.scale([borderColor, primaryColor])(opacity).hex('rgb');
   }
 
   render() {
@@ -68,13 +68,13 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
 
   private renderMap() {
     const { height, width, world } = this.renderOptions;
-    const { colorLand } = GeoMapD3;
+    const { landColor } = GeoMapD3;
 
     this.landPath = this.svg
       .append('path')
       .attr('class', 'geo_map-land')
       .datum(topojson.feature(world.topology, world.topology.objects.land))
-      .attr('fill', colorLand);
+      .attr('fill', landColor);
 
     const countryGeometryCollection: GeometryCollection = {
       type: 'GeometryCollection',
@@ -234,7 +234,7 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
   }
 
   private appendTerritoryPath(geometry: Polygon | MultiPolygon, valueRatio: number) {
-    const { colorBorder } = GeoMapD3;
+    const { borderColor } = GeoMapD3;
     const { world } = this.renderOptions;
     return this.dataG
       .append('path')
@@ -242,11 +242,11 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
       .datum(topojson.feature(world.topology, geometry))
       .attr('d', this.geoPath)
       .attr('fill', GeoMapD3.getColor(valueRatio))
-      .attr('stroke', colorBorder);
+      .attr('stroke', borderColor);
   }
 
   private appendCityCircle(city: City, valueRatio: number) {
-    const { colorBorder, minRadius, maxRadius } = GeoMapD3;
+    const { borderColor, minRadius, maxRadius } = GeoMapD3;
     return this.dataG
       .append('circle')
       .attr('class', 'geo_map-city')
@@ -254,6 +254,6 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
       .attr('transform', this.geoTransform)
       .attr('r', linearSquaredScale(valueRatio, minRadius, maxRadius))
       .attr('fill', GeoMapD3.getColor(valueRatio))
-      .attr('stroke', colorBorder);
+      .attr('stroke', borderColor);
   }
 }
