@@ -1,13 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { GeoMapComponent } from './geo-map.component';
 import { GeoMapD3 } from '../../d3/geo-map.d3';
+import { fetchWorld } from '../../datasets/geo.dataset';
+import { MetaType } from '../../datasets/metas/types';
 
 describe('GeoMapComponent', () => {
   let fixture: ComponentFixture<GeoMapComponent>;
   let component: GeoMapComponent;
   let geoMapD3: GeoMapD3;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       declarations: [
         GeoMapComponent,
@@ -15,6 +17,12 @@ describe('GeoMapComponent', () => {
     });
     fixture = TestBed.createComponent(GeoMapComponent);
     component = fixture.componentInstance;
+    component.meta = {
+      type: MetaType.GEO_MAP,
+      title: 'Map',
+      queryData: () => [],
+      world: await fetchWorld(),
+    };
     geoMapD3 = component.geoMapD3;
   });
 

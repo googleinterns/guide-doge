@@ -1,23 +1,27 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { GeoMapD3, RenderOptions } from '../../d3/geo-map.d3';
 import { A11yPlaceholderDirective } from '../../directives/a11y-placeholder/a11y-placeholder.directive';
 import { GeoMapMeta } from '../../datasets/metas/geo-map.meta';
 import { BehaviorSubject } from 'rxjs';
 import { GeoDatum } from '../../datasets/queries/geo.query';
+import { DAY } from '../../utils/timeUnits';
+import { TerritoryLevel, World } from '../../datasets/geo.types';
 
 @Component({
   selector: 'app-geo-map',
   templateUrl: './geo-map.component.html',
   styleUrls: ['./geo-map.component.scss'],
 })
-export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
+export class GeoMapComponent implements RenderOptions, OnInit, OnChanges, OnDestroy {
   @ViewChild(A11yPlaceholderDirective, { static: true }) a11yPlaceholder: A11yPlaceholderDirective<GeoMapComponent>;
 
+  @Input() endDate = new Date();
+  @Input() startDate = new Date(this.endDate.getTime() - 30 * DAY);
   @Input() meta: GeoMapMeta;
   @Input() height = 500;
   @Input() width = 800;
-  @Input() topoJsonUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
 
+  world: World;
   data$ = new BehaviorSubject<GeoDatum[]>([]);
   geoMapD3: GeoMapD3;
 
@@ -28,10 +32,22 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.world = this.meta.world;
     this.geoMapD3.render();
   }
 
   ngOnDestroy() {
     this.geoMapD3.clear();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (['startDate', 'endDate', 'meta'].some(key => key in changes)) {
+      const data = this.meta.queryData({
+        range: [this.startDate, this.endDate],
+        territory: null,
+        unit: TerritoryLevel.COUNTRY,
+      });
+      this.data$.next(data);
+    }
   }
 }
