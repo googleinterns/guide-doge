@@ -2,7 +2,7 @@ import * as AFRAME from 'aframe';
 import * as d3 from 'd3';
 import { VRScatterPoint } from '../datasets/queries/vr.query';
 import { MetaType } from '../datasets/metas/types';
-import 'aframe-extras/src/controls/qz-keyboard-controls';
+const PROXY_FLAG = '__keyboard-controls-proxy';
 
 
 
@@ -24,6 +24,7 @@ export class Scatterplot{
     yScale: d3.ScaleLinear<number, number>;
     zScale: d3.ScaleLinear<number, number>;
     dataType: MetaType;
+    loaded = false;
 
 
   constructor(shape: string) {
@@ -31,7 +32,6 @@ export class Scatterplot{
   }
   init(container: HTMLElement, data: VRScatterPoint[], dataType: MetaType){
     this.data = data;
-    console.log(data);
     this.dataType = dataType;
     this.container = container;
     this.dataType = dataType;
@@ -41,13 +41,16 @@ export class Scatterplot{
     this.dataTextContainer.className = 'dataTxt';
     container.appendChild(this.dataPointContainer);
     container.appendChild(this.dataTextContainer);
-    if (this.data.length > 0){
+    if (this.data.length > 0 && !this.loaded){
+      console.log(data);
       this.generatePts();
       this.generateText();
       this.setColor('blue');
+      this.createSky('gray');
+      this.createGridPlane();
     }
-    this.createSky('gray');
-    this.createGridPlane();
+    this.loaded = true;
+    
     //this.setYMovementKeys();
   }
  
@@ -85,16 +88,27 @@ export class Scatterplot{
     });
     
     window.onload = function(){
-      console.log(document.querySelector('[camera]').getAttribute('keyboard-controls'));
-      document.querySelector('[camera]').setAttribute('wasd-controls', 'fly: true');
-      document.querySelector('[camera]').setAttribute('wasd-controls', 'wsAxis: y');
-      // document.querySelector('[camera]').setAttribute('universal-controls', 'movementControls');
       console.log(document.querySelector('[camera]').getAttribute('wasd-controls'));
-      console.log(document.querySelector('[camera]'));
     };
   }
   private generateText(){
        // enter identifies any DOM elements to be added when # array elements doesn't match
+      
+        AFRAME.registerComponent('rotatecards', {
+          init: function () {
+            console.log('rotate cards!');
+          },
+          tick: function () {
+            console.log('hey!');
+            this.el.object3D.rotation.set(
+              
+              document.querySelector('[camera]').object3D.rotation.x,
+              document.querySelector('[camera]').object3D.rotation.y,
+              document.querySelector('[camera]').object3D.rotation.z,
+            ); 
+          }
+        });
+      
        d3.select(this.dataTextContainer).selectAll('a-entity').data(this.data).enter().append('a-entity');
        d3.select(this.dataTextContainer).selectAll('a-plane').data(this.data).enter().append('a-plane')
        .attr('position', (d, i) => {
@@ -105,7 +119,10 @@ export class Scatterplot{
        })
        .attr('width', .5)
        .attr('height', .5)
-       .attr('color', 'black');
+       .attr('color', 'black')
+       .each((d, i, g) => {
+         (g[i] as AFRAME.Entity).setAttribute('rotatecards', '');
+       });
        // d is data at index, i within
        // select all shapes within given container
        d3.select(this.dataTextContainer).selectAll('a-entity')
@@ -125,6 +142,9 @@ export class Scatterplot{
           const y = this.yScale((d as VRScatterPoint).y);
           const z = this.zScale((d as VRScatterPoint).z);
           return `${x + this.DATA_PT_RADIUS} ${y + 2 * this.DATA_PT_RADIUS} ${z}`;
+        })
+        .each((d, i, g) => {
+          (g[i] as AFRAME.Entity).setAttribute('rotatecards', '');
         });
   }
   private setColor(color) {
@@ -170,3 +190,131 @@ export class Scatterplot{
     });
   }
 }
+
+AFRAME.registerComponent('qz-keyboard-controls', {
+  schema: {
+    enabled:           { default: true },
+    debug:             { default: false }
+  },
+
+  init: function () {
+    this.dVelocity = new AFRAME.THREE.Vector3();
+    this.localKeys = {};
+    this.listeners = {
+      keydown: this.onKeyDown.bind(this),
+      keyup: this.onKeyUp.bind(this),
+      blur: this.onBlur.bind(this)
+    };
+    this.attachEventListeners();
+  },
+
+  /*******************************************************************
+  * Movement
+  */
+
+  isVelocityActive: function () {
+    return this.data.enabled && !!Object.keys(this.getKeys()).length;
+  },
+
+  getVelocityDelta: function () {
+    var data = this.data,
+        keys = this.getKeys();
+    debugger;
+    this.dVelocity.set(0, 0, 0);
+    if (data.enabled) {
+      if (keys.KeyW || keys.ArrowUp)    { this.dVelocity.z -= 1; }
+      if (keys.KeyA || keys.ArrowLeft)  { this.dVelocity.x -= 1; }
+      if (keys.KeyS || keys.ArrowDown)  { this.dVelocity.z += 1; }
+      if (keys.KeyD || keys.ArrowRight) { this.dVelocity.x += 1; }
+	  
+          // NEW STUFF HERE
+      if (keys.KeyQ)  { this.dVelocity.y += 1; }
+      if (keys.KeyZ) { this.dVelocity.y -= 1; }
+	  
+	  
+    }
+
+    return this.dVelocity.clone();
+  },
+
+  /*******************************************************************
+  * Events
+  */
+
+  play: function () {
+    this.attachEventListeners();
+  },
+
+  pause: function () {
+    this.removeEventListeners();
+  },
+
+  remove: function () {
+    this.pause();
+  },
+
+  attachEventListeners: function () {
+    window.addEventListener('keydown', this.listeners.keydown, false);
+    window.addEventListener('keyup', this.listeners.keyup, false);
+    window.addEventListener('blur', this.listeners.blur, false);
+  },
+
+  removeEventListeners: function () {
+    window.removeEventListener('keydown', this.listeners.keydown);
+    window.removeEventListener('keyup', this.listeners.keyup);
+    window.removeEventListener('blur', this.listeners.blur);
+  },
+
+  onKeyDown: function (event) {
+    this.localKeys[event.code] = true;
+    this.emit(event);
+  },
+
+  onKeyUp: function (event) {
+    delete this.localKeys[event.code];
+    this.emit(event);
+  },
+
+  onBlur: function () {
+    for (var code in this.localKeys) {
+      if (this.localKeys.hasOwnProperty(code)) {
+        delete this.localKeys[code];
+      }
+    }
+  },
+
+  emit: function (event) {
+    // TODO - keydown only initially?
+    // TODO - where the f is the spacebar
+
+    // Emit original event.
+    if (PROXY_FLAG in event) {
+      // TODO - Method never triggered.
+      this.el.emit(event.type, event);
+    }
+
+    // Emit convenience event, identifying key.
+    this.el.emit(event.type + ':' + event.code, new KeyboardEvent(event.type, event));
+    if (this.data.debug) console.log(event.type + ':' + event.code);
+  },
+
+  /*******************************************************************
+  * Accessors
+  */
+
+  isPressed: function (code) {
+    return code in this.getKeys();
+  },
+
+  getKeys: function () {
+    if (this.isProxied()) {
+      return this.el.sceneEl.components['proxy-controls'].getKeyboard();
+    }
+    return this.localKeys;
+  },
+
+  isProxied: function () {
+    var proxyControls = this.el.sceneEl.components['proxy-controls'];
+    return proxyControls && proxyControls.isConnected();
+  }
+});
