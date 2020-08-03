@@ -41,7 +41,7 @@ export interface Cone2D {
   endAngleRad: number;
 }
 
-export interface TimeSeriesTrend {
+export interface TimeSeriesPartialTrend {
   idxStart: number;
   idxEnd: number;
   timeStart: Date;
@@ -51,14 +51,14 @@ export interface TimeSeriesTrend {
 }
 
 
-export function normalizedUniformPartiallyLinearEpsApprox(points: TimeSeriesPoint[], eps: number): TimeSeriesTrend[] {
+export function normalizedUniformPartiallyLinearEpsApprox(points: TimeSeriesPoint[], eps: number): TimeSeriesPartialTrend[] {
   const numPoints = points.map(timeSeriesPointToNumPoint);
   const normalizedPoints = normalizePoints(numPoints, {}, { min: 0 });
 
   if (normalizedPoints.length <= 1) {
     return [];
   } else {
-    const trends: TimeSeriesTrend[] = [];
+    const trends: TimeSeriesPartialTrend[] = [];
     // Modified Sklansky and Gonzalez algorithm for extracting trends
     let i = 0;
     let j = 1;

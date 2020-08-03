@@ -1,5 +1,5 @@
 import { Summary } from './types';
-import { TimeSeriesPoint } from '../queries/time-series.query';
+import { TimeSeriesPoint } from '../metas/types';
 import { cacheSummaries } from './utils/commons';
 import {
   PointMembershipFunction,
@@ -9,7 +9,7 @@ import {
   trapmfR,
   sigmaCountQA,
 } from './libs/protoform';
-import { normalizedUniformPartiallyLinearEpsApprox, TimeSeriesTrend } from './utils/time-series';
+import { normalizedUniformPartiallyLinearEpsApprox, TimeSeriesPartialTrend } from './libs/trend';
 
 export function queryFactory(points: TimeSeriesPoint[]) {
   return cacheSummaries(() => {
@@ -17,7 +17,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
 
     const trends = normalizedUniformPartiallyLinearEpsApprox(points, 0.01);
 
-    const applyTrendAngleWithWeight = (f: MembershipFunction) => ({ pctSpan, cone }: TimeSeriesTrend) => {
+    const applyTrendAngleWithWeight = (f: MembershipFunction) => ({ pctSpan, cone }: TimeSeriesPartialTrend) => {
       const avgAngleRad = (cone.endAngleRad + cone.startAngleRad) / 2;
       return f(avgAngleRad) * pctSpan * trends.length;
     };
@@ -38,7 +38,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       ['few', uFewPercentage],
     ];
 
-    const uTrends: [string, PointMembershipFunction<TimeSeriesTrend>][] = [
+    const uTrends: [string, PointMembershipFunction<TimeSeriesPartialTrend>][] = [
       ['quickly increasing', uQuicklyIncreasingTrend],
       ['increasing', uIncreasingTrend],
       ['constant', uConstantTrend],

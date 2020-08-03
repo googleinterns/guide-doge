@@ -84,6 +84,7 @@ export function create(config: Config): Dataset {
   const dataCube = generateCube(categories, measures, generateCubeConfig);
 
   const visitCountQuerySummariesFactory = combineQuerySummariesFactories(
+    TrendSummarization.queryFactory,
     TrendRegressionSummarization.queryFactory,
   );
 
