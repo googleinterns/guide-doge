@@ -5,9 +5,10 @@ import { DAY } from '../utils/timeUnits';
 import { XYPoint } from './metas/types';
 import { createLineChartMeta } from './metas/line-chart.meta';
 import { TimeSeriesQueryOptions } from './queries/time-series.query';
-import { kalmanSmoothing, normalizePointsY, cumulativeMovingAverage, exponentialMovingAverage } from './summarizations/utils/time-series';
+import { normalizePointsY } from './summarizations/utils/commons';
+import { exponentialMovingAverage } from './summarizations/libs/trend';
 import * as TrendSummarization from './summarizations/trend.summarization';
-import * as PartialTrendSummarization from './summarizations/partial-trend.summarization';
+import * as TrendPartialSummarization from './summarizations/trend-partial.summarization';
 
 export interface Config {
   offset: number;
@@ -48,7 +49,7 @@ export function create(config: Config): Dataset {
         {
           label: 'Dummy Data',
           points: exponentialMovingAverage(data),
-          querySummaries: PartialTrendSummarization.queryFactory(data),
+          querySummaries: TrendPartialSummarization.queryFactory(data),
           style: {
             color: 'green',
           },

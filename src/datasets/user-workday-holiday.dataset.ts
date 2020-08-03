@@ -7,11 +7,11 @@ import { createLineChartMeta } from './metas/line-chart.meta';
 import { PreferenceMeta } from '../services/preference/types';
 import { DAY } from '../utils/timeUnits';
 import { combineQuerySummariesFactories } from './summarizations/utils/commons';
-import { kalmanSmoothing, normalizePointsY, cumulativeMovingAverage, exponentialMovingAverage } from './summarizations/utils/time-series';
+import { normalizePointsY } from './summarizations/utils/commons';
+import { exponentialMovingAverage } from './summarizations/libs/trend';
 import * as WorkdayHolidayAbsoluteSummarization from './summarizations/workday-holiday-absolute.summarization';
 import * as WorkdayHolidayRelativeSummarization from './summarizations/workday-holiday-relative.summarization';
-import * as TrendSummarization from './summarizations/trend.summarization';
-import * as PartialTrendSummarization from './summarizations/partial-trend.summarization';
+import * as TrendPartialSummarization from './summarizations/trend-partial.summarization';
 
 export interface Config {
   dailyWeightStd: number;
@@ -72,8 +72,7 @@ export function create(config: Config): Dataset {
   const dataCube = generateCube(categories, measures, generateCubeConfig);
 
   const visitCountQuerySummariesFactory = combineQuerySummariesFactories(
-    TrendSummarization.queryFactory,
-    TrendRegressionSummarization.queryFactory,
+    TrendPartialSummarization.queryFactory,
   );
 
   const lineChartMeta = createLineChartMeta(
@@ -95,7 +94,7 @@ export function create(config: Config): Dataset {
         return [{
           label: 'Visit Count - Smoothed',
           points: exponentialMovingAverage(normalizePointsY(points)),
-          querySummaries: PartialTrendSummarization.queryFactory(points),
+          querySummaries: TrendPartialSummarization.queryFactory(points),
           style: {
             color: 'green',
           },

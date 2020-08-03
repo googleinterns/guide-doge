@@ -1,5 +1,5 @@
 import { Summary } from './types';
-import { TimeSeriesPoint } from '../queries/time-series.query';
+import { TimeSeriesPoint } from '../metas/types';
 import { cacheSummaries } from './utils/commons';
 import {
   PointMembershipFunction,
@@ -7,9 +7,12 @@ import {
   trapmf,
   trapmfL,
   trapmfR,
-  sigmaCountQA,
 } from './libs/protoform';
-import { normalizedUniformPartiallyLinearEpsApprox, TimeSeriesTrend, exponentialMovingAverage } from './utils/time-series';
+import {
+  exponentialMovingAverage,
+  normalizedUniformPartiallyLinearEpsApprox,
+  TimeSeriesPartialTrend,
+} from './libs/trend';
 import { formatX } from '../../utils/formatters';
 
 export function queryFactory(points: TimeSeriesPoint[]) {
@@ -19,7 +22,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const smoothedPoints = exponentialMovingAverage(points);
     const trends = normalizedUniformPartiallyLinearEpsApprox(smoothedPoints, 0.01);
 
-    const applyTrendAngleWithWeight = (f: MembershipFunction) => ({ cone }: TimeSeriesTrend) => {
+    const applyTrendAngleWithWeight = (f: MembershipFunction) => ({ cone }: TimeSeriesPartialTrend) => {
       const avgAngleRad = (cone.endAngleRad + cone.startAngleRad) / 2;
       return f(avgAngleRad);
     };
@@ -28,7 +31,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const uConstantTrend = applyTrendAngleWithWeight(trapmf(-MX / 4, -MX / 8, MX / 8, MX / 4));
     const uDecreasingTrend = applyTrendAngleWithWeight(trapmfR(-MX / 4, -MX / 8));
 
-    const uTrends: [string, PointMembershipFunction<TimeSeriesTrend>][] = [
+    const uTrends: [string, PointMembershipFunction<TimeSeriesPartialTrend>][] = [
       ['increasing', uIncreasingTrend],
       ['constant', uConstantTrend],
       ['decreasing', uDecreasingTrend],
@@ -36,7 +39,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
 
     const mvThreshold = 0.7;
 
-    const mergeTrends = (a: TimeSeriesTrend, b: TimeSeriesTrend): TimeSeriesTrend[] => {
+    const mergeTrends = (a: TimeSeriesPartialTrend, b: TimeSeriesPartialTrend): TimeSeriesPartialTrend[] => {
       for (const [_, uTrend] of uTrends) {
         if (uTrend(a) >= mvThreshold && uTrend(b) >= mvThreshold) {
           const idxStart = Math.min(a.idxStart, b.idxStart);
@@ -62,12 +65,12 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       return [a, b];
     };
 
-    let mergedTrends: TimeSeriesTrend[] = [];
+    let mergedTrends: TimeSeriesPartialTrend[] = [];
     for (const trend of trends) {
       if (mergedTrends.length === 0) {
         mergedTrends.push(trend);
       } else {
-        const prevTrend = mergedTrends.pop() as TimeSeriesTrend;
+        const prevTrend = mergedTrends.pop() as TimeSeriesPartialTrend;
         mergedTrends = mergedTrends.concat(mergeTrends(prevTrend, trend));
       }
     }
