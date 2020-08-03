@@ -1,3 +1,4 @@
+import * as d3 from 'd3';
 import { Hapticplot } from './hapticplot.d3';
 import { Entity, Scene } from 'aframe';
 import { Vector3 } from 'three';
@@ -11,6 +12,11 @@ describe('VR Haptic Plot', () => {
   let scene: HTMLElement;
   let controller: HTMLElement;
   let hapticplot: Hapticplot;
+  let graphScale: d3.ScaleLinear<number, number>;
+
+  const POINT_SIZE = 0.02;
+  const DEFAULT_COLOR = '#F0A202';
+  const HOVER_COLOR = 'red';
 
   beforeEach( () =>  {
     scene = document.createElement('a-scene');
@@ -22,6 +28,8 @@ describe('VR Haptic Plot', () => {
     (controller as Entity).sceneEl = (scene as Scene);
     scene.appendChild(controller);
     hapticplot = new Hapticplot(shape);
+
+    graphScale = d3.scaleLinear();
   });
 
   it('places no points bc 1:1 correspondence with empty data array', () => {
@@ -32,29 +40,39 @@ describe('VR Haptic Plot', () => {
   });
 
   it('places points for each datum in a one datum array', () => {
-    hapticplot.init(scene, [10]);
-    const expectedPosArray = [new Vector3(0, 10, -1)];
+    const dataArray = [10];
+    graphScale.domain([0, d3.max(dataArray) as number])  // max of dataset
+      .range([0, 0.5]);
+    hapticplot.init(scene, dataArray);
+    const expectedPosArray = Array.from(dataArray).map(
+      (datum: number, i) =>
+      new Vector3((0.5 / dataArray.length) * i, graphScale(datum) + 1, -1));
     const result = getPositions(scene, shape);
     expect(result).toEqual(expectedPosArray);
   });
 
   it('places points for each datum in a three datum array', () => {
+    const dataArray = [0, 10, 20];
+    graphScale.domain([0, d3.max(dataArray) as number])  // max of dataset
+      .range([0, 0.5]);
     hapticplot.init(scene, [0, 10, 20]);
-    const expectedPosArray = [new Vector3(0, 0, -1), new Vector3(0.1, 10, -1), new Vector3(0.2, 20, -1)];
+    const expectedPosArray = Array.from(dataArray).map(
+      (datum: number, i) =>
+      new Vector3((0.5 / dataArray.length) * i, graphScale(datum) + 1, -1));
     const result = getPositions(scene, shape);
     expect(result).toEqual(expectedPosArray);
   });
 
   it('places points for each datum and sets the correct color property on the resulting shape entities', () => {
     hapticplot.init(scene, [10, 20, 30]);
-    const expectedColorArray = ['green', 'green' , 'green'];
+    const expectedColorArray = [DEFAULT_COLOR, DEFAULT_COLOR , DEFAULT_COLOR];
     const result = getColors(scene, shape);
     expect(result).toEqual(expectedColorArray);
   });
 
   it('places points for each datum and sets the correct size property on the resulting shape entities', () => {
     hapticplot.init(scene, [10, 20, 30]);
-    const expectedSizeArray = ['0.05', '0.05', '0.05'];
+    const expectedSizeArray = [POINT_SIZE.toString(), POINT_SIZE.toString(), POINT_SIZE.toString()];
     const result = getRadii(scene, shape);
     expect(result).toEqual(expectedSizeArray);
   });
@@ -68,7 +86,7 @@ describe('VR Haptic Plot', () => {
 
   it('places points for each datum and sets the correct color property on the resulting shape entities after a hover event', () => {
     hapticplot.init(scene, [10, 20, 30]);
-    const expectedAttrArray = ['red', 'red', 'red'];
+    const expectedAttrArray = [HOVER_COLOR, HOVER_COLOR, HOVER_COLOR];
     const result = getHoveredColor(scene, shape);
     expect(result).toEqual(expectedAttrArray);
   });
