@@ -1,5 +1,5 @@
 import { AudificationPreference, Preference } from '../services/preference/types';
-import { TimeSeriesPoint } from '../datasets/queries/time-series.query';
+import { TimeSeriesPoint } from '../datasets/metas/types';
 import { activeUserMeasure } from '../models/data-cube/presets';
 import { LineChartDatum } from '../components/line-chart/line-chart.component';
 import { Summary } from '../datasets/summarizations/types';

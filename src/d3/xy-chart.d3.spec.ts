@@ -1,6 +1,7 @@
 import { RenderOptions, XYChartD3 } from './xy-chart.d3';
 import { Subject } from 'rxjs';
-import { TimeSeriesDatum, TimeSeriesPoint } from '../datasets/queries/time-series.query';
+import { TimeSeriesPoint } from '../datasets/metas/types';
+import { TimeSeriesDatum } from '../datasets/queries/time-series.query';
 import { mockData } from '../utils/mocks.spec';
 import { ElementRef } from '@angular/core';
 import { LineChartDatum } from '../components/line-chart/line-chart.component';

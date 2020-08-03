@@ -2,7 +2,7 @@ import { ElementRef } from '@angular/core';
 import { Subject } from 'rxjs';
 import { LineChartD3 } from './line-chart.d3';
 import { mockData, mockPoint } from '../utils/mocks.spec';
-import { TimeSeriesPoint } from '../datasets/queries/time-series.query';
+import { TimeSeriesPoint } from '../datasets/metas/types';
 import { LineChartDatum } from '../components/line-chart/line-chart.component';
 import { RenderOptions } from './xy-chart.d3';
 
