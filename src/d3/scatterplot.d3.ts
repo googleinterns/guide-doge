@@ -76,6 +76,24 @@ export class Scatterplot{
   }
 
   private generatePts() {
+    window.onload = () => {
+      document.addEventListener('keydown', (event) => {
+        if (event.keyCode === 81){
+          document.querySelector('[camera]').object3D.position.set(
+            document.querySelector('[camera]').object3D.position.x,
+            document.querySelector('[camera]').object3D.position.y + 1,
+            document.querySelector('[camera]').object3D.position.z
+          );
+        }
+        if (event.keyCode === 90){
+          document.querySelector('[camera]').object3D.position.set(
+            document.querySelector('[camera]').object3D.position.x,
+            document.querySelector('[camera]').object3D.position.y - 1,
+            document.querySelector('[camera]').object3D.position.z
+          );
+        }
+      })
+    };
     this.scalePosition();
      // enter identifies any DOM elements to be added when # array elements doesn't match
     d3.select(this.dataPointContainer).selectAll(this.shape).data(this.data).enter().append(this.shape);
