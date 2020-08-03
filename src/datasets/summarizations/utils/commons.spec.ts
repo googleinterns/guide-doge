@@ -1,5 +1,11 @@
-import { cacheSummaries, combineQuerySummariesFactories } from './commons';
+import {
+  cacheSummaries,
+  combineQuerySummariesFactories,
+  pairToPoint,
+  pointToPair,
+} from './commons';
 import { Summary } from '../types';
+import { XYPoint } from 'src/datasets/metas/types';
 
 describe('cacheSummaries', () => {
   const summaries: Summary[] = [
@@ -69,3 +75,19 @@ describe('combineQuerySummariesFactories', () => {
     });
   });
 });
+
+describe('pairToPoint', () => {
+  it('should create point from pair.', () => {
+    expect(pairToPoint([1, 1])).toEqual({ x: 1, y: 1 });
+    expect(pairToPoint([2, 1])).toEqual({ x: 2, y: 1 });
+  });
+});
+
+describe('pointToPair', () => {
+  it('should create pair from point.', () => {
+    expect(pointToPair({ x: 1, y: 1 })).toEqual([1, 1]);
+    expect(pointToPair({ x: 2, y: 1 })).toEqual([2, 1]);
+  });
+});
+
+
