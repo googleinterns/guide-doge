@@ -1,6 +1,6 @@
-import { TimeSeriesPoint } from '../../queries/time-series.query';
+import { TimeSeriesPoint, NumPoint } from '../../metas/types';
 import { DAY, WEEK } from '../../../utils/timeUnits';
-import { XYPoint } from 'src/datasets/metas/types';
+import { normalizePoints } from './commons';
 
 /**
  * Group time-series points by the week number of their x-values (date).
@@ -25,87 +25,11 @@ export function groupPointsByXWeek(points: TimeSeriesPoint[]): TimeSeriesPoint[]
   return sortedWeekPointPairs.map(([_, currentWeekPoints]) => currentWeekPoints);
 }
 
-export function exponentialMovingAverage(points: TimeSeriesPoint[], alpha = 0.4): TimeSeriesPoint[] {
-  const N = points.length;
-  const ys = points.map(({ y }) => y);
-
-  const Ss = new Array(N).fill(0);
-  for (let i = 0; i < N; i++) {
-    Ss[i] = alpha * ys[i] + (1.0 - alpha) * (Ss[i - 1] ?? ys[i]);
-  }
-
-  const smoothedPoints = Ss.map((S, i) => ({
-    x: points[i].x,
-    y: S,
-  }));
-  return smoothedPoints;
-}
-
-export function cumulativeMovingAverage(points: TimeSeriesPoint[]): TimeSeriesPoint[] {
-  const N = points.length;
-  const ys = points.map(({ y }) => y);
-
-  const cmas = new Array(N).fill(0);
-  for (let i = 0; i < N; i++) {
-    cmas[i] = (ys[i] + i * (cmas[i - 1] ?? 0)) / (i + 1);
-  }
-
-  const smoothedPoints = cmas.map((cma, i) => ({
-    x: points[i].x,
-    y: cmas[i],
-  }));
-  return smoothedPoints;
-}
-
-export function kalmanSmoothing(points: TimeSeriesPoint[]): TimeSeriesPoint[] {
-  const N = points.length;
-  const zs = points.map(({ y }) => y);
-
-  // Kalman Filter
-  const F = 1.0;
-  const Q = 0.0;
-  const H = 1.0;
-  const R = 0.00001;
-
-  const xinit = zs[0];
-  const Pinit = 10;
-
-  const xs: number[] = [...new Array(N).fill(0)];
-  const Ps: [number, number][] = [...new Array(N).fill([0, 0])];
-  for (let k = 0; k < N; k++) {
-    const z = zs[k];
-    if (k === 0) {
-      xs[k] = xinit;
-      Ps[k] = [Pinit, Pinit];
-    } else {
-      const Pk = F * Ps[k - 1][1] * F + Q;
-      const S = R + H * Pk * H;
-      const K = Pk * H * (1 / S);
-      const Pkk = (1.0 - K * H) * Pk;
-      const xk = F * xs[k - 1] + K * (z - H * F * xs[k - 1]);
-
-      Ps[k] = [Pk, Pkk];
-      xs[k] = xk;
-    }
-  }
-
-  // Rauch–Tung–Striebel (RTS) smoother
-  const xps: number[] = new Array(xs.length).fill(0);
-  for (let k = N - 1; k >= 0; k--) {
-    if (k === N - 1) {
-      xps[k] = xs[k];
-    } else {
-      const C = Ps[k][1] * F * (1 / Ps[k + 1][0]);
-      xps[k] = xs[k] + C * (xps[k + 1] - xs[k + 1]);
-    }
-  }
-
-  const smoothedPoints = xps.map((xp, i) => ({
-    x: points[i].x,
-    y: xp,
-  }));
-
-  return smoothedPoints;
+export function timeSeriesPointToNumPoint(point: TimeSeriesPoint) {
+  return {
+    x: point.x.getTime(),
+    y: point.y,
+  };
 }
 
 export interface Cone2D {
@@ -125,7 +49,7 @@ export interface TimeSeriesTrend {
 
 export function normalizedUniformPartiallyLinearEpsApprox(points: TimeSeriesPoint[], eps: number): TimeSeriesTrend[] {
   const numPoints = points.map(timeSeriesPointToNumPoint);
-  const normalizedPoints = normalizeNumPoints(numPoints, {}, { min: 0 });
+  const normalizedPoints = normalizePoints(numPoints, {}, { min: 0 });
 
   if (normalizedPoints.length <= 1) {
     return [];
@@ -196,48 +120,4 @@ function intersectCone(c1: Cone2D, c2: Cone2D): Cone2D | null {
   } else {
     return null;
   }
-}
-
-export type NumPoint = XYPoint<number, number>;
-
-export function timeSeriesPointToNumPoint(point: TimeSeriesPoint) {
-  return {
-    x: point.x.getTime(),
-    y: point.y,
-  };
-}
-
-interface ChartAxisLimit {
-  min?: number;
-  max?: number;
-}
-
-export function normalizePointsX<T>(points: XYPoint<number, T>[], xlim: ChartAxisLimit = {}): XYPoint<number, T>[] {
-  const xValues = points.map(({ x }) => x);
-  const {
-    min: xmin = Math.min(...xValues),
-    max: xmax = Math.max(...xValues),
-  } = xlim;
-
-  return points.map(({ x, y }) => ({
-    x: (x - xmin) / (xmax - xmin),
-    y,
-  }));
-}
-
-export function normalizePointsY<T>(points: XYPoint<T, number>[], ylim: ChartAxisLimit = {}): XYPoint<T, number>[] {
-  const yValues = points.map(({ y }) => y);
-  const {
-    min: ymin = Math.min(...yValues),
-    max: ymax = Math.max(...yValues),
-  } = ylim;
-
-  return points.map(({ x, y }) => ({
-    x,
-    y: (y - ymin) / (ymax - ymin) * 5 / 8,
-  }));
-}
-
-export function normalizeNumPoints(points: NumPoint[], xlim: ChartAxisLimit = {}, ylim: ChartAxisLimit = {}): NumPoint[] {
-  return normalizePointsY(normalizePointsX(points, xlim), ylim);
 }
