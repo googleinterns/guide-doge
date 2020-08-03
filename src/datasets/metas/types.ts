@@ -20,4 +20,6 @@ export interface XYPoint<T, U> {
   y: U;
 }
 
+export type TimeSeriesPoint = XYPoint<Date, number>;
+
 export type Meta = LineChartMeta | TabbedChartsMeta;

@@ -1,4 +1,4 @@
-import { XYPoint } from '../metas/types';
+import { TimeSeriesPoint } from '../metas/types';
 import { inOneOfDateRanges } from '../../models/data-cube/filters';
 import { DAY } from '../../utils/timeUnits';
 import { DataCube } from '../../models/data-cube/data-cube.model';
@@ -9,8 +9,6 @@ import { Summary } from '../summarizations/types';
 export interface TimeSeriesQueryOptions {
   range: [Date, Date];
 }
-
-export type TimeSeriesPoint = XYPoint<Date, number>;
 
 export interface TimeSeriesDatum<S> {
   label: string;
