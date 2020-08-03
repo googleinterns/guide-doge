@@ -27,8 +27,13 @@ export function combineQuerySummariesFactories<PointT>(
   };
 }
 
-function pointToPair<X, Y>(p: XYPoint<X, Y>): [X, Y] {
+export function pointToPair<X, Y>(p: XYPoint<X, Y>): [X, Y] {
   return [p.x, p.y];
+}
+
+export function pairToPoint<X, Y>(p: [X, Y]): XYPoint<X, Y> {
+  const [x, y] = p;
+  return { x, y };
 }
 
 interface ChartAxisLimit {
@@ -52,7 +57,7 @@ export function normalizePointsX<T>(points: XYPoint<number, T>[], xlim: ChartAxi
 export function normalizePointsY<T>(points: XYPoint<T, number>[], ylim: ChartAxisLimit = {}): XYPoint<T, number>[] {
   const yValues = points.map(({ y }) => y);
   const {
-    min: ymin = Math.min(...yValues),
+    min: ymin = 0,
     max: ymax = Math.max(...yValues),
   } = ylim;
 
