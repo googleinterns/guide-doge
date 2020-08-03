@@ -13,7 +13,8 @@ import { normalizedUniformPartiallyLinearEpsApprox, TimeSeriesPartialTrend } fro
 
 export function queryFactory(points: TimeSeriesPoint[]) {
   return cacheSummaries(() => {
-    const MX = Math.PI / 2;
+    // The size of the chart is fixed to 800 * 500
+    const ANGMX = Math.atan(500 / 800);
 
     const trends = normalizedUniformPartiallyLinearEpsApprox(points, 0.01);
 
@@ -22,11 +23,11 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       return f(avgAngleRad) * pctSpan * trends.length;
     };
 
-    const uQuicklyIncreasingTrend = applyTrendAngleWithWeight(trapmfL(MX / 2, MX * 3 / 5));
-    const uIncreasingTrend = applyTrendAngleWithWeight(trapmfL(MX / 8, MX / 4));
-    const uConstantTrend = applyTrendAngleWithWeight(trapmf(-MX / 4, -MX / 8, MX / 8, MX / 4));
-    const uDecreasingTrend = applyTrendAngleWithWeight(trapmfR(-MX / 4, -MX / 8));
-    const uQuicklyDecreasingTrend = applyTrendAngleWithWeight(trapmfR(-MX * 3 / 5, -MX / 2));
+    const uQuicklyIncreasingTrend = applyTrendAngleWithWeight(trapmfL(ANGMX / 2, ANGMX * 3 / 5));
+    const uIncreasingTrend = applyTrendAngleWithWeight(trapmfL(ANGMX / 8, ANGMX / 4));
+    const uConstantTrend = applyTrendAngleWithWeight(trapmf(-ANGMX / 4, -ANGMX / 8, ANGMX / 8, ANGMX / 4));
+    const uDecreasingTrend = applyTrendAngleWithWeight(trapmfR(-ANGMX / 4, -ANGMX / 8));
+    const uQuicklyDecreasingTrend = applyTrendAngleWithWeight(trapmfR(-ANGMX * 3 / 5, -ANGMX / 2));
 
     const uMostPercentage = trapmfL(0.6, 0.7);
     const uHalfPercentage = trapmf(0.3, 0.4, 0.6, 0.7);
