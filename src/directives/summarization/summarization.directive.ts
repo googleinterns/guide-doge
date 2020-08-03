@@ -22,7 +22,8 @@ export class SummarizationDirective implements OnInit, OnDestroy {
   }
 
   get host() {
-    const component = this.lineChartComponent; // later it will be like: this.lineChartComponent || this.barChartComponent || ...
+    // TODO: support multiple component types when available in `this.lineChartComponent || this.barChartComponent || ...`
+    const component = this.lineChartComponent;
     if (!component) {
       throw new Error('The component does not support summarization.');
     }

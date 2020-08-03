@@ -2,7 +2,11 @@ import { cacheSummaries, combineQuerySummariesFactories } from './commons';
 import { Summary } from '../types';
 
 describe('cacheSummaries', () => {
-  const summaries: Summary[] = ['s1', 's2', 's3'].map(createMockSummaryFromText);
+  const summaries: Summary[] = [
+    { text: 's1', validity: 0.5 },
+    { text: 's2', validity: 0.5 },
+    { text: 's3', validity: 0.5 },
+  ];
   let querySummariesSpy;
   let cachedQuerySummaries;
 
@@ -35,8 +39,14 @@ describe('cacheSummaries', () => {
 
 describe('combineQuerySummariesFactories', () => {
   const summariesArrays: Summary[][] = [
-    ['s1', 's2'].map(createMockSummaryFromText),
-    ['s3', 's4'].map(createMockSummaryFromText),
+    [
+      { text: 's1', validity: 0.5 },
+      { text: 's2', validity: 0.5 },
+    ],
+    [
+      { text: 's3', validity: 0.5 },
+      { text: 's4', validity: 0.5 },
+    ],
   ];
   const summariesQueries = summariesArrays.map(summaries => () => summaries);
   let querySummariesFactories;
@@ -59,10 +69,3 @@ describe('combineQuerySummariesFactories', () => {
     });
   });
 });
-
-function createMockSummaryFromText(text): Summary {
-  return {
-    text,
-    validity: 0.5,
-  };
-}

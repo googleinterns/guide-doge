@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { humanizeMeasureName } from '../../utils/formatters';
-import { Meta } from '../../datasets/metas/types';
+import { Meta, MetaType } from '../../datasets/metas/types';
 import { TabbedChartsMeta } from '../../datasets/metas/tabbed-charts.meta';
 
 @Component({
@@ -9,6 +9,8 @@ import { TabbedChartsMeta } from '../../datasets/metas/tabbed-charts.meta';
   styleUrls: ['./card.component.scss'],
 })
 export class CardComponent<T extends Meta> implements OnInit {
+  MetaType = MetaType;
+
   @Input() meta: T;
   humanizeMeasureName = humanizeMeasureName;
   currentTabTitle?: string;
@@ -43,6 +45,6 @@ export class CardComponent<T extends Meta> implements OnInit {
   }
 
   isTabbedChartsMetaCard(): this is CardComponent<TabbedChartsMeta> {
-    return this.meta.type === 'tabbed';
+    return this.meta.type === MetaType.TABBED_CHARTS;
   }
 }

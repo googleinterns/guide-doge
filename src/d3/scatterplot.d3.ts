@@ -1,48 +1,52 @@
-// run `tsc Scatterplot.ts` to compile into Scatterplot.js file
-
-// for running on browser
-// import * as _d3 from 'd3';
-
-// declare global {
-// const d3: typeof _d3;
-// }
-
-// for running on unit tests
+import * as AFRAME from 'aframe';
 import * as d3 from 'd3';
-import * as THREE from 'three';
+import { VRScatterPoint } from '../datasets/queries/vr.query';
+import { MetaType } from '../datasets/metas/types';
+
+
+export interface ScatterPlotStyle {
+  color: string | number;
+  shape: string;
+}
 
 export class Scatterplot{
-    private data: number[];
+    private data: VRScatterPoint[];
     private shape: string;
     private container: HTMLElement | null;
-    private hscale: d3.ScaleLinear<number, number>;
+    private TIME_MAX = 31;
+    timeScale: d3.ScaleTime<number, number>;
+    dataType: MetaType;
 
   constructor(shape: string) {
     this.shape = shape;
   }
-  init(container: HTMLElement, data: number[]){
+  init(container: HTMLElement, data: VRScatterPoint[], dataType: MetaType){
+    // console.log(data[0].categories.browser);
     this.data = data;
+    this.dataType = dataType;
     this.container = container;
-    document.body.append(container);
-    // create a scale so that there is correspondence between data set and screen render
-    this.hscale = d3.scaleLinear();
-    this.hscale.domain([0, d3.max(this.data) as number])       // max of dataset
-    .range([0, 100]);                                      // linear mapping of data set values to values from 0 to 10
-    this.createSky();
+    this.dataType = dataType;
     this.generatePts();
     this.setColor('blue');
+    this.createSky('gray');
     this.createGridPlane();
   }
 
+  private scaleTime(date: Date): number{
+    const startTime = this.data[0].x;
+    const endTime = this.data[this.data.length - 1].x;
+    this.timeScale = d3.scaleTime().domain([startTime, endTime]).rangeRound([0, this.TIME_MAX]);
+    return this.timeScale(date);
+  }
   private generatePts() {
      // enter identifies any DOM elements to be added when # array elements doesn't match
     d3.select(this.container).selectAll(this.shape).data(this.data).enter().append(this.shape);
     // d is data at index, i within
     // select all shapes within given container
-    d3.select(this.container).selectAll(this.shape).attr('position', (d, i) => {
-      const x = i * 5;
-      const y = i * 10;
-      const z = (-this.data[i] * 2);
+    d3.select(this.container).selectAll(this.shape).attr('radius', .5).attr('position', (d, i) => {
+      const x = (d as VRScatterPoint).x;
+      const y = (d as VRScatterPoint).y;
+      const z = (d as VRScatterPoint).z;
       return `${x} ${y} ${z}`;
     });
   }
@@ -51,34 +55,41 @@ export class Scatterplot{
       return color;
     });
   }
-  private createSky(){
-    const aSky = document.createElement('a-sky');
-    this.container!.appendChild(aSky);
-    d3.select(this.container).selectAll('a-sky').attr('color', () => {
-      return '#f2b9af';
-    });
-  }
   private createGridPlane()
   {
     const xGrid = document.createElement('a-entity');
+    xGrid.className = 'grids';
     xGrid.id = 'xGrid';
+    xGrid.className = 'grids';
     this.container!.appendChild(xGrid);
-    xGrid.object3D.add(new THREE.GridHelper(50, 50, 0xffffff, 0xffffff));
+    xGrid.object3D.add(new AFRAME.THREE.GridHelper(50, 50, 0xffffff, 0xffffff));
     d3.select(this.container).select('#xGrid').attr('position', '0 0 0');
     d3.select(this.container).select('#xGrid').attr('rotation', '0 0 0');
 
     const yGrid = document.createElement('a-entity');
+    yGrid.className = 'grids';
     yGrid.id = 'yGrid';
+    yGrid.className = 'grids';
     this.container!.appendChild(yGrid);
-    yGrid.object3D.add(new THREE.GridHelper(50, 50, 0xffffff, 0xffffff));
+    yGrid.object3D.add(new AFRAME.THREE.GridHelper(50, 50, 0xffffff, 0xffffff));
     d3.select(this.container).select('#yGrid').attr('position', '0 0 0');
     d3.select(this.container).select('#yGrid').attr('rotation', '0 0 -90');
 
     const zGrid = document.createElement('a-entity');
+    zGrid.className = 'grids';
     zGrid.id = 'zGrid';
+    zGrid.className = 'grids';
     this.container!.appendChild(zGrid);
-    zGrid.object3D.add(new THREE.GridHelper(50, 50, 0xffffff, 0xffffff));
+    zGrid.object3D.add(new AFRAME.THREE.GridHelper(50, 50, 0xffffff, 0xffffff));
     d3.select(this.container).select('#zGrid').attr('position', '0 0 0');
     d3.select(this.container).select('#zGrid').attr('rotation', '-90 0 0');
+  }
+  private createSky(color: string | number){
+    const sky = document.createElement('a-sky');
+    sky.id = 'sky';
+    this.container?.appendChild(sky);
+    d3.select(this.container).selectAll('#sky').attr('color', () => {
+      return color;
+    });
   }
 }

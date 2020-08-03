@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LineChartComponent } from './line-chart.component';
-import { mockPoint } from '../../utils/mocks.spec';
+import { mockData, mockPoint } from '../../utils/mocks.spec';
 import { MatCardModule } from '@angular/material/card';
 import { LineChartD3 } from '../../d3/line-chart.d3';
 
@@ -31,6 +31,18 @@ describe('LineChartComponent', () => {
   it('should have truthy i18n values.', () => {
     component.activePoint = mockPoint;
     expect(component.VISUALIZATION).toBeTruthy();
+  });
+
+  it('should have legend items with active points mapped.', () => {
+    component.data$.next(mockData);
+    component.activePoint = mockPoint;
+    const { legendItems } = component;
+
+    expect(legendItems.length).toBeGreaterThan(0);
+    for (const legendItem of component.legendItems) {
+      expect(legendItem.label).toBeTruthy();
+      expect(legendItem.activePoint).toBeTruthy();
+    }
   });
 
   it('should synchronize activePoint with activePoint$.', () => {

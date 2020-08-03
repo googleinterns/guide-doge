@@ -10,7 +10,7 @@ export interface RenderOptions {
 }
 
 export abstract class BaseD3<T extends RenderOptions> {
-  static colorPrimary = 'rgb(33, 150, 243)';
+  static primaryColor = 'rgb(33, 150, 243)';
 
   private clear$?: Subject<undefined>;
 
@@ -25,8 +25,12 @@ export abstract class BaseD3<T extends RenderOptions> {
     return d3.select(this.renderOptions.elementRef.nativeElement);
   }
 
-  protected get svg() {
+  protected get svg(): d3.Selection<SVGSVGElement, unknown, null, undefined> {
     return this.container.select('svg');
+  }
+
+  protected get svgElement() {
+    return this.svg.node()!;
   }
 
   config(renderOptions: T) {
