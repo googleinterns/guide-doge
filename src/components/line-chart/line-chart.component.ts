@@ -7,7 +7,8 @@ import { formatX, formatY } from '../../utils/formatters';
 import { A11yPlaceholderDirective } from '../../directives/a11y-placeholder/a11y-placeholder.directive';
 import { DAY } from '../../utils/timeUnits';
 import { LineChartMeta } from '../../datasets/metas/line-chart.meta';
-import { TimeSeriesDatum, TimeSeriesPoint } from '../../datasets/queries/time-series.query';
+import { TimeSeriesDatum } from '../../datasets/queries/time-series.query';
+import { TimeSeriesPoint } from '../../datasets/metas/types';
 
 export type LineChartDatum = TimeSeriesDatum<LegendItemStyle>;
 
