@@ -22,20 +22,20 @@ describe('VR Scatter Plot', () => {
 
   });
   it('places no points bc 1:1 correspondence with empty element array', () => {
-    scatterplot.init(element, [], MetaType.SCATTER_PLOT);
+    scatterplot.init(element, [], [], MetaType.SCATTER_PLOT);
     const expectedPosArray = [];
     const result = getPosition(element, shape);
     expect(result).toEqual(expectedPosArray);
   });
   it('places points for each element in a one element array', () => {
-    scatterplot.init(element, scatterPlotData1, MetaType.SCATTER_PLOT);
+    scatterplot.init(element, scatterPlotData1, [], MetaType.SCATTER_PLOT);
     const posArray = [{ x: 20, y: 10, z: 5 }];
     const expectedPosArray = scalePosition(posArray);
     const result = getPosition(element, shape);
     expect(result).toEqual(expectedPosArray);
   });
   it('places points for each element in a eight element array', () => {
-    scatterplot.init(element, scatterPlotData8, MetaType.SCATTER_PLOT);
+    scatterplot.init(element, scatterPlotData8, [], MetaType.SCATTER_PLOT);
     const posArray = [
       { x: 0, y: 0, z: 0 }, { x: 20, y: 10, z: 5 },
       { x: 40, y: 20, z: 10 }, { x: 60, y: 30, z: 15 },
@@ -55,11 +55,11 @@ describe('Checking for presence of', () => {
   beforeEach( () =>  {
     element = document.createElement('a-scene');
     scatterplot = new Scatterplot('a-sphere');
-    scatterplot.init(element, [], MetaType.SCATTER_PLOT);
+    scatterplot.init(element, [], [], MetaType.SCATTER_PLOT);
     grids = element.getElementsByClassName('grids');
   });
   it('aframe sky', () => {
-    scatterplot.init(element, [], MetaType.SCATTER_PLOT);
+    scatterplot.init(element, [], [], MetaType.SCATTER_PLOT);
     const sky = document.getElementsByTagName('a-sky');
     let skyPresent = false;
     if (sky !== null){

@@ -82,7 +82,7 @@ export class VRScatterPlotComponent implements OnInit {
   }
 
   initD3ScatterPlot(){
-    this.vrScatterPlot.init(document.querySelector('a-scene'), this.datum$.value.points, MetaType.SCATTER_PLOT);
+    this.vrScatterPlot.init(document.querySelector('a-scene'), this.datum$.value.points, this.datum$.value.labels, MetaType.SCATTER_PLOT);
   }
 
   get datum() {
