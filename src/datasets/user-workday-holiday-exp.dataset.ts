@@ -13,9 +13,11 @@ import * as WorkdayHolidayRelativeSummarization from './summarizations/workday-h
 import * as TrendSummarization from './summarizations/trend.summarization';
 import * as PartialTrendSummarization from './summarizations/partial-trend.summarization';
 
+
 export interface Config {
   dailyWeightStd: number;
   workdayHolidayActiveRatio: number;
+  expIncreasingFactor: number;
 }
 
 export const configMeta: PreferenceMeta<Config> = {
@@ -26,6 +28,10 @@ export const configMeta: PreferenceMeta<Config> = {
   workdayHolidayActiveRatio: {
     type: 'number',
     defaultValue: 10,
+  },
+  expIncreasingFactor: {
+    type: 'number',
+    defaultValue: 0.1,
   },
 };
 
@@ -45,9 +51,16 @@ export function create(config: Config): Dataset {
   const {
     dailyWeightStd,
     workdayHolidayActiveRatio,
+    expIncreasingFactor,
   } = config;
 
-  const dateCategory = generateDateCategory(startDate, endDate, dailyWeightStd, workdayHolidayActiveRatio);
+  const dateCategory = generateDateCategory(
+    startDate,
+    endDate,
+    dailyWeightStd,
+    workdayHolidayActiveRatio,
+    expIncreasingFactor,
+  );
 
   const visitCountMeasure: Measure = {
     name: 'visitCount',
@@ -72,9 +85,8 @@ export function create(config: Config): Dataset {
   const dataCube = generateCube(categories, measures, generateCubeConfig);
 
   const visitCountQuerySummariesFactory = combineQuerySummariesFactories(
-    // WorkdayHolidayAbsoluteSummarization.queryFactory,
-    // WorkdayHolidayRelativeSummarization.queryFactory,
     TrendSummarization.queryFactory,
+    TrendRegressionSummarization.queryFactory,
   );
 
   const lineChartMeta = createLineChartMeta(
@@ -118,7 +130,13 @@ export function create(config: Config): Dataset {
 }
 
 
-function generateDateCategory(startDate: Date, endDate: Date, dailyVariance: number, workdayToHolidayUserActiveRatio: number): Category {
+function generateDateCategory(
+  startDate: Date,
+  endDate: Date,
+  dailyVariance: number,
+  workdayToHolidayUserActiveRatio: number,
+  expIncreasingFactor: number,
+): Category {
   const dailyThunk = random.normal(0, dailyVariance);
   const values: CategoryValue[] = [];
   const date = new Date(startDate);
@@ -131,12 +149,12 @@ function generateDateCategory(startDate: Date, endDate: Date, dailyVariance: num
     if (date.getDay() === 0 || date.getDay() === 6) {
       values.push({
         name: date.getTime(),
-        weight: Math.max(holidayWeightMean + dailyThunk(), 0) * normalizeFactor * Math.exp(i / 10),
+        weight: Math.max(holidayWeightMean + dailyThunk(), 0) * normalizeFactor * expIncreasingFactor * Math.exp(i * expIncreasingFactor),
       });
     } else {
       values.push({
         name: date.getTime(),
-        weight: Math.max(workdayWeightMean + dailyThunk()) * normalizeFactor * Math.exp(i / 10),
+        weight: Math.max(workdayWeightMean + dailyThunk()) * normalizeFactor * Math.exp(i * expIncreasingFactor),
       });
     }
     date.setTime(date.getTime() + DAY);

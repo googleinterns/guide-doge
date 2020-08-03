@@ -1,0 +1,31 @@
+@import "../../utils/constants";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  border-radius: 2px;
+  overflow: hidden;
+
+  .svg-wrapper {
+    box-sizing: content-box;
+    position: relative;
+
+    svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  .attribution-container {
+    @include card-section;
+    padding: 1em 1.5em;
+    display: flex;
+    flex-direction: column;
+    font-size: $font-size-small;
+
+    a {
+      color: mat-color($guide-doge-primary);
+    }
+  }
+}

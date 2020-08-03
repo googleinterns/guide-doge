@@ -1,9 +1,9 @@
-import { BaseMeta } from './types';
+import { BaseMeta, MetaType } from './types';
 import { LineChartMeta } from './line-chart.meta';
 
 export type ChartMeta = LineChartMeta;
 
-export interface TabbedChartsMeta extends BaseMeta<'tabbed'> {
+export interface TabbedChartsMeta extends BaseMeta<MetaType.TABBED_CHARTS> {
   metas: ChartMeta[];
 }
 
@@ -12,7 +12,7 @@ export function createTabbedChartsMeta(
   metas: ChartMeta[],
 ): TabbedChartsMeta {
   return {
-    type: 'tabbed',
+    type: MetaType.TABBED_CHARTS,
     title,
     metas,
   };

@@ -3,7 +3,7 @@ import { Dataset } from './types';
 import { createDefault } from '../utils/preferences';
 import { DAY } from '../utils/timeUnits';
 import { DataCube } from '../models/data-cube/data-cube.model';
-import { Meta } from './metas/types';
+import { Meta, MetaType } from './metas/types';
 
 describe('UserWorkdayHolidayDataset', () => {
   let dataset: Dataset;
@@ -21,9 +21,9 @@ describe('UserWorkdayHolidayDataset', () => {
 
   it('should query data points in date range.', () => {
     const testMeta = (meta: Meta) => {
-      if (meta.type === 'tabbed') {
+      if (meta.type === MetaType.TABBED_CHARTS) {
         meta.metas.map(testMeta);
-      } else {
+      } else if (meta.type === MetaType.LINE_CHART) {
         const testRanges: [Date, Date][] = [
           [new Date(currentTime - 10 * DAY), new Date(currentTime - 5 * DAY)],
           [new Date(currentTime + 5 * DAY), new Date(currentTime + 10 * DAY)],

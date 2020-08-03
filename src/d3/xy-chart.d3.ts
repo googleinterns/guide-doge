@@ -2,7 +2,8 @@ import * as d3 from 'd3';
 import { BaseD3, RenderOptions as BaseRenderOptions } from './base.d3';
 import { Observable } from 'rxjs';
 import { formatX } from '../utils/formatters';
-import { TimeSeriesDatum, TimeSeriesPoint } from '../datasets/queries/time-series.query';
+import { TimeSeriesPoint } from '../datasets/metas/types';
+import { TimeSeriesDatum } from '../datasets/queries/time-series.query';
 
 export interface RenderOptions<Datum> extends BaseRenderOptions {
   data$: Observable<Datum[]>;

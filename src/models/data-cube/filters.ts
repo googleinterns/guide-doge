@@ -26,3 +26,15 @@ export function inOneOfDateRanges(dateRanges: [Date, Date][], rangeOptions: Rang
       });
   };
 }
+
+export function inCities(cityIds: string[]): Filter {
+  return (categories: Category[]) => {
+    const cityIndex = categories.findIndex(
+      category => category.name === 'city',
+    );
+    return (row: Row) => {
+      const cityId = row.header[cityIndex] as string;
+      return cityIds.includes(cityId);
+    };
+  };
+}

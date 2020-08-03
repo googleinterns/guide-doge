@@ -1,7 +1,7 @@
 import { XYChartD3 } from './xy-chart.d3';
 import * as d3 from 'd3';
 import { LineChartDatum } from '../components/line-chart/line-chart.component';
-import { TimeSeriesPoint } from '../datasets/queries/time-series.query';
+import { TimeSeriesPoint } from '../datasets/metas/types';
 
 export interface LegendItemStyle {
   color: string;
@@ -17,7 +17,7 @@ interface LinePath {
 
 export class LineChartD3 extends XYChartD3<LegendItemStyle> {
   static defaultLegendItemStyle: LegendItemStyle = {
-    color: LineChartD3.colorPrimary,
+    color: LineChartD3.primaryColor,
     width: 2,
     opacity: 1,
     dashes: [],
@@ -73,7 +73,7 @@ export class LineChartD3 extends XYChartD3<LegendItemStyle> {
       .append('circle')
       .attr('class', 'line_chart-active_point')
       .attr('r', 4)
-      .attr('fill', LineChartD3.colorPrimary);
+      .attr('fill', LineChartD3.primaryColor);
   }
 
   protected updateActivePoint(activePoint: TimeSeriesPoint | null) {
@@ -105,8 +105,8 @@ export class LineChartD3 extends XYChartD3<LegendItemStyle> {
       ...LineChartD3.defaultLegendItemStyle,
       ...style ?? {},
     };
-    return (stylePath: d3.Selection<T, unknown, null, undefined>) => {
-      stylePath
+    return (selection: d3.Selection<T, unknown, null, undefined>) => {
+      selection
         .attr('stroke', color)
         .attr('stroke-width', width)
         .attr('opacity', opacity)

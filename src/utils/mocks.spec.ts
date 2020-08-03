@@ -1,5 +1,5 @@
 import { AudificationPreference, Preference } from '../services/preference/types';
-import { TimeSeriesPoint } from '../datasets/queries/time-series.query';
+import { TimeSeriesPoint } from '../datasets/metas/types';
 import { activeUserMeasure } from '../models/data-cube/presets';
 import { LineChartDatum } from '../components/line-chart/line-chart.component';
 import { Summary } from '../datasets/summarizations/types';
@@ -47,3 +47,8 @@ export const mockData = createMockData();
 export const [mockDatum] = createMockData(1);
 
 export const mockMeasureName = activeUserMeasure.name;
+
+export const atlantaCityId = '1840013660';
+export const southKoreaCountryId = '410';
+export const easternEuropeSubcontinentId = '151';
+export const oceaniaContinentId = '009';
