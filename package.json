@@ -62,6 +62,7 @@
     "@types/mathjs": "^6.0.5",
     "@types/node": "^12.11.1",
     "@types/random": "^2.1.1",
+    "@types/regression": "^2.0.0",
     "@types/sprintf-js": "^1.1.2",
     "@types/uuid": "^8.0.0",
     "codelyzer": "^5.1.2",
