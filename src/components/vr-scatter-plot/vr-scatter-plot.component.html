@@ -1,8 +1,11 @@
 <a-scene #ascene embedded style="position: absolute;">
-    <a-entity daydream-controls>
-      <a-entity laser-controls="hand: right" raycaster="objects: .links; far: 5">
-      </a-entity>
+    <a-entity id="control" daydream-contorl>
+      <a-entity cursor laser-controls="hand: right" raycaster="objects: .links; far: 5">
+      </a-entity> 
     </a-entity>
+    <a-camera>
+        <a-cursor position="0 0 -1"></a-cursor>
+    </a-camera>
 </a-scene>
 <aside class="sidebar">
     <h2 class="sidebar-title">Customization</h2>

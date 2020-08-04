@@ -4,8 +4,7 @@ import { VRScatterPoint } from '../datasets/queries/vr.query';
 import { MetaType } from '../datasets/metas/types';
 const PROXY_FLAG = '__keyboard-controls-proxy';
 const DATA_PT_RADIUS = .05;
-
-
+// const CAM_Y_ROTATION = AFRAME.THREE.MathUtils.degToRad(135);
 
 export interface ScatterPlotStyle {
   color: string | number;
@@ -52,6 +51,27 @@ export class Scatterplot{
     this.createSky('gray');
     this.createGridPlane();
     this.loaded = true;
+    window.onload = () => {
+      document.addEventListener('keydown', (event) => {
+        if (event.keyCode === 81){
+          document.querySelector('[camera]').object3D.position.set(
+            document.querySelector('[camera]').object3D.position.x,
+            document.querySelector('[camera]').object3D.position.y + .2,
+            document.querySelector('[camera]').object3D.position.z
+          );
+        }
+        if (event.keyCode === 90){
+          document.querySelector('[camera]').object3D.position.set(
+            document.querySelector('[camera]').object3D.position.x,
+            document.querySelector('[camera]').object3D.position.y - .2,
+            document.querySelector('[camera]').object3D.position.z
+          );
+        }
+      })
+      // document.querySelector('[camera]').object3D.rotation.set(0, (135 * Math.PI / 180) , 0);
+      document.querySelector('[camera]').setAttribute('rotate_camera', '');
+      
+    };
   }
 
   private scalePosition(){
@@ -76,24 +96,6 @@ export class Scatterplot{
   }
 
   private generatePts() {
-    window.onload = () => {
-      document.addEventListener('keydown', (event) => {
-        if (event.keyCode === 81){
-          document.querySelector('[camera]').object3D.position.set(
-            document.querySelector('[camera]').object3D.position.x,
-            document.querySelector('[camera]').object3D.position.y + .2,
-            document.querySelector('[camera]').object3D.position.z
-          );
-        }
-        if (event.keyCode === 90){
-          document.querySelector('[camera]').object3D.position.set(
-            document.querySelector('[camera]').object3D.position.x,
-            document.querySelector('[camera]').object3D.position.y - .2,
-            document.querySelector('[camera]').object3D.position.z
-          );
-        }
-      })
-    };
     this.scalePosition();
      // enter identifies any DOM elements to be added when # array elements doesn't match
     d3.select(this.dataPointContainer).selectAll(this.shape).data(this.data).enter().append(this.shape);
@@ -104,6 +106,9 @@ export class Scatterplot{
       const y = this.yScale((d as VRScatterPoint).y);
       const z = this.zScale((d as VRScatterPoint).z);
       return `${x} ${y} ${z}`;
+    })
+    .on('mouseenter', (d, i) => {
+      console.log(this.xScale((d as VRScatterPoint).x));
     });
   }
 
@@ -204,5 +209,11 @@ AFRAME.registerComponent('show_cards', {
     } else {
       this.el.object3D.visible = false;
     }
+  }
+});
+
+AFRAME.registerComponent('rotate_camera', {
+  init() {
+    this.el.setAttribute('rotation', '0, 135, 0');
   }
 });
