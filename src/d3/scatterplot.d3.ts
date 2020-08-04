@@ -81,14 +81,14 @@ export class Scatterplot{
         if (event.keyCode === 81){
           document.querySelector('[camera]').object3D.position.set(
             document.querySelector('[camera]').object3D.position.x,
-            document.querySelector('[camera]').object3D.position.y + 1,
+            document.querySelector('[camera]').object3D.position.y + .2,
             document.querySelector('[camera]').object3D.position.z
           );
         }
         if (event.keyCode === 90){
           document.querySelector('[camera]').object3D.position.set(
             document.querySelector('[camera]').object3D.position.x,
-            document.querySelector('[camera]').object3D.position.y - 1,
+            document.querySelector('[camera]').object3D.position.y - .2,
             document.querySelector('[camera]').object3D.position.z
           );
         }
