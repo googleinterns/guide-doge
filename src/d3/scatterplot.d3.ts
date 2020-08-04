@@ -107,8 +107,9 @@ export class Scatterplot{
       const z = this.zScale((d as VRScatterPoint).z);
       return `${x} ${y} ${z}`;
     })
-    .on('mouseenter', (d, i) => {
+    .on('mouseenter', (d, i, g) => {
       console.log(this.xScale((d as VRScatterPoint).x));
+      (g[i] as AFRAME.Entity).setAttribute('color', 'yellow');
     });
   }
 
