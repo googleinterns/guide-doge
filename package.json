@@ -51,6 +51,7 @@
     "three-js": "^79.0.0",
     "tone": "^14.7.2",
     "topojson": "^3.0.2",
+    "transition-timing": "^1.1.0",
     "tslib": "^1.10.0",
     "uuid": "^8.1.0",
     "zone.js": "~0.10.2"

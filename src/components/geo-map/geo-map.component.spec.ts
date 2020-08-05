@@ -3,6 +3,7 @@ import { GeoMapComponent } from './geo-map.component';
 import { GeoMapD3 } from '../../d3/geo-map.d3';
 import { fetchWorld } from '../../datasets/geo.dataset';
 import { MetaType } from '../../datasets/metas/types';
+import { GeoMapModule } from './geo-map.module';
 
 describe('GeoMapComponent', () => {
   let fixture: ComponentFixture<GeoMapComponent>;
@@ -11,8 +12,8 @@ describe('GeoMapComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      declarations: [
-        GeoMapComponent,
+      imports: [
+        GeoMapModule,
       ],
     });
     fixture = TestBed.createComponent(GeoMapComponent);

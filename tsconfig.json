@@ -21,7 +21,8 @@
     "removeComments": true,
     "preserveConstEnums": true,
     "strictBindCallApply": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
