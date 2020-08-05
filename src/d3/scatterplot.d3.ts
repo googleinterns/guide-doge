@@ -45,10 +45,8 @@ export class Scatterplot{
     container.appendChild(this.dataPointContainer);
     container.appendChild(this.dataTextContainer);
     if (this.data.length > 0 && !this.loaded){
-      console.log(data);
       this.generateText();
       this.generatePts();
-    
       this.setColor('blue');
     }
     this.createSky('gray');
@@ -113,23 +111,13 @@ export class Scatterplot{
       // (g[i] as AFRAME.Entity).setAttribute('hover_cards', '');
       (g[i] as AFRAME.Entity).addEventListener('mouseenter', () => {
         const hoverIdx = i;
-        console.log(this.cardSelection);
         this.cardSelection.filter((d, i) => { return i === hoverIdx}).attr('visible', true);
       });
       (g[i] as AFRAME.Entity).addEventListener('mouseleave', () => {
         const hoverIdx = i;
-        console.log(this.cardSelection);
         this.cardSelection.filter((d, i) => { return i === hoverIdx}).attr('visible', false);
       });
     });
-    // .on('mouseenter', (d, i, g) => {
-    //   console.log(this.xScale((d as VRScatterPoint).x));
-    //   // (g[i] as AFRAME.Entity).setAttribute('color', 'yellow');
-    //   const hoverIdx = i;
-    //   console.log(hoverIdx);
-    //   console.log(this.dataTextContainer.children);
-    //   d3.select(this.dataTextContainer).selectAll('a-entity').filter((d, i) => {;return i === hoverIdx}).attr('visible', true);
-    // });
   }
 
   private generateText(){
@@ -239,11 +227,4 @@ AFRAME.registerComponent('rotate_camera', {
     this.el.setAttribute('rotation', '0, 135, 0');
   }
 });
-AFRAME.registerComponent('hover_cards', {
-  init() {
-    this.el.addEventListener('mouseenter', () => {
-      // this.generateText();
-    });
-    
-  }
-});
+
