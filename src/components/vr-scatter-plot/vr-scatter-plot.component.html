@@ -1,9 +1,10 @@
 <a-scene #ascene embedded style="position: absolute;">
+    <a-entity id="control" daydream-control>
+        <a-entity cursor laser-controls="hand: right" raycaster position="0 0 -1">
+        </a-entity> 
+    </a-entity>
     <a-camera>
-        <a-entity id="control" daydream-control>
-            <a-entity cursor laser-controls="hand: right" raycaster position="0 0 -1">
-            </a-entity> 
-        </a-entity>
+       
         <a-cursor position="0 0 -1"></a-cursor>
     </a-camera>
 </a-scene>
