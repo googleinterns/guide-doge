@@ -20,6 +20,7 @@ export class Scatterplot{
     private dataPointContainer: HTMLElement;
     private dataTextContainer: HTMLElement;
     private metrics: string[];
+    private cardSelection: any;
     xScale: d3.ScaleLinear<number, number>;
     yScale: d3.ScaleLinear<number, number>;
     zScale: d3.ScaleLinear<number, number>;
@@ -30,6 +31,7 @@ export class Scatterplot{
   constructor(shape: string) {
     this.shape = shape;
   }
+  
   init(container: HTMLElement, data: VRScatterPoint[], metrics: string[], dataType: MetaType){
     this.data = data;
     this.metrics = metrics;
@@ -44,8 +46,9 @@ export class Scatterplot{
     container.appendChild(this.dataTextContainer);
     if (this.data.length > 0 && !this.loaded){
       console.log(data);
-      this.generatePts();
       this.generateText();
+      this.generatePts();
+    
       this.setColor('blue');
     }
     this.createSky('gray');
@@ -96,7 +99,6 @@ export class Scatterplot{
   }
 
   private generatePts() {
-    this.scalePosition();
      // enter identifies any DOM elements to be added when # array elements doesn't match
     d3.select(this.dataPointContainer).selectAll(this.shape).data(this.data).enter().append(this.shape);
     // d is data at index, i within
@@ -107,16 +109,60 @@ export class Scatterplot{
       const z = this.zScale((d as VRScatterPoint).z);
       return `${x} ${y} ${z}`;
     })
-    .on('mouseenter', (d, i, g) => {
-      console.log(this.xScale((d as VRScatterPoint).x));
-      (g[i] as AFRAME.Entity).setAttribute('color', 'yellow');
+    .each((d, i, g) => {
+      // (g[i] as AFRAME.Entity).setAttribute('hover_cards', '');
+      (g[i] as AFRAME.Entity).addEventListener('mouseenter', () => {
+        const hoverIdx = i;
+        console.log(this.cardSelection);
+        this.cardSelection.filter((d, i) => { return i === hoverIdx}).attr('visible', true);
+        // d3.select(this.dataTextContainer).selectAll('a-entity').data(this.data).enter().append('a-entity');
+    // d3.select(this.dataTextContainer).selectAll('a-entity')
+    //   .attr('geometry', 'primitive: plane; height: auto; width: .5')
+    //   .attr('material', 'color: blue')
+    //   .attr('text', (d, i) => {
+    //     const categories = (d as VRScatterPoint).categories.browser + ', ' + (d as VRScatterPoint).categories.country
+    //       + ', ' + (d as VRScatterPoint).categories.source;
+    //     // for (let categChild of (d as VRScatterPoint).categories)
+    //     const x = (d as VRScatterPoint).x;
+    //     const y = (d as VRScatterPoint).y;
+    //     const z = (d as VRScatterPoint).z;
+    //     return `
+    //     value: ${categories} POSITION:
+    //     \n \t${this.metrics[0]}: ${x}
+    //     \n \t${this.metrics[1]}: ${y.toFixed(2)}
+    //     \n \t${this.metrics[2]}: ${z}\n;
+    //     font: ${this.AILERON_FONT};
+    //     xOffset: ${DATA_PT_RADIUS / 3}`;
+    //   })
+    //   .attr('visible', true)
+    //   .attr('position', (d, i) => {
+    //     const x = this.xScale((d as VRScatterPoint).x);
+    //     const y = this.yScale((d as VRScatterPoint).y);
+    //     const z = this.zScale((d as VRScatterPoint).z);
+    //     return `${x + DATA_PT_RADIUS} ${y + 2 * DATA_PT_RADIUS} ${z}`;
+    //   })
+    //   .each((d, i, g) => {
+    //     (g[i] as AFRAME.Entity).setAttribute('rotate_cards', '');
+    //     // (g[i] as AFRAME.Entity).setAttribute('show_cards', '');
+    //   });
+      })
     });
+    // .on('mouseenter', (d, i, g) => {
+    //   console.log(this.xScale((d as VRScatterPoint).x));
+    //   // (g[i] as AFRAME.Entity).setAttribute('color', 'yellow');
+    //   const hoverIdx = i;
+    //   console.log(hoverIdx);
+    //   console.log(this.dataTextContainer.children);
+    //   d3.select(this.dataTextContainer).selectAll('a-entity').filter((d, i) => {;return i === hoverIdx}).attr('visible', true);
+    // });
   }
 
   private generateText(){
+    this.scalePosition();
     // enter identifies any DOM elements to be added when # array elements doesn't match
     d3.select(this.dataTextContainer).selectAll('a-entity').data(this.data).enter().append('a-entity');
-    d3.select(this.dataTextContainer).selectAll('a-entity')
+    this.cardSelection =  d3.select(this.dataTextContainer).selectAll('a-entity');
+    this.cardSelection
       .attr('geometry', 'primitive: plane; height: auto; width: .5')
       .attr('material', 'color: blue')
       .attr('text', (d, i) => {
@@ -143,7 +189,7 @@ export class Scatterplot{
       })
       .each((d, i, g) => {
         (g[i] as AFRAME.Entity).setAttribute('rotate_cards', '');
-        (g[i] as AFRAME.Entity).setAttribute('show_cards', '');
+        // (g[i] as AFRAME.Entity).setAttribute('show_cards', '');
       });
   }
 
@@ -216,5 +262,13 @@ AFRAME.registerComponent('show_cards', {
 AFRAME.registerComponent('rotate_camera', {
   init() {
     this.el.setAttribute('rotation', '0, 135, 0');
+  }
+});
+AFRAME.registerComponent('hover_cards', {
+  init() {
+    this.el.addEventListener('mouseenter', () => {
+      // this.generateText();
+    });
+    
   }
 });
