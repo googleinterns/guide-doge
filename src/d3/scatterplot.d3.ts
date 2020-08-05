@@ -28,12 +28,12 @@ export class Scatterplot{
     dataType: MetaType;
     loaded = false;
     tilePos: Record<string,string> = {
-      ['xPos']: '-1 2.5 -2',
-      ['xNeg']: '-2 2.5 -2',
-      ['yPos']: '-1.5 3 -2',
-      ['yNeg']: '-1.5 2 -2',
-      ['zPos']: '1 2.75 -2',
-      ['zNeg']: '1 2.25 -2',
+      ['xPos']: '-1 2.5 -3',
+      ['xNeg']: '-2 2.5 -3',
+      ['yPos']: '-1.5 3 -3',
+      ['yNeg']: '-1.5 2 -3',
+      ['zPos']: '1 2.75 -3',
+      ['zNeg']: '1 2.25 -3',
   };
 
 
