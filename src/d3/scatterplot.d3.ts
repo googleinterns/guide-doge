@@ -128,7 +128,7 @@ export class Scatterplot{
         (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.xNeg);
         (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/left_arrow.png');
       }
-      (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
+      (navTile as AFRAME.Entity).addEventListener('raycaster-intersected', () => {
         document.querySelector('[camera]').object3D.position.set(
           document.querySelector('[camera]').object3D.position.x + velocity,
           document.querySelector('[camera]').object3D.position.y,
@@ -143,7 +143,7 @@ export class Scatterplot{
         (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.yNeg);
         (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/down_arrow.png');
       }
-      (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
+      (navTile as AFRAME.Entity).addEventListener('raycaster-intersected', () => {
         document.querySelector('[camera]').object3D.position.set(
           document.querySelector('[camera]').object3D.position.x,
           document.querySelector('[camera]').object3D.position.y + velocity,
@@ -158,7 +158,7 @@ export class Scatterplot{
         (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.zNeg);
         (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/down_arrow.png');
       }
-      (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
+      (navTile as AFRAME.Entity).addEventListener('raycaster-intersected', () => {
         document.querySelector('[camera]').object3D.position.set(
           document.querySelector('[camera]').object3D.position.x,
           document.querySelector('[camera]').object3D.position.y,
