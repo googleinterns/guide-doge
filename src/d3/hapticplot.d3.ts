@@ -8,26 +8,29 @@ export class Hapticplot{
     private container: HTMLElement | null = null;
     private graphScale: d3.ScaleLinear<number, number>;
     private hapticScale: d3.ScaleLinear<number, number>;
+    private audioScale: d3.ScaleLinear<number, number>;
 
   constructor(shape: string) {
     this.shape = shape;
   }
 
   init(container: HTMLElement | null, data: number[]){
-    const POINT_SIZE = 0.02;
+    const POINT_SIZE = 0.01;
     const DEFAULT_COLOR = '#F0A202';
     const HOVER_COLOR = 'red';
 
     this.data = data;
     this.container = container;
-    // create a scale so that there is correspondence between data set and screen render,
-    // a linear mapping of data set values to values from 0 to 10
+    // create linear mapping from this.data to positions (graph), haptic intensiies, and audio selection
     this.graphScale = d3.scaleLinear();
     this.graphScale.domain([0, d3.max(this.data) as number])  // max of dataset
       .range([0, 0.5]);
     this.hapticScale = d3.scaleLinear();
     this.hapticScale.domain([0, d3.max(this.data) as number])  // max of dataset
       .range([0, 1]);
+    this.audioScale = d3.scaleLinear();
+    this.audioScale.domain([0, d3.max(this.data) as number])  // max of dataset
+      .range([0, 27]);
     this.setupPoints(DEFAULT_COLOR, HOVER_COLOR, POINT_SIZE);
     this.createSky();
     this.createGridPlane();
@@ -53,14 +56,16 @@ export class Hapticplot{
       //  - "enter" identifies any DOM elements to be added when # array
       //    elements & # DOM elements don't match
       .data(this.data).enter().append(this.shape).classed('datapoint', true)
-      // Updates points positions based on ingested data
-      .each((d, i , g) => this.setPosition(d, i, g[i]))
       // Adds given color property to all points
       .attr('color', defaultColor)
       // Sets points radius property
       .attr('radius', size)
       // Enables controller interaction with points using superhands' tags
       .attr('hoverable', '')
+      // Updates points positions based on ingested data
+      .each((d, i , g) => this.setPosition(d, i, g[i]))
+      // Adds audio triggers to points based on ingested data
+      .each((d, i, g) => this.setAudio(d, g[i]))
       // Adds listeners for state change events, which trigger a change in the
       // point's color property when a hover event occurs
       .on('hover-start',  (d, i, g) => this.onHoverStart(g[i], this.hapticScale(d), hoverColor, size))
@@ -69,36 +74,48 @@ export class Hapticplot{
   }
 
   /**
-   * Generates a world space position for each data entity, based on ingested data
+   * Sets a world space position for each point, based on ingested data
    * @param data Ingested Data
    * @param index Crrent index in data array
    */
   private setPosition(datum, index, entity){
     const x = (0.5 / this.data.length) * index;
     const y = this.graphScale(datum) + 1;
-    const z = -1;
+    const z = -1 + (0.01 / this.data.length) * (index * index);
     (entity as Entity).object3D.position.set(x, y, z);
   }
 
+   /**
+   * Sets up audio trigger for points, and atached audio matched to data
+   * @param data Ingested Data
+   * @param index Crrent index in data array
+   */
+  private setAudio(datum, entity){
+    d3.select(entity)
+      .attr('sound', 'src: url(../../assets/' 
+        + Math.round(this.audioScale(datum)).toString() + '.mp3)' 
+        + '; on: hover-start')
+  }
+
   /**
-   * When a data entity begins being hovered by the controller entity
+   * When a point begins being hovered by the controller entity
    *  - triggers a haptic pulse
    *  - changes the entities color to indicate a pulse has fired
    * @param entity The entity being hovered
-   * @param hapticIntensity A points haptic intensity, based on is associated data
+   * @param hapticIntensity A data enities haptic intensity, based on is associated data
    * @param hoverColor The colorthe entity takes on while hoverec
    */
   private onHoverStart(entity, hapticIntensity, hoverColor, size){
     d3.event.detail?.hand?.components.haptics.pulse(hapticIntensity, 5000);
     d3.select(entity)
       .attr('color', hoverColor)
-      .attr('radius', size + (hapticIntensity / 30));
+      .attr('radius', size + (hapticIntensity / 60));
   }
 
   /**
    * When an object stops being hovered by the controller entity
    *  - changes the entities color to indicate hovering has ended
-   * @param entity The data entity which is no longer hovered
+   * @param entity The point which is no longer hovered
    * @param defaultColor The default color of unhovered entities
    */
   private onHoverEnd(entity, defaultColor, size){
