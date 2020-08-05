@@ -1,4 +1,4 @@
 export async function importAudificationModule() {
-  const { LineChartAudificationModule } = await import('../../components/line-chart-audification/line-chart-audification.module');
+  const { LineChartAudificationModule } = await import('./line-chart-audification.module');
   return LineChartAudificationModule;
 }

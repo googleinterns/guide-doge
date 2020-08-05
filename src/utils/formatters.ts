@@ -9,12 +9,12 @@ export const humanizeMeasureName = (str: string) => str
   .replace(/([A-Z])/g, ' $1')
   .replace(/^./, firstCharacter => firstCharacter.toUpperCase());
 
-export const humanizeTerritoryLevel = (level: TerritoryLevel) => {
+export const humanizeTerritoryLevel = (level: TerritoryLevel, plural = false) => {
   // TODO: i18n
   return [
-    'Continent',
-    'Subcontinent',
-    'Country',
-    'City',
-  ][level];
+    ['Continent', 'Continents'],
+    ['Subcontinent', 'Subcontinents'],
+    ['Country', 'Countries'],
+    ['City', 'Cities'],
+  ][level][plural ? 1 : 0];
 };

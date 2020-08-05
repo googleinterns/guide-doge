@@ -49,6 +49,22 @@
     }
 
     .table {
+      .active {
+        background-color: mat-color($guide-doge-primary, default, .1);
+      }
+
+      .mat-header-cell,
+      .mat-cell {
+        padding-left: 12px;
+      }
+
+      .mat-row.active .mat-cell.active {
+        font-weight: 500;
+      }
+
+      .mat-column-ranking {
+        text-align: right;
+      }
     }
   }
 
