@@ -2,11 +2,13 @@ import { LineChartMeta } from './line-chart.meta';
 import { TabbedChartsMeta } from './tabbed-charts.meta';
 import { VRScatterplotMeta } from './vr-scatter-plot.meta';
 import { GeoMapMeta } from './geo-map.meta';
-
+import { Type } from '@angular/core';
+import { LazyA11yModule } from '../../directives/a11y/a11y.directive';
 
 export interface BaseMeta<T extends MetaType> {
   type: T;
   title: string;
+  a11yModuleImporters?: (() => Promise<Type<LazyA11yModule>>)[];
 }
 
 export interface DataMeta<T extends MetaType, QueryT> extends BaseMeta<T> {
@@ -42,5 +44,5 @@ export enum MetaType {
   TABBED_CHARTS,
   LINE_CHART,
   GEO_MAP,
-  SCATTER_PLOT
+  SCATTER_PLOT,
 }

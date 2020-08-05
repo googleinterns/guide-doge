@@ -9,6 +9,7 @@ import { Territory, TerritoryLevel } from '../../datasets/geo.types';
 import { formatY, humanizeMeasureName, humanizeTerritoryLevel } from '../../utils/formatters';
 import { filter, map, takeUntil } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
+import { A11yHostComponent } from '../a11y-host/a11y-host.component';
 
 type TerritoryGroup = { level: TerritoryLevel, territories: Territory[] };
 
@@ -22,13 +23,13 @@ const defaultUnit = COUNTRY;
   templateUrl: './geo-map.component.html',
   styleUrls: ['./geo-map.component.scss'],
 })
-export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
+export class GeoMapComponent extends A11yHostComponent implements RenderOptions, OnInit, OnDestroy {
   humanizeMeasureName = humanizeMeasureName;
   humanizeTerritoryLevel = humanizeTerritoryLevel;
   formatY = formatY;
   territoryLevels = [CONTINENT, SUBCONTINENT, COUNTRY, CITY];
 
-  @ViewChild(A11yPlaceholderDirective, { static: true }) a11yPlaceholder: A11yPlaceholderDirective<GeoMapComponent>;
+  @ViewChild(A11yPlaceholderDirective, { static: true }) a11yPlaceholder: A11yPlaceholderDirective;
 
   @Input() meta: GeoMapMeta;
   @Input() height = 500;
@@ -47,6 +48,7 @@ export class GeoMapComponent implements RenderOptions, OnInit, OnDestroy {
   constructor(
     public elementRef: ElementRef<HTMLElement>,
   ) {
+    super(elementRef);
     this.geoMapD3 = new GeoMapD3(this);
     this.filteringTerritory$
       .pipe(takeUntil(this.destroy$))
