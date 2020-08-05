@@ -3,6 +3,7 @@ import * as math from 'mathjs';
 import { TimeSeriesPoint, NumPoint } from '../../metas/types';
 import { normalizePoints, pointToPair, pairToPoint } from '../utils/commons';
 import { timeSeriesPointToNumPoint } from '../utils/time-series';
+import { MINUTE, DAY, WEEK } from '../../../utils/timeUnits';
 
 export interface LinearRegressionResult {
   gradient: number;
@@ -124,6 +125,56 @@ function intersectCone(c1: Cone2D, c2: Cone2D): Cone2D | null {
   } else {
     return null;
   }
+}
+
+// export interface TimeSeriesPartialTrend {
+//   idxStart: number;
+//   idxEnd: number;
+//   timeStart: Date;
+//   timeEnd: Date;
+//   pctSpan: number;
+//   cone: Cone2D;
+// }
+
+export function groupPartialTrendsByWeek(trends: TimeSeriesPartialTrend[]): TimeSeriesPartialTrend[] {
+  const weekTrends: TimeSeriesPartialTrend[] = [];
+  trends.sort(({ timeStart: a }, { timeStart: b }) => a.getTime() - b.getTime());
+  for (const trend of trends) {
+    const weekStartOffset = 4 * DAY;
+    const startWeekNo = Math.floor((trend.timeStart.getTime() - weekStartOffset) / WEEK);
+    const endWeekNo = Math.floor((trend.timeEnd.getTime() - weekStartOffset) / WEEK);
+    if (startWeekNo === endWeekNo) {
+      weekTrends.push({
+        ...trend,
+        idxStart: -1,
+        idxEnd: -1,
+      });
+    } else {
+      const timezoneOffset = new Date().getTimezoneOffset() * MINUTE;
+      for (let weekNo = startWeekNo; weekNo <= endWeekNo; weekNo++) {
+        const weekStartTime = new Date(weekNo * WEEK + timezoneOffset);
+        const weekEndTime = new Date((weekNo + 1) * WEEK + weekStartOffset + timezoneOffset - 1);
+
+        const newStartTime = new Date(Math.max(weekStartTime.getTime(), trend.timeStart.getTime()));
+        const newEndTime = new Date(Math.min(weekEndTime.getTime(), trend.timeEnd.getTime()));
+
+        const trendTimeSpan = trend.timeEnd.getTime() - trend.timeStart.getTime();
+        const newTimeSpan = newEndTime.getTime() - newStartTime.getTime();
+        const trendPctSpan = trend.pctSpan;
+        const newPctSpan = trendPctSpan * (newTimeSpan / trendTimeSpan);
+
+        weekTrends.push({
+          ...trend,
+          idxStart: -1,
+          idxEnd: -1,
+          timeStart: newStartTime,
+          timeEnd: newEndTime,
+          pctSpan: newPctSpan,
+        });
+      }
+    }
+  }
+  return weekTrends;
 }
 
 export function exponentialMovingAverage(points: TimeSeriesPoint[], alpha = 0.3): TimeSeriesPoint[] {

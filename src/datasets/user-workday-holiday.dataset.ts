@@ -11,7 +11,7 @@ import { normalizePointsY } from './summarizations/utils/commons';
 import { exponentialMovingAverage } from './summarizations/libs/trend';
 import * as WorkdayHolidayAbsoluteSummarization from './summarizations/workday-holiday-absolute.summarization';
 import * as WorkdayHolidayRelativeSummarization from './summarizations/workday-holiday-relative.summarization';
-import * as TrendPartialSummarization from './summarizations/trend-partial.summarization';
+import * as TrendPartialSummarization from './summarizations/trend-partial-weekly.summarization';
 
 export interface Config {
   dailyWeightStd: number;
@@ -21,7 +21,7 @@ export interface Config {
 export const configMeta: PreferenceMeta<Config> = {
   dailyWeightStd: {
     type: 'number',
-    defaultValue: 0.5,
+    defaultValue: 0,
   },
   workdayHolidayActiveRatio: {
     type: 'number',
@@ -61,11 +61,11 @@ export function create(config: Config): Dataset {
 
   const generateCubeConfig = {
     avgHits: 10000,
-    hitStdDev: 10,
+    hitStdDev: 0,
     avgUsers: 1000,
-    userStdDev: 10,
+    userStdDev: 0,
     avgSessionsPerUser: 5,
-    sessionsPerUserStdDev: 3,
+    sessionsPerUserStdDev: 0,
     timeSeries: false,
   };
 
@@ -86,27 +86,27 @@ export function create(config: Config): Dataset {
 
   const metas = [
     lineChartMeta,
-    createLineChartMeta(
-      'Visit Count',
-      (opt) => {
-        const points = lineChartMeta.queryData(opt)[0].points;
-        const smoothedPoints = exponentialMovingAverage(points);
-        return [{
-          label: 'Visit Count - Smoothed',
-          points: exponentialMovingAverage(normalizePointsY(points)),
-          querySummaries: TrendPartialSummarization.queryFactory(points),
-          style: {
-            color: 'green',
-          },
-        }, {
-          label: 'Visit Count',
-          points: normalizePointsY(points),
-          style: {
-            opacity: 0.5,
-          },
-        }];
-      },
-    ),
+    // createLineChartMeta(
+    //   'Visit Count',
+    //   (opt) => {
+    //     const points = lineChartMeta.queryData(opt)[0].points;
+    //     const smoothedPoints = exponentialMovingAverage(points);
+    //     return [{
+    //       label: 'Visit Count - Smoothed',
+    //       points: exponentialMovingAverage(normalizePointsY(points)),
+    //       querySummaries: TrendPartialSummarization.queryFactory(points),
+    //       style: {
+    //         color: 'green',
+    //       },
+    //     }, {
+    //       label: 'Visit Count',
+    //       points: normalizePointsY(points),
+    //       style: {
+    //         opacity: 0.5,
+    //       },
+    //     }];
+    //   },
+    // ),
   ];
 
   return {

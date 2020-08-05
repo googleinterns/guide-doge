@@ -9,7 +9,7 @@ import { DAY } from '../utils/timeUnits';
 import { combineQuerySummariesFactories } from './summarizations/utils/commons';
 import { normalizePointsY } from './summarizations/utils/commons';
 import { exponentialMovingAverage } from './summarizations/libs/trend';
-import * as TrendPartialSummarization from './summarizations/trend-partial.summarization';
+import * as TrendPartialSummarization from './summarizations/trend-partial-weekly.summarization';
 
 export interface Config {
   dailyWeightStd: number;
@@ -97,26 +97,26 @@ export function create(config: Config): Dataset {
 
   const metas = [
     lineChartMeta,
-    createLineChartMeta(
-      'Visit Count',
-      (opt) => {
-        const points = lineChartMeta.queryData(opt)[0].points;
-        return [{
-          label: 'Visit Count - Smoothed',
-          points: exponentialMovingAverage(normalizePointsY(points)),
-          querySummaries: TrendPartialSummarization.queryFactory(points),
-          style: {
-            color: 'green'
-          },
-        }, {
-          label: 'Visit Count',
-          points: normalizePointsY(points),
-          style: {
-            opacity: 0.5,
-          },
-        }];
-      },
-    ),
+    // createLineChartMeta(
+    //   'Visit Count',
+    //   (opt) => {
+    //     const points = lineChartMeta.queryData(opt)[0].points;
+    //     return [{
+    //       label: 'Visit Count - Smoothed',
+    //       points: exponentialMovingAverage(normalizePointsY(points)),
+    //       querySummaries: TrendPartialSummarization.queryFactory(points),
+    //       style: {
+    //         color: 'green'
+    //       },
+    //     }, {
+    //       label: 'Visit Count',
+    //       points: normalizePointsY(points),
+    //       style: {
+    //         opacity: 0.5,
+    //       },
+    //     }];
+    //   },
+    // ),
   ];
 
   return {

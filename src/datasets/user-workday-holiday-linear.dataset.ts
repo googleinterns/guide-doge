@@ -7,7 +7,7 @@ import { createLineChartMeta } from './metas/line-chart.meta';
 import { PreferenceMeta } from '../services/preference/types';
 import { DAY } from '../utils/timeUnits';
 import { combineQuerySummariesFactories } from './summarizations/utils/commons';
-import * as TrendPartialSummarization from './summarizations/trend-partial.summarization';
+import * as TrendPartialSummarization from './summarizations/trend-partial-weekly.summarization';
 
 
 export interface Config {
