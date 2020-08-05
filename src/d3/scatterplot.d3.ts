@@ -21,6 +21,7 @@ export class Scatterplot{
     private dataTextContainer: HTMLElement;
     private metrics: string[];
     private cardSelection: any;
+    private DAYDREAM_NAV_SPEED;
     xScale: d3.ScaleLinear<number, number>;
     yScale: d3.ScaleLinear<number, number>;
     zScale: d3.ScaleLinear<number, number>;
@@ -44,6 +45,7 @@ export class Scatterplot{
     this.dataTextContainer.className = 'dataTxt';
     container.appendChild(this.dataPointContainer);
     container.appendChild(this.dataTextContainer);
+    this.DAYDREAM_NAV_SPEED = .1;
     if (this.data.length > 0 && !this.loaded){
       this.generateText();
       this.generatePts();
@@ -51,7 +53,10 @@ export class Scatterplot{
     }
     this.createSky('gray');
     this.createGridPlane();
+    this.createNavTools();
     this.loaded = true;
+  }
+  private createNavTools(){
     window.onload = () => {
       document.addEventListener('keydown', (event) => {
         if (event.keyCode === 81){
@@ -71,8 +76,34 @@ export class Scatterplot{
       })
       // document.querySelector('[camera]').object3D.rotation.set(0, (135 * Math.PI / 180) , 0);
       document.querySelector('[camera]').setAttribute('rotate_camera', '');
+      const xPos = document.createElement('a-entity');
+      document.querySelector('[camera]').appendChild(xPos);
+    xPos.className = 'navTools';
+    xPos.id = 'xPos';
+    xPos.className = 'grids';
+    
+    (xPos as AFRAME.Entity).addEventListener('mousedown', () => {
+      document.querySelector('[camera]').object3D.position.set(
+        document.querySelector('[camera]').object3D.position.x + .1,
+        document.querySelector('[camera]').object3D.position.y,
+        document.querySelector('[camera]').object3D.position.z
+      );
+    });
+    (xPos as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: 2; width: 2');
+    (xPos as AFRAME.Entity).setAttribute('material', 'color: blue; opacity: .5');
+    (xPos as AFRAME.Entity).setAttribute('text', 'value: >; align: center; lineHeight: 2');
+
+
+      
+      (xPos as AFRAME.Entity).setAttribute('position', '0 4 -6');
+      console.log('entered here');
       
     };
+    
+  }
+  createNavTile(dim: string, velocity: number){
+    const navTile = document.createElement('a-entity');
+    document.querySelector('[camera]').appendChild(navTile);
   }
 
   private scalePosition(){
