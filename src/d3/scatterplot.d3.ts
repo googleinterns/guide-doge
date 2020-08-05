@@ -27,6 +27,14 @@ export class Scatterplot{
     zScale: d3.ScaleLinear<number, number>;
     dataType: MetaType;
     loaded = false;
+    tilePos: Record<string,string> = {
+      ['xPos']: '-1 2.5 -6',
+      ['xNeg']: '-2 2.5 -6',
+      ['yPos']: '-1.5 3 -6',
+      ['yNeg']: '-1.5 2 -6',
+      ['zPos']: '1 2.75 -6',
+      ['zNeg']: '1 2.25 -6',
+  };
 
 
   constructor(shape: string) {
@@ -76,26 +84,32 @@ export class Scatterplot{
       })
       // document.querySelector('[camera]').object3D.rotation.set(0, (135 * Math.PI / 180) , 0);
       document.querySelector('[camera]').setAttribute('rotate_camera', '');
-      const xPos = document.createElement('a-entity');
-      document.querySelector('[camera]').appendChild(xPos);
-    xPos.className = 'navTools';
-    xPos.id = 'xPos';
-    xPos.className = 'grids';
+    //   const xPos = document.createElement('a-entity');
+    //   document.querySelector('[camera]').appendChild(xPos);
+    // xPos.className = 'navTools';
+    // xPos.id = 'xPos';
+    // xPos.className = 'grids';
     
-    (xPos as AFRAME.Entity).addEventListener('mousedown', () => {
-      document.querySelector('[camera]').object3D.position.set(
-        document.querySelector('[camera]').object3D.position.x + .1,
-        document.querySelector('[camera]').object3D.position.y,
-        document.querySelector('[camera]').object3D.position.z
-      );
-    });
-    (xPos as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: 2; width: 2');
-    (xPos as AFRAME.Entity).setAttribute('material', 'color: blue; opacity: .5');
-    (xPos as AFRAME.Entity).setAttribute('text', 'value: >; align: center; lineHeight: 2');
+    // (xPos as AFRAME.Entity).addEventListener('mousedown', () => {
+    //   document.querySelector('[camera]').object3D.position.set(
+    //     document.querySelector('[camera]').object3D.position.x + .1,
+    //     document.querySelector('[camera]').object3D.position.y,
+    //     document.querySelector('[camera]').object3D.position.z
+    //   );
+    // });
+    // (xPos as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: .5; width: .5');
+    // (xPos as AFRAME.Entity).setAttribute('material', 'color: blue; opacity: .5');
+    // (xPos as AFRAME.Entity).setAttribute('text', 'value: >; align: center; lineHeight: 2');
 
 
       
-      (xPos as AFRAME.Entity).setAttribute('position', '0 4 -6');
+    //   (xPos as AFRAME.Entity).setAttribute('position', '0 4 -6');
+    this.createNavTile('x', this.DAYDREAM_NAV_SPEED);
+    this.createNavTile('x', -this.DAYDREAM_NAV_SPEED);
+    this.createNavTile('y', this.DAYDREAM_NAV_SPEED);
+    this.createNavTile('y', -this.DAYDREAM_NAV_SPEED);
+    this.createNavTile('z', this.DAYDREAM_NAV_SPEED);
+    this.createNavTile('z', -this.DAYDREAM_NAV_SPEED);
       console.log('entered here');
       
     };
@@ -104,6 +118,54 @@ export class Scatterplot{
   createNavTile(dim: string, velocity: number){
     const navTile = document.createElement('a-entity');
     document.querySelector('[camera]').appendChild(navTile);
+    // this.container!.appendChild(navTile);
+    (navTile as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: .5; width: .5');
+    if (dim === 'x'){
+      if (velocity > 0){
+        (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.xPos);
+        (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/right_arrow.png');
+      } else {
+        (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.xNeg);
+        (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/left_arrow.png');
+      }
+      (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
+        document.querySelector('[camera]').object3D.position.set(
+          document.querySelector('[camera]').object3D.position.x + velocity,
+          document.querySelector('[camera]').object3D.position.y,
+          document.querySelector('[camera]').object3D.position.z
+        );
+      });
+    } else if (dim === 'y'){
+      if (velocity > 0){
+        (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.yPos);
+        (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/up_arrow.png');
+      } else {
+        (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.yNeg);
+        (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/down_arrow.png');
+      }
+      (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
+        document.querySelector('[camera]').object3D.position.set(
+          document.querySelector('[camera]').object3D.position.x,
+          document.querySelector('[camera]').object3D.position.y + velocity,
+          document.querySelector('[camera]').object3D.position.z
+        );
+      });
+    } else if (dim === 'z'){
+      if (velocity > 0){
+        (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.zPos);
+        (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/up_arrow.png');
+      } else {
+        (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.zNeg);
+        (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/down_arrow.png');
+      }
+      (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
+        document.querySelector('[camera]').object3D.position.set(
+          document.querySelector('[camera]').object3D.position.x,
+          document.querySelector('[camera]').object3D.position.y,
+          document.querySelector('[camera]').object3D.position.z + velocity
+        );
+      });
+    }
   }
 
   private scalePosition(){
