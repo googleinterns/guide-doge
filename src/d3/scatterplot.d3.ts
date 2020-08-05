@@ -115,37 +115,12 @@ export class Scatterplot{
         const hoverIdx = i;
         console.log(this.cardSelection);
         this.cardSelection.filter((d, i) => { return i === hoverIdx}).attr('visible', true);
-        // d3.select(this.dataTextContainer).selectAll('a-entity').data(this.data).enter().append('a-entity');
-    // d3.select(this.dataTextContainer).selectAll('a-entity')
-    //   .attr('geometry', 'primitive: plane; height: auto; width: .5')
-    //   .attr('material', 'color: blue')
-    //   .attr('text', (d, i) => {
-    //     const categories = (d as VRScatterPoint).categories.browser + ', ' + (d as VRScatterPoint).categories.country
-    //       + ', ' + (d as VRScatterPoint).categories.source;
-    //     // for (let categChild of (d as VRScatterPoint).categories)
-    //     const x = (d as VRScatterPoint).x;
-    //     const y = (d as VRScatterPoint).y;
-    //     const z = (d as VRScatterPoint).z;
-    //     return `
-    //     value: ${categories} POSITION:
-    //     \n \t${this.metrics[0]}: ${x}
-    //     \n \t${this.metrics[1]}: ${y.toFixed(2)}
-    //     \n \t${this.metrics[2]}: ${z}\n;
-    //     font: ${this.AILERON_FONT};
-    //     xOffset: ${DATA_PT_RADIUS / 3}`;
-    //   })
-    //   .attr('visible', true)
-    //   .attr('position', (d, i) => {
-    //     const x = this.xScale((d as VRScatterPoint).x);
-    //     const y = this.yScale((d as VRScatterPoint).y);
-    //     const z = this.zScale((d as VRScatterPoint).z);
-    //     return `${x + DATA_PT_RADIUS} ${y + 2 * DATA_PT_RADIUS} ${z}`;
-    //   })
-    //   .each((d, i, g) => {
-    //     (g[i] as AFRAME.Entity).setAttribute('rotate_cards', '');
-    //     // (g[i] as AFRAME.Entity).setAttribute('show_cards', '');
-    //   });
-      })
+      });
+      (g[i] as AFRAME.Entity).addEventListener('mouseleave', () => {
+        const hoverIdx = i;
+        console.log(this.cardSelection);
+        this.cardSelection.filter((d, i) => { return i === hoverIdx}).attr('visible', false);
+      });
     });
     // .on('mouseenter', (d, i, g) => {
     //   console.log(this.xScale((d as VRScatterPoint).x));
