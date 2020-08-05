@@ -75,7 +75,7 @@ describe('VR Haptic Plot', () => {
 
   it('initilizes the controller entitys and attaches the haptic component', () => {
     const expectedRes = true;
-    const result = getHaptics(controller);
+    const result = hasHaptics(controller);
     expect(result).toEqual(expectedRes);
   });
 });
@@ -84,15 +84,10 @@ describe('VR Haptic Plot', () => {
 
 // Returns an array of actual position vectors
 function getPositions(scene: HTMLElement, shape: string): Vector3[]{
-  const attrArray: Vector3[] = [];
-  const shapes = scene.querySelectorAll(shape);
-  for (const point of shapes){
-    attrArray.push(new Vector3(
-      (point as Entity).object3D.position.x,
-      (point as Entity).object3D.position.y,
-      (point as Entity).object3D.position.z));
-  }
-  return attrArray;
+  return Array.from(scene.querySelectorAll(shape)).map((point: Element) => new Vector3(
+    (point as Entity).object3D.position.x,
+    (point as Entity).object3D.position.y,
+    (point as Entity).object3D.position.z));
 }
 
 // Returns an array of each generated objects color
@@ -120,6 +115,6 @@ function getHoveredColor(scene: HTMLElement, shape: string): (string | null)[]{
 }
 
 // Checks the given controller for a haptic component
-function getHaptics(controller: HTMLElement): boolean{
+function hasHaptics(controller: HTMLElement): boolean{
   return (controller as Entity).components.hasOwnProperty('haptics');
 }
