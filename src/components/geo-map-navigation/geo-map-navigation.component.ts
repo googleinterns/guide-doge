@@ -105,11 +105,11 @@ export class GeoMapNavigationComponent implements GeoMapNavigationPreference, On
     $event.stopPropagation();
     switch (key) {
       case '-':
-      case '_':
+      case '_': // '-' with shift for convenience
         this.unit = Math.max(this.unit - 1, this.filteringTerritory?.level ?? 0);
         return this.readOutUnitAndFilteringTerritory();
       case '+':
-      case '=':
+      case '=': // '+' without shift for convenience
         this.unit = Math.min(this.unit + 1, CITY);
         return this.readOutUnitAndFilteringTerritory();
       case 'Enter':
@@ -138,8 +138,9 @@ export class GeoMapNavigationComponent implements GeoMapNavigationPreference, On
         return this.readOutActiveMeasure();
       case '?':
         return this.readOutInstructions();
+      default:
+        return false;
     }
-    return false;
   }
 
   @HostListener('focus', ['$event'])
