@@ -1,5 +1,6 @@
 import {
   Compiler,
+  Component,
   ComponentFactoryResolver,
   ComponentRef,
   Directive,
@@ -16,10 +17,12 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { A11yHostComponent } from '../../components/a11y-host/a11y-host.component';
 
-export interface LazyA11yModule<Component = any> {
-  A11yComponent: Type<Component>;
+type A11yComponent = Preference;
+
+export interface LazyA11yModule<C extends A11yComponent = A11yComponent> {
+  A11yComponent: Type<C>;
   preferenceKey: keyof PreferenceService;
-  componentRef?: ComponentRef<Component>;
+  componentRef?: ComponentRef<C>;
 }
 
 @Directive({
