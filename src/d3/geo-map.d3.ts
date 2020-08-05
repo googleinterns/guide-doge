@@ -37,7 +37,7 @@ export class GeoMapD3 extends BaseD3<RenderOptions> {
 
   protected zoom: d3.ZoomBehavior<SVGSVGElement, unknown>;
   private animationId?: number;
-  private projection: d3.GeoProjection;
+  protected projection: d3.GeoProjection;
   private geoPath: d3.GeoPath;
   private centerY: number;
   private lastTransform: d3.ZoomTransform | null;

@@ -54,10 +54,6 @@ export class GeoMapNavigationComponent implements GeoMapNavigationPreference, On
     this.host.filteringTerritory = filteringTerritory;
   }
 
-  get meta() {
-    return this.host.meta;
-  }
-
   get keywordElement() {
     return this.host.keywordRef.nativeElement;
   }
@@ -109,11 +105,11 @@ export class GeoMapNavigationComponent implements GeoMapNavigationPreference, On
     $event.stopPropagation();
     switch (key) {
       case '-':
-      case '_':
+      case '_': // '-' with shift for convenience
         this.unit = Math.max(this.unit - 1, this.filteringTerritory?.level ?? 0);
         return this.readOutUnitAndFilteringTerritory();
       case '+':
-      case '=':
+      case '=': // '+' without shift for convenience
         this.unit = Math.min(this.unit + 1, CITY);
         return this.readOutUnitAndFilteringTerritory();
       case 'Enter':
@@ -122,7 +118,7 @@ export class GeoMapNavigationComponent implements GeoMapNavigationPreference, On
         } else if (this.activeDatumIndex >= 0) {
           this.filteringTerritory = this.data[this.activeDatumIndex].territory;
         } else {
-          break;
+          return this.readOutNothingSelected();
         }
         return this.readOutUnitAndFilteringTerritory();
       case '/':
@@ -142,8 +138,9 @@ export class GeoMapNavigationComponent implements GeoMapNavigationPreference, On
         return this.readOutActiveMeasure();
       case '?':
         return this.readOutInstructions();
+      default:
+        return false;
     }
-    return false;
   }
 
   @HostListener('focus', ['$event'])
@@ -174,6 +171,10 @@ export class GeoMapNavigationComponent implements GeoMapNavigationPreference, On
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  private readOutNothingSelected() {
+    return this.screenReaderComponent.readOut(t(GEO_MAP_NAVIGATION.NOTHING_SELECTED));
   }
 
   private readOutUnitAndFilteringTerritory() {

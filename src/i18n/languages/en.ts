@@ -73,4 +73,5 @@ export const en: I18n = {
   [GEO_MAP_NAVIGATION.BREAK_SILENCE]: 'Press <kbd>?</kbd> to read out the instructions.',
   [GEO_MAP_NAVIGATION.ACTIVE_DATUM]: '%(territory)s has %(value)f %(measure)s.',
   [GEO_MAP_NAVIGATION.ACTIVE_MEASURE]: '%(measure)s of %(value)f in %(territory)s.',
+  [GEO_MAP_NAVIGATION.NOTHING_SELECTED]: 'No territory has been selected.',
 };

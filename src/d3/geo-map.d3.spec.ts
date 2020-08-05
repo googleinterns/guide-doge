@@ -4,6 +4,9 @@ import { GeoMapD3, RenderOptions } from './geo-map.d3';
 import { GeoDatum } from '../datasets/queries/geo.query';
 import { fetchWorld } from '../datasets/geo.dataset';
 import { Territory, TerritoryLevel, World } from '../datasets/geo.types';
+import { atlantaCityId, southKoreaCountryId } from '../utils/mocks.spec';
+import * as d3 from 'd3';
+import { waitFor } from '../utils/misc';
 
 interface SubjectRenderOptions extends RenderOptions {
   data$: Subject<GeoDatum[]>;
@@ -14,6 +17,8 @@ const { CONTINENT, SUBCONTINENT, COUNTRY, CITY } = TerritoryLevel;
 
 describe('GeoMapD3', () => {
   class MockGeoMapD3 extends GeoMapD3 {
+    public projection: d3.GeoProjection;
+
     scaleTo(scale) {
       this.zoom.scaleTo(this.svg, scale);
     }
@@ -29,11 +34,14 @@ describe('GeoMapD3', () => {
   let geoMapD3: MockGeoMapD3;
   let world: World;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
+    world = await fetchWorld();
+  });
+
+  beforeEach(() => {
     svgElement = document.createElement('svg');
     containerElement = document.createElement('div');
     containerElement.appendChild(svgElement);
-    world = await fetchWorld();
     renderOptions = {
       elementRef: new ElementRef<HTMLElement>(containerElement),
       width: 256,
@@ -54,8 +62,8 @@ describe('GeoMapD3', () => {
     expect(geoMapD3).toBeInstanceOf(GeoMapD3);
   });
 
-  it('should render the map.', async () => {
-    await geoMapD3.render();
+  it('should render the map.', () => {
+    geoMapD3.render();
 
     const landElement = svgElement.querySelector('.geo_map-land');
     const boundaryElement = svgElement.querySelector('.geo_map-boundary');
@@ -64,8 +72,9 @@ describe('GeoMapD3', () => {
     expect(boundaryElement).toBeTruthy();
   });
 
-  it('should rerender the map on zooming.', async () => {
-    await geoMapD3.render();
+  it('should rerender the map on zooming.', () => {
+    geoMapD3.render();
+    geoMapD3.scaleTo(50);
 
     const landElement = svgElement.querySelector('.geo_map-land')!;
     const dAttribute = landElement.getAttribute('d');
@@ -76,8 +85,9 @@ describe('GeoMapD3', () => {
     expect(newDAttribute).not.toBe(dAttribute);
   });
 
-  it('should rerender the map on panning.', async () => {
-    await geoMapD3.render();
+  it('should rerender the map on panning.', () => {
+    geoMapD3.render();
+    geoMapD3.translateBy(0, 0);
 
     const landElement = svgElement.querySelector('.geo_map-land')!;
     const dAttribute = landElement.getAttribute('d');
@@ -88,11 +98,11 @@ describe('GeoMapD3', () => {
     expect(newDAttribute).not.toBe(dAttribute);
   });
 
-  it('should update territory paths upon changes.', async () => {
-    await geoMapD3.render();
+  it('should update territory paths upon data change.', () => {
+    geoMapD3.render();
 
     const data = [{
-      territory: world[COUNTRY]['410'],
+      territory: world[COUNTRY][southKoreaCountryId],
       values: { activeUser: 123 },
     }];
     renderOptions.data$.next(data);
@@ -102,11 +112,11 @@ describe('GeoMapD3', () => {
     expect(territoryCount).toBe(data.length);
   });
 
-  it('should update city circles upon changes.', async () => {
-    await geoMapD3.render();
+  it('should update city circles upon data change.', () => {
+    geoMapD3.render();
 
     const data = [{
-      territory: world[CITY]['1840013660'],
+      territory: world[CITY][atlantaCityId],
       values: { activeUser: 234 },
     }];
     renderOptions.data$.next(data);
@@ -114,5 +124,27 @@ describe('GeoMapD3', () => {
     const cityCount = svgElement.querySelectorAll('circle.geo_map-territory').length;
 
     expect(cityCount).toBe(data.length);
+  });
+
+  it('should update projection upon filtering territory changes.', async () => {
+    geoMapD3.render();
+    const translate = geoMapD3.projection.translate();
+    const scale = geoMapD3.projection.scale();
+
+    const city = world[CITY][atlantaCityId];
+    const data = [{
+      territory: city,
+      values: { activeUser: 234 },
+    }];
+    renderOptions.data$.next(data);
+    renderOptions.filteringTerritory$.next(city);
+
+    // wait for the first frame of animation to happen
+    await waitFor(50);
+
+    const newTranslate = geoMapD3.projection.translate();
+    const newScale = geoMapD3.projection.scale();
+    expect(translate).not.toEqual(newTranslate);
+    expect(scale).not.toEqual(newScale);
   });
 });
