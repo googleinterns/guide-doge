@@ -27,7 +27,7 @@ export class Scatterplot{
     zScale: d3.ScaleLinear<number, number>;
     dataType: MetaType;
     loaded = false;
-    tilePos: Record<string,string> = {
+    tilePosition: Record<string, string> = {
       ['xPos']: '-1 1 -4',
       ['xNeg']: '-2 1 -4',
       ['yPos']: '-1.5 1.5 -4',
@@ -35,6 +35,10 @@ export class Scatterplot{
       ['zPos']: '1 1.5 -4',
       ['zNeg']: '1 .5 -4',
   };
+  speedPosition: Record<string, string> = {
+    ['plus']: '.25 2 -4',
+    ['minus']: '-.75 2 -4',
+};
     cameraRig: HTMLElement = document.createElement('a-entity');
 
 
@@ -91,9 +95,31 @@ export class Scatterplot{
     this.createNavTile('y', -this.DAYDREAM_NAV_SPEED);
     this.createNavTile('z', this.DAYDREAM_NAV_SPEED);
     this.createNavTile('z', -this.DAYDREAM_NAV_SPEED);
-      
+    this.createSpeedCtrls('plus');
+    this.createSpeedCtrls('neg');
     };
     
+  }
+  createSpeedCtrls(sign: string){
+    let rigPos = (document.getElementById('rig') as AFRAME.Entity).object3D.position;
+    const navTile = document.createElement('a-entity');
+    // document.querySelector('[camera]').appendChild(navTile);
+    document.querySelector('[camera]').appendChild(navTile);
+    // this.container!.appendChild(navTile);
+    (navTile as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: .5; width: .5');
+    if (sign === 'plus'){
+    (navTile as AFRAME.Entity).setAttribute('position', this.speedPosition.plus);
+        (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/plus.png');
+        (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
+          this.DAYDREAM_NAV_SPEED = this.DAYDREAM_NAV_SPEED - .2;
+        });
+      } else{
+        (navTile as AFRAME.Entity).setAttribute('position', this.speedPosition.minus);
+            (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/negative.png');
+            (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
+              this.DAYDREAM_NAV_SPEED = this.DAYDREAM_NAV_SPEED + .2;
+            });
+      }
   }
   createNavTile(dim: string, velocity: number){
     let rigPos = (document.getElementById('rig') as AFRAME.Entity).object3D.position;
@@ -104,10 +130,10 @@ export class Scatterplot{
     (navTile as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: .5; width: .5');
     if (dim === 'x'){
       if (velocity > 0){
-        (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.xPos);
+        (navTile as AFRAME.Entity).setAttribute('position', this.tilePosition.xPos);
         (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/right_arrow.png');
       } else {
-        (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.xNeg);
+        (navTile as AFRAME.Entity).setAttribute('position', this.tilePosition.xNeg);
         (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/left_arrow.png');
       }
       (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
@@ -119,10 +145,10 @@ export class Scatterplot{
       });
     } else if (dim === 'y'){
       if (velocity > 0){
-        (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.yPos);
+        (navTile as AFRAME.Entity).setAttribute('position', this.tilePosition.yPos);
         (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/up_arrow.png');
       } else {
-        (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.yNeg);
+        (navTile as AFRAME.Entity).setAttribute('position', this.tilePosition.yNeg);
         (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/down_arrow.png');
       }
       (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
@@ -134,10 +160,10 @@ export class Scatterplot{
       });
     } else if (dim === 'z'){
       if (velocity > 0){
-        (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.zPos);
+        (navTile as AFRAME.Entity).setAttribute('position', this.tilePosition.zPos);
         (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/up_arrow.png');
       } else {
-        (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.zNeg);
+        (navTile as AFRAME.Entity).setAttribute('position', this.tilePosition.zNeg);
         (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/down_arrow.png');
       }
       (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
