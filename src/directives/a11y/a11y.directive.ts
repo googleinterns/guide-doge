@@ -1,6 +1,5 @@
 import {
   Compiler,
-  Component,
   ComponentFactoryResolver,
   ComponentRef,
   Directive,
@@ -21,15 +20,19 @@ type A11yComponent = Preference;
 
 export interface LazyA11yModule<C extends A11yComponent = A11yComponent> {
   A11yComponent: Type<C>;
+}
+
+export interface A11yModuleImporter {
   preferenceKey: keyof PreferenceService;
-  componentRef?: ComponentRef<C>;
+
+  import(): Promise<Type<LazyA11yModule>>;
 }
 
 @Directive({
   selector: '[appA11y]',
 })
 export class A11yDirective implements OnInit, OnDestroy {
-  @Input('appA11y') a11yModuleImporters?: (() => Promise<Type<LazyA11yModule>>)[];
+  @Input('appA11y') a11yModuleImporters?: A11yModuleImporter[];
 
   private destroy$ = new Subject();
 
@@ -51,21 +54,17 @@ export class A11yDirective implements OnInit, OnDestroy {
 
   async ngOnInit() {
     for (const moduleImporter of this.a11yModuleImporters ?? []) {
-      const Module = await moduleImporter();
-
-      // compile the asynchronously imported module to resolve the dependencies of the a11y component
-      const moduleFactory = await this.compiler.compileModuleAsync(Module);
-      const moduleRef = moduleFactory.create(null);
-      const module = moduleRef.instance;
-
-      const preference$ = this.preferenceService[module.preferenceKey] as BehaviorSubject<PreferenceWithMeta<Preference>>;
+      let componentRef: ComponentRef<A11yComponent> | null = null;
+      const preference$ = this.preferenceService[moduleImporter.preferenceKey] as BehaviorSubject<PreferenceWithMeta<Preference>>;
       preference$
         .pipe(takeUntil(this.destroy$))
-        .subscribe(preference => {
+        .subscribe(async preference => {
+          if (componentRef) {
+            this.detach(componentRef);
+            componentRef = null;
+          }
           if (preference.enabled) {
-            this.attach(module, preference);
-          } else {
-            this.detach(module);
+            componentRef = await this.attach(moduleImporter, preference);
           }
         });
     }
@@ -76,8 +75,14 @@ export class A11yDirective implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  async attach(module: LazyA11yModule, preference: Preference) {
-    this.detach(module);
+  async attach(moduleImporter: A11yModuleImporter, preference: Preference) {
+    // asynchronously import the a11y module
+    const Module = await moduleImporter.import();
+
+    // compile the module to resolve the dependencies of the a11y component
+    const moduleFactory = await this.compiler.compileModuleAsync(Module);
+    const moduleRef = moduleFactory.create(null);
+    const module = moduleRef.instance;
 
     // create a component, providing the host to be injected
     const injector = Injector.create({
@@ -87,21 +92,20 @@ export class A11yDirective implements OnInit, OnDestroy {
       }],
     });
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(module.A11yComponent);
-    const componentRef = module.componentRef = this.viewContainerRef.createComponent(componentFactory, undefined, injector);
+    const componentRef = this.viewContainerRef.createComponent(componentFactory, undefined, injector);
     const component = componentRef.instance;
 
     // inject preference into the component
     Object.assign(component, preference);
+
+    return componentRef;
   }
 
-  detach(module: LazyA11yModule) {
-    if (module.componentRef) {
-      const index = this.viewContainerRef.indexOf(module.componentRef.hostView);
-      if (index >= 0) {
-        this.viewContainerRef.remove(index);
-      }
-      module.componentRef.destroy();
-      module.componentRef = undefined;
+  detach(componentRef: ComponentRef<A11yComponent>) {
+    const index = this.viewContainerRef.indexOf(componentRef.hostView);
+    if (index >= 0) {
+      this.viewContainerRef.remove(index);
     }
+    componentRef.destroy();
   }
 }

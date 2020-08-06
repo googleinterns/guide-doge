@@ -5,8 +5,9 @@ import { A11yModule } from './a11y.module';
 import { LineChartComponent } from '../../components/line-chart/line-chart.component';
 import { PreferenceService } from '../../services/preference/preference.service';
 import { LineChartModule } from '../../components/line-chart/line-chart.module';
-import { importAudificationModule } from '../../components/line-chart-audification/line-chart-audification.importer';
-import { importSummarizationModule } from '../../components/chart-summarization/chart-summarization.importer';
+import { audificationModuleImporter } from '../../components/line-chart-audification/line-chart-audification.importer';
+import { summarizationModuleImporter } from '../../components/chart-summarization/chart-summarization.importer';
+import { waitFor } from '../../utils/misc';
 
 describe('A11yDirective', () => {
   @Component({
@@ -55,7 +56,7 @@ describe('A11yDirective', () => {
   });
 
   it('should attach or detach an a11y component as the preference changes.', async () => {
-    directive.a11yModuleImporters = [importAudificationModule, importSummarizationModule];
+    directive.a11yModuleImporters = [audificationModuleImporter, summarizationModuleImporter];
     await directive.ngOnInit();
 
     const audificationPreference = preferenceService.audification$.value;
@@ -65,6 +66,8 @@ describe('A11yDirective', () => {
       enabled: true,
     });
     expect(directive.attach).toHaveBeenCalled();
+
+    await waitFor(300);
 
     spyOn(directive, 'detach');
     preferenceService.audification$.next({
