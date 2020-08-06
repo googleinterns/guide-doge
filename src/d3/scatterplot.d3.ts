@@ -213,7 +213,7 @@ export class Scatterplot{
       });
       (g[i] as AFRAME.Entity).addEventListener('mouseleave', () => {
         const hoverIdx = i;
-        this.cardSelection.filter((d, i) => { return i === hoverIdx}).attr('visible', false);
+        this.cardSelection.filter((d, i) => { return i === hoverIdx}).attr('visible',);
       });
     });
   }
@@ -302,28 +302,15 @@ export class Scatterplot{
 
 AFRAME.registerComponent('rotate_cards', {
   tick() {
+    // need to include rig to account for initial rotation of camera rig
     const rigRot = (document.getElementById('rig') as AFRAME.Entity).object3D.rotation;
+    const camRot = (document.querySelector('[camera]') as AFRAME.Entity).object3D.rotation;
     this.el.object3D.rotation.set(
-       rigRot.x,
-       rigRot.y,
-       rigRot.z,
+       rigRot.x + camRot.x,
+       rigRot.y + camRot.y,
+       rigRot.z + camRot.z,
     );
   }
 });
 
-AFRAME.registerComponent('show_cards', {
-  tick() {
-    if (this.el.object3D.position.distanceTo(document.querySelector('[camera]').object3D.position) < DATA_PT_RADIUS * 40){
-      this.el.object3D.visible = true;
-    } else {
-      this.el.object3D.visible = false;
-    }
-  }
-});
-
-AFRAME.registerComponent('rotate_camera', {
-  init() {
-    this.el.setAttribute('rotation', '0, 135, 0');
-  }
-});
 
