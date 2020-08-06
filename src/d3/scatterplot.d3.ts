@@ -28,12 +28,12 @@ export class Scatterplot{
     dataType: MetaType;
     loaded = false;
     tilePos: Record<string,string> = {
-      ['xPos']: '-1 1 -3',
-      ['xNeg']: '-2 1 -3',
-      ['yPos']: '-1.5 1.5 -3',
-      ['yNeg']: '-1.5 .5 -3',
-      ['zPos']: '1 1.25 -3',
-      ['zNeg']: '1 -.25 -3',
+      ['xPos']: '-1 1 -4',
+      ['xNeg']: '-2 1 -4',
+      ['yPos']: '-1.5 1.5 -4',
+      ['yNeg']: '-1.5 .5 -4',
+      ['zPos']: '1 1.5 -4',
+      ['zNeg']: '1 .5 -4',
   };
     cameraRig: HTMLElement = document.createElement('a-entity');
 
@@ -113,7 +113,6 @@ export class Scatterplot{
     this.createNavTile('y', -this.DAYDREAM_NAV_SPEED);
     this.createNavTile('z', this.DAYDREAM_NAV_SPEED);
     this.createNavTile('z', -this.DAYDREAM_NAV_SPEED);
-      console.log('entered here');
       
     };
     
@@ -214,7 +213,7 @@ export class Scatterplot{
       });
       (g[i] as AFRAME.Entity).addEventListener('mouseleave', () => {
         const hoverIdx = i;
-        this.cardSelection.filter((d, i) => { return i === hoverIdx}).attr('visible', true);
+        this.cardSelection.filter((d, i) => { return i === hoverIdx}).attr('visible', false);
       });
     });
   }
@@ -242,7 +241,7 @@ export class Scatterplot{
         font: ${this.AILERON_FONT};
         xOffset: ${DATA_PT_RADIUS / 3}`;
       })
-      .attr('visible', true)
+      .attr('visible', false)
       .attr('position', (d, i) => {
         const x = this.xScale((d as VRScatterPoint).x);
         const y = this.yScale((d as VRScatterPoint).y);
@@ -303,10 +302,11 @@ export class Scatterplot{
 
 AFRAME.registerComponent('rotate_cards', {
   tick() {
+    const rigRot = (document.getElementById('rig') as AFRAME.Entity).object3D.rotation;
     this.el.object3D.rotation.set(
-       document.querySelector('[camera]').object3D.rotation.x,
-       document.querySelector('[camera]').object3D.rotation.y,
-       document.querySelector('[camera]').object3D.rotation.z,
+       rigRot.x,
+       rigRot.y,
+       rigRot.z,
     );
   }
 });
