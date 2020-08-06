@@ -119,8 +119,8 @@ export class Scatterplot{
     
   }
   createNavTile(dim: string, velocity: number){
+    let rigPos = (document.getElementById('rig') as AFRAME.Entity).object3D.position;
     const navTile = document.createElement('a-entity');
-    console.log((document.getElementById('rig') as AFRAME.Entity).object3D.position);
     // document.querySelector('[camera]').appendChild(navTile);
     this.cameraRig.appendChild(navTile);
     // this.container!.appendChild(navTile);
@@ -133,8 +133,7 @@ export class Scatterplot{
         (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.xNeg);
         (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/left_arrow.png');
       }
-      (navTile as AFRAME.Entity).addEventListener('mouseenter', () => {
-        let rigPos = (document.getElementById('rig') as AFRAME.Entity).object3D.position;
+      (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
         rigPos.set(
           rigPos.x + velocity,
           rigPos.y,
@@ -150,10 +149,10 @@ export class Scatterplot{
         (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/down_arrow.png');
       }
       (navTile as AFRAME.Entity).addEventListener('mouseenter', () => {
-        document.querySelector('[camera]').object3D.position.set(
-          document.querySelector('[camera]').object3D.position.x,
-          document.querySelector('[camera]').object3D.position.y + velocity,
-          document.querySelector('[camera]').object3D.position.z
+        rigPos.set(
+          rigPos.x,
+          rigPos.y + velocity,
+          rigPos.z
         );
       });
     } else if (dim === 'z'){
@@ -165,10 +164,10 @@ export class Scatterplot{
         (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/down_arrow.png');
       }
       (navTile as AFRAME.Entity).addEventListener('mouseenter', () => {
-        document.querySelector('[camera]').object3D.position.set(
-          document.querySelector('[camera]').object3D.position.x,
-          document.querySelector('[camera]').object3D.position.y,
-          document.querySelector('[camera]').object3D.position.z + velocity
+        rigPos.set(
+          rigPos.x,
+          rigPos.y,
+          rigPos.z + velocity
         );
       });
     }
@@ -210,12 +209,12 @@ export class Scatterplot{
       // (g[i] as AFRAME.Entity).setAttribute('hover_cards', '');
       (g[i] as AFRAME.Entity).addEventListener('mouseenter', () => {
         const hoverIdx = i;
-        document.querySelector('[camera]').object3D.position.set(0, 0, -6);
+        console.log(this.cardSelection);
         this.cardSelection.filter((d, i) => { return i === hoverIdx}).attr('visible', true);
       });
       (g[i] as AFRAME.Entity).addEventListener('mouseleave', () => {
         const hoverIdx = i;
-        this.cardSelection.filter((d, i) => { return i === hoverIdx}).attr('visible', false);
+        this.cardSelection.filter((d, i) => { return i === hoverIdx}).attr('visible', true);
       });
     });
   }
@@ -243,7 +242,7 @@ export class Scatterplot{
         font: ${this.AILERON_FONT};
         xOffset: ${DATA_PT_RADIUS / 3}`;
       })
-      .attr('visible', false)
+      .attr('visible', true)
       .attr('position', (d, i) => {
         const x = this.xScale((d as VRScatterPoint).x);
         const y = this.yScale((d as VRScatterPoint).y);
