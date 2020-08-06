@@ -27,7 +27,7 @@ export class Scatterplot{
     zScale: d3.ScaleLinear<number, number>;
     dataType: MetaType;
     loaded = false;
-    tilePos: Record<string,string> = {
+    tilePos: Record<string, string> = {
       ['xPos']: '-1 1 -4',
       ['xNeg']: '-2 1 -4',
       ['yPos']: '-1.5 1.5 -4',
@@ -41,7 +41,7 @@ export class Scatterplot{
   constructor(shape: string) {
     this.shape = shape;
   }
-  
+
   init(container: HTMLElement, data: VRScatterPoint[], metrics: string[], dataType: MetaType){
     this.data = data;
     this.metrics = metrics;
@@ -70,43 +70,21 @@ export class Scatterplot{
       this.cameraRig = document.getElementById('rig')!;
       console.log(document.getElementById('rig')!);
       document.addEventListener('keydown', (event) => {
-        if (event.keyCode === 81){
+        if (event.code === 'KeyQ'){
           document.querySelector('[camera]').object3D.position.set(
             document.querySelector('[camera]').object3D.position.x,
             document.querySelector('[camera]').object3D.position.y + .2,
             document.querySelector('[camera]').object3D.position.z
           );
         }
-        if (event.keyCode === 90){
+        if (event.code === 'keyZ'){
           document.querySelector('[camera]').object3D.position.set(
             document.querySelector('[camera]').object3D.position.x,
             document.querySelector('[camera]').object3D.position.y - .2,
             document.querySelector('[camera]').object3D.position.z
           );
         }
-      })
-      // document.querySelector('[camera]').object3D.rotation.set(0, (135 * Math.PI / 180) , 0);
-      // document.querySelector('[camera]').setAttribute('rotate_camera', '');
-    //   const xPos = document.createElement('a-entity');
-    //   document.querySelector('[camera]').appendChild(xPos);
-    // xPos.className = 'navTools';
-    // xPos.id = 'xPos';
-    // xPos.className = 'grids';
-    
-    // (xPos as AFRAME.Entity).addEventListener('mousedown', () => {
-    //   document.querySelector('[camera]').object3D.position.set(
-    //     document.querySelector('[camera]').object3D.position.x + .1,
-    //     document.querySelector('[camera]').object3D.position.y,
-    //     document.querySelector('[camera]').object3D.position.z
-    //   );
-    // });
-    // (xPos as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: .5; width: .5');
-    // (xPos as AFRAME.Entity).setAttribute('material', 'color: blue; opacity: .5');
-    // (xPos as AFRAME.Entity).setAttribute('text', 'value: >; align: center; lineHeight: 2');
-
-
-      
-    //   (xPos as AFRAME.Entity).setAttribute('position', '0 4 -6');
+      });
     this.createNavTile('x', this.DAYDREAM_NAV_SPEED);
     this.createNavTile('x', -this.DAYDREAM_NAV_SPEED);
     this.createNavTile('y', this.DAYDREAM_NAV_SPEED);
