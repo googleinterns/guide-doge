@@ -35,6 +35,7 @@ export class Scatterplot{
       ['zPos']: '1 1.25 -3',
       ['zNeg']: '1 -.25 -3',
   };
+    cameraRig: HTMLElement = document.createElement('a-entity');
 
 
   constructor(shape: string) {
@@ -66,6 +67,8 @@ export class Scatterplot{
   }
   private createNavTools(){
     window.onload = () => {
+      this.cameraRig = document.getElementById('rig')!;
+      console.log(document.getElementById('rig')!);
       document.addEventListener('keydown', (event) => {
         if (event.keyCode === 81){
           document.querySelector('[camera]').object3D.position.set(
@@ -83,7 +86,7 @@ export class Scatterplot{
         }
       })
       // document.querySelector('[camera]').object3D.rotation.set(0, (135 * Math.PI / 180) , 0);
-      document.querySelector('[camera]').setAttribute('rotate_camera', '');
+      // document.querySelector('[camera]').setAttribute('rotate_camera', '');
     //   const xPos = document.createElement('a-entity');
     //   document.querySelector('[camera]').appendChild(xPos);
     // xPos.className = 'navTools';
@@ -117,7 +120,9 @@ export class Scatterplot{
   }
   createNavTile(dim: string, velocity: number){
     const navTile = document.createElement('a-entity');
-    document.querySelector('[camera]').appendChild(navTile);
+    console.log((document.getElementById('rig') as AFRAME.Entity).object3D.position);
+    // document.querySelector('[camera]').appendChild(navTile);
+    this.cameraRig.appendChild(navTile);
     // this.container!.appendChild(navTile);
     (navTile as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: .5; width: .5');
     if (dim === 'x'){
@@ -129,10 +134,11 @@ export class Scatterplot{
         (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/left_arrow.png');
       }
       (navTile as AFRAME.Entity).addEventListener('mouseenter', () => {
-        document.querySelector('[camera]').object3D.position.set(
-          document.querySelector('[camera]').object3D.position.x + velocity,
-          document.querySelector('[camera]').object3D.position.y,
-          document.querySelector('[camera]').object3D.position.z
+        let rigPos = (document.getElementById('rig') as AFRAME.Entity).object3D.position;
+        rigPos.set(
+          rigPos.x + velocity,
+          rigPos.y,
+          rigPos.z
         );
       });
     } else if (dim === 'y'){
