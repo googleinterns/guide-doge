@@ -19,6 +19,7 @@ describe('VR Haptic Plot', () => {
   const HOVER_COLOR = 'red';
 
   beforeEach( () =>  {
+    // Scene and Controller Mock Setup
     scene = document.createElement('a-scene');
     controller = document.createElement('a-entity');
     controller.setAttribute('sphere-collider', '');
@@ -28,7 +29,7 @@ describe('VR Haptic Plot', () => {
     (controller as Entity).sceneEl = (scene as Scene);
     scene.appendChild(controller);
     hapticplot = new Hapticplot(shape);
-
+    // Position Mapping Scaler
     graphScale = d3.scaleLinear();
   });
 

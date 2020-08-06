@@ -99,7 +99,7 @@ export class Hapticplot{
    * Changes a points color and size when it stops being hovered by the controller entity
    * @param point The point which is no longer hovered
    * @param defaultColor The default color of unhovered entities
-   * * @param size The radius of the point no longer being hovered
+   * @param size The radius of the point no longer being hovered
    */
   private onHoverEnd(point, defaultColor, size){
     d3.event.detail?.hand?.components.haptics.pulse(0, 1);
