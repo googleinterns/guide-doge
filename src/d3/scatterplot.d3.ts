@@ -213,7 +213,7 @@ export class Scatterplot{
       });
       (g[i] as AFRAME.Entity).addEventListener('mouseleave', () => {
         const hoverIdx = i;
-        this.cardSelection.filter((d, i) => { return i === hoverIdx}).attr('visible',);
+        this.cardSelection.filter((d, i) => { return i === hoverIdx}).attr('visible', false);
       });
     });
   }
