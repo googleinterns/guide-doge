@@ -12,7 +12,7 @@ export interface ScatterPlotStyle {
 }
 
 export class Scatterplot{
-    readonly AILERON_FONT = 'https://cdn.aframe.io/fonts/Aileron-Semibold.fnt';
+    readonly AILERON_FONT = 'https://cdn.aframe.io/fonts/Roboto-msdf.json';
     private GRID_BOUND = 50;
     private data: VRScatterPoint[];
     private shape: string;
@@ -58,14 +58,14 @@ export class Scatterplot{
     if (this.data.length > 0 && !this.loaded){
       this.generateText();
       this.generatePts();
-      this.setColor('blue');
+      this.setColor('royalblue');
     }
-    this.createSky('gray');
+    this.createSky('lightgray');
     this.createGridPlane();
-    this.createNavTools();
+    this.createCtrlTools();
     this.loaded = true;
   }
-  private createNavTools(){
+  private createCtrlTools(){
     window.onload = () => {
       this.cameraRig = document.getElementById('rig')!;
       console.log(document.getElementById('rig')!);
@@ -84,29 +84,7 @@ export class Scatterplot{
             document.querySelector('[camera]').object3D.position.z
           );
         }
-      })
-      // document.querySelector('[camera]').object3D.rotation.set(0, (135 * Math.PI / 180) , 0);
-      // document.querySelector('[camera]').setAttribute('rotate_camera', '');
-    //   const xPos = document.createElement('a-entity');
-    //   document.querySelector('[camera]').appendChild(xPos);
-    // xPos.className = 'navTools';
-    // xPos.id = 'xPos';
-    // xPos.className = 'grids';
-    
-    // (xPos as AFRAME.Entity).addEventListener('mousedown', () => {
-    //   document.querySelector('[camera]').object3D.position.set(
-    //     document.querySelector('[camera]').object3D.position.x + .1,
-    //     document.querySelector('[camera]').object3D.position.y,
-    //     document.querySelector('[camera]').object3D.position.z
-    //   );
-    // });
-    // (xPos as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: .5; width: .5');
-    // (xPos as AFRAME.Entity).setAttribute('material', 'color: blue; opacity: .5');
-    // (xPos as AFRAME.Entity).setAttribute('text', 'value: >; align: center; lineHeight: 2');
-
-
-      
-    //   (xPos as AFRAME.Entity).setAttribute('position', '0 4 -6');
+      });
     this.createNavTile('x', this.DAYDREAM_NAV_SPEED);
     this.createNavTile('x', -this.DAYDREAM_NAV_SPEED);
     this.createNavTile('y', this.DAYDREAM_NAV_SPEED);
@@ -225,7 +203,7 @@ export class Scatterplot{
     this.cardSelection =  d3.select(this.dataTextContainer).selectAll('a-entity');
     this.cardSelection
       .attr('geometry', 'primitive: plane; height: auto; width: .5')
-      .attr('material', 'color: blue')
+      .attr('material', 'color: royalblue')
       .attr('text', (d, i) => {
         const categories = (d as VRScatterPoint).categories.browser + ', ' + (d as VRScatterPoint).categories.country
           + ', ' + (d as VRScatterPoint).categories.source;
@@ -234,10 +212,10 @@ export class Scatterplot{
         const y = (d as VRScatterPoint).y;
         const z = (d as VRScatterPoint).z;
         return `
-        value: ${categories} POSITION:
+        value: \n${categories} POSITION:
         \n \t${this.metrics[0]}: ${x}
         \n \t${this.metrics[1]}: ${y.toFixed(2)}
-        \n \t${this.metrics[2]}: ${z}\n;
+        \n \t${this.metrics[2]}: ${z} \n\n;
         font: ${this.AILERON_FONT};
         xOffset: ${DATA_PT_RADIUS / 3}`;
       })
