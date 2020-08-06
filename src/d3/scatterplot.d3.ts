@@ -204,6 +204,7 @@ export class Scatterplot{
       // (g[i] as AFRAME.Entity).setAttribute('hover_cards', '');
       (g[i] as AFRAME.Entity).addEventListener('mouseenter', () => {
         const hoverIdx = i;
+        document.querySelector('[camera]').object3D.position.set(0, 0, -6);
         this.cardSelection.filter((d, i) => { return i === hoverIdx}).attr('visible', true);
       });
       (g[i] as AFRAME.Entity).addEventListener('mouseleave', () => {
