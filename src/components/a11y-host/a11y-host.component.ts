@@ -11,7 +11,7 @@ export abstract class A11yHostComponent {
     elementRef.nativeElement[A11yHostComponent.componentKey] = this;
   }
 
-  static getComponent(elementRef) {
+  static getComponent(elementRef): A11yHostComponent {
     return elementRef.nativeElement[A11yHostComponent.componentKey];
   }
 }
