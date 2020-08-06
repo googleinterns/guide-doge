@@ -122,7 +122,7 @@ export class Scatterplot{
     let rigPos = (document.getElementById('rig') as AFRAME.Entity).object3D.position;
     const navTile = document.createElement('a-entity');
     // document.querySelector('[camera]').appendChild(navTile);
-    this.cameraRig.appendChild(navTile);
+    document.querySelector('[camera]').appendChild(navTile);
     // this.container!.appendChild(navTile);
     (navTile as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: .5; width: .5');
     if (dim === 'x'){
