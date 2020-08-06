@@ -147,7 +147,7 @@ export class Scatterplot{
         (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.yNeg);
         (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/down_arrow.png');
       }
-      (navTile as AFRAME.Entity).addEventListener('mouseenter', () => {
+      (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
         rigPos.set(
           rigPos.x,
           rigPos.y + velocity,
@@ -162,7 +162,7 @@ export class Scatterplot{
         (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.zNeg);
         (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/down_arrow.png');
       }
-      (navTile as AFRAME.Entity).addEventListener('mouseenter', () => {
+      (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
         rigPos.set(
           rigPos.x,
           rigPos.y,
