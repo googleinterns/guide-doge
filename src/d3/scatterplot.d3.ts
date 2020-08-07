@@ -145,18 +145,18 @@ speedPosition: Record<string, string> = {
       speedTile.setAttribute('position', this.speedPosition.plus);
       speedTile.setAttribute('material', 'color: white; opacity: .75; src: ../assets/plus.png;');
       speedTile.addEventListener('mousedown', () => {
-        if (this.DAYDREAM_NAV_SPEED === 0){
-          this.DAYDREAM_NAV_SPEED = 0;
-        } else{
-          this.DAYDREAM_NAV_SPEED = this.DAYDREAM_NAV_SPEED - .2;
-        }
+        this.DAYDREAM_NAV_SPEED = this.DAYDREAM_NAV_SPEED + .2;
       });
       } else if (sign === 'neg'){
           speedTile.setAttribute('geometry', 'primitive: plane; height: .35; width: .35');
           speedTile.setAttribute('position', this.speedPosition.minus);
           speedTile.setAttribute('material', 'color: white; opacity: .75; src: ../assets/negative.png');
           speedTile.addEventListener('mousedown', () => {
-            this.DAYDREAM_NAV_SPEED = this.DAYDREAM_NAV_SPEED + .2;
+            if (this.DAYDREAM_NAV_SPEED === 0){
+              this.DAYDREAM_NAV_SPEED = 0;
+            } else{
+              this.DAYDREAM_NAV_SPEED = this.DAYDREAM_NAV_SPEED - .2;
+            }
           });
       } else if (sign === 'label'){
           // speedTile.setAttribute('geometry', 'primitive: plane; height: auto; width: auto');
