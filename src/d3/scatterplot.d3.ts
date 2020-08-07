@@ -288,9 +288,13 @@ export class Scatterplot{
       })
       .attr('visible', false)
       .attr('position', (d, i) => {
-        const x = this.xScale((d as VRScatterPoint).x);
-        const y = this.yScale((d as VRScatterPoint).y);
-        const z = this.zScale((d as VRScatterPoint).z);
+        const cameraPosition = document.querySelector('[camera]').object3D.position;
+        const x = cameraPosition.x;
+        const y = cameraPosition.y;
+        const z = cameraPosition.z - 1;
+
+        // const y = this.yScale((d as VRScatterPoint).y);
+        // const z = this.zScale((d as VRScatterPoint).z);
         return `${x + DATA_PT_RADIUS} ${y + 2 * DATA_PT_RADIUS} ${z}`;
       })
       .each((d, i, g) => {
