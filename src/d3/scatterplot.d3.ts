@@ -36,10 +36,12 @@ export class Scatterplot{
       ['zNeg']: '1 .5 -4',
   };
   speedPosition: Record<string, string> = {
-    ['plus']: '.25 2 -4',
-    ['minus']: '-.75 2 -4',
+    ['plus']: '1 2 -1.98',
+    ['minus']: '-1 2 -1.98',
+    ['label']: '0 2 -1.98'
 };
     cameraRig: HTMLElement = document.createElement('a-entity');
+    ctrlPanel: HTMLElement = document.createElement('a-entity');
 
 
   constructor(shape: string) {
@@ -95,30 +97,69 @@ export class Scatterplot{
     this.createNavTile('y', -this.DAYDREAM_NAV_SPEED);
     this.createNavTile('z', this.DAYDREAM_NAV_SPEED);
     this.createNavTile('z', -this.DAYDREAM_NAV_SPEED);
-    this.createSpeedCtrls('plus');
-    this.createSpeedCtrls('neg');
+    this.createCtrlPanel();
+    // this.createSpeedCtrls('plus');
+    // this.createSpeedCtrls('neg');
     };
     
+  }
+  createCtrlPanel(){
+    const panel = this.ctrlPanel as AFRAME.Entity;
+    panel.id = 'ctrls';
+    document.querySelector('[camera]').appendChild(panel);
+    panel.setAttribute('position', '0 0 -2');
+    panel.addEventListener('mousedown', () => {
+      panel.setAttribute('visible', !panel.object3D.visible);
+    });
+    panel.addEventListener('mouseleave', () => {
+      panel.setAttribute('visible', !panel.object3D.visible);
+    });
+    // const backgrd = document.createElement('a-entity') as AFRAME.Entity;
+    // panel!.appendChild(backgrd);
+    panel.setAttribute('geometry', 'primitive: plane; height: 3; width: 2');
+    // backgrd.setAttribute('position', '0 0 -.25');
+    panel.setAttribute('material', 'color: white; transparent: true');
+    const titleTile = document.createElement('a-entity') as AFRAME.Entity;
+    document.getElementById('ctrls')!.appendChild(titleTile);
+    titleTile.setAttribute('position', this.speedPosition.label);
+    titleTile.setAttribute('text', 'value: WebVR Control Panel; align: center; color: black;');
+    titleTile.setAttribute('scale', '6 6 1');
+    titleTile.setAttribute('position', '0 2.5 -1.98');
+    this.createSpeedCtrls('plus');
+    this.createSpeedCtrls('neg');
+    this.createSpeedCtrls('label');
+
+    // (panel as AFRAME.Entity).setAttribute('visible', false);
   }
   createSpeedCtrls(sign: string){
     let rigPos = (document.getElementById('rig') as AFRAME.Entity).object3D.position;
     const navTile = document.createElement('a-entity');
     // document.querySelector('[camera]').appendChild(navTile);
-    document.querySelector('[camera]').appendChild(navTile);
+    document.getElementById('ctrls')!.appendChild(navTile);
+    // document.querySelector('[camera]')!.appendChild(navTile);
+    // document.querySelector('[camera]').appendChild(navTile);
     // this.container!.appendChild(navTile);
-    (navTile as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: .5; width: .5');
+    
     if (sign === 'plus'){
+      (navTile as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: .35; width: .35');
     (navTile as AFRAME.Entity).setAttribute('position', this.speedPosition.plus);
-        (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/plus.png');
+        (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/plus.png;');
         (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
           this.DAYDREAM_NAV_SPEED = this.DAYDREAM_NAV_SPEED - .2;
         });
-      } else{
+      } else if (sign === 'neg'){
+        (navTile as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: .35; width: .35');
         (navTile as AFRAME.Entity).setAttribute('position', this.speedPosition.minus);
             (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/negative.png');
             (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
               this.DAYDREAM_NAV_SPEED = this.DAYDREAM_NAV_SPEED + .2;
             });
+      } else if (sign === 'label'){
+        // (navTile as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: auto; width: auto');
+        (navTile as AFRAME.Entity).setAttribute('position', this.speedPosition.label);
+        (navTile as AFRAME.Entity).setAttribute('text', 'value: Speed; align: center; color: black');
+        (navTile as AFRAME.Entity).setAttribute('scale', '4 4 1');
+            
       }
   }
   createNavTile(dim: string, velocity: number){
