@@ -118,7 +118,7 @@ export class Scatterplot{
     // panel!.appendChild(backgrd);
     panel.setAttribute('geometry', 'primitive: plane; height: 3; width: 2');
     // backgrd.setAttribute('position', '0 0 -.25');
-    panel.setAttribute('material', 'color: white; transparent: true');
+    panel.setAttribute('material', 'color: white; opacity: .5');
     const titleTile = document.createElement('a-entity') as AFRAME.Entity;
     document.getElementById('ctrls')!.appendChild(titleTile);
     titleTile.setAttribute('position', this.speedPosition.label);
