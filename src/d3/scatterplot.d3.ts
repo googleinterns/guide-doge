@@ -145,7 +145,11 @@ speedPosition: Record<string, string> = {
       speedTile.setAttribute('position', this.speedPosition.plus);
       speedTile.setAttribute('material', 'color: white; opacity: .75; src: ../assets/plus.png;');
       speedTile.addEventListener('mousedown', () => {
+        if (this.DAYDREAM_NAV_SPEED === 0){
+          this.DAYDREAM_NAV_SPEED = 0;
+        } else{
           this.DAYDREAM_NAV_SPEED = this.DAYDREAM_NAV_SPEED - .2;
+        }
       });
       } else if (sign === 'neg'){
           speedTile.setAttribute('geometry', 'primitive: plane; height: .35; width: .35');
@@ -168,6 +172,7 @@ speedPosition: Record<string, string> = {
     document.querySelector('[camera]').appendChild(navTile);
     // this.container!.appendChild(navTile);
     (navTile as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: .5; width: .5');
+    let sign = 1;
     if (dim === 'x'){
       if (velocity > 0){
         (navTile as AFRAME.Entity).setAttribute('position', this.tilePosition.xPos);
@@ -175,10 +180,11 @@ speedPosition: Record<string, string> = {
       } else {
         (navTile as AFRAME.Entity).setAttribute('position', this.tilePosition.xNeg);
         (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/left_arrow.png');
+        sign = -1;
       }
       (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
         rigPos.set(
-          rigPos.x + velocity,
+          rigPos.x + sign * this.DAYDREAM_NAV_SPEED,
           rigPos.y,
           rigPos.z
         );
@@ -190,11 +196,12 @@ speedPosition: Record<string, string> = {
       } else {
         (navTile as AFRAME.Entity).setAttribute('position', this.tilePosition.yNeg);
         (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/down_arrow.png');
+         sign = -1;
       }
       (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
         rigPos.set(
           rigPos.x,
-          rigPos.y + velocity,
+          rigPos.y + sign * this.DAYDREAM_NAV_SPEED,
           rigPos.z
         );
       });
@@ -205,12 +212,14 @@ speedPosition: Record<string, string> = {
       } else {
         (navTile as AFRAME.Entity).setAttribute('position', this.tilePosition.zNeg);
         (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/down_arrow.png');
+        sign = -1;
+
       }
       (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
         rigPos.set(
           rigPos.x,
           rigPos.y,
-          rigPos.z + velocity
+          rigPos.z + sign * this.DAYDREAM_NAV_SPEED
         );
       });
     }
