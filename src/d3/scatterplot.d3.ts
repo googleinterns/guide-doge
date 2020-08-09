@@ -24,33 +24,39 @@ export class Scatterplot{
     dataType: MetaType;
     camera: HTMLElement;
 
-
   constructor(shape: string) {
     this.shape = shape;
   }
+
   init(container: HTMLElement, data: VRScatterPoint[], dataType: MetaType){
     this.data = data;
     this.dataType = dataType;
     this.container = container;
     this.dataType = dataType;
-    this.dataPointContainer = document.createElement('a-entity');
-    this.dataPointContainer.className = 'dataPts';
-    this.dataTextContainer = document.createElement('a-entity');
-    this.dataTextContainer.className = 'dataTxt';
+    this.dataPointContainer = this.createEntity('a-entity', 'dataPts');
+    this.dataTextContainer = this.createEntity('a-entity', 'dataTxt');
     container.appendChild(this.dataPointContainer);
-    // container.appendChild(this.dataTextContainer);
+    container.appendChild(this.dataTextContainer);
     if (this.data.length > 0){
       this.generatePts();
       this.setColor('blue');
+      this.generateText();
     }
     this.createSky('gray');
     this.createGridPlane();
     window.onload = () => {
-     this.camera = document.querySelector('[camera]');
-     this.camera.appendChild(this.dataTextContainer);
-
-     this.generateText();
+      this.dataTextContainer = this.createEntity('a-entity', 'dataTxt');
+      this.generateText();
+      this.camera = document.querySelector('[camera]');
+      this.camera.appendChild(this.dataTextContainer);
+      this.container!.removeChild(this.dataTextContainer);
     };
+  }
+
+  private createEntity(entity: string, id: string): HTMLElement {
+    const retEntity = document.createElement(entity);
+    retEntity.id = id;
+    return retEntity;
   }
 
   private scalePosition(){
@@ -68,11 +74,16 @@ export class Scatterplot{
         maxZValue = pt.z;
       }
     }
-    // scale positions based on largest value found in xyz to absVal(maxGridDimension)
-    this.xScale = d3.scaleLinear().domain([0, maxXValue]).range([0, this.GRID_BOUND]);
-    this.yScale = d3.scaleLinear().domain([0, maxYValue]).range([0, this.GRID_BOUND]);
-    this.zScale = d3.scaleLinear().domain([0, maxZValue]).range([0, this.GRID_BOUND]);
+    this.xScale = this.dimScales(maxXValue);
+    this.yScale = this.dimScales(maxYValue);
+    this.zScale = this.dimScales(maxZValue);
   }
+
+  private dimScales(maxVal: number): d3.ScaleLinear<number, number> {
+     // scale positions based on largest value found in xyz to absVal(maxGridDimension)
+    return d3.scaleLinear().domain([0, maxVal]).range([0, this.GRID_BOUND]);
+  }
+
   private generatePts() {
     this.scalePosition();
      // enter identifies any DOM elements to be added when # array elements doesn't match
@@ -83,44 +94,38 @@ export class Scatterplot{
       const x = this.xScale((d as VRScatterPoint).x);
       const y = this.yScale((d as VRScatterPoint).y);
       const z = this.zScale((d as VRScatterPoint).z);
-      return `${x} ${y} ${z}`;
+      return `${x.toFixed(2)} ${y.toFixed(2)} ${z.toFixed(2)}`;
     });
   }
+
   private generateText(){
-       // enter identifies any DOM elements to be added when # array elements doesn't match
-       d3.select(this.dataTextContainer).selectAll('a-entity').data(this.data).enter().append('a-entity');
-       d3.select(this.dataTextContainer).selectAll('a-entity')
-       .attr('geometry', 'primitive: plane; height: auto; width: .5')
-       .attr('position', (d, i) => {
-         const camPos = (this.camera as AFRAME.Entity).object3D.position;
-        const x = camPos.x;
-        const y = camPos.y;
-        const z = camPos.z - 1 - i * .01;
+    // enter identifies any DOM elements to be added when # array elements doesn't match
+    d3.select(this.dataTextContainer).selectAll('a-entity').data(this.data).enter().append('a-entity');
+    d3.select(this.dataTextContainer).selectAll('a-entity')
+      .attr('geometry', 'primitive: plane; height: auto; width: .5')
+      .attr('position', (d, i) => {
         // added padding for z-fighting - when merged with hover feature, can set to z = -1 (or other constant)
         return `${.25} ${-.25} ${-(.5 + i * .005)}`;
-       })
-       .attr('material', 'color: blue')
-       // d is data at index, i within
-       // select all shapes within given container
-      .attr('text', (d, i) => {
-        const x = (d as VRScatterPoint).x;
-        const y = (d as VRScatterPoint).y;
-        const z = (d as VRScatterPoint).z;
-        return `
-        value: POSITION:
-        \n\tx: ${x}
-        \n\ty: ${y}
-        \n\tz:${z}`;
       })
-      .attr('visible', true);
+      .attr('material', 'color: blue')
+      // d is data at index, i within
+      // select all shapes within given container
+    .attr('text', (d, i) => {
+      const x = (d as VRScatterPoint).x;
+      const y = (d as VRScatterPoint).y;
+      const z = (d as VRScatterPoint).z;
+      return `
+      value: POSITION:\n\nx: ${x}\n\ny: ${y}\n\nz: ${z}`;
+    })
+    .attr('visible', true);
   }
   private setColor(color) {
     d3.select(this.container).selectAll(this.shape).attr('color', () => {
       return color;
     });
   }
-  private createGridPlane()
-  {
+
+  private createGridPlane(){
     const xGrid = document.createElement('a-entity');
     xGrid.className = 'grids';
     xGrid.id = 'xGrid';
@@ -148,6 +153,7 @@ export class Scatterplot{
     d3.select(this.container).select('#zGrid').attr('position', '0 0 0');
     d3.select(this.container).select('#zGrid').attr('rotation', '-90 0 0');
   }
+
   private createSky(color: string | number){
     const sky = document.createElement('a-sky');
     sky.id = 'sky';
