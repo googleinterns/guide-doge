@@ -44,7 +44,6 @@ export class Scatterplot{
     container.appendChild(this.dataPointContainer);
     container.appendChild(this.dataTextContainer);
     if (this.data.length > 0 && !this.loaded){
-      console.log(data);
       this.generatePts();
       this.setColor('blue');
       this.generateText();
@@ -59,6 +58,23 @@ export class Scatterplot{
       this.camera = document.querySelector('[camera]');
       this.camera.appendChild(this.dataTextContainer);
       this.container!.removeChild(this.dataTextContainer);
+      window.addEventListener('keydown', (event) => {
+        const camPos = document.querySelector('[camera]').object3D.position;
+        if (event.code === 'KeyQ'){
+          camPos.set(
+            document.querySelector('[camera]').object3D.position.x,
+            document.querySelector('[camera]').object3D.position.y + 1,
+            document.querySelector('[camera]').object3D.position.z
+          );
+        }
+        if (event.code === 'KeyZ'){
+          camPos.set(
+            camPos.x,
+            camPos.y - 1,
+            camPos.z
+          );
+        }
+      });
     };
   }
 
@@ -94,24 +110,6 @@ export class Scatterplot{
   }
 
   private generatePts() {
-    window.onload = () => {
-      document.addEventListener('keydown', (event) => {
-        if (event.keyCode === 81){
-          document.querySelector('[camera]').object3D.position.set(
-            document.querySelector('[camera]').object3D.position.x,
-            document.querySelector('[camera]').object3D.position.y + 1,
-            document.querySelector('[camera]').object3D.position.z
-          );
-        }
-        if (event.keyCode === 90){
-          document.querySelector('[camera]').object3D.position.set(
-            document.querySelector('[camera]').object3D.position.x,
-            document.querySelector('[camera]').object3D.position.y - 1,
-            document.querySelector('[camera]').object3D.position.z
-          );
-        }
-      })
-    };
     this.scalePosition();
      // enter identifies any DOM elements to be added when # array elements doesn't match
     d3.select(this.dataPointContainer).selectAll(this.shape).data(this.data).enter().append(this.shape);
@@ -130,10 +128,6 @@ export class Scatterplot{
     d3.select(this.dataTextContainer).selectAll('a-entity').data(this.data).enter().append('a-entity');
     d3.select(this.dataTextContainer).selectAll('a-entity')
       .attr('geometry', 'primitive: plane; height: auto; width: .5')
-      .each((d, i, g) => {
-        (g[i] as AFRAME.Entity).setAttribute('rotate_cards', '');
-        (g[i] as AFRAME.Entity).setAttribute('show_cards', '');
-      })
       .attr('position', (d, i) => {
         // added padding for z-fighting - when merged with hover feature, can set to z = -1 (or other constant)
         return `${.25} ${-.25} ${-(.5 + i * .005)}`;
@@ -146,7 +140,7 @@ export class Scatterplot{
       const y = (d as VRScatterPoint).y;
       const z = (d as VRScatterPoint).z;
       return `
-      value: POSITION:\n\nx: ${x}\n\ny: ${y}\n\nz: ${z}`;
+      value: POSITION:\n\n${this.metrics[0]} (x): ${x}\n\n${this.metrics[1]} (y): ${y}\n\n${this.metrics[2]} (z): ${z}`;
     })
     .attr('visible', true);
   }
@@ -195,23 +189,3 @@ export class Scatterplot{
     });
   }
 }
-
-AFRAME.registerComponent('rotate_cards', {
-  tick() {
-    this.el.object3D.rotation.set(
-       document.querySelector('[camera]').object3D.rotation.x,
-       document.querySelector('[camera]').object3D.rotation.y,
-       document.querySelector('[camera]').object3D.rotation.z,
-    );
-  }
-});
-
-AFRAME.registerComponent('show_cards', {
-  tick() {
-    if (this.el.object3D.position.distanceTo(document.querySelector('[camera]').object3D.position) < DATA_PT_RADIUS * 40){
-      this.el.object3D.visible = true;
-    } else {
-      this.el.object3D.visible = false;
-    }
-  }
-});
