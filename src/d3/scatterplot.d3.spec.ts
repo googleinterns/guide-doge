@@ -16,7 +16,7 @@ describe('VR Scatter Plot', () => {
   const expPosArray1 = [ {x: 50, y: 50, z: 50}];
   // need to ignore line for `` formatting to not cause error
   // tslint:disable-next-line
-  const scatterPlotTxt1: string[] = [`POSITION:\n\nx: ${scatterPlotData1[0].x}\n\ny: ${scatterPlotData1[0].y}\n\nz: ${scatterPlotData1[0].z}`];
+  const scatterPlotTxt1: string[] = [`POSITION:\n\nActive Users (x): ${scatterPlotData1[0].x}\n\nRevenue (y): ${scatterPlotData1[0].y}\n\nEvent Count (z): ${scatterPlotData1[0].z}`];
 
   const scatterPlotData8: VRScatterPoint[] = [];
   for (let i = 0; i < 8; i++){
@@ -43,7 +43,7 @@ describe('VR Scatter Plot', () => {
   const scatterPlotTxt8: string[] = [];
   for (let i = 0; i < 8; i++){
     scatterPlotTxt8.push(
-    `POSITION:\n\nx: ${expPosDataArray8[i].x}\n\ny: ${expPosDataArray8[i].y}\n\nz: ${expPosDataArray8[i].z}`);
+    `POSITION:\n\nActive Users (x): ${expPosDataArray8[i].x}\n\nRevenue (y): ${expPosDataArray8[i].y}\n\nEvent Count (z): ${expPosDataArray8[i].z}`);
   }
 
   beforeEach( () =>  {
@@ -52,38 +52,38 @@ describe('VR Scatter Plot', () => {
   });
 
   it('places no points bc 1:1 correspondence with empty element array', () => {
-    scatterplot.init(element, [], MetaType.SCATTER_PLOT);
+    scatterplot.init(element, [], [], MetaType.SCATTER_PLOT);
     const expectedPosArray = [];
     const result = getPosition(element, shape);
     expect(result).toEqual(expectedPosArray);
   });
 
   it('places points for each element in a one element array', () => {
-    scatterplot.init(element, scatterPlotData1, MetaType.SCATTER_PLOT);
+    scatterplot.init(element, scatterPlotData1, ['Active Users', 'Revenue', 'Event Count'], MetaType.SCATTER_PLOT);
     const result = getPosition(element, shape);
     expect(result).toEqual(expPosArray1);
   });
 
   it('places points for each element in a eight element array', () => {
-    scatterplot.init(element, scatterPlotData8, MetaType.SCATTER_PLOT);
+    scatterplot.init(element, scatterPlotData8, ['Active Users', 'Revenue', 'Event Count'], MetaType.SCATTER_PLOT);
     const result = getPosition(element, shape);
     expect(result).toEqual(expPosArray8);
   });
 
   it('checks for content of hovercards of 0 element array', () => {
-    scatterplot.init(element, [], MetaType.SCATTER_PLOT);
+    scatterplot.init(element, [], [], MetaType.SCATTER_PLOT);
     const result = getPositionData(element);
     expect(result).toEqual([]);
   });
 
   it('checks for content of hovercards of 1 element array', () => {
-    scatterplot.init(element, scatterPlotData1, MetaType.SCATTER_PLOT);
+    scatterplot.init(element, scatterPlotData1, ['Active Users', 'Revenue', 'Event Count'],  MetaType.SCATTER_PLOT);
     const result = getPositionData(element);
     expect(result).toEqual(scatterPlotTxt1);
   });
 
   it('checks for content of hovercards of 8 element array', () => {
-    scatterplot.init(element, scatterPlotData8, MetaType.SCATTER_PLOT);
+    scatterplot.init(element, scatterPlotData8, ['Active Users', 'Revenue', 'Event Count'], MetaType.SCATTER_PLOT);
     const result = getPositionData(element);
     expect(result).toEqual(scatterPlotTxt8);
   });
@@ -97,11 +97,11 @@ describe('Checking for presence of', () => {
   beforeEach( () =>  {
     element = document.createElement('a-scene');
     scatterplot = new Scatterplot('a-sphere');
-    scatterplot.init(element, [], MetaType.SCATTER_PLOT);
+    scatterplot.init(element, [], [], MetaType.SCATTER_PLOT);
     grids = element.getElementsByClassName('grids');
   });
   it('aframe sky', () => {
-    scatterplot.init(element, [], MetaType.SCATTER_PLOT);
+    scatterplot.init(element, [], [], MetaType.SCATTER_PLOT);
     const sky = document.getElementsByTagName('a-sky');
     let skyPresent = false;
     if (sky !== null){
@@ -144,4 +144,3 @@ function getPositionData(element: HTMLElement): string[]{
   }
   return positionDataArray;
 }
-

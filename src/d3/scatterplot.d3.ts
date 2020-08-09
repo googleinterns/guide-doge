@@ -2,6 +2,9 @@ import * as AFRAME from 'aframe';
 import * as d3 from 'd3';
 import { VRScatterPoint } from '../datasets/queries/vr.query';
 import { MetaType } from '../datasets/metas/types';
+const PROXY_FLAG = '__keyboard-controls-proxy';
+const DATA_PT_RADIUS = .05;
+
 
 
 export interface ScatterPlotStyle {
@@ -11,25 +14,28 @@ export interface ScatterPlotStyle {
 
 export class Scatterplot{
     readonly AILERON_FONT = 'https://cdn.aframe.io/fonts/Aileron-Semibold.fnt';
-    readonly DATA_PT_RADIUS = .05;
     private GRID_BOUND = 50;
     private data: VRScatterPoint[];
     private shape: string;
     private container: HTMLElement | null;
     private dataPointContainer: HTMLElement;
     private dataTextContainer: HTMLElement;
+    private metrics: string[];
     xScale: d3.ScaleLinear<number, number>;
     yScale: d3.ScaleLinear<number, number>;
     zScale: d3.ScaleLinear<number, number>;
     dataType: MetaType;
+    loaded = false;
     camera: HTMLElement;
+
 
   constructor(shape: string) {
     this.shape = shape;
   }
 
-  init(container: HTMLElement, data: VRScatterPoint[], dataType: MetaType){
+  init(container: HTMLElement, data: VRScatterPoint[], metrics: string[], dataType: MetaType){
     this.data = data;
+    this.metrics = metrics;
     this.dataType = dataType;
     this.container = container;
     this.dataType = dataType;
@@ -37,19 +43,38 @@ export class Scatterplot{
     this.dataTextContainer = this.createEntity('a-entity', 'dataTxt');
     container.appendChild(this.dataPointContainer);
     container.appendChild(this.dataTextContainer);
-    if (this.data.length > 0){
+    if (this.data.length > 0 && !this.loaded){
       this.generatePts();
       this.setColor('blue');
       this.generateText();
     }
     this.createSky('gray');
     this.createGridPlane();
+    this.loaded = true;
+
     window.onload = () => {
       this.dataTextContainer = this.createEntity('a-entity', 'dataTxt');
       this.generateText();
       this.camera = document.querySelector('[camera]');
       this.camera.appendChild(this.dataTextContainer);
       this.container!.removeChild(this.dataTextContainer);
+      window.addEventListener('keydown', (event) => {
+        const camPos = document.querySelector('[camera]').object3D.position;
+        if (event.code === 'KeyQ'){
+          camPos.set(
+            document.querySelector('[camera]').object3D.position.x,
+            document.querySelector('[camera]').object3D.position.y + 1,
+            document.querySelector('[camera]').object3D.position.z
+          );
+        }
+        if (event.code === 'KeyZ'){
+          camPos.set(
+            camPos.x,
+            camPos.y - 1,
+            camPos.z
+          );
+        }
+      });
     };
   }
 
@@ -90,7 +115,7 @@ export class Scatterplot{
     d3.select(this.dataPointContainer).selectAll(this.shape).data(this.data).enter().append(this.shape);
     // d is data at index, i within
     // select all shapes within given container
-    d3.select(this.dataPointContainer).selectAll(this.shape).attr('radius', this.DATA_PT_RADIUS).attr('position', (d, i) => {
+    d3.select(this.dataPointContainer).selectAll(this.shape).attr('radius', DATA_PT_RADIUS).attr('position', (d, i) => {
       const x = this.xScale((d as VRScatterPoint).x);
       const y = this.yScale((d as VRScatterPoint).y);
       const z = this.zScale((d as VRScatterPoint).z);
@@ -115,10 +140,11 @@ export class Scatterplot{
       const y = (d as VRScatterPoint).y;
       const z = (d as VRScatterPoint).z;
       return `
-      value: POSITION:\n\nx: ${x}\n\ny: ${y}\n\nz: ${z}`;
+      value: POSITION:\n\n${this.metrics[0]} (x): ${x}\n\n${this.metrics[1]} (y): ${y}\n\n${this.metrics[2]} (z): ${z}`;
     })
     .attr('visible', true);
   }
+
   private setColor(color) {
     d3.select(this.container).selectAll(this.shape).attr('color', () => {
       return color;
