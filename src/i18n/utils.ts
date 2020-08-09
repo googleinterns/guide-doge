@@ -36,6 +36,9 @@ export function tA11y(key: I18nKey, ...args: any[]) {
     t(key, ...args)
       .replace(/\.{3}/g, 'to')
       .replace(/<kbd>(\S+)<\/kbd>/g, `'$1'`)
-      .replace(/'\?'/g, `'${t(PUNCTUATION.QUESTION_MARK)}'`),
+      .replace(/'\?'/g, `'${t(PUNCTUATION.QUESTION_MARK)}'`)
+      .replace(/'\/'/g, `'${t(PUNCTUATION.SLASH)}'`)
+      .replace(/'\+'/g, `'${t(PUNCTUATION.PLUS)}'`)
+      .replace(/'-'/g, `'${t(PUNCTUATION.HYPHEN)}'`),
   );
 }
