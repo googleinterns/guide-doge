@@ -22,6 +22,7 @@ export class Scatterplot{
     yScale: d3.ScaleLinear<number, number>;
     zScale: d3.ScaleLinear<number, number>;
     dataType: MetaType;
+    camera: HTMLElement;
 
 
   constructor(shape: string) {
@@ -29,7 +30,6 @@ export class Scatterplot{
   }
   init(container: HTMLElement, data: VRScatterPoint[], dataType: MetaType){
     this.data = data;
-    console.log(data);
     this.dataType = dataType;
     this.container = container;
     this.dataType = dataType;
@@ -38,41 +38,21 @@ export class Scatterplot{
     this.dataTextContainer = document.createElement('a-entity');
     this.dataTextContainer.className = 'dataTxt';
     container.appendChild(this.dataPointContainer);
-    container.appendChild(this.dataTextContainer);
+    // container.appendChild(this.dataTextContainer);
     if (this.data.length > 0){
       this.generatePts();
-      this.generateText();
       this.setColor('blue');
     }
     this.createSky('gray');
     this.createGridPlane();
-    this.setYMovementKeys();
-    document.querySelector('[camera]').setAttribute('qz-keyboard-controls', '');
+    window.onload = () => {
+     this.camera = document.querySelector('[camera]');
+     this.camera.appendChild(this.dataTextContainer);
+
+     this.generateText();
+    };
   }
-  private setYMovementKeys(){
-    AFRAME.registerComponent('qz-keyboard-controls', {
-      getVelocityDelta: function () {
-        var data = this.data,
-            keys = this.getKeys();
-    
-        this.dVelocity.set(0, 0, 0);
-        if (data.enabled) {
-          if (keys.KeyW || keys.ArrowUp)    { this.dVelocity.z -= 1; }
-          if (keys.KeyA || keys.ArrowLeft)  { this.dVelocity.x -= 1; }
-          if (keys.KeyS || keys.ArrowDown)  { this.dVelocity.z += 1; }
-          if (keys.KeyD || keys.ArrowRight) { this.dVelocity.x += 1; }
-    
-          // NEW STUFF HERE
-          if (keys.KeyQ)  { this.dVelocity.y += 1; }
-          if (keys.KeyZ) { this.dVelocity.y -= 1; }
-        }
-    
-        return this.dVelocity.clone();
-      },
-    
-      // ...
-    });
-  }
+
   private scalePosition(){
     let maxXValue = this.data[0].x;
     let maxYValue = this.data[0].y;
@@ -109,36 +89,30 @@ export class Scatterplot{
   private generateText(){
        // enter identifies any DOM elements to be added when # array elements doesn't match
        d3.select(this.dataTextContainer).selectAll('a-entity').data(this.data).enter().append('a-entity');
-       d3.select(this.dataTextContainer).selectAll('a-plane').data(this.data).enter().append('a-plane')
+       d3.select(this.dataTextContainer).selectAll('a-entity')
+       .attr('geometry', 'primitive: plane; height: auto; width: .5')
        .attr('position', (d, i) => {
-        const x = this.xScale((d as VRScatterPoint).x);
-        const y = this.yScale((d as VRScatterPoint).y);
-        const z = this.zScale((d as VRScatterPoint).z);
-        return `${x - 6 * this.DATA_PT_RADIUS} ${y + 2 * this.DATA_PT_RADIUS} ${z}`;
+         const camPos = (this.camera as AFRAME.Entity).object3D.position;
+        const x = camPos.x;
+        const y = camPos.y;
+        const z = camPos.z - 1 - i * .01;
+        // added padding for z-fighting - when merged with hover feature, can set to z = -1 (or other constant)
+        return `${.25} ${-.25} ${-(.5 + i * .005)}`;
        })
-       .attr('width', .5)
-       .attr('height', .5)
-       .attr('color', 'black');
+       .attr('material', 'color: blue')
        // d is data at index, i within
        // select all shapes within given container
-       d3.select(this.dataTextContainer).selectAll('a-entity')
-         .attr('text', (d, i) => {
-            const x = (d as VRScatterPoint).x;
-            const y = (d as VRScatterPoint).y;
-            const z = (d as VRScatterPoint).z;
-            return `
-            value: POSITION:
-            \n\tx: ${x}
-            \n\ty: ${y}
-            \n\tz:${z}`;
-        })
-        .attr('text', `font: ${this.AILERON_FONT}`)
-        .attr('position', (d, i) => {
-          const x = this.xScale((d as VRScatterPoint).x);
-          const y = this.yScale((d as VRScatterPoint).y);
-          const z = this.zScale((d as VRScatterPoint).z);
-          return `${x + this.DATA_PT_RADIUS} ${y + 2 * this.DATA_PT_RADIUS} ${z}`;
-        });
+      .attr('text', (d, i) => {
+        const x = (d as VRScatterPoint).x;
+        const y = (d as VRScatterPoint).y;
+        const z = (d as VRScatterPoint).z;
+        return `
+        value: POSITION:
+        \n\tx: ${x}
+        \n\ty: ${y}
+        \n\tz:${z}`;
+      })
+      .attr('visible', true);
   }
   private setColor(color) {
     d3.select(this.container).selectAll(this.shape).attr('color', () => {
