@@ -13,13 +13,16 @@
     "target": "es2015",
     "lib": [
       "es2019",
-      "dom"
+      "dom",
+      "dom.iterable"
     ],
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "removeComments": true,
     "preserveConstEnums": true,
-    "resolveJsonModule": true
+    "strictBindCallApply": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
