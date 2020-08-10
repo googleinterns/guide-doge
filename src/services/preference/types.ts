@@ -6,7 +6,10 @@ export interface Preference {
   enabled: boolean;
 }
 
-export type PreferenceWithMeta<T extends Preference> = T & { _meta: PreferenceMeta<T> };
+export type PreferenceWithMeta<T extends Preference> = T & {
+  _meta: PreferenceMeta<T>;
+  _meta_name?: string;
+};
 
 export interface AudificationPreference extends Preference {
   lowestPitch: number;
