@@ -50,15 +50,14 @@ export class Scatterplot{
     this.dataType = dataType;
     this.dataPointContainer = document.createElement('a-entity');
     this.dataPointContainer.className = 'dataPts';
-    this.dataTextContainer = document.createElement('a-entity');
-    this.dataTextContainer.className = 'dataTxt';
+    // this.dataTextContainer = document.createElement('a-entity');
+    // this.dataTextContainer.className = 'dataTxt';
     container.appendChild(this.dataPointContainer);
-    container.appendChild(this.dataTextContainer);
+    // container.appendChild(this.dataTextContainer);
     this.DAYDREAM_NAV_SPEED = .1;
     if (this.data.length > 0 && !this.loaded){
-      this.generateText();
+      // this.generateText();
       this.generatePts();
-      this.setColor('blue');
     }
     this.createSky('gray');
     this.createGridPlane();
@@ -71,7 +70,7 @@ export class Scatterplot{
       this.dataTextContainer.className = 'dataTxt';
       this.generateText();
       document.querySelector('[camera]').appendChild(this.dataTextContainer);
-      this.container.removeChild(this.dataTextContainer);
+      // this.container!.removeChild(this.dataTextContainer);
       this.cameraRig = document.getElementById('rig')!;
       console.log(document.getElementById('rig')!);
       document.addEventListener('keydown', (event) => {
@@ -178,6 +177,7 @@ export class Scatterplot{
   }
 
   private generatePts() {
+    this.scalePosition();
      // enter identifies any DOM elements to be added when # array elements doesn't match
     d3.select(this.dataPointContainer).selectAll(this.shape).data(this.data).enter().append(this.shape);
     // d is data at index, i within
@@ -203,7 +203,6 @@ export class Scatterplot{
   }
 
   private generateText(){
-    this.scalePosition();
     // enter identifies any DOM elements to be added when # array elements doesn't match
     d3.select(this.dataTextContainer).selectAll('a-entity').data(this.data).enter().append('a-entity');
     this.cardSelection =  d3.select(this.dataTextContainer).selectAll('a-entity');
