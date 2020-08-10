@@ -70,7 +70,6 @@ export class Scatterplot{
       this.dataTextContainer.className = 'dataTxt';
       this.generateText();
       document.querySelector('[camera]').appendChild(this.dataTextContainer);
-      // this.container!.removeChild(this.dataTextContainer);
       this.cameraRig = document.getElementById('rig')!;
       console.log(document.getElementById('rig')!);
       document.addEventListener('keydown', (event) => {
