@@ -2,6 +2,7 @@ import * as AFRAME from 'aframe';
 import * as d3 from 'd3';
 import { VRScatterPoint } from '../datasets/queries/vr.query';
 import { MetaType } from '../datasets/metas/types';
+import { addQZCtrls, createNavTiles, createCtrlPanel } from './scatterplot-ctrls';
 const PROXY_FLAG = '__keyboard-controls-proxy';
 const DATA_PT_RADIUS = .05;
 // const CAM_Y_ROTATION = AFRAME.THREE.MathUtils.degToRad(135);
@@ -21,20 +22,12 @@ export class Scatterplot{
     private dataTextContainer: HTMLElement;
     private metrics: string[];
     private cardSelection: any;
-    private DAYDREAM_NAV_SPEED;
+    DAYDREAM_NAV_SPEED;
     xScale: d3.ScaleLinear<number, number>;
     yScale: d3.ScaleLinear<number, number>;
     zScale: d3.ScaleLinear<number, number>;
     dataType: MetaType;
     loaded = false;
-    tilePos: Record<string, string> = {
-      ['xPos']: '-1 1 -4',
-      ['xNeg']: '-2 1 -4',
-      ['yPos']: '-1.5 1.5 -4',
-      ['yNeg']: '-1.5 .5 -4',
-      ['zPos']: '1 1.5 -4',
-      ['zNeg']: '1 .5 -4',
-  };
     cameraRig: HTMLElement = document.createElement('a-entity');
 
 
@@ -50,108 +43,30 @@ export class Scatterplot{
     this.dataType = dataType;
     this.dataPointContainer = document.createElement('a-entity');
     this.dataPointContainer.className = 'dataPts';
-    // this.dataTextContainer = document.createElement('a-entity');
-    // this.dataTextContainer.className = 'dataTxt';
     container.appendChild(this.dataPointContainer);
-    // container.appendChild(this.dataTextContainer);
     this.DAYDREAM_NAV_SPEED = .1;
     if (this.data.length > 0 && !this.loaded){
-      // this.generateText();
       this.generatePts();
     }
     this.createSky('gray');
     this.createGridPlane();
-    this.createNavTools();
     this.loaded = true;
-  }
-  private createNavTools(){
-    window.onload = () => {
+    setTimeout(() => {
       this.dataTextContainer = document.createElement('a-entity');
       this.dataTextContainer.className = 'dataTxt';
-      this.generateText();
       document.querySelector('[camera]').appendChild(this.dataTextContainer);
-      this.cameraRig = document.getElementById('rig')!;
-      console.log(document.getElementById('rig')!);
-      document.addEventListener('keydown', (event) => {
-        const camPos = document.querySelector('[camera]').object3D.position;
-        if (event.code === 'KeyQ'){
-          camPos.set(
-            camPos.x,
-            camPos.y + .2,
-            camPos.z
-          );
-        }
-        if (event.code === 'KeyZ'){
-          camPos.set(
-            camPos.x,
-            camPos.y - .2,
-            camPos.z
-          );
-        }
-      });
-    this.createNavTile('x', this.DAYDREAM_NAV_SPEED);
-    this.createNavTile('x', -this.DAYDREAM_NAV_SPEED);
-    this.createNavTile('y', this.DAYDREAM_NAV_SPEED);
-    this.createNavTile('y', -this.DAYDREAM_NAV_SPEED);
-    this.createNavTile('z', this.DAYDREAM_NAV_SPEED);
-    this.createNavTile('z', -this.DAYDREAM_NAV_SPEED);
-      
-    };
-    
+      this.generateText();
+      this.createCtrlTools();
+    }, 1000);
   }
-  createNavTile(dim: string, velocity: number){
-    let rigPos = (document.getElementById('rig') as AFRAME.Entity).object3D.position;
-    const navTile = document.createElement('a-entity');
-    // document.querySelector('[camera]').appendChild(navTile);
-    document.querySelector('[camera]').appendChild(navTile);
-    // this.container!.appendChild(navTile);
-    (navTile as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: .5; width: .5');
-    if (dim === 'x'){
-      if (velocity > 0){
-        (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.xPos);
-        (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/right_arrow.png');
-      } else {
-        (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.xNeg);
-        (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/left_arrow.png');
-      }
-      (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
-        rigPos.set(
-          rigPos.x + velocity,
-          rigPos.y,
-          rigPos.z
-        );
-      });
-    } else if (dim === 'y'){
-      if (velocity > 0){
-        (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.yPos);
-        (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/up_arrow.png');
-      } else {
-        (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.yNeg);
-        (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/down_arrow.png');
-      }
-      (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
-        rigPos.set(
-          rigPos.x,
-          rigPos.y + velocity,
-          rigPos.z
-        );
-      });
-    } else if (dim === 'z'){
-      if (velocity > 0){
-        (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.zPos);
-        (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/up_arrow.png');
-      } else {
-        (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.zNeg);
-        (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/down_arrow.png');
-      }
-      (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
-        rigPos.set(
-          rigPos.x,
-          rigPos.y,
-          rigPos.z + velocity
-        );
-      });
-    }
+  private createCtrlTools(){
+   
+    addQZCtrls();
+    createNavTiles(this.DAYDREAM_NAV_SPEED);
+    createCtrlPanel(this);
+
+    
+    
   }
 
   private scalePosition(){
