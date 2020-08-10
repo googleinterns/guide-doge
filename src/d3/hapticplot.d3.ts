@@ -1,11 +1,13 @@
 import * as d3 from 'd3';
 import * as THREE from 'three';
 import { Entity } from 'aframe';
+import { sanitizeUrl } from '@braintree/sanitize-url';
 
-const POINT_SIZE = 0.02;
+const POINT_SIZE = 0.01;
 const DEFAULT_COLOR = '#F0A202';
 const HOVER_COLOR = 'red';
 const SKY_COLOR = '#4d4d4d';
+const ASSETS_FOLDER = '../../assets/';
 
 export class Hapticplot{
     private data: number[];
@@ -13,6 +15,7 @@ export class Hapticplot{
     private container: HTMLElement | null = null;
     private graphScale: d3.ScaleLinear<number, number>;
     private hapticScale: d3.ScaleLinear<number, number>;
+    private audioScale: d3.ScaleLinear<number, number>;
 
   constructor(shape: string) {
     this.shape = shape;
@@ -21,21 +24,23 @@ export class Hapticplot{
   init(container: HTMLElement | null, data: number[]){
     this.data = data;
     this.container = container;
-    // create a scale so that there is correspondence between data set and screen render,
-    // a linear mapping of data set values to values from 0 to 10
-    this.graphScale = d3.scaleLinear();
-    this.graphScale.domain([0, d3.max(this.data) as number])  // max of dataset
+    // Creates a linear mapping from this.data to graph positions, haptic intensities, and audio selection
+    this.graphScale = d3.scaleLinear()
+      .domain([0, d3.max(this.data) as number])  // max of dataset
       .range([0, 0.5]);
-    this.hapticScale = d3.scaleLinear();
-    this.hapticScale.domain([0, d3.max(this.data) as number])  // max of dataset
+    this.hapticScale = d3.scaleLinear()
+      .domain([0, d3.max(this.data) as number])  // max of dataset
       .range([0, 1]);
+    this.audioScale = d3.scaleLinear()
+      .domain([0, d3.max(this.data) as number])  // max of dataset
+      .range([0, 27]);
     this.setupPoints(DEFAULT_COLOR, HOVER_COLOR, POINT_SIZE);
     this.createSky();
     this.createGridPlane();
   }
 
   /**
-   * selects all entities of type datapoint
+   * Selects all entities of type datapoint
    */
   private getShapes(){
     return d3.select(this.container).selectAll('datapoint');
@@ -54,14 +59,16 @@ export class Hapticplot{
       //  - "enter" identifies any DOM elements to be added when # array
       //    elements & # DOM elements don't match
       .data(this.data).enter().append(this.shape).classed('datapoint', true)
-      // Updates points positions based on ingested data
-      .each((d, i , g) => this.setPosition(d, i, g[i]))
       // Adds given color property to all points
       .attr('color', defaultColor)
       // Sets points radius property
       .attr('radius', size)
       // Enables controller interaction with points using superhands' tags
       .attr('hoverable', '')
+      // Updates points positions based on ingested data
+      .each((d, i , g) => this.setPosition(d, i, g[i]))
+      // Adds audio triggers to points based on ingested data
+      .each((d, i , g) => this.setAudio(d, g[i]))
       // Adds listeners for state change events, which trigger a change in the
       // point's color property when a hover event occurs
       .on('hover-start',  (d, i, g) => this.onHoverStart(g[i], this.hapticScale(d), hoverColor, size))
@@ -70,7 +77,7 @@ export class Hapticplot{
   }
 
   /**
-   * Generates a world space position for each point, based on ingested data
+   * Sets a world space position for each point, based on ingested data
    * @param data Ingested Data
    * @param index Crrent index in data array
    * @param point the point whos position is being set
@@ -83,7 +90,18 @@ export class Hapticplot{
   }
 
   /**
-   * Triggers a haptic pulse, changes a points color and size when a it is hovered by the controller entity
+   * Attaches audio triggers to each point, mapping associated data to mp3 marimba notes
+   * @param datum Ingested Data
+   * @param point the point who's position is being set
+   */
+  private setAudio(datum, point){
+    const sanitizedUrl = sanitizeUrl(`${ASSETS_FOLDER}${Math.round(this.audioScale(datum))}.mp3`);
+    d3.select(point)
+      .attr('sound', `src: url(${sanitizedUrl}); on: hover-start`);
+  }
+
+  /**
+   * Triggers a haptic pulse and changes a points color and size when a it is hovered by the controller entity
    * @param point The point being hovered
    * @param hapticIntensity A points haptic intensity, based on is associated data
    * @param hoverColor The color the point takes on while hovered
@@ -93,7 +111,7 @@ export class Hapticplot{
     d3.event.detail?.hand?.components.haptics.pulse(hapticIntensity, 5000);
     d3.select(point)
       .attr('color', hoverColor)
-      .attr('radius', size + (hapticIntensity / 30));
+      .attr('radius', size + (hapticIntensity / 60));
   }
 
   /**
@@ -109,14 +127,18 @@ export class Hapticplot{
       .attr('radius', size);
   }
 
-  // Creates and adds a sky box to the scene
+  /**
+   * Creates and adds a sky box to the scene
+   */
   private createSky(){
     const aSky = document.createElement('a-sky');
     this.container!.appendChild(aSky);
     d3.select(this.container).selectAll('a-sky').attr('color', SKY_COLOR);
   }
 
-  // Creates and adds grid 3D grid lines to the scene
+  /**
+   * Creates and adds grid 3D grid lines to the scene
+   */
   private createGridPlane()
   {
     const xGrid = document.createElement('a-entity');
