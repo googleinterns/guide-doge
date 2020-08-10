@@ -60,13 +60,9 @@ export class Scatterplot{
     }, 1000);
   }
   private createCtrlTools(){
-   
     addQZCtrls();
     createNavTiles(this.DAYDREAM_NAV_SPEED);
-    createCtrlPanel(this);
-
-    
-    
+    createCtrlPanel(this); 
   }
 
   private scalePosition(){
