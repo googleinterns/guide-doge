@@ -67,21 +67,27 @@ export class Scatterplot{
   }
   private createNavTools(){
     window.onload = () => {
+      this.dataTextContainer = document.createElement('a-entity');
+      this.dataTextContainer.className = 'dataTxt';
+      this.generateText();
+      document.querySelector('[camera]').appendChild(this.dataTextContainer);
+      this.container.removeChild(this.dataTextContainer);
       this.cameraRig = document.getElementById('rig')!;
       console.log(document.getElementById('rig')!);
       document.addEventListener('keydown', (event) => {
+        const camPos = document.querySelector('[camera]').object3D.position;
         if (event.code === 'KeyQ'){
-          document.querySelector('[camera]').object3D.position.set(
-            document.querySelector('[camera]').object3D.position.x,
-            document.querySelector('[camera]').object3D.position.y + .2,
-            document.querySelector('[camera]').object3D.position.z
+          camPos.set(
+            camPos.x,
+            camPos.y + .2,
+            camPos.z
           );
         }
-        if (event.code === 'keyZ'){
-          document.querySelector('[camera]').object3D.position.set(
-            document.querySelector('[camera]').object3D.position.x,
-            document.querySelector('[camera]').object3D.position.y - .2,
-            document.querySelector('[camera]').object3D.position.z
+        if (event.code === 'KeyZ'){
+          camPos.set(
+            camPos.x,
+            camPos.y - .2,
+            camPos.z
           );
         }
       });
@@ -203,7 +209,7 @@ export class Scatterplot{
     this.cardSelection =  d3.select(this.dataTextContainer).selectAll('a-entity');
     this.cardSelection
       .attr('geometry', 'primitive: plane; height: auto; width: .5')
-      .attr('material', 'color: blue')
+      .attr('material', 'color: blue; opacity: .5')
       .attr('text', (d, i) => {
         const categories = (d as VRScatterPoint).categories.browser + ', ' + (d as VRScatterPoint).categories.country
           + ', ' + (d as VRScatterPoint).categories.source;
@@ -212,23 +218,17 @@ export class Scatterplot{
         const y = (d as VRScatterPoint).y;
         const z = (d as VRScatterPoint).z;
         return `
-        value: ${categories} POSITION:
-        \n \t${this.metrics[0]}: ${x}
-        \n \t${this.metrics[1]}: ${y.toFixed(2)}
-        \n \t${this.metrics[2]}: ${z}\n;
-        font: ${this.AILERON_FONT};
-        xOffset: ${DATA_PT_RADIUS / 3}`;
+        value: \n${categories} Position:\n\n\t  ${this.metrics[0]} (x): ${x}\n\n\t${this.metrics[1]}(y): ${y.toFixed(2)}\n\n\t${this.metrics[2]} (z): ${z}\n;
+        xOffset: ${DATA_PT_RADIUS / 3};
+        shader: msdf; 
+        font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/rubikmonoone/RubikMonoOne-Regular.json;`;
       })
       .attr('visible', false)
       .attr('position', (d, i) => {
         const x = this.xScale((d as VRScatterPoint).x);
         const y = this.yScale((d as VRScatterPoint).y);
         const z = this.zScale((d as VRScatterPoint).z);
-        return `${x + DATA_PT_RADIUS} ${y + 2 * DATA_PT_RADIUS} ${z}`;
-      })
-      .each((d, i, g) => {
-        (g[i] as AFRAME.Entity).setAttribute('rotate_cards', '');
-        // (g[i] as AFRAME.Entity).setAttribute('show_cards', '');
+        return `${0} ${0} ${-(.25)}`;
       });
   }
 
