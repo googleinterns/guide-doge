@@ -115,7 +115,7 @@ function createSpeedCtrls(sign: string, scatter: Scatterplot){
       speedTile.setAttribute('position', speedPos.plus);
       speedTile.setAttribute('material', 'color: white; opacity: .75; src: ../assets/plus.png;');
       speedTile.addEventListener('mousedown', () => {
-        scatter.DAYDREAM_NAV_SPEED = scatter.DAYDREAM_NAV_SPEED + .2;
+        scatter.DAYDREAM_NAV_SPEED = scatter.DAYDREAM_NAV_SPEED + .1;
       });
       } else if (sign === 'neg'){
           speedTile.setAttribute('geometry', 'primitive: plane; height: .35; width: .35');
@@ -125,13 +125,13 @@ function createSpeedCtrls(sign: string, scatter: Scatterplot){
             if (scatter.DAYDREAM_NAV_SPEED === 0){
               scatter.DAYDREAM_NAV_SPEED = 0;
             } else{
-              scatter.DAYDREAM_NAV_SPEED = scatter.DAYDREAM_NAV_SPEED - .2;
+              scatter.DAYDREAM_NAV_SPEED = scatter.DAYDREAM_NAV_SPEED - .1;
             }
           });
       } else if (sign === 'label'){
           // speedTile.setAttribute('geometry', 'primitive: plane; height: auto; width: auto');
           speedTile.setAttribute('position', speedPos.label);
-          speedTile.setAttribute('text', 'value: Speed; align: center; color: black; shader: msdf; font: https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/rubikmonoone/RubikMonoOne-Regular.json;');
+          speedTile.setAttribute('text', `value: Speed ${scatter.DAYDREAM_NAV_SPEED}; align: center; color: black; shader: msdf; font: https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/rubikmonoone/RubikMonoOne-Regular.json;`);
           speedTile.setAttribute('scale', '4 4 1');     
       }
   }
