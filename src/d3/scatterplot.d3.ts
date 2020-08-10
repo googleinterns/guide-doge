@@ -126,8 +126,9 @@ export class Scatterplot{
         const x = (d as VRScatterPoint).x;
         const y = (d as VRScatterPoint).y;
         const z = (d as VRScatterPoint).z;
+        const nbsp = 'nbsp;';
         return `
-        value: \n${categories} Position:\n\n\t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ${this.metrics[0]} (x): ${x}\n\n\t${this.metrics[1]}(y): ${y.toFixed(2)}\n\n\t${this.metrics[2]} (z): ${z}\n;
+        value: \n${categories} Position:\t${this.metrics[0]} (x): ${x}\n\n\t${this.metrics[1]}(y): ${y.toFixed(2)}\n\n\t${this.metrics[2]} (z): ${z}\n;
         xOffset: ${DATA_PT_RADIUS / 3};
         shader: msdf; 
         font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/rubikmonoone/RubikMonoOne-Regular.json;`;
