@@ -1,5 +1,6 @@
 import * as UserWhiteNoiseDataset from '../../datasets/user-white-noise.dataset';
 import * as DummyDataset from '../../datasets/dummy.dataset';
+import * as VRScatterplotDataset from '../../datasets/vr-scatterplot.dataset';
 
 export interface Preference {
   enabled: boolean;
@@ -20,18 +21,25 @@ export interface AudificationPreference extends Preference {
 
 export type DataTablePreference = Preference;
 
-export type TextSummaryPreference = Preference;
+export type GeoMapNavigationPreference = Preference;
+
+export interface SummarizationPreference extends Preference {
+  validityThreshold: number;
+}
 
 export type PreferenceMeta<T> = {
   [K in keyof T]: PreferenceItemMeta;
 };
 
-export type DatasetPreference = UserWGNDatasetPreference | DummyDatasetPreference | BaseDatasetPreference<string, Preference>;
+export type DatasetPreference =
+  UserWGNDatasetPreference | DummyDatasetPreference |
+  VRScatterplotPreference | BaseDatasetPreference<string, Preference>;
 
 export type BaseDatasetPreference<T extends string, U> = { name: T } & U;
 
-export type UserWGNDatasetPreference = BaseDatasetPreference<'UserWhiteNoise', UserWhiteNoiseDataset.Config & Preference>;
-export type DummyDatasetPreference = BaseDatasetPreference<'Dummy', DummyDataset.Config & Preference>;
+export type UserWGNDatasetPreference = BaseDatasetPreference<'UserWhiteNoiseDataset', UserWhiteNoiseDataset.Config & Preference>;
+export type DummyDatasetPreference = BaseDatasetPreference<'DummyDataset', DummyDataset.Config & Preference>;
+export type VRScatterplotPreference = BaseDatasetPreference<'VRScatterplotDataset', VRScatterplotDataset.Config & Preference>;
 
 export type PreferenceItemMeta = NumberPreferenceItemMeta | BoolPreferenceItemMeta | SelectPreferenceItemMeta;
 

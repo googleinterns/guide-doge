@@ -1,0 +1,78 @@
+@import "../../utils/constants";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  border-radius: 2px;
+  overflow: hidden;
+
+  .hierarchy-wrapper {
+    @include card-section;
+
+    .hierarchy-territory {
+      &:not(:last-child):after {
+        white-space: pre;
+        content: " > ";
+        color: $color-font;
+        font-weight: 300;
+      }
+    }
+  }
+
+  .svg-wrapper {
+    @include card-section;
+    padding: 0;
+    box-sizing: content-box;
+    position: relative;
+
+    svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  .table-wrapper {
+    @include card-section;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    .navigator {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .filter {
+        width: 200px;
+      }
+    }
+
+    .table {
+      .active {
+        background-color: mat-color($guide-doge-primary, default, .1);
+      }
+
+      .mat-header-cell,
+      .mat-cell {
+        padding-left: 12px;
+      }
+
+      .mat-row.active .mat-cell.active {
+        font-weight: 500;
+      }
+
+      .mat-column-ranking {
+        text-align: right;
+      }
+    }
+  }
+
+  .attribution-container {
+    @include card-section;
+    padding: 1em 1.5em;
+    display: flex;
+    flex-direction: column;
+    font-size: $font-size-small;
+  }
+}

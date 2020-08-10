@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import { DataService } from '../../services/data/data.service';
 import { takeUntil } from 'rxjs/operators';
 import { Meta } from '../../datasets/metas/types';
-import { AUDIFICATION_PREFERENCE, DATA_PREFERENCE, DATA_TABLE_PREFERENCE, TEXT_SUMMARY_PREFERENCE } from '../../i18n';
+import { AUDIFICATION_PREFERENCE, DATA_PREFERENCE, GEO_MAP_NAVIGATION_PREFERENCE, SUMMARIZATION_PREFERENCE } from '../../i18n';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,14 +16,16 @@ export class DashboardComponent {
   audification$ = this.preferenceService.audification$;
   dataset$ = this.preferenceService.dataset$;
   dataTable$ = this.preferenceService.dataTable$;
-  textSummary$ = this.preferenceService.textSummary$;
+  summarization$ = this.preferenceService.summarization$;
+  geoMapNavigation$ = this.preferenceService.geoMapNavigation$;
   componentMetas: Meta[];
-  private destroy$ = new Subject();
 
   DATA_PREFERENCE = DATA_PREFERENCE;
   AUDIFICATION_PREFERENCE = AUDIFICATION_PREFERENCE;
-  DATA_TABLE_PREFERENCE = DATA_TABLE_PREFERENCE;
-  TEXT_SUMMARY_PREFERENCE = TEXT_SUMMARY_PREFERENCE;
+  GEO_MAP_NAVIGATION_PREFERENCE = GEO_MAP_NAVIGATION_PREFERENCE;
+  SUMMARIZATION_PREFERENCE = SUMMARIZATION_PREFERENCE;
+
+  private destroy$ = new Subject();
 
   constructor(
     private dataService: DataService,

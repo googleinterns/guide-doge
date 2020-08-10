@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core';
-import { AudificationDirective } from './audification.directive';
+import { A11yDirective } from './a11y.directive';
 import { PreferenceModule } from '../../services/preference/preference.module';
 
 @NgModule({
   declarations: [
-    AudificationDirective,
+    A11yDirective,
   ],
   imports: [
     PreferenceModule,
   ],
   exports: [
-    AudificationDirective,
+    A11yDirective,
   ],
 })
-export class AudificationModule {
+export class A11yModule {
 }

@@ -27,6 +27,7 @@ export class DataService implements OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .pipe(pluck('name'))
       .pipe(map(name => name ?? defaultDatasetName))
+      .pipe(filter(name => name in datasets))
       .pipe(distinctUntilChanged())
       .subscribe(name => {
         const meta = {

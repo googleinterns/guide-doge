@@ -43,3 +43,19 @@ export function waitFor(duration: number, cancel$?: Subject<unknown>) {
       });
   });
 }
+
+export function linearScale(ratio: number, min: number, max: number) {
+  return (max - min) * ratio + min;
+}
+
+export function squaredLinearScale(ratio: number, min: number, max: number) {
+  return Math.sqrt(linearScale(ratio, min * min, max * max));
+}
+
+export function logScale(ratio: number, min: number, max: number) {
+  return linearScale(Math.log(linearScale(ratio, 1, Math.E)), min, max);
+}
+
+export function isNotNullish<T>(value: T): value is NonNullable<T> {
+  return value !== undefined && value !== null;
+}

@@ -1,14 +1,15 @@
-import { BehaviorSubject, fromEventPattern } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import * as Cookies from 'js-cookie';
 import {
   AudificationPreference,
   DatasetPreference,
   DataTablePreference,
+  GeoMapNavigationPreference,
   Preference,
-  TextSummaryPreference,
   PreferenceMeta,
   PreferenceWithMeta,
   SelectPreferenceItemMeta,
+  SummarizationPreference,
 } from './types';
 import { createDefault } from '../../utils/preferences';
 import { datasets } from '../../datasets';
@@ -23,7 +24,7 @@ export class PreferenceService {
       type: 'select',
       defaultValue: Object.keys(datasets)[0],
       options: Object.keys(datasets),
-    }
+    },
   }, 'dataset');
 
   audification$ = this.createPreference<AudificationPreference>({
@@ -60,12 +61,23 @@ export class PreferenceService {
     },
   }, 'data_table');
 
-  textSummary$ = this.createPreference<TextSummaryPreference>({
+  summarization$ = this.createPreference<SummarizationPreference>({
     enabled: {
       type: 'boolean',
       defaultValue: true,
     },
-  }, 'text_summary');
+    validityThreshold: {
+      type: 'number',
+      defaultValue: 0.5,
+    },
+  }, 'summarization');
+
+  geoMapNavigation$ = this.createPreference<GeoMapNavigationPreference>({
+    enabled: {
+      type: 'boolean',
+      defaultValue: true,
+    },
+  }, 'geo_map_navigation');
 
   private createPreference<T extends Preference>(preferenceMeta: PreferenceMeta<T>, cookieKeySuffix: string) {
     const defaultPreference = createDefault(preferenceMeta);

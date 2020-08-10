@@ -3,6 +3,7 @@ import { CardComponent } from './card.component';
 import { MatCardModule } from '@angular/material/card';
 import { TabbedChartsMeta } from '../../datasets/metas/tabbed-charts.meta';
 import { LineChartMeta } from '../../datasets/metas/line-chart.meta';
+import { MetaType } from '../../datasets/metas/types';
 
 describe('CardComponent', () => {
   let tabbedFixture: ComponentFixture<CardComponent<TabbedChartsMeta>>;
@@ -11,17 +12,17 @@ describe('CardComponent', () => {
   let lineComponent: CardComponent<LineChartMeta>;
 
   const testChartMeta1: LineChartMeta = {
-    type: 'line',
+    type: MetaType.LINE_CHART,
     title: 'testChart1',
     queryData: () => [],
   };
   const testChartMeta2: LineChartMeta = {
-    type: 'line',
+    type: MetaType.LINE_CHART,
     title: 'testChart2',
     queryData: () => [],
   };
   const testTabbedChartsMeta: TabbedChartsMeta = {
-    type: 'tabbed',
+    type: MetaType.TABBED_CHARTS,
     title: 'testTabbedCharts',
     metas: [testChartMeta1, testChartMeta2],
   };
