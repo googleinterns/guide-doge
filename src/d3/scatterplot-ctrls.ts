@@ -136,7 +136,7 @@ function createSpeedCtrls(sign: string, scatter: Scatterplot){
           // speedTile.setAttribute('geometry', 'primitive: plane; height: auto; width: auto');
           speedTile.setAttribute('position', speedPos.label);
           speedTile.setAttribute('text', `value: Speed ${scatter.DAYDREAM_NAV_SPEED}; align: center; color: black; shader: msdf; font: https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/rubikmonoone/RubikMonoOne-Regular.json;`);
-          speedTile.setAttribute('scale', '4 4 1');     
+        //   speedTile.setAttribute('scale', '4 4 1');     
       }
   }
 
