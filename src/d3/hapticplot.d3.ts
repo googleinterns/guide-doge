@@ -2,6 +2,11 @@ import * as d3 from 'd3';
 import * as THREE from 'three';
 import { Entity } from 'aframe';
 
+const POINT_SIZE = 0.02;
+const DEFAULT_COLOR = '#F0A202';
+const HOVER_COLOR = 'red';
+const SKY_COLOR = '#4d4d4d';
+
 export class Hapticplot{
     private data: number[];
     private shape: string;
@@ -14,10 +19,6 @@ export class Hapticplot{
   }
 
   init(container: HTMLElement | null, data: number[]){
-    const POINT_SIZE = 0.02;
-    const DEFAULT_COLOR = '#F0A202';
-    const HOVER_COLOR = 'red';
-
     this.data = data;
     this.container = container;
     // create a scale so that there is correspondence between data set and screen render,
@@ -112,9 +113,7 @@ export class Hapticplot{
   private createSky(){
     const aSky = document.createElement('a-sky');
     this.container!.appendChild(aSky);
-    d3.select(this.container).selectAll('a-sky').attr('color', () => {
-      return '#4d4d4d';
-    });
+    d3.select(this.container).selectAll('a-sky').attr('color', SKY_COLOR);
   }
 
   // Creates and adds grid 3D grid lines to the scene
@@ -124,21 +123,24 @@ export class Hapticplot{
     xGrid.id = 'xGrid';
     this.container!.appendChild(xGrid);
     xGrid.object3D.add(new THREE.GridHelper(1, 50, 0xffffff, 0xffffff));
-    d3.select(this.container).select('#xGrid').attr('position', '0 1 -1');
-    d3.select(this.container).select('#xGrid').attr('rotation', '0 0 0');
+    d3.select(this.container).select('#xGrid')
+      .attr('position', '0 1 -1')
+      .attr('rotation', '0 0 0');
 
     const yGrid = document.createElement('a-entity');
     yGrid.id = 'yGrid';
     this.container!.appendChild(yGrid);
     yGrid.object3D.add(new THREE.GridHelper(1, 50, 0xffffff, 0xffffff));
-    d3.select(this.container).select('#yGrid').attr('position', '0 1 -1');
-    d3.select(this.container).select('#yGrid').attr('rotation', '0 0 -90');
+    d3.select(this.container).select('#yGrid')
+      .attr('position', '0 1 -1')
+      .attr('rotation', '0 0 -90');
 
     const zGrid = document.createElement('a-entity');
     zGrid.id = 'zGrid';
     this.container!.appendChild(zGrid);
     zGrid.object3D.add(new THREE.GridHelper(1, 50, 0xffffff, 0xffffff));
-    d3.select(this.container).select('#zGrid').attr('position', '0 1 -1');
-    d3.select(this.container).select('#zGrid').attr('rotation', '-90 0 0');
+    d3.select(this.container).select('#zGrid')
+      .attr('position', '0 1 -1')
+      .attr('rotation', '-90 0 0');
   }
 }

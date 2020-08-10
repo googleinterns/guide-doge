@@ -45,9 +45,7 @@ describe('VR Haptic Plot', () => {
     graphScale.domain([0, d3.max(dataArray) as number])  // max of dataset
       .range([0, 0.5]);
     hapticplot.init(scene, dataArray);
-    const expectedPosArray = Array.from(dataArray).map(
-      (datum: number, i) =>
-      new Vector3((0.5 / dataArray.length) * i, graphScale(datum) + 1, -1));
+    const expectedPosArray = [new Vector3(0, 1.5, -1)];
     const result = getPositions(scene, shape);
     expect(result).toEqual(expectedPosArray);
   });
@@ -57,9 +55,7 @@ describe('VR Haptic Plot', () => {
     graphScale.domain([0, d3.max(dataArray) as number])  // max of dataset
       .range([0, 0.5]);
     hapticplot.init(scene, [0, 10, 20]);
-    const expectedPosArray = Array.from(dataArray).map(
-      (datum: number, i) =>
-      new Vector3((0.5 / dataArray.length) * i, graphScale(datum) + 1, -1));
+    const expectedPosArray = [new Vector3(0, 1, -1), new Vector3(1 / 6, 1.25, -1), new Vector3(1 / 3, 1.5, -1)];
     const result = getPositions(scene, shape);
     expect(result).toEqual(expectedPosArray);
   });
