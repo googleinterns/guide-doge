@@ -188,7 +188,7 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
     xGrid.id = 'xGrid';
     xGrid.className = 'grids';
     this.container!.appendChild(xGrid);
-    xGrid.object3D.add(new AFRAME.THREE.GridHelper(this.GRID_BOUND * 2, this.GRID_BOUND * 2, 0xffffff, 0xffffff));
+    xGrid.object3D.add(new AFRAME.THREE.GridHelper(this.XGRID_BOUND * 2, this.XGRID_BOUND * 2, 0xffffff, 0xffffff));
     d3.select(this.container).select('#xGrid').attr('position', '0 0 0');
     d3.select(this.container).select('#xGrid').attr('rotation', '0 0 0');
 
@@ -197,7 +197,7 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
     yGrid.id = 'yGrid';
     yGrid.className = 'grids';
     this.container!.appendChild(yGrid);
-    yGrid.object3D.add(new AFRAME.THREE.GridHelper(this.GRID_BOUND * 2, this.GRID_BOUND * 2, 0xffffff, 0xffffff));
+    yGrid.object3D.add(new AFRAME.THREE.GridHelper(this.YGRID_BOUND * 2, this.YGRID_BOUND * 2, 0xffffff, 0xffffff));
     d3.select(this.container).select('#yGrid').attr('position', '0 0 0');
     d3.select(this.container).select('#yGrid').attr('rotation', '0 0 -90');
 
@@ -206,7 +206,7 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
     zGrid.id = 'zGrid';
     zGrid.className = 'grids';
     this.container!.appendChild(zGrid);
-    zGrid.object3D.add(new AFRAME.THREE.GridHelper(this.GRID_BOUND * 2, this.GRID_BOUND * 2, 0xffffff, 0xffffff));
+    zGrid.object3D.add(new AFRAME.THREE.GridHelper(this.ZGRID_BOUND * 2, this.ZGRID_BOUND * 2, 0xffffff, 0xffffff));
     d3.select(this.container).select('#zGrid').attr('position', '0 0 0');
     d3.select(this.container).select('#zGrid').attr('rotation', '-90 0 0');
   }
