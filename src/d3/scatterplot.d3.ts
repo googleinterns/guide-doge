@@ -61,7 +61,7 @@ export class Scatterplot{
   }
   private createCtrlTools(){
     addQZCtrls();
-    createNavTiles(this.DAYDREAM_NAV_SPEED);
+    createNavTiles(this.DAYDREAM_NAV_SPEED, this);
     createCtrlPanel(this); 
   }
 
