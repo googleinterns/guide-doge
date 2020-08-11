@@ -17,22 +17,25 @@ const speedPos: Record<string, string> = {
    
   };
 
-export function addQZCtrls(){
+export function addQZCtrls(scatter: Scatterplot){
 document.addEventListener('keydown', (event) => {
   const camPos = document.querySelector('[camera]').object3D.position;
   if (event.code === 'KeyQ'){
     camPos.set(
       camPos.x,
-      camPos.y + .2,
+      camPos.y + scatter.DAYDREAM_NAV_SPEED,
       camPos.z
     );
+    console.log(scatter.DAYDREAM_NAV_SPEED);
+
     }
     if (event.code === 'KeyZ'){
       camPos.set(
         camPos.x,
-        camPos.y - .2,
+        camPos.y - scatter.DAYDREAM_NAV_SPEED,
         camPos.z
         );
+        console.log(scatter.DAYDREAM_NAV_SPEED);
     }
   });
 }
@@ -112,6 +115,8 @@ export function createCtrlPanel(scatter: Scatterplot){
 
 //create speedctrls and 'speed' label based on sign parameter
 function createSpeedCtrls(sign: string, scatter: Scatterplot){
+                  console.log(scatter.DAYDREAM_NAV_SPEED);
+
     const speedTile = document.createElement('a-entity') as AFRAME.Entity;
     document.querySelector('[camera]').appendChild(speedTile);
     // document.getElementById('ctrls')!.appendChild(navTile);
@@ -119,23 +124,30 @@ function createSpeedCtrls(sign: string, scatter: Scatterplot){
       speedTile.setAttribute('geometry', 'primitive: plane; height: .35; width: .35');
       speedTile.setAttribute('position', speedPos.plus);
       speedTile.setAttribute('material', 'color: white; opacity: .75; src: ../assets/plus.png;');
-      speedTile.addEventListener('mousedown', () => {
+      (speedTile as AFRAME.Entity).addEventListener('mousedown', () => {
         scatter.DAYDREAM_NAV_SPEED = scatter.DAYDREAM_NAV_SPEED + .1;
+        console.log(scatter.DAYDREAM_NAV_SPEED);
+
       });
       } else if (sign === 'neg'){
           speedTile.setAttribute('geometry', 'primitive: plane; height: .35; width: .35');
           speedTile.setAttribute('position', speedPos.minus);
           speedTile.setAttribute('material', 'color: white; opacity: .75; src: ../assets/negative.png');
-          speedTile.addEventListener('mousedown', () => {
+          (speedTile as AFRAME.Entity).addEventListener('mousedown', () => {
             if (scatter.DAYDREAM_NAV_SPEED > 0){
               scatter.DAYDREAM_NAV_SPEED = scatter.DAYDREAM_NAV_SPEED - .1;
+              console.log(scatter.DAYDREAM_NAV_SPEED);
             }
           });
-      } else if (sign === 'label'){
-          // speedTile.setAttribute('geometry', 'primitive: plane; height: auto; width: auto');
-          speedTile.setAttribute('position', speedPos.label);
-          speedTile.setAttribute('text', `value: Speed ${scatter.DAYDREAM_NAV_SPEED}; align: center; color: black; shader: msdf; font: https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/rubikmonoone/RubikMonoOne-Regular.json;`);
-          speedTile.setAttribute('scale', '3 3 1');     
-      }
+      } 
+    //   else if (sign === 'label'){
+    //       // speedTile.setAttribute('geometry', 'primitive: plane; height: auto; width: auto');
+    //       speedTile.setAttribute('position', speedPos.label);
+    //       speedTile.setAttribute('text', `value: Speed ${scatter.DAYDREAM_NAV_SPEED}; align: center; color: black; shader: msdf; font: https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/rubikmonoone/RubikMonoOne-Regular.json;`);
+    //       speedTile.setAttribute('scale', '3 3 1');  
+    //       speedTile.addEventListener('mousedown', () => {
+    //           console.log(scatter.DAYDREAM_NAV_SPEED);
+    //       });   
+    //   }
   }
 

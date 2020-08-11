@@ -50,17 +50,20 @@ export class Scatterplot{
     }
     this.createSky('gray');
     this.createGridPlane();
-    this.loaded = true;
+    
+    if (!this.loaded){
     setTimeout(() => {
       this.dataTextContainer = document.createElement('a-entity');
       this.dataTextContainer.className = 'dataTxt';
       document.querySelector('[camera]').appendChild(this.dataTextContainer);
       this.generateText();
       this.createCtrlTools();
-    }, 1000);
+    }, 2000);
   }
+  this.loaded = true;
+}
   private createCtrlTools(){
-    addQZCtrls();
+    addQZCtrls(this);
     createNavTiles(this.DAYDREAM_NAV_SPEED, this);
     createCtrlPanel(this); 
   }
