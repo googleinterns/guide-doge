@@ -81,8 +81,10 @@ createNavTiles(DAYDREAM_NAV_SPEED: number){
 createNavTile(dim: string){
     var rigPos = (document.getElementById('rig') as AFRAME.Entity).object3D.position;
     const navTilePos = document.createElement('a-entity');
+    navTilePos.className = 'clickable';
     document.querySelector('[camera]').appendChild(navTilePos);
     const navTileNeg = document.createElement('a-entity');
+    navTileNeg.className = 'clickable';
     document.querySelector('[camera]').appendChild(navTileNeg);
     (navTilePos as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: .75; width: .75');
     (navTileNeg as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: .75; width: .75');
@@ -115,7 +117,8 @@ createNavTile(dim: string){
           var yDelta = 0;
           var zDelta = 0;
           if (dim === 'x'){
-              xDelta = this.scatter.DAYDREAM_NAV_SPEED;
+              // add negative bc camera is turned around
+              xDelta = -this.scatter.DAYDREAM_NAV_SPEED;
           } else if (dim === 'y'){
               yDelta = this.scatter.DAYDREAM_NAV_SPEED;
           } else if (dim === 'z'){
@@ -135,7 +138,8 @@ createNavTile(dim: string){
         var yDelta = 0;
         var zDelta = 0;
         if (dim === 'x'){
-            xDelta = this.scatter.DAYDREAM_NAV_SPEED;
+          // add negative bc camera is turned around
+          xDelta = -this.scatter.DAYDREAM_NAV_SPEED;
         } else if (dim === 'y'){
             yDelta = this.scatter.DAYDREAM_NAV_SPEED;
         } else if (dim === 'z'){
@@ -165,6 +169,7 @@ createCtrlPanel(){
 //create speedctrls and 'speed' label based on sign parameter
 createSpeedCtrls(sign: string){
     const speedTile = document.createElement('a-entity') as AFRAME.Entity;
+    speedTile.className = 'clickable';
     document.querySelector('[camera]').appendChild(speedTile);
     // document.getElementById('ctrls')!.appendChild(navTile);
     if (sign === 'plus'){
@@ -198,10 +203,13 @@ createSpeedCtrls(sign: string){
 
   createScaleCtrls(dim: string){
     const scaleTilePos = document.createElement('a-entity') as AFRAME.Entity;
+    scaleTilePos.className = 'clickable';
     document.querySelector('[camera]').appendChild(scaleTilePos);
     const scaleTileNeg = document.createElement('a-entity') as AFRAME.Entity;
+    scaleTileNeg.className = 'clickable';
     document.querySelector('[camera]').appendChild(scaleTileNeg);
     const labelTile = document.createElement('a-entity') as AFRAME.Entity;
+    labelTile.className = 'clickable';
     document.querySelector('[camera]').appendChild(labelTile);
 
     scaleTilePos.setAttribute('geometry', 'primitive: plane; height: .4; width: .4');  

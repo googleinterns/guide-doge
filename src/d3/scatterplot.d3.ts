@@ -170,14 +170,13 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
         const x = (d as VRScatterPoint).x;
         const y = (d as VRScatterPoint).y;
         const z = (d as VRScatterPoint).z;
-        const nbsp = 'nbsp;';
         return `
         value: \n${categories} Position:\n\n\t--${this.metrics[0]} (x): ${x}\n\n\t--${this.metrics[1]} (y): ${y.toFixed(2)}\n\n\t--${this.metrics[2]} (z): ${z};
         xOffset: ${DATA_PT_RADIUS / 3};
         shader: msdf; 
         font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/roboto/Roboto-Medium.json;`;
       })
-      .attr('visible', false)
+      .attr('visible', true)
       .attr('position', (d, i) => {
         const x = this.xScale((d as VRScatterPoint).x);
         const y = this.yScale((d as VRScatterPoint).y);
