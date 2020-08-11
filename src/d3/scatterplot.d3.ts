@@ -21,7 +21,9 @@ export interface ScatterPlotStyle {
 
 export class Scatterplot{
     readonly AILERON_FONT = 'https://cdn.aframe.io/fonts/Aileron-Semibold.fnt';
-    private GRID_BOUND = 50;
+    XGRID_BOUND = 50;
+    private YGRID_BOUND = 50;
+    private ZGRID_BOUND = 50;
     private data: VRScatterPoint[];
     private shape: string;
     private container: HTMLElement | null;
@@ -29,6 +31,7 @@ export class Scatterplot{
     private dataTextContainer: HTMLElement;
     private metrics: string[];
     private cardSelection: any;
+    ptSelection: any;
     DAYDREAM_NAV_SPEED;
     xScale: d3.ScaleLinear<number, number>;
     yScale: d3.ScaleLinear<number, number>;
@@ -58,16 +61,15 @@ export class Scatterplot{
     this.createGridPlane();
     
     if (!this.loaded){
-      window.onload = () =>{
-        this.DAYDREAM_NAV_SPEED = .1;
-        // this.createCtrlPanel();
-      };
     setTimeout(() => {
       this.DAYDREAM_NAV_SPEED = .1;
       this.dataTextContainer = document.createElement('a-entity');
       this.dataTextContainer.className = 'dataTxt';
       document.querySelector('[camera]').appendChild(this.dataTextContainer);
       this.generateText();
+      if (this.data.length > 0){
+        this.generatePts();
+      }
       const control = new Controls(this);
       // this.createCtrlTools();
     }, 2000);
@@ -87,7 +89,7 @@ export class Scatterplot{
     return this.DAYDREAM_NAV_SPEED;
   }
 
-  private scalePosition(){
+  private scalePosition(xMapping: number, yMapping: number, zMapping: number){
     let maxXValue = this.data[0].x;
     let maxYValue = this.data[0].y;
     let maxZValue = this.data[0].z;
@@ -103,18 +105,28 @@ export class Scatterplot{
       }
     }
     // scale positions based on largest value found in xyz to absVal(maxGridDimension)
-    this.xScale = d3.scaleLinear().domain([0, maxXValue]).range([0, this.GRID_BOUND]);
-    this.yScale = d3.scaleLinear().domain([0, maxYValue]).range([0, this.GRID_BOUND]);
-    this.zScale = d3.scaleLinear().domain([0, maxZValue]).range([0, this.GRID_BOUND]);
+    this.xScale = d3.scaleLinear().domain([0, maxXValue]).range([0, xMapping]);
+    this.yScale = d3.scaleLinear().domain([0, maxYValue]).range([0, yMapping]);
+    this.zScale = d3.scaleLinear().domain([0, maxZValue]).range([0, zMapping]);
   }
 
+changeScales(xMapping: number, yMapping: number, zMapping: number){
+  this.XGRID_BOUND = xMapping;
+  this.YGRID_BOUND = yMapping;
+  this.ZGRID_BOUND = zMapping;
+  this.generatePts();
+}
+
   private generatePts() {
-    this.scalePosition();
+    this.scalePosition(this.XGRID_BOUND, this.YGRID_BOUND, this.ZGRID_BOUND);
      // enter identifies any DOM elements to be added when # array elements doesn't match
     d3.select(this.dataPointContainer).selectAll(this.shape).data(this.data).enter().append(this.shape);
+    this.ptSelection = d3.select(this.dataPointContainer).selectAll(this.shape);
+    this.ptSelection
     // d is data at index, i within
     // select all shapes within given container
-    d3.select(this.dataPointContainer).selectAll(this.shape).attr('radius', DATA_PT_RADIUS).attr('position', (d, i) => {
+    .attr('radius', DATA_PT_RADIUS)
+    .attr('position', (d, i) => {
       const x = this.xScale((d as VRScatterPoint).x);
       const y = this.yScale((d as VRScatterPoint).y);
       const z = this.zScale((d as VRScatterPoint).z);
@@ -124,7 +136,6 @@ export class Scatterplot{
       // (g[i] as AFRAME.Entity).setAttribute('hover_cards', '');
       (g[i] as AFRAME.Entity).addEventListener('mouseenter', () => {
         const hoverIdx = i;
-        console.log(this.cardSelection);
         this.cardSelection.filter((d, i) => { return i === hoverIdx}).attr('visible', true);
       });
       (g[i] as AFRAME.Entity).addEventListener('mouseleave', () => {

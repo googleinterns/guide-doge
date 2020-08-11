@@ -9,12 +9,15 @@ const tilePos: Record<string, string> = {
   ['zPos']: '1 1.5 -4',
   ['zNeg']: '1 .5 -4',
 };
-
 const speedPos: Record<string, string> = {
-    ['minus']: '-1 2.5 -4',
-    ['plus']: '.25 2.5 -4',
-    ['label']: '0 2.5 -4',
-   
+    ['minus']: '-1 2.75 -5',
+    ['plus']: '.25 2.75 -5',
+    ['label']: '0 2.75 -5',
+};
+const xScalePos: Record<string, string> = {
+    ['decrement']: '-1 -.5 -5',
+    ['increment']: '.25 -.5 -5',
+    ['label']: '0 -.5 -5',
 };
 
 const dimensions = ['x', 'y', 'z'];
@@ -81,13 +84,10 @@ createNavTile(dim: string){
         positivePos = tilePos.zPos;
         negativePos = tilePos.zNeg;
     }
-
     (navTilePos as AFRAME.Entity).setAttribute('position', positivePos);
     (navTileNeg as AFRAME.Entity).setAttribute('position', negativePos);
     (navTilePos as AFRAME.Entity).setAttribute('material', `color: white; opacity: .75; src: ${imagePos}`);
     (navTileNeg as AFRAME.Entity).setAttribute('material', `color: white; opacity: .75; src: ${imageNeg}`);
-    
-    
     var intervalPos; 
     var intervalNeg;
     // set event listeners with scatter.DAYDREAM... delta in order to have updated speeds
@@ -139,12 +139,13 @@ createCtrlPanel(){
     this.createSpeedCtrls('plus');
     this.createSpeedCtrls('neg');
     this.createSpeedCtrls('label');
+    this.createScaleCtrls('increment');
+    this.createScaleCtrls('decrement');
+    this.createScaleCtrls('label');
 }
 
 //create speedctrls and 'speed' label based on sign parameter
 createSpeedCtrls(sign: string){
-                  console.log(this.scatter.DAYDREAM_NAV_SPEED);
-
     const speedTile = document.createElement('a-entity') as AFRAME.Entity;
     document.querySelector('[camera]').appendChild(speedTile);
     // document.getElementById('ctrls')!.appendChild(navTile);
@@ -170,10 +171,38 @@ createSpeedCtrls(sign: string){
     //   else if (sign === 'label'){
     //       // speedTile.setAttribute('geometry', 'primitive: plane; height: auto; width: auto');
     //       speedTile.setAttribute('position', speedPos.label);
-    //       speedTile.setAttribute('text', `value: Speed ${scatter.DAYDREAM_NAV_SPEED}; align: center; color: black; shader: msdf; font: https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/rubikmonoone/RubikMonoOne-Regular.json;`);
+    //       speedTile.setAttribute('text', `value: Speed ${this.scatter.DAYDREAM_NAV_SPEED}; align: center; color: black; shader: msdf; font: https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/rubikmonoone/RubikMonoOne-Regular.json;`);
     //       speedTile.setAttribute('scale', '3 3 1');  
     //       speedTile.addEventListener('mousedown', () => {
-    //           console.log(scatter.DAYDREAM_NAV_SPEED);
+    //       });   
+    //   }
+  }
+
+  createScaleCtrls(delta: string){
+    const speedTile = document.createElement('a-entity') as AFRAME.Entity;
+    document.querySelector('[camera]').appendChild(speedTile);
+    // document.getElementById('ctrls')!.appendChild(navTile);
+    if (delta === 'increment'){
+      speedTile.setAttribute('geometry', 'primitive: plane; height: 1; width: 1');
+      speedTile.setAttribute('position', xScalePos.increment);
+      speedTile.setAttribute('material', 'color: white; opacity: .75; src: ../assets/plus.png;');
+      (speedTile as AFRAME.Entity).addEventListener('mousedown', () => {
+        this.scatter.changeScales(this.scatter.XGRID_BOUND + 50, 50, 50);
+      });
+      } else if (delta === 'decrement'){
+          speedTile.setAttribute('geometry', 'primitive: plane; height: 1; width: 1');
+          speedTile.setAttribute('position', xScalePos.decrement);
+          speedTile.setAttribute('material', 'color: white; opacity: .75; src: ../assets/negative.png');
+          (speedTile as AFRAME.Entity).addEventListener('mousedown', () => {
+            this.scatter.changeScales(this.scatter.XGRID_BOUND - 50, 50, 50);
+          });
+      } 
+    //   else if (delta === 'label'){
+    //       // speedTile.setAttribute('geometry', 'primitive: plane; height: auto; width: auto');
+    //       speedTile.setAttribute('position', xScalePos.label);
+    //       speedTile.setAttribute('text', `value: Speed ${this.scatter.DAYDREAM_NAV_SPEED}; align: center; color: black; shader: msdf; font: https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/rubikmonoone/RubikMonoOne-Regular.json;`);
+    //       speedTile.setAttribute('scale', '3 3 1');  
+    //       speedTile.addEventListener('mousedown', () => {
     //       });   
     //   }
   }
