@@ -21,9 +21,9 @@ export interface ScatterPlotStyle {
 
 export class Scatterplot{
     readonly AILERON_FONT = 'https://cdn.aframe.io/fonts/Aileron-Semibold.fnt';
-    XGRID_BOUND = 50;
+    private XGRID_BOUND = 50;
     private YGRID_BOUND = 50;
-    ZGRID_BOUND = 50;
+    private ZGRID_BOUND = 50;
     private data: VRScatterPoint[];
     private shape: string;
     private container: HTMLElement | null;
@@ -86,6 +86,17 @@ export class Scatterplot{
   getDaydreamNavSpeed(): number{
     return this.DAYDREAM_NAV_SPEED;
   }
+
+  getGridBound(dimension: string): number{
+    if(dimension === 'x'){
+      return this.XGRID_BOUND;
+    } else if(dimension === 'y'){
+        return this.YGRID_BOUND;
+    } else if(dimension === 'z'){
+        return this.ZGRID_BOUND;
+    }
+  }
+
 
   private scalePosition(xMapping: number, yMapping: number, zMapping: number){
     let maxXValue = this.data[0].x;
@@ -150,7 +161,7 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
     d3.select(this.dataTextContainer).selectAll('a-entity').data(this.data).enter().append('a-entity');
     this.cardSelection =  d3.select(this.dataTextContainer).selectAll('a-entity');
     this.cardSelection
-      .attr('geometry', 'primitive: plane; height: auto; width: .5')
+      .attr('geometry', 'primitive: plane; height: .2; width: .5')
       .attr('material', 'color: blue; opacity: .5')
       .attr('text', (d, i) => {
         const categories = (d as VRScatterPoint).categories.browser + ', ' + (d as VRScatterPoint).categories.country
@@ -161,17 +172,17 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
         const z = (d as VRScatterPoint).z;
         const nbsp = 'nbsp;';
         return `
-        value: \n${categories} Position:\n\n\u00A0\u00A0\u00A0${this.metrics[0]} (x): ${x}\n\n\t${this.metrics[1]}(y): ${y.toFixed(2)}\n\n\t${this.metrics[2]} (z): ${z}\n;
+        value: \n${categories} Position:\n\n\t--${this.metrics[0]} (x): ${x}\n\n\t--${this.metrics[1]} (y): ${y.toFixed(2)}\n\n\t--${this.metrics[2]} (z): ${z};
         xOffset: ${DATA_PT_RADIUS / 3};
         shader: msdf; 
-        font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/rubikmonoone/RubikMonoOne-Regular.json;`;
+        font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/roboto/Roboto-Medium.json;`;
       })
       .attr('visible', false)
       .attr('position', (d, i) => {
         const x = this.xScale((d as VRScatterPoint).x);
         const y = this.yScale((d as VRScatterPoint).y);
         const z = this.zScale((d as VRScatterPoint).z);
-        return `${0} ${0} ${-(.25)}`;
+        return `${0} ${-.15} ${-(.5)}`;
       });
   }
 
