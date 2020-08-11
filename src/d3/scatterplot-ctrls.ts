@@ -15,7 +15,9 @@ const speedPos: Record<string, string> = {
     ['plus']: '.25 2.5 -4',
     ['label']: '0 2.5 -4',
    
-  };
+};
+
+const dimensions = ['x', 'y', 'z'];
 
 export class Controls{
   scatter: Scatterplot;
@@ -49,69 +51,88 @@ document.addEventListener('keydown', (event) => {
 
 // abstracted calling of creating navigation tiles (3 dimensions - pos/neg direction)
 createNavTiles(DAYDREAM_NAV_SPEED: number){
-  this.createNavTile('x', DAYDREAM_NAV_SPEED);
-  this.createNavTile('x', -DAYDREAM_NAV_SPEED);
-  this.createNavTile('y', DAYDREAM_NAV_SPEED);
-  this.createNavTile('y', -DAYDREAM_NAV_SPEED);
-  this.createNavTile('z', DAYDREAM_NAV_SPEED);
-  this.createNavTile('z', -DAYDREAM_NAV_SPEED);
+  for (let dimension of dimensions){
+      this.createNavTile(dimension);
+  }
 }
 
 // create 6 arrows - 3 per dimenstion - to allow for movement in scene
-createNavTile(dim: string, velocity: number){
-    let rigPos = (document.getElementById('rig') as AFRAME.Entity).object3D.position;
-    const navTile = document.createElement('a-entity');
-    // document.querySelector('[camera]').appendChild(navTile);
-    document.querySelector('[camera]').appendChild(navTile);
-    (navTile as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: 1; width: 1');
+createNavTile(dim: string){
+    var rigPos = (document.getElementById('rig') as AFRAME.Entity).object3D.position;
+    const navTilePos = document.createElement('a-entity');
+    document.querySelector('[camera]').appendChild(navTilePos);
+    const navTileNeg = document.createElement('a-entity');
+    document.querySelector('[camera]').appendChild(navTileNeg);
+    (navTilePos as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: 1; width: 1');
+    (navTileNeg as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: 1; width: 1');
+    var positivePos = '';
+    var negativePos = '';
+    var imagePos = '../assets/up_arrow.png';
+    var imageNeg = '../assets/down_arrow.png';
     if (dim === 'x'){
-      if (velocity > 0){
-        (navTile as AFRAME.Entity).setAttribute('position', tilePos.xPos);
-        (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/right_arrow.png');
-      } else {
-        (navTile as AFRAME.Entity).setAttribute('position', tilePos.xNeg);
-        (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/left_arrow.png');
-      }
-      // set event listeners with scatter.DAYDREAM... delta in order to have updated speeds
-      (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
-        rigPos.set(
-          rigPos.x + this.scatter.DAYDREAM_NAV_SPEED,
-          rigPos.y,
-          rigPos.z
-        );
-      });
+      positivePos = tilePos.xPos;
+      negativePos = tilePos.xNeg;
+      imagePos = '../assets/right_arrow.png';
+      imageNeg = '../assets/left_arrow.png';
     } else if (dim === 'y'){
-      if (velocity > 0){
-        (navTile as AFRAME.Entity).setAttribute('position', tilePos.yPos);
-        (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/up_arrow.png');
-      } else {
-        (navTile as AFRAME.Entity).setAttribute('position', tilePos.yNeg);
-        (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/down_arrow.png');
-      }
-      (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
-        rigPos.set(
-          rigPos.x,
-          rigPos.y + this.scatter.DAYDREAM_NAV_SPEED,
-          rigPos.z
-        );
-      });
+        positivePos = tilePos.yPos;
+        negativePos = tilePos.yNeg;
     } else if (dim === 'z'){
-      if (velocity > 0){
-        (navTile as AFRAME.Entity).setAttribute('position', tilePos.zPos);
-        (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/up_arrow.png');
-      } else {
-        (navTile as AFRAME.Entity).setAttribute('position', tilePos.zNeg);
-        (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/down_arrow.png');
-      }
-      (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
-        rigPos.set(
-          rigPos.x,
-          rigPos.y,
-          rigPos.z + this.scatter.DAYDREAM_NAV_SPEED
-        );
-      });
+        positivePos = tilePos.zPos;
+        negativePos = tilePos.zNeg;
     }
+
+    (navTilePos as AFRAME.Entity).setAttribute('position', positivePos);
+    (navTileNeg as AFRAME.Entity).setAttribute('position', negativePos);
+    (navTilePos as AFRAME.Entity).setAttribute('material', `color: white; opacity: .75; src: ${imagePos}`);
+    (navTileNeg as AFRAME.Entity).setAttribute('material', `color: white; opacity: .75; src: ${imageNeg}`);
+    
+    
+    var intervalPos; 
+    var intervalNeg;
+    // set event listeners with scatter.DAYDREAM... delta in order to have updated speeds
+    (navTilePos as AFRAME.Entity).addEventListener('mousedown', () => {
+        intervalPos = setInterval(() => {
+          var xDelta = 0;
+          var yDelta = 0;
+          var zDelta = 0;
+          if (dim === 'x'){
+              xDelta = this.scatter.DAYDREAM_NAV_SPEED;
+          } else if (dim === 'y'){
+              yDelta = this.scatter.DAYDREAM_NAV_SPEED;
+          } else if (dim === 'z'){
+              zDelta = this.scatter.DAYDREAM_NAV_SPEED;
+          }
+          rigPos.set(
+              rigPos.x + xDelta,
+              rigPos.y + yDelta,
+              rigPos.z + zDelta
+          );
+        }, 200);
+      });
+      (navTilePos as AFRAME.Entity).addEventListener('mouseup', () => { clearInterval(intervalPos);});
+    (navTileNeg as AFRAME.Entity).addEventListener('mousedown', () => {
+      intervalNeg = setInterval(() => {
+        var xDelta = 0;
+        var yDelta = 0;
+        var zDelta = 0;
+        if (dim === 'x'){
+            xDelta = this.scatter.DAYDREAM_NAV_SPEED;
+        } else if (dim === 'y'){
+            yDelta = this.scatter.DAYDREAM_NAV_SPEED;
+        } else if (dim === 'z'){
+            zDelta = this.scatter.DAYDREAM_NAV_SPEED;
+        }
+        rigPos.set(
+            rigPos.x - xDelta,
+            rigPos.y - yDelta,
+            rigPos.z - zDelta
+        );
+      }, 200);
+    });
+    (navTileNeg as AFRAME.Entity).addEventListener('mouseup', () => { clearInterval(intervalNeg);}); 
   }
+  
 
 // abstracted calling to create collapsible control panel with speed and scale adjustments
 createCtrlPanel(){
