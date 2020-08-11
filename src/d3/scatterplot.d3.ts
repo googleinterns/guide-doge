@@ -95,6 +95,7 @@ export class Scatterplot{
     } else if(dimension === 'z'){
         return this.ZGRID_BOUND;
     }
+    return this.XGRID_BOUND;
   }
 
 
