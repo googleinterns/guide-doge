@@ -182,10 +182,9 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
   }
 
   private redrawGridPlane(){
-    var grids = this.container!.getElementsByClassName('grids');
-    for (const grid of grids){
-      this.container!.removeChild(grid);
-    }
+    this.container!.removeChild(document.getElementById('xGrid')!);
+    this.container!.removeChild(document.getElementById('yGrid')!);
+    this.container!.removeChild(document.getElementById('zGrid')!);
     this.createGridPlane();
   }
 
