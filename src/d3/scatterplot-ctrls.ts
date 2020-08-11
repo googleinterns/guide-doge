@@ -36,11 +36,12 @@ export class Controls{
 document.addEventListener('keydown', (event) => {
   const camPos = document.querySelector('[camera]').object3D.position;
   if (event.code === 'KeyQ'){
-    camPos.set(
-      camPos.x,
-      camPos.y + this.scatter.DAYDREAM_NAV_SPEED,
-      camPos.z
-    );
+    // camPos.set(
+    //   camPos.x,
+    //   camPos.y + this.scatter.DAYDREAM_NAV_SPEED,
+    //   camPos.z
+    // );
+    this.scatter.changeScales(50, 50, this.scatter.ZGRID_BOUND + 50);
     }
     if (event.code === 'KeyZ'){
       camPos.set(

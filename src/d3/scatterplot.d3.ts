@@ -23,7 +23,7 @@ export class Scatterplot{
     readonly AILERON_FONT = 'https://cdn.aframe.io/fonts/Aileron-Semibold.fnt';
     XGRID_BOUND = 50;
     private YGRID_BOUND = 50;
-    private ZGRID_BOUND = 50;
+    ZGRID_BOUND = 50;
     private data: VRScatterPoint[];
     private shape: string;
     private container: HTMLElement | null;
@@ -54,9 +54,6 @@ export class Scatterplot{
     this.dataPointContainer = document.createElement('a-entity');
     this.dataPointContainer.className = 'dataPts';
     container.appendChild(this.dataPointContainer);
-    if (this.data.length > 0 && !this.loaded){
-      this.generatePts();
-    }
     this.createSky('gray');
     this.createGridPlane();
     
@@ -66,10 +63,11 @@ export class Scatterplot{
       this.dataTextContainer = document.createElement('a-entity');
       this.dataTextContainer.className = 'dataTxt';
       document.querySelector('[camera]').appendChild(this.dataTextContainer);
-      this.generateText();
+     
       if (this.data.length > 0){
         this.generatePts();
       }
+      this.generateText();
       const control = new Controls(this);
       // this.createCtrlTools();
     }, 2000);
@@ -111,10 +109,12 @@ export class Scatterplot{
   }
 
 changeScales(xMapping: number, yMapping: number, zMapping: number){
+  d3.select(this.dataPointContainer).selectAll(this.shape).data(this.data).remove();
   this.XGRID_BOUND = xMapping;
   this.YGRID_BOUND = yMapping;
   this.ZGRID_BOUND = zMapping;
   this.generatePts();
+  this.redrawGridPlane();
 }
 
   private generatePts() {
@@ -179,6 +179,14 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
     d3.select(this.container).selectAll(this.shape).attr('color', () => {
       return color;
     });
+  }
+
+  private redrawGridPlane(){
+    var grids = this.container!.getElementsByClassName('grids');
+    for (const grid of grids){
+      this.container!.removeChild(grid);
+    }
+    this.createGridPlane();
   }
 
   private createGridPlane()
