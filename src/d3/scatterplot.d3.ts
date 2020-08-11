@@ -2,10 +2,17 @@ import * as AFRAME from 'aframe';
 import * as d3 from 'd3';
 import { VRScatterPoint } from '../datasets/queries/vr.query';
 import { MetaType } from '../datasets/metas/types';
-import { addQZCtrls, createNavTiles, createCtrlPanel } from './scatterplot-ctrls';
+import { Controls } from './scatterplot-ctrls';
 const PROXY_FLAG = '__keyboard-controls-proxy';
 const DATA_PT_RADIUS = .05;
 // const CAM_Y_ROTATION = AFRAME.THREE.MathUtils.degToRad(135);
+
+const speedPos: Record<string, string> = {
+    ['minus']: '-.75 1.5 -4',
+    ['plus']: '.25 1.5 -4',
+    ['label']: '-.25 1.5 -4',
+   
+  };
 
 export interface ScatterPlotStyle {
   color: string | number;
@@ -44,7 +51,6 @@ export class Scatterplot{
     this.dataPointContainer = document.createElement('a-entity');
     this.dataPointContainer.className = 'dataPts';
     container.appendChild(this.dataPointContainer);
-    this.DAYDREAM_NAV_SPEED = .1;
     if (this.data.length > 0 && !this.loaded){
       this.generatePts();
     }
@@ -52,20 +58,33 @@ export class Scatterplot{
     this.createGridPlane();
     
     if (!this.loaded){
+      window.onload = () =>{
+        this.DAYDREAM_NAV_SPEED = .1;
+        // this.createCtrlPanel();
+      };
     setTimeout(() => {
+      this.DAYDREAM_NAV_SPEED = .1;
       this.dataTextContainer = document.createElement('a-entity');
       this.dataTextContainer.className = 'dataTxt';
       document.querySelector('[camera]').appendChild(this.dataTextContainer);
       this.generateText();
-      this.createCtrlTools();
+      const control = new Controls(this);
+      // this.createCtrlTools();
     }, 2000);
   }
   this.loaded = true;
 }
-  private createCtrlTools(){
-    addQZCtrls(this);
-    createNavTiles(this.DAYDREAM_NAV_SPEED, this);
-    createCtrlPanel(this); 
+  // private createCtrlTools(){
+  //   addQZCtrls(this);
+  //   createNavTiles(this.DAYDREAM_NAV_SPEED, this);
+  //   createCtrlPanel(this); 
+  // }
+  setDaydreamNavSpeed(setSpeed: number){
+    this.DAYDREAM_NAV_SPEED = setSpeed;
+  }
+
+  getDaydreamNavSpeed(): number{
+    return this.DAYDREAM_NAV_SPEED;
   }
 
   private scalePosition(){

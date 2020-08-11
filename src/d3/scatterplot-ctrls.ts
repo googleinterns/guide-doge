@@ -11,52 +11,59 @@ const tilePos: Record<string, string> = {
 };
 
 const speedPos: Record<string, string> = {
-    ['minus']: '-.75 1.5 -4',
-    ['plus']: '.25 1.5 -4',
-    ['label']: '-.25 1.5 -4',
+    ['minus']: '-1 2.5 -4',
+    ['plus']: '.25 2.5 -4',
+    ['label']: '0 2.5 -4',
    
   };
 
-export function addQZCtrls(scatter: Scatterplot){
+export class Controls{
+  scatter: Scatterplot;
+  constructor(scatter: Scatterplot){
+  this.scatter = scatter;
+  this.addQZCtrls();
+  this.createNavTiles(this.scatter.DAYDREAM_NAV_SPEED);
+  this.createCtrlPanel(); 
+  }
+
+
+  addQZCtrls(){
 document.addEventListener('keydown', (event) => {
   const camPos = document.querySelector('[camera]').object3D.position;
   if (event.code === 'KeyQ'){
     camPos.set(
       camPos.x,
-      camPos.y + scatter.DAYDREAM_NAV_SPEED,
+      camPos.y + this.scatter.DAYDREAM_NAV_SPEED,
       camPos.z
     );
-    console.log(scatter.DAYDREAM_NAV_SPEED);
-
     }
     if (event.code === 'KeyZ'){
       camPos.set(
         camPos.x,
-        camPos.y - scatter.DAYDREAM_NAV_SPEED,
+        camPos.y - this.scatter.DAYDREAM_NAV_SPEED,
         camPos.z
         );
-        console.log(scatter.DAYDREAM_NAV_SPEED);
     }
   });
 }
 
 // abstracted calling of creating navigation tiles (3 dimensions - pos/neg direction)
-export function createNavTiles(DAYDREAM_NAV_SPEED: number, scatter: Scatterplot){
-  createNavTile('x', DAYDREAM_NAV_SPEED, scatter);
-  createNavTile('x', -DAYDREAM_NAV_SPEED, scatter);
-  createNavTile('y', DAYDREAM_NAV_SPEED, scatter);
-  createNavTile('y', -DAYDREAM_NAV_SPEED, scatter);
-  createNavTile('z', DAYDREAM_NAV_SPEED, scatter);
-  createNavTile('z', -DAYDREAM_NAV_SPEED, scatter);
+createNavTiles(DAYDREAM_NAV_SPEED: number){
+  this.createNavTile('x', DAYDREAM_NAV_SPEED);
+  this.createNavTile('x', -DAYDREAM_NAV_SPEED);
+  this.createNavTile('y', DAYDREAM_NAV_SPEED);
+  this.createNavTile('y', -DAYDREAM_NAV_SPEED);
+  this.createNavTile('z', DAYDREAM_NAV_SPEED);
+  this.createNavTile('z', -DAYDREAM_NAV_SPEED);
 }
 
 // create 6 arrows - 3 per dimenstion - to allow for movement in scene
-function createNavTile(dim: string, velocity: number, scatter: Scatterplot){
+createNavTile(dim: string, velocity: number){
     let rigPos = (document.getElementById('rig') as AFRAME.Entity).object3D.position;
     const navTile = document.createElement('a-entity');
     // document.querySelector('[camera]').appendChild(navTile);
     document.querySelector('[camera]').appendChild(navTile);
-    (navTile as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: .5; width: .5');
+    (navTile as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: 1; width: 1');
     if (dim === 'x'){
       if (velocity > 0){
         (navTile as AFRAME.Entity).setAttribute('position', tilePos.xPos);
@@ -68,7 +75,7 @@ function createNavTile(dim: string, velocity: number, scatter: Scatterplot){
       // set event listeners with scatter.DAYDREAM... delta in order to have updated speeds
       (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
         rigPos.set(
-          rigPos.x + scatter.DAYDREAM_NAV_SPEED,
+          rigPos.x + this.scatter.DAYDREAM_NAV_SPEED,
           rigPos.y,
           rigPos.z
         );
@@ -84,7 +91,7 @@ function createNavTile(dim: string, velocity: number, scatter: Scatterplot){
       (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
         rigPos.set(
           rigPos.x,
-          rigPos.y + scatter.DAYDREAM_NAV_SPEED,
+          rigPos.y + this.scatter.DAYDREAM_NAV_SPEED,
           rigPos.z
         );
       });
@@ -100,43 +107,42 @@ function createNavTile(dim: string, velocity: number, scatter: Scatterplot){
         rigPos.set(
           rigPos.x,
           rigPos.y,
-          rigPos.z + scatter.DAYDREAM_NAV_SPEED
+          rigPos.z + this.scatter.DAYDREAM_NAV_SPEED
         );
       });
     }
   }
 
 // abstracted calling to create collapsible control panel with speed and scale adjustments
-export function createCtrlPanel(scatter: Scatterplot){
-    createSpeedCtrls('plus', scatter);
-    createSpeedCtrls('neg', scatter);
-    createSpeedCtrls('label', scatter);
+createCtrlPanel(){
+    this.createSpeedCtrls('plus');
+    this.createSpeedCtrls('neg');
+    this.createSpeedCtrls('label');
 }
 
 //create speedctrls and 'speed' label based on sign parameter
-function createSpeedCtrls(sign: string, scatter: Scatterplot){
-                  console.log(scatter.DAYDREAM_NAV_SPEED);
+createSpeedCtrls(sign: string){
+                  console.log(this.scatter.DAYDREAM_NAV_SPEED);
 
     const speedTile = document.createElement('a-entity') as AFRAME.Entity;
     document.querySelector('[camera]').appendChild(speedTile);
     // document.getElementById('ctrls')!.appendChild(navTile);
     if (sign === 'plus'){
-      speedTile.setAttribute('geometry', 'primitive: plane; height: .35; width: .35');
+      speedTile.setAttribute('geometry', 'primitive: plane; height: 1; width: 1');
       speedTile.setAttribute('position', speedPos.plus);
       speedTile.setAttribute('material', 'color: white; opacity: .75; src: ../assets/plus.png;');
       (speedTile as AFRAME.Entity).addEventListener('mousedown', () => {
-        scatter.DAYDREAM_NAV_SPEED = scatter.DAYDREAM_NAV_SPEED + .1;
-        console.log(scatter.DAYDREAM_NAV_SPEED);
-
+        this.scatter.setDaydreamNavSpeed(this.scatter.getDaydreamNavSpeed() + .1);
+        console.log(this.scatter.getDaydreamNavSpeed());
       });
       } else if (sign === 'neg'){
-          speedTile.setAttribute('geometry', 'primitive: plane; height: .35; width: .35');
+          speedTile.setAttribute('geometry', 'primitive: plane; height: 1; width: 1');
           speedTile.setAttribute('position', speedPos.minus);
           speedTile.setAttribute('material', 'color: white; opacity: .75; src: ../assets/negative.png');
           (speedTile as AFRAME.Entity).addEventListener('mousedown', () => {
-            if (scatter.DAYDREAM_NAV_SPEED > 0){
-              scatter.DAYDREAM_NAV_SPEED = scatter.DAYDREAM_NAV_SPEED - .1;
-              console.log(scatter.DAYDREAM_NAV_SPEED);
+            if (this.scatter.DAYDREAM_NAV_SPEED > 0){
+              this.scatter.setDaydreamNavSpeed(this.scatter.getDaydreamNavSpeed() - .1);
+              console.log(this.scatter.getDaydreamNavSpeed());
             }
           });
       } 
@@ -150,4 +156,5 @@ function createSpeedCtrls(sign: string, scatter: Scatterplot){
     //       });   
     //   }
   }
+}
 
