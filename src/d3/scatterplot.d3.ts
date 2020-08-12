@@ -177,7 +177,7 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
         shader: msdf; 
         font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/roboto/Roboto-Medium.json;`;
       })
-      .attr('visible', true)
+      .attr('visible', false)
       .attr('position', (d, i) => {
         const x = this.xScale((d as VRScatterPoint).x);
         const y = this.yScale((d as VRScatterPoint).y);
