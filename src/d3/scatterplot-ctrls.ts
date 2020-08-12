@@ -33,20 +33,32 @@ const zScalePos: Record<string, string> = {
 };
 
 const allScalePos: Record<string, string> = {
-    ['decrement']: '-.5 0 -3',
-    ['increment']: '.5 0 -3',
-    ['label']: '0 -.05 -3.01',
+    ['decrement']: '-.5 .15 -3',
+    ['increment']: '.5 .15 -3',
+    ['label']: '0 .1 -3.01',
 };
+
+const toggleBarPos: Record<string, string> = {
+  ['bar']: '0 -.10 -3',
+  ['label']: '0 -.15 -3.01',
+}
+
+const bckgrdPos: Record<string, string> = {
+  ['place']: '0 .8 -3.02',
+}
 
 const dimensions = ['x', 'y', 'z'];
 
 export class Controls{
+  showCtrls: boolean;
   scatter: Scatterplot;
+
   constructor(scatter: Scatterplot){
-  this.scatter = scatter;
-  this.addQZCtrls();
-  this.createNavTiles(this.scatter.DAYDREAM_NAV_SPEED);
-  this.createCtrlPanel(); 
+    this.showCtrls = true;
+    this.scatter = scatter;
+    this.addQZCtrls();
+    this.createNavTiles(this.scatter.DAYDREAM_NAV_SPEED);
+    this.createCtrlPanel(); 
   }
 
 
@@ -81,10 +93,8 @@ createNavTiles(DAYDREAM_NAV_SPEED: number){
 createNavTile(dim: string){
     var rigPos = (document.getElementById('rig') as AFRAME.Entity).object3D.position;
     const navTilePos = document.createElement('a-entity');
-    navTilePos.className = 'clickable';
     document.querySelector('[camera]').appendChild(navTilePos);
     const navTileNeg = document.createElement('a-entity');
-    navTileNeg.className = 'clickable';
     document.querySelector('[camera]').appendChild(navTileNeg);
     (navTilePos as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: .75; width: .75');
     (navTileNeg as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: .75; width: .75');
@@ -158,12 +168,15 @@ createNavTile(dim: string){
 
 // abstracted calling to create collapsible control panel with speed and scale adjustments
 createCtrlPanel(){
+  this.createBackground();
     this.createSpeedCtrls('plus');
     this.createSpeedCtrls('neg');
     this.createSpeedCtrls('label');
     for (const dimension of dimensions){
       this.createScaleCtrls(dimension);
     }
+    this.createScaleCtrls('all');
+    this.createToggleBar();
 }
 
 //create speedctrls and 'speed' label based on sign parameter
@@ -241,7 +254,15 @@ createSpeedCtrls(sign: string){
         negativePos = zScalePos.decrement;
         labelPos = zScalePos.label;
         labelName = 'Z-Scale';
-    }
+    } else if (dim === 'z'){
+        xScaleDelta = 10;
+        yScaleDelta = 10;
+        zScaleDelta = 10;
+        positivePos = allScalePos.increment;
+        negativePos = allScalePos.decrement;
+        labelPos = allScalePos.label;
+        labelName = 'XYZ-Scale';
+      }
     // document.getElementById('ctrls')!.appendChild(navTile);
     
     scaleTilePos.setAttribute('position', positivePos);
@@ -261,6 +282,42 @@ createSpeedCtrls(sign: string){
     labelTile.setAttribute('position', labelPos);
     labelTile.setAttribute('text', `value: ${labelName}; align: center; color: black; shader: msdf; font: https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/rubikmonoone/RubikMonoOne-Regular.json;`);
     labelTile.setAttribute('scale', '3 3 1');    
+  }
+
+  private createToggleBar(){
+    const toggleBar = document.createElement('a-entity');
+    document.querySelector('[camera]').appendChild(toggleBar);
+    toggleBar.setAttribute('geometry', 'primitive: plane; height: .1; width: 1.2');
+    toggleBar.setAttribute('material', 'color: white; opacity: .75');
+    toggleBar.setAttribute('position', toggleBarPos.bar);
+    const toggleText = document.createElement('a-entity');
+    document.querySelector('[camera]').appendChild(toggleText);
+    toggleText.setAttribute('position', toggleBarPos.label);
+    toggleText.setAttribute('text', 'value: Open; align: center; color: black; shader: msdf; font: https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/rubikmonoone/RubikMonoOne-Regular.json;');
+    toggleText.setAttribute('scale', '3 3 1');
+    toggleBar.addEventListener('mousedown', () => {
+      const controlItems = document.getElementsByClassName('clickable');
+      for (let item of (controlItems as unknown as Array<Element>)){
+        (item as AFRAME.Entity).setAttribute('visible', !this.showCtrls);
+      }
+      this.showCtrls = !this.showCtrls;
+      toggleText.setAttribute('text', () => {
+        var text = '';
+        if (this.showCtrls)
+          text = 'Close';
+        else
+          text = 'Open';
+        return `value: \n${text}; align: center; color: black; shader: msdf; font: https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/rubikmonoone/RubikMonoOne-Regular.json;`;
+      });
+    });
+  }
+
+  private createBackground(){
+    const bckgrd = document.createElement('a-entity');
+    document.querySelector('[camera]').appendChild(bckgrd);
+    bckgrd.setAttribute('geometry', 'primitive: plane; height: 2.3; width: 1.5');
+    bckgrd.setAttribute('material', 'color: black; opacity: .55');
+    bckgrd.setAttribute('position', bckgrdPos.place);
   }
 }
 
