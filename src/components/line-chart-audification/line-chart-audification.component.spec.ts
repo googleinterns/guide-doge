@@ -42,7 +42,7 @@ describe('LineChartAudificationComponent', () => {
     const host = hostFixture.componentInstance;
     host.meta = createLineChartMeta(
       'Title',
-      () => mockData,
+      () => ({ data: mockData }),
     );
     TestBed.resetTestingModule();
 

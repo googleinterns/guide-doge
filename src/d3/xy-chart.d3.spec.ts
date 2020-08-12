@@ -11,7 +11,7 @@ type TestLegendItemStyle = {};
 type TestDatum = TimeSeriesDatum<TestLegendItemStyle>;
 
 interface SubjectRenderOptions extends RenderOptions<TestDatum> {
-  data$: Subject<TestDatum[]>;
+  data$: Subject<{ data: TestDatum[] }>;
   activePoint$: Subject<TimeSeriesPoint | null>;
 }
 
@@ -56,7 +56,7 @@ describe('XYChartD3', () => {
       elementRef: new ElementRef<HTMLElement>(containerElement),
       width: 256,
       height: 256,
-      data$: new Subject<LineChartDatum[]>(),
+      data$: new Subject<{ data: LineChartDatum[] }>(),
       activePoint$: new Subject<TimeSeriesPoint | null>(),
     };
     xyChartD3 = new TestXYChartD3(renderOptions);
@@ -74,7 +74,7 @@ describe('XYChartD3', () => {
     expect(xyChartD3.dataFlag).toBe(0);
     xyChartD3.render();
     expect(xyChartD3.dataFlag).toBe(1);
-    renderOptions.data$.next(mockData);
+    renderOptions.data$.next({ data: mockData });
     expect(xyChartD3.dataFlag).toBe(2);
   });
 
@@ -96,7 +96,7 @@ describe('XYChartD3', () => {
 
   it('should render the legend.', () => {
     xyChartD3.render();
-    renderOptions.data$.next(mockData);
+    renderOptions.data$.next({ data: mockData });
     const textElements = svgElement.querySelectorAll('.xy_chart-legend text');
     expect(textElements.length).toBe(mockData.length);
   });

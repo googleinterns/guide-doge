@@ -34,7 +34,7 @@ describe('LineChartComponent', () => {
   });
 
   it('should have legend items with active points mapped.', () => {
-    component.data$.next(mockData);
+    component.data$.next({ data: mockData });
     component.activePoint = mockPoint;
     const { legendItems } = component;
 

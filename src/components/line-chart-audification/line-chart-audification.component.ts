@@ -89,7 +89,7 @@ export class LineChartAudificationComponent implements AudificationPreference, O
       this.datumIndex$,
     ]).pipe(takeUntil(this.destroy$))
       .subscribe(([data, datumIndex]) => {
-        const { points } = data[datumIndex];
+        const { points } = data.data[datumIndex];
         const values = points.map(datum => datum.y);
         this.domain = points.map(d => d.x).sort(ascendingDate);
         this.range = [...values].sort(ascendingNumber);

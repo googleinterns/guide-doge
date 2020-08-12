@@ -34,7 +34,7 @@ describe('ChartSummarizationComponent', () => {
     const host = hostFixture.componentInstance;
     host.meta = createLineChartMeta(
       'Title',
-      () => mockData,
+      () => ({ data: mockData }),
     );
     TestBed.resetTestingModule();
 
@@ -90,7 +90,7 @@ describe('ChartSummarizationComponent', () => {
   it('should render summaries with validity greater than or equal to threshold.', () => {
     const summarizationElement: HTMLElement = fixture.nativeElement;
     const psummaries = Array.from(summarizationElement.querySelectorAll('p.summary'));
-    for (const summary of mockSummaries){
+    for (const summary of mockSummaries) {
       if (summary.validity >= validityThreshold) {
         expect(psummaries.some(psummary => psummary.textContent?.includes(summary.text))).toBeTrue();
       }
@@ -100,7 +100,7 @@ describe('ChartSummarizationComponent', () => {
   it('should not render summaries with validity less than threshold.', () => {
     const summarizationElement: HTMLElement = fixture.nativeElement;
     const psummaries = Array.from(summarizationElement.querySelectorAll('p.summary'));
-    for (const summary of mockSummaries){
+    for (const summary of mockSummaries) {
       if (summary.validity < validityThreshold) {
         expect(psummaries.every(psummary => !psummary.textContent?.includes(summary.text))).toBeTrue();
       }

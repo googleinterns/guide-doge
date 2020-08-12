@@ -7,7 +7,7 @@ import { createLineChartMeta } from './metas/line-chart.meta';
 import { PreferenceMeta } from '../services/preference/types';
 import { DAY } from '../utils/timeUnits';
 import { combineQuerySummariesFactories } from './summarizations/utils/commons';
-import * as TrendPartialSummarization from './summarizations/trend-partial.summarization';
+import * as TrendPartialSummarization from './summarizations/trend-correlation.summarization';
 
 
 export interface Config {
@@ -86,21 +86,16 @@ export function create(config: Config): Dataset {
 
   const dataCube = generateCube(categories, measures, generateCubeConfig);
 
-  const visitCountQuerySummariesFactory = combineQuerySummariesFactories(
-    TrendPartialSummarization.queryFactory,
-  );
-
   const lineChartMeta = createLineChartMeta(
     'Active Users ',
     createTimeSeriesQuery(dataCube, [{
       label: 'Active Users',
       measureName: 'activeUsers',
-      querySummariesFactory: visitCountQuerySummariesFactory,
     }, {
       label: 'Revenue',
       measureName: 'revenue',
       style: { opacity: .6, color: 'red' },
-    }]),
+    }], TrendPartialSummarization.queryFactory),
   );
 
   const metas = [

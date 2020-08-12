@@ -23,6 +23,10 @@ export class ChartSummarizationComponent implements OnInit {
     return this.host.data[0];
   }
 
+  get globalQuerySumaries() {
+    return this.host.querySummaries;
+  }
+
   get querySumaries() {
     return this.datum.querySummaries;
   }
@@ -32,13 +36,17 @@ export class ChartSummarizationComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    let summaries: Summary[] = [];
     if (this.querySumaries) {
-      this.summaries = this.querySumaries()
-        .filter(({ validity }) => validity >= (this.validityThreshold ?? 0.0))
-        .sort(({ validity: va }, { validity: vb }) => vb - va);
-    } else {
-      this.summaries = [];
+      summaries = [...summaries, ...this.querySumaries()
+        .filter(({ validity }) => validity >= (this.validityThreshold ?? 0.0))];
     }
-  }
+    if (this.globalQuerySumaries) {
+      summaries = [...summaries, ...this.globalQuerySumaries()
+        .filter(({ validity }) => validity >= (this.validityThreshold ?? 0.0))];
+    }
 
+    summaries.sort(({ validity: va }, { validity: vb }) => vb - va);
+    this.summaries = summaries;
+  }
 }

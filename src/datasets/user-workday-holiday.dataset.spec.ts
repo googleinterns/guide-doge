@@ -33,7 +33,7 @@ describe('UserWorkdayHolidayDataset', () => {
 
         for (const range of testRanges) {
           const data = meta.queryData({ range });
-          for (const datum of data) {
+          for (const datum of data.data) {
             for (const point of datum.points) {
               expect(point.x > range[0]).toBeTrue();
               expect(point.x <= range[1]).toBeTrue();

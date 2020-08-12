@@ -14,12 +14,12 @@ describe('CardComponent', () => {
   const testChartMeta1: LineChartMeta = {
     type: MetaType.LINE_CHART,
     title: 'testChart1',
-    queryData: () => [],
+    queryData: () => ({ data: [] }),
   };
   const testChartMeta2: LineChartMeta = {
     type: MetaType.LINE_CHART,
     title: 'testChart2',
-    queryData: () => [],
+    queryData: () => ({ data: [] }),
   };
   const testTabbedChartsMeta: TabbedChartsMeta = {
     type: MetaType.TABBED_CHARTS,

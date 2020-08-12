@@ -7,7 +7,7 @@ import { LineChartDatum } from '../components/line-chart/line-chart.component';
 import { RenderOptions } from './xy-chart.d3';
 
 interface SubjectRenderOptions extends RenderOptions<LineChartDatum> {
-  data$: Subject<LineChartDatum[]>;
+  data$: Subject<{ data: LineChartDatum[] }>;
   activePoint$: Subject<TimeSeriesPoint | null>;
 }
 
@@ -26,7 +26,7 @@ describe('LineChartD3', () => {
       elementRef: new ElementRef<HTMLElement>(containerElement),
       width: 256,
       height: 256,
-      data$: new Subject<LineChartDatum[]>(),
+      data$: new Subject<{ data: LineChartDatum[] }>(),
       activePoint$: new Subject<TimeSeriesPoint | null>(),
     };
     lineChartD3 = new LineChartD3(renderOptions);
@@ -42,14 +42,14 @@ describe('LineChartD3', () => {
 
   it('should update the data upon changes.', async () => {
     lineChartD3.render();
-    renderOptions.data$.next([mockData[0]]);
+    renderOptions.data$.next({ data: [mockData[0]] });
     await new Promise(resolve => setTimeout(resolve, transitionDelay));
     const pathElement = svgElement.querySelector('.xy_chart-data path');
     expect(pathElement).not.toBe(null);
 
     if (pathElement !== null) {
       const dAttribute = pathElement.getAttribute('d');
-      renderOptions.data$.next([mockData[1]]);
+      renderOptions.data$.next({ data: [mockData[0]] });
       await new Promise(resolve => setTimeout(resolve, transitionDelay));
       const newDAttribute = pathElement.getAttribute('d');
       expect(newDAttribute).not.toBe(dAttribute);

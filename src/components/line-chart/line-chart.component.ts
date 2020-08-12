@@ -7,10 +7,15 @@ import { formatX, formatY } from '../../utils/formatters';
 import { A11yPlaceholderDirective } from '../../directives/a11y-placeholder/a11y-placeholder.directive';
 import { DAY } from '../../utils/timeUnits';
 import { LineChartMeta } from '../../datasets/metas/line-chart.meta';
+import { Summary } from '../../datasets/summarizations/types';
 import { TimeSeriesDatum } from '../../datasets/queries/time-series.query';
 import { TimeSeriesPoint } from '../../datasets/metas/types';
 
 export type LineChartDatum = TimeSeriesDatum<LegendItemStyle>;
+export type LineChartData = {
+  data: LineChartDatum[],
+  querySummaries?: () => Summary[],
+};
 
 @Component({
   selector: 'app-line-chart',
@@ -29,7 +34,7 @@ export class LineChartComponent implements RenderOptions<LineChartDatum>, OnChan
   formatX = formatX;
   formatY = formatY;
 
-  data$ = new BehaviorSubject<LineChartDatum[]>([]);
+  data$ = new BehaviorSubject<LineChartData>({ data: [] });
   activePoint$ = new BehaviorSubject<TimeSeriesPoint | null>(null);
   lineChartD3: LineChartD3;
   private destroy$ = new Subject();
@@ -41,7 +46,11 @@ export class LineChartComponent implements RenderOptions<LineChartDatum>, OnChan
   }
 
   get data() {
-    return this.data$.value;
+    return this.data$.value.data;
+  }
+
+  get querySummaries() {
+    return this.data$.value.querySummaries;
   }
 
   get activePoint() {

@@ -6,7 +6,7 @@ import { TimeSeriesPoint } from '../datasets/metas/types';
 import { TimeSeriesDatum } from '../datasets/queries/time-series.query';
 
 export interface RenderOptions<Datum> extends BaseRenderOptions {
-  data$: Observable<Datum[]>;
+  data$: Observable<{ data: Datum[] }>;
   activePoint$: Observable<TimeSeriesPoint | null>;
 }
 
@@ -52,9 +52,9 @@ export abstract class XYChartD3<LegendItemStyle,
     data$
       .pipe(this.takeUntilCleared())
       .subscribe(data => {
-        this.updateLegend(data);
-        this.updateAxis(data);
-        this.updateData(data);
+        this.updateLegend(data.data);
+        this.updateAxis(data.data);
+        this.updateData(data.data);
       });
 
     activePoint$

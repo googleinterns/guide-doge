@@ -17,7 +17,10 @@ export interface TimeSeriesDatum<S> {
   querySummaries?: () => Summary[];
 }
 
-export type TimeSeriesQuery<S> = (options: TimeSeriesQueryOptions) => TimeSeriesDatum<S>[];
+export type TimeSeriesQuery<S> = (options: TimeSeriesQueryOptions) => {
+  data: TimeSeriesDatum<S>[],
+  querySummaries?: () => Summary[],
+};
 
 export type LegendItem<S> = {
   /* The label for TimeSeriesDatum */
@@ -46,7 +49,11 @@ export type LegendItem<S> = {
  * the returned datum.
  *
  */
-export function createTimeSeriesQuery<S>(dataCube: DataCube, legendItems: LegendItem<S>[]): TimeSeriesQuery<S> {
+export function createTimeSeriesQuery<S>(
+  dataCube: DataCube,
+  legendItems: LegendItem<S>[],
+  querySummariesFactory?: (dataPoints: TimeSeriesPoint[][]) => () => Summary[]): TimeSeriesQuery<S> {
+
   return queryOptions => {
     const [startDate, endDate] = queryOptions.range;
     const measureNames = unique(legendItems.map(item => item.measureName));
@@ -76,7 +83,17 @@ export function createTimeSeriesQuery<S>(dataCube: DataCube, legendItems: Legend
       sortBy: [dateCategoryName],
     });
 
-    return legendItems.map(item => createTimeSeriesDatum(rows, startDate, endDate, item));
+    const data = legendItems.map(item => createTimeSeriesDatum(rows, startDate, endDate, item));
+    const queryResult: {
+      data: TimeSeriesDatum<S>[],
+      querySummaries?: () => Summary[],
+    } = { data };
+
+    if (querySummariesFactory) {
+      queryResult.querySummaries = querySummariesFactory(data.map(({ points }) => points));
+    }
+
+    return queryResult;
   };
 }
 

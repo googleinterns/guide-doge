@@ -32,7 +32,7 @@ describe('UserWhiteNoiseDataset', () => {
         ];
 
         for (const range of testRanges) {
-          const data = meta.queryData({ range });
+          const data = meta.queryData({ range }).data;
           for (const datum of data) {
             for (const point of datum.points) {
               expect(point.x > range[0]).toBeTrue();

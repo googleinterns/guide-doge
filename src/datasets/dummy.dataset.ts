@@ -23,43 +23,36 @@ export const configMeta: PreferenceMeta<Config> = {
 
 export function create(config: Config): Dataset {
   const time = new Date(Date.now() - 100 * DAY);
-  const data: XYPoint<Date, number>[] = [];
+  const points: XYPoint<Date, number>[] = [];
   const rand = random.normal(0, 500);
   for (let i = 1; i <= 100; i++) {
-    data.push({
+    points.push({
       x: new Date(time.getTime() + i * DAY),
       y: Math.exp(i / 10) + config.offset + rand(),
     });
   }
 
-  const lineChartMeta = createLineChartMeta(
-    'Line Chart',
-    (options: TimeSeriesQueryOptions) => [{
-      label: 'Dummy Data',
-      points: data,
-      querySummaries: TrendSummarization.queryFactory(data),
-    }],
-  );
 
   const metas = [
-    lineChartMeta,
     createLineChartMeta(
       'Line Chart',
-      (options: TimeSeriesQueryOptions) => [
-        {
-          label: 'Dummy Data',
-          points: exponentialMovingAverage(data),
-          querySummaries: TrendPartialSummarization.queryFactory(data),
-          style: {
-            color: 'green',
-          },
-        }, {
-          label: 'Dummy Data',
-          points: data,
-          style: {
-            opacity: 0.5,
-          },
-        }],
+      (options: TimeSeriesQueryOptions) => ({
+        data: [
+          {
+            label: 'Dummy Data',
+            points: exponentialMovingAverage(points),
+            querySummaries: TrendPartialSummarization.queryFactory(points),
+            style: {
+              color: 'green',
+            },
+          }, {
+            label: 'Dummy Data',
+            points,
+            style: {
+              opacity: 0.5,
+            },
+          }],
+      })
     )
   ];
 
