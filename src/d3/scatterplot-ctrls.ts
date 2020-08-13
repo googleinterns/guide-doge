@@ -300,7 +300,7 @@ createSpeedCtrls(sign: string){
     const toggleText = document.createElement('a-entity');
     document.querySelector('[camera]').appendChild(toggleText);
     toggleText.setAttribute('position', toggleBarPos.label);
-    toggleText.setAttribute('text', `value: Open; align: center; color: black; shader: msdf; font: ${ROBOTO};`);
+    toggleText.setAttribute('text', `value: Control Panel; align: center; color: black; shader: msdf; font: ${ROBOTO};`);
     toggleText.setAttribute('scale', '2 2 1');
     toggleBar.addEventListener('mousedown', () => {
       const nonTxtControlItems = document.getElementsByClassName('nonTextToggle');
@@ -315,14 +315,6 @@ createSpeedCtrls(sign: string){
           (item as AFRAME.Entity).setAttribute('visible', !this.showCtrls);
         }
       this.showCtrls = !this.showCtrls;
-      toggleText.setAttribute('text', () => {
-        var text = '';
-        if (this.showCtrls)
-          text = 'Close';
-        else
-          text = 'Open';
-        return `value: \n${text}; align: center; color: black; shader: msdf; font: ${ROBOTO};`;
-      });
     });
   }
 
