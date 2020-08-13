@@ -26,6 +26,7 @@ export class Scatterplot{
     zScale: d3.ScaleLinear<number, number>;
     dataType: MetaType;
     loaded = false;
+    camera: HTMLElement;
 
 
   constructor(shape: string) {
@@ -38,40 +39,50 @@ export class Scatterplot{
     this.dataType = dataType;
     this.container = container;
     this.dataType = dataType;
-    this.dataPointContainer = document.createElement('a-entity');
-    this.dataPointContainer.className = 'dataPts';
-    this.dataTextContainer = document.createElement('a-entity');
-    this.dataTextContainer.className = 'dataTxt';
+    this.dataPointContainer = this.createEntity('a-entity', 'dataPts');
+    this.dataTextContainer = this.createEntity('a-entity', 'dataTxt');
     container.appendChild(this.dataPointContainer);
     container.appendChild(this.dataTextContainer);
     if (this.data.length > 0 && !this.loaded){
       this.generateText();
       this.generatePts();
       this.setColor('blue');
+      this.generateText();
     }
     this.createSky('gray');
     this.createGridPlane();
     this.loaded = true;
+
     window.onload = () => {
-      document.addEventListener('keydown', (event) => {
+      this.dataTextContainer = this.createEntity('a-entity', 'dataTxt');
+      this.generateText();
+      this.camera = document.querySelector('[camera]');
+      this.camera.appendChild(this.dataTextContainer);
+      this.container!.removeChild(this.dataTextContainer);
+      window.addEventListener('keydown', (event) => {
+        const camPos = document.querySelector('[camera]').object3D.position;
         if (event.code === 'KeyQ'){
-          document.querySelector('[camera]').object3D.position.set(
+          camPos.set(
             document.querySelector('[camera]').object3D.position.x,
-            document.querySelector('[camera]').object3D.position.y + .2,
+            document.querySelector('[camera]').object3D.position.y + 1,
             document.querySelector('[camera]').object3D.position.z
           );
         }
         if (event.code === 'KeyZ'){
-          document.querySelector('[camera]').object3D.position.set(
-            document.querySelector('[camera]').object3D.position.x,
-            document.querySelector('[camera]').object3D.position.y - .2,
-            document.querySelector('[camera]').object3D.position.z
+          camPos.set(
+            camPos.x,
+            camPos.y - 1,
+            camPos.z
           );
         }
       });
-      // document.querySelector('[camera]').object3D.rotation.set(0, (135 * Math.PI / 180) , 0);
-      document.querySelector('[camera]').setAttribute('rotate_camera', '');
     };
+  }
+
+  private createEntity(entity: string, id: string): HTMLElement {
+    const retEntity = document.createElement(entity);
+    retEntity.id = id;
+    return retEntity;
   }
 
   private scalePosition(){
@@ -89,13 +100,18 @@ export class Scatterplot{
         maxZValue = pt.z;
       }
     }
-    // scale positions based on largest value found in xyz to absVal(maxGridDimension)
-    this.xScale = d3.scaleLinear().domain([0, maxXValue]).range([0, this.GRID_BOUND]);
-    this.yScale = d3.scaleLinear().domain([0, maxYValue]).range([0, this.GRID_BOUND]);
-    this.zScale = d3.scaleLinear().domain([0, maxZValue]).range([0, this.GRID_BOUND]);
+    this.xScale = this.dimScales(maxXValue);
+    this.yScale = this.dimScales(maxYValue);
+    this.zScale = this.dimScales(maxZValue);
+  }
+
+  private dimScales(maxVal: number): d3.ScaleLinear<number, number> {
+     // scale positions based on largest value found in xyz to absVal(maxGridDimension)
+    return d3.scaleLinear().domain([0, maxVal]).range([0, this.GRID_BOUND]);
   }
 
   private generatePts() {
+    this.scalePosition();
      // enter identifies any DOM elements to be added when # array elements doesn't match
     d3.select(this.dataPointContainer).selectAll(this.shape).data(this.data).enter().append(this.shape);
     // d is data at index, i within
@@ -130,33 +146,21 @@ export class Scatterplot{
     this.cardSelection =  d3.select(this.dataTextContainer).selectAll('a-entity');
     this.cardSelection
       .attr('geometry', 'primitive: plane; height: auto; width: .5')
-      .attr('material', 'color: blue')
-      .attr('text', (d, i) => {
-        const categories = (d as VRScatterPoint).categories.browser + ', ' + (d as VRScatterPoint).categories.country
-          + ', ' + (d as VRScatterPoint).categories.source;
-        // for (let categChild of (d as VRScatterPoint).categories)
-        const x = (d as VRScatterPoint).x;
-        const y = (d as VRScatterPoint).y;
-        const z = (d as VRScatterPoint).z;
-        return `
-        value: ${categories} POSITION:
-        \n \t${this.metrics[0]}: ${x}
-        \n \t${this.metrics[1]}: ${y.toFixed(2)}
-        \n \t${this.metrics[2]}: ${z}\n;
-        font: ${this.AILERON_FONT};
-        xOffset: ${DATA_PT_RADIUS / 3}`;
-      })
-      .attr('visible', false)
       .attr('position', (d, i) => {
-        const x = this.xScale((d as VRScatterPoint).x);
-        const y = this.yScale((d as VRScatterPoint).y);
-        const z = this.zScale((d as VRScatterPoint).z);
-        return `${x + DATA_PT_RADIUS} ${y + 2 * DATA_PT_RADIUS} ${z}`;
+        // added padding for z-fighting - when merged with hover feature, can set to z = -1 (or other constant)
+        return `${.25} ${-.25} ${-(.5 + i * .005)}`;
       })
-      .each((d, i, g) => {
-        (g[i] as AFRAME.Entity).setAttribute('rotate_cards', '');
-        // (g[i] as AFRAME.Entity).setAttribute('show_cards', '');
-      });
+      .attr('material', 'color: blue')
+      // d is data at index, i within
+      // select all shapes within given container
+    .attr('text', (d, i) => {
+      const x = (d as VRScatterPoint).x;
+      const y = (d as VRScatterPoint).y;
+      const z = (d as VRScatterPoint).z;
+      return `
+      value: POSITION:\n\n${this.metrics[0]} (x): ${x}\n\n${this.metrics[1]} (y): ${y}\n\n${this.metrics[2]} (z): ${z}`;
+    })
+    .attr('visible', true);
   }
 
   private setColor(color) {
@@ -165,8 +169,7 @@ export class Scatterplot{
     });
   }
 
-  private createGridPlane()
-  {
+  private createGridPlane(){
     const xGrid = document.createElement('a-entity');
     xGrid.className = 'grids';
     xGrid.id = 'xGrid';
@@ -204,30 +207,3 @@ export class Scatterplot{
     });
   }
 }
-
-AFRAME.registerComponent('rotate_cards', {
-  tick() {
-    this.el.object3D.rotation.set(
-       document.querySelector('[camera]').object3D.rotation.x,
-       document.querySelector('[camera]').object3D.rotation.y,
-       document.querySelector('[camera]').object3D.rotation.z,
-    );
-  }
-});
-
-AFRAME.registerComponent('show_cards', {
-  tick() {
-    if (this.el.object3D.position.distanceTo(document.querySelector('[camera]').object3D.position) < DATA_PT_RADIUS * 40){
-      this.el.object3D.visible = true;
-    } else {
-      this.el.object3D.visible = false;
-    }
-  }
-});
-
-AFRAME.registerComponent('rotate_camera', {
-  init() {
-    this.el.setAttribute('rotation', '0, 135, 0');
-  }
-});
-
