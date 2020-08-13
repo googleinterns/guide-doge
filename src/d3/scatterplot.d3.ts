@@ -149,11 +149,15 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
       // (g[i] as AFRAME.Entity).setAttribute('hover_cards', '');
       (g[i] as AFRAME.Entity).addEventListener('mouseenter', () => {
         const hoverIdx = i;
-        this.cardSelection.filter((d, i) => { return i === hoverIdx}).attr('visible', true);
+        this.cardSelection.filter((d, i) => { return i === hoverIdx})
+        .attr('visible', true) 
+        .attr('position', '0 -.15 -.5');
       });
       (g[i] as AFRAME.Entity).addEventListener('mouseleave', () => {
         const hoverIdx = i;
-        this.cardSelection.filter((d, i) => { return i === hoverIdx}).attr('visible', false);
+        this.cardSelection.filter((d, i) => { return i === hoverIdx})
+        .attr('visible', false)
+        .attr('position', '0 0 2');
       });
     });
   }
@@ -179,12 +183,7 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
         font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/roboto/Roboto-Medium.json;`;
       })
       .attr('visible', false)
-      .attr('position', (d, i) => {
-        const x = this.xScale((d as VRScatterPoint).x);
-        const y = this.yScale((d as VRScatterPoint).y);
-        const z = this.zScale((d as VRScatterPoint).z);
-        return `${0} ${-.15} ${-(.5)}`;
-      });
+      .attr('position', '0 0 2');
   }
 
   private setColor(color) {

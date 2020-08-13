@@ -12,41 +12,41 @@ const tilePos: Record<string, string> = {
   ['zNeg']: '1.25 .5 -4',
 };
 const speedPos: Record<string, string> = {
-    ['minus']: '-.05 .05 -.25',
-    ['plus']: '.05 .05 -.25',
-    ['label']: '0 .05 -.26',
+    ['minus']: '-.3 .5 -2',
+    ['plus']: '.3 .5 -2',
+    ['label']: '0 .45 -2',
 };
 const xScalePos: Record<string, string> = {
-    ['decrement']: '-.05 .023 -.25',
-    ['increment']: '.05 .023 -.25',
+    ['decrement']: '-.05 .023 -2',
+    ['increment']: '.05 .023 -2',
     ['label']: '0 .017 -.26',
 };
 
 const yScalePos: Record<string, string> = {
-    ['decrement']: '-.05 -0.002 -.25',
-    ['increment']: '.05 -0.002 -.25',
+    ['decrement']: '-.05 -0.002 -2',
+    ['increment']: '.05 -0.002 -2',
     ['label']: '0 -0.008 -.26',
 };
 
 const zScalePos: Record<string, string> = {
-    ['decrement']: '-.05 -0.027 -.25',
-    ['increment']: '.05 -0.027 -.25',
+    ['decrement']: '-.05 -0.027 -2',
+    ['increment']: '.05 -0.027 -2',
     ['label']: '0 -0.033 -.26',
 };
 
 const allScalePos: Record<string, string> = {
-    ['decrement']: '-.05 -.052 -.25',
-    ['increment']: '.05 -.052 -.25',
+    ['decrement']: '-.05 -.052 -2',
+    ['increment']: '.05 -.052 -2',
     ['label']: '0 -.058 -.26',
 };
 
 const toggleBarPos: Record<string, string> = {
-  ['bar']: '0 -.073 -.25',
+  ['bar']: '0 -.073 -2',
   ['label']: '0 -.075 -.24',
 };
 
 const bckgrdPos: Record<string, string> = {
-  ['place']: '0 -.01 -.27',
+  ['place']: '0 -.01 -2.01',
 };
 
 const dimensions = ['x', 'y', 'z'];
@@ -188,7 +188,7 @@ createSpeedCtrls(sign: string){
     document.querySelector('[camera]').appendChild(speedTile);
     // document.getElementById('ctrls')!.appendChild(navTile);
     if (sign === 'plus'){
-      speedTile.setAttribute('geometry', 'primitive: plane; height: .025; width: .025');
+      speedTile.setAttribute('geometry', 'primitive: plane; height: .25; width: .25');
       speedTile.setAttribute('position', speedPos.plus);
       speedTile.setAttribute('material', 'color: white; opacity: .75; src: ../assets/plus.png;');
       (speedTile as AFRAME.Entity).addEventListener('mousedown', () => {
@@ -196,7 +196,7 @@ createSpeedCtrls(sign: string){
         console.log(this.scatter.getDaydreamNavSpeed());
       });
       } else if (sign === 'neg'){
-          speedTile.setAttribute('geometry', 'primitive: plane; height: .025; width: .025');
+          speedTile.setAttribute('geometry', 'primitive: plane; height: .25; width: .25');
           speedTile.setAttribute('position', speedPos.minus);
           speedTile.setAttribute('material', 'color: white; opacity: .75; src: ../assets/negative.png');
           (speedTile as AFRAME.Entity).addEventListener('mousedown', () => {
@@ -209,7 +209,7 @@ createSpeedCtrls(sign: string){
           // speedTile.setAttribute('geometry', 'primitive: plane; height: auto; width: auto');
           speedTile.setAttribute('position', speedPos.label);
           speedTile.setAttribute('text', `value: Speed; align: center; color: black; shader: msdf; font: ${ROBOTO};`);
-          speedTile.setAttribute('scale', '.2 .2 1');  
+          speedTile.setAttribute('scale', '2 2 1');  
           speedTile.addEventListener('mousedown', () => {
           });   
       }
@@ -226,9 +226,9 @@ createSpeedCtrls(sign: string){
     labelTile.className = 'toggle';
     document.querySelector('[camera]').appendChild(labelTile);
 
-    scaleTilePos.setAttribute('geometry', 'primitive: plane; height: .025; width: .025');  
+    scaleTilePos.setAttribute('geometry', 'primitive: plane; height: .25; width: .25');  
     scaleTilePos.setAttribute('material', 'color: black; opacity: .95; src: ../assets/plus.png;');
-    scaleTileNeg.setAttribute('geometry', 'primitive: plane; height: .025; width: .025');  
+    scaleTileNeg.setAttribute('geometry', 'primitive: plane; height: .25; width: .25');  
     scaleTileNeg.setAttribute('material', 'color: black; opacity: .95; src: ../assets/negative.png;');
     var xScaleDelta = 0;
     var yScaleDelta = 0;
@@ -322,7 +322,7 @@ createSpeedCtrls(sign: string){
   private createBackground(){
     const bckgrd = document.createElement('a-entity');
     document.querySelector('[camera]').appendChild(bckgrd);
-    bckgrd.setAttribute('geometry', 'primitive: plane; height: .170; width: .135');
+    bckgrd.setAttribute('geometry', 'primitive: plane; height: .05; width: .25');
     bckgrd.setAttribute('material', 'color: #4385f4; opacity: .5;');
     bckgrd.setAttribute('position', bckgrdPos.place);
   }
