@@ -31,7 +31,7 @@ export class Scatterplot{
   constructor(shape: string) {
     this.shape = shape;
   }
-  
+
   init(container: HTMLElement, data: VRScatterPoint[], metrics: string[], dataType: MetaType){
     this.data = data;
     this.metrics = metrics;
@@ -54,24 +54,23 @@ export class Scatterplot{
     this.loaded = true;
     window.onload = () => {
       document.addEventListener('keydown', (event) => {
-        if (event.keyCode === 81){
+        if (event.code === 'KeyQ'){
           document.querySelector('[camera]').object3D.position.set(
             document.querySelector('[camera]').object3D.position.x,
             document.querySelector('[camera]').object3D.position.y + .2,
             document.querySelector('[camera]').object3D.position.z
           );
         }
-        if (event.keyCode === 90){
+        if (event.code === 'KeyZ'){
           document.querySelector('[camera]').object3D.position.set(
             document.querySelector('[camera]').object3D.position.x,
             document.querySelector('[camera]').object3D.position.y - .2,
             document.querySelector('[camera]').object3D.position.z
           );
         }
-      })
+      });
       // document.querySelector('[camera]').object3D.rotation.set(0, (135 * Math.PI / 180) , 0);
       document.querySelector('[camera]').setAttribute('rotate_camera', '');
-      
     };
   }
 
@@ -111,11 +110,15 @@ export class Scatterplot{
       // (g[i] as AFRAME.Entity).setAttribute('hover_cards', '');
       (g[i] as AFRAME.Entity).addEventListener('mouseenter', () => {
         const hoverIdx = i;
-        this.cardSelection.filter((d, i) => { return i === hoverIdx}).attr('visible', true);
+        // disable next line bc d,i are necessary even if shadowed from .each
+        // tslint:disable-next-line
+        this.cardSelection.filter((d, i) => i === hoverIdx).attr('visible', true);
       });
       (g[i] as AFRAME.Entity).addEventListener('mouseleave', () => {
         const hoverIdx = i;
-        this.cardSelection.filter((d, i) => { return i === hoverIdx}).attr('visible', false);
+        // disable next line bc d,i are necessary even if shadowed from .each
+        // tslint:disable-next-line
+        this.cardSelection.filter((d, i) => i === hoverIdx).attr('visible', false);
       });
     });
   }
