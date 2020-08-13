@@ -14,7 +14,7 @@ describe('VR Haptic Plot', () => {
   let hapticplot: Hapticplot;
   let graphScale: d3.ScaleLinear<number, number>;
 
-  const POINT_SIZE = 0.02;
+  const POINT_SIZE = 0.01;
   const DEFAULT_COLOR = '#F0A202';
   const HOVER_COLOR = 'red';
 
@@ -93,6 +93,17 @@ describe('VR Haptic Plot', () => {
     const result = hasHaptics(controller);
     expect(result).toEqual(expectedRes);
   });
+
+  it('initilizes data points with sound components', () => {
+    hapticplot.init(scene, [10, 20, 30]);
+    expect(hasSounds(scene, shape)).toEqual(true);
+  });
+
+  it('attaches audio triggers to initilized data points', () => {
+    hapticplot.init(scene, [10, 20, 30]);
+    expect(hasSoundTriggers(scene, shape)).toEqual(true);
+  });
+
 });
 
 // Helper Functions
@@ -132,4 +143,29 @@ function getHoveredColor(scene: HTMLElement, shape: string): (string | null)[]{
 // Checks the given controller for a haptic component
 function hasHaptics(controller: HTMLElement): boolean{
   return (controller as Entity).components.hasOwnProperty('haptics');
+}
+
+// Returns true if each data point has a sound component attached, otherwise false
+function hasSounds(scene: HTMLElement, shape: string): boolean{
+  const points = scene.querySelectorAll(shape);
+  for (const point of points){
+    if (!(point as Entity).components.hasOwnProperty('sound')){
+      return false;
+    }
+  }
+  return true;
+}
+
+// Returns true if each data point's sound component has a hover-start event listener, otherwise false
+function hasSoundTriggers(scene: HTMLElement, shape: string): boolean{
+  const points = scene.querySelectorAll(shape);
+  for (const point of points){
+    const pointEntity = (point as Entity);
+    pointEntity.flushToDOM();
+    const trigger = pointEntity.components.sound.el.getDOMAttribute('sound').on;
+    if (trigger !== 'hover-start'){
+      return false;
+    }
+  }
+  return true;
 }

@@ -9,7 +9,8 @@
     "Andrew Koroluk <koroluka@google.com>",
     "Daniel Yule <danielyule@google.com>",
     "Michael Fitzpatrick <mfitz@google.com>",
-    "Jinseo Park <jinseo@google.com>"
+    "Jinseo Park <jinseo@google.com>",
+    "Harrison Pearl <hspearl@google.com>"
   ],
   "scripts": {
     "ng": "ng",
@@ -33,6 +34,7 @@
     "@angular/platform-browser": "~9.1.7",
     "@angular/platform-browser-dynamic": "~9.1.7",
     "@angular/router": "~9.1.7",
+    "@braintree/sanitize-url": "^4.1.1",
     "@types/aframe": "^1.0.1",
     "aframe": "^1.0.4",
     "aframe-extras": "^6.1.0",
