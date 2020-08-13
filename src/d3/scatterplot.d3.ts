@@ -67,7 +67,6 @@ export class Scatterplot{
      
       if (this.data.length > 0){
         this.generatePts();
-        this.setColor('#4385f4');
       }
       this.generateText();
       const control = new Controls(this);
@@ -165,6 +164,7 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
     // d is data at index, i within
     // select all shapes within given container
     .attr('radius', DATA_PT_RADIUS)
+    .attr('material', 'color: #4385f4')
     .attr('position', (d, i) => {
       const x = this.xScale((d as VRScatterPoint).x);
       const y = this.yScale((d as VRScatterPoint).y);
@@ -194,7 +194,7 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
     this.cardSelection =  d3.select(this.dataTextContainer).selectAll('a-entity');
     this.cardSelection
       .attr('geometry', 'primitive: plane; height: .2; width: .5')
-      .attr('material', 'color: blue; opacity: .5')
+      .attr('material', 'color: #4385f4; opacity: .5')
       .attr('text', (d, i) => {
         const categories = (d as VRScatterPoint).categories.browser + ', ' + (d as VRScatterPoint).categories.country
           + ', ' + (d as VRScatterPoint).categories.source;
@@ -210,12 +210,6 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
       })
       .attr('visible', false)
       .attr('position', '0 0 2');
-  }
-
-  private setColor(color) {
-    d3.select(this.container).selectAll(this.shape).attr('color', () => {
-      return color;
-    });
   }
 
   private redrawGridPlane(){
