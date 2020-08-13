@@ -4,49 +4,49 @@ import { rollup } from 'd3';
 const ROBOTO = 'https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/roboto/Roboto-Medium.json';
 
 const tilePos: Record<string, string> = {
-  ['xPos']: '-1.25 1 -4',
-  ['xNeg']: '-2.25 1 -4',
-  ['yPos']: '-1.75 1.5 -4',
-  ['yNeg']: '-1.75 .5 -4',
+  ['xPos']: '-1.15 1 -4',
+  ['xNeg']: '-2.15 1 -4',
+  ['yPos']: '-1.65 1.5 -4',
+  ['yNeg']: '-1.65 .5 -4',
   ['zPos']: '1.25 1.5 -4',
   ['zNeg']: '1.25 .5 -4',
 };
 const speedPos: Record<string, string> = {
-    ['minus']: '-.3 .5 -2',
-    ['plus']: '.3 .5 -2',
+    ['minus']: '-.35 .5 -2',
+    ['plus']: '.35 .5 -2',
     ['label']: '0 .45 -2',
 };
 const xScalePos: Record<string, string> = {
-    ['decrement']: '-.05 .023 -2',
-    ['increment']: '.05 .023 -2',
-    ['label']: '0 .017 -.26',
+    ['decrement']: '-.35 .25 -2',
+    ['increment']: '.35 .25 -2',
+    ['label']: '0 .2 -2',
 };
 
 const yScalePos: Record<string, string> = {
-    ['decrement']: '-.05 -0.002 -2',
-    ['increment']: '.05 -0.002 -2',
-    ['label']: '0 -0.008 -.26',
+    ['decrement']: '-.35 0 -2',
+    ['increment']: '.35 0 -2',
+    ['label']: '0 -.05 -2',
 };
 
 const zScalePos: Record<string, string> = {
-    ['decrement']: '-.05 -0.027 -2',
-    ['increment']: '.05 -0.027 -2',
-    ['label']: '0 -0.033 -.26',
+    ['decrement']: '-.35 -0.25 -2',
+    ['increment']: '.35 -0.25 -2',
+    ['label']: '0 -0.3 -2',
 };
 
 const allScalePos: Record<string, string> = {
-    ['decrement']: '-.05 -.052 -2',
-    ['increment']: '.05 -.052 -2',
-    ['label']: '0 -.058 -.26',
+    ['decrement']: '-.35 -.5 -2',
+    ['increment']: '.35 -.5 -2',
+    ['label']: '0 -.55 -2',
 };
 
 const toggleBarPos: Record<string, string> = {
-  ['bar']: '0 -.073 -2',
-  ['label']: '0 -.075 -.24',
+  ['bar']: '0 -.725 -2',
+  ['label']: '0 -.775 -1.98',
 };
 
 const bckgrdPos: Record<string, string> = {
-  ['place']: '0 -.01 -2.01',
+  ['place']: '0 -.1 -2.01',
 };
 
 const dimensions = ['x', 'y', 'z'];
@@ -190,15 +190,14 @@ createSpeedCtrls(sign: string){
     if (sign === 'plus'){
       speedTile.setAttribute('geometry', 'primitive: plane; height: .25; width: .25');
       speedTile.setAttribute('position', speedPos.plus);
-      speedTile.setAttribute('material', 'color: white; opacity: .75; src: ../assets/plus.png;');
+      speedTile.setAttribute('material', 'color: black; opacity: .95; src: ../assets/plus.png;');
       (speedTile as AFRAME.Entity).addEventListener('mousedown', () => {
         this.scatter.setDaydreamNavSpeed(this.scatter.getDaydreamNavSpeed() + .1);
-        console.log(this.scatter.getDaydreamNavSpeed());
       });
       } else if (sign === 'neg'){
           speedTile.setAttribute('geometry', 'primitive: plane; height: .25; width: .25');
           speedTile.setAttribute('position', speedPos.minus);
-          speedTile.setAttribute('material', 'color: white; opacity: .75; src: ../assets/negative.png');
+          speedTile.setAttribute('material', 'color: black; opacity: .95; src: ../assets/negative.png');
           (speedTile as AFRAME.Entity).addEventListener('mousedown', () => {
             if (this.scatter.DAYDREAM_NAV_SPEED > 0){
               this.scatter.setDaydreamNavSpeed(this.scatter.getDaydreamNavSpeed() - .1);
@@ -263,9 +262,7 @@ createSpeedCtrls(sign: string){
         negativePos = allScalePos.decrement;
         labelPos = allScalePos.label;
         labelName = 'XYZ-Scale';
-      }
-    // document.getElementById('ctrls')!.appendChild(navTile);
-    
+      }    
     scaleTilePos.setAttribute('position', positivePos);
     (scaleTilePos as AFRAME.Entity).addEventListener('mousedown', () => {
     this.scatter.changeScales(
@@ -282,20 +279,20 @@ createSpeedCtrls(sign: string){
     });   
     labelTile.setAttribute('position', labelPos);
     labelTile.setAttribute('text', `value: ${labelName}; align: center; color: black; shader: msdf; font: ${ROBOTO};`);
-    labelTile.setAttribute('scale', '.2 .2 1');    
+    labelTile.setAttribute('scale', '2 2 1');    
   }
 
   private createToggleBar(){
     const toggleBar = document.createElement('a-entity');
     document.querySelector('[camera]').appendChild(toggleBar);
-    toggleBar.setAttribute('geometry', 'primitive: plane; height: .01; width:.075');
-    toggleBar.setAttribute('material', 'color: #4385f4; opacity: .75');
+    toggleBar.setAttribute('geometry', 'primitive: plane; height: .15; width:.75');
+    toggleBar.setAttribute('material', 'color: #4385f4; opacity: 1');
     toggleBar.setAttribute('position', toggleBarPos.bar);
     const toggleText = document.createElement('a-entity');
     document.querySelector('[camera]').appendChild(toggleText);
     toggleText.setAttribute('position', toggleBarPos.label);
     toggleText.setAttribute('text', `value: Open; align: center; color: black; shader: msdf; font: ${ROBOTO};`);
-    toggleText.setAttribute('scale', '.2 .2 1');
+    toggleText.setAttribute('scale', '2 2 1');
     toggleBar.addEventListener('mousedown', () => {
       const controlItems = document.getElementsByClassName('toggle');
         // if (this.showCtrls){
@@ -322,8 +319,8 @@ createSpeedCtrls(sign: string){
   private createBackground(){
     const bckgrd = document.createElement('a-entity');
     document.querySelector('[camera]').appendChild(bckgrd);
-    bckgrd.setAttribute('geometry', 'primitive: plane; height: .05; width: .25');
-    bckgrd.setAttribute('material', 'color: #4385f4; opacity: .5;');
+    bckgrd.setAttribute('geometry', 'primitive: plane; height: 1.5; width: 1');
+    bckgrd.setAttribute('material', 'color: #4385f4; opacity: .75;');
     bckgrd.setAttribute('position', bckgrdPos.place);
   }
 }
