@@ -298,15 +298,15 @@ createSpeedCtrls(sign: string){
     toggleText.setAttribute('scale', '.2 .2 1');
     toggleBar.addEventListener('mousedown', () => {
       const controlItems = document.getElementsByClassName('toggle');
-        if (this.showCtrls){
+        // if (this.showCtrls){
           for (let item of (controlItems as unknown as Array<Element>)){
             (item as AFRAME.Entity).setAttribute('visible', !this.showCtrls);
             // document.removeChild(item);
           }
-        }
-        else{
-          this.createCtrlPanel;
-        }
+        // }
+        // else{
+          // this.createCtrlPanel;
+        // }
       this.showCtrls = !this.showCtrls;
       toggleText.setAttribute('text', () => {
         var text = '';
