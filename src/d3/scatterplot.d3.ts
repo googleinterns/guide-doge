@@ -4,8 +4,7 @@ import { VRScatterPoint } from '../datasets/queries/vr.query';
 import { MetaType } from '../datasets/metas/types';
 const PROXY_FLAG = '__keyboard-controls-proxy';
 const DATA_PT_RADIUS = .05;
-
-
+// const CAM_Y_ROTATION = AFRAME.THREE.MathUtils.degToRad(135);
 
 export interface ScatterPlotStyle {
   color: string | number;
@@ -21,6 +20,7 @@ export class Scatterplot{
     private dataPointContainer: HTMLElement;
     private dataTextContainer: HTMLElement;
     private metrics: string[];
+    private cardSelection: any;
     xScale: d3.ScaleLinear<number, number>;
     yScale: d3.ScaleLinear<number, number>;
     zScale: d3.ScaleLinear<number, number>;
@@ -47,6 +47,7 @@ export class Scatterplot{
       this.generatePts();
       this.setColor('blue');
       this.generateText();
+
     }
     this.createSky('gray');
     this.createGridPlane();
@@ -62,9 +63,9 @@ export class Scatterplot{
         const camPos = document.querySelector('[camera]').object3D.position;
         if (event.code === 'KeyQ'){
           camPos.set(
-            document.querySelector('[camera]').object3D.position.x,
-            document.querySelector('[camera]').object3D.position.y + 1,
-            document.querySelector('[camera]').object3D.position.z
+            camPos.x,
+            camPos.y + 1,
+            camPos.z
           );
         }
         if (event.code === 'KeyZ'){
@@ -120,17 +121,34 @@ export class Scatterplot{
       const y = this.yScale((d as VRScatterPoint).y);
       const z = this.zScale((d as VRScatterPoint).z);
       return `${x.toFixed(2)} ${y.toFixed(2)} ${z.toFixed(2)}`;
+    })
+    .each((d, i, g) => {
+      // (g[i] as AFRAME.Entity).setAttribute('hover_cards', '');
+      (g[i] as AFRAME.Entity).addEventListener('mouseenter', () => {
+        const hoverIdx = i;
+        // disable next line bc d,i are necessary even if shadowed from .each
+        // tslint:disable-next-line
+        this.cardSelection.filter((d, i) => i === hoverIdx).attr('visible', true);
+      });
+      (g[i] as AFRAME.Entity).addEventListener('mouseleave', () => {
+        const hoverIdx = i;
+        // disable next line bc d,i are necessary even if shadowed from .each
+        // tslint:disable-next-line
+        this.cardSelection.filter((d, i) => i === hoverIdx).attr('visible', false);
+      });
     });
   }
 
   private generateText(){
+    this.scalePosition();
     // enter identifies any DOM elements to be added when # array elements doesn't match
     d3.select(this.dataTextContainer).selectAll('a-entity').data(this.data).enter().append('a-entity');
-    d3.select(this.dataTextContainer).selectAll('a-entity')
+    this.cardSelection =  d3.select(this.dataTextContainer).selectAll('a-entity');
+    this.cardSelection
       .attr('geometry', 'primitive: plane; height: auto; width: .5')
       .attr('position', (d, i) => {
         // added padding for z-fighting - when merged with hover feature, can set to z = -1 (or other constant)
-        return `${.25} ${-.25} ${-(.5 + i * .005)}`;
+        return `${0} ${-.15} ${-(.5 + i * .005)}`;
       })
       .attr('material', 'color: blue')
       // d is data at index, i within
