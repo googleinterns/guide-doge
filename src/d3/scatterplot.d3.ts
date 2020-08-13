@@ -121,18 +121,29 @@ export class Scatterplot{
     this.yScale = d3.scaleLinear().domain([0, maxYValue]).range([0, yMapping]);
     this.zScale = d3.scaleLinear().domain([0, maxZValue]).range([0, zMapping]);
   }
-getRand(min, max) {
+  getRand(min, max) {
     return Math.random() * (max - min) + min;
  }
  demoDS(){
+  const browsers = ['Firefox','Chrome','Safari','Edge','Opera','Internet Explorer','Samsung Internet'];
+  browsers.reverse();
+
+  const countries = ['China','India','United States','Indonesia','Pakistan','Brazil','Nigeria','Bangladesh','Russia','Mexico','Japan','Ethiopia','Philippines','Egypt','Vietnam','DR Congo','Turkey','Iran','Germany','Thailand','United Kingdom','France','Italy','Tanzania','South Africa','Myanmar','Kenya','South Korea','Colombia','Spain','Uganda','Argentina','Algeria','Sudan','Ukraine','Iraq','Afghanistan','Poland','Canada','Morocco','Saudi Arabia','Uzbekistan','Peru','Angola','Malaysia','Mozambique','Ghana','Yemen','Nepal','Venezuela','Madagascar','Cameroon', 'North Korea','Australia','Niger','Taiwan','Sri Lanka','Burkina Faso','Mali','Romania','Malawi','Chile','Kazakhstan','Zambia','Guatemala','Ecuador','Syria','Netherlands','Senegal','Cambodia','Chad','Somalia','Zimbabwe','Guinea','Rwanda','Benin','Burundi','Tunisia','Bolivia','Belgium','Haiti','Cuba','South Sudan','Dominican Republic','Czech Republic (Czechia)','Greece','Jordan','Portugal','Azerbaijan','Sweden','Honduras','United Arab Emirates','Hungary','Tajikistan','Belarus','Austria','Papua New Guinea','Serbia','Israel','Switzerland','Togo','Sierra Leone','Hong Kong','Laos','Paraguay','Bulgaria','Libya','Lebanon','Nicaragua','Kyrgyzstan','El Salvador','Turkmenistan','Singapore','Denmark','Finland','Congo','Slovakia','Norway','Oman','State of Palestine','Costa Rica','Liberia','Ireland','Central African Republic','New Zealand','Mauritania','Panama','Kuwait','Croatia','Moldova','Georgia','Eritrea','Uruguay','Bosnia and Herzegovina','Mongolia','Armenia','Jamaica','Qatar','Albania','Puerto Rico','Lithuania','Namibia','Gambia','Botswana','Gabon','Lesotho','North Macedonia','Slovenia','Guinea-Bissau','Latvia','Bahrain','Equatorial Guinea','Trinidad and Tobago','Estonia','Timor-Leste','Mauritius','Cyprus','Eswatini','Djibouti','Fiji','Réunion','Comoros','Guyana','Bhutan','Solomon Islands','Macao','Montenegro','Luxembourg','Western Sahara','Suriname','Cabo Verde','Maldives','Malta','Brunei','Guadeloupe','Belize','Bahamas','Martinique','Iceland'];
+  countries.reverse();
+
+  const sources = ['App campaign', 'Direct', 'Referral'];
+  sources.reverse();
+
   var data: VRScatterPoint[] = [];
+  let k = 0;
   for (var i = 0; i < 100; i++) {
     for (var j = 0; j < this.getRand(5, 10); j++) {
       data.push({
-        categories: {}, 
+        categories: {browser: browsers[k % browsers.length], country: countries[k % countries.length], source: sources[k % sources.length]}, 
         x: Math.round(i + this.getRand(-5, 5)),
         y: Math.round(i + this.getRand(-5, 5)),
         z: Math.round(i + this.getRand(-5, 5))});
+      k++;
     }
   }
   this.data = data;
@@ -166,10 +177,10 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
     // select all shapes within given container
     .attr('radius', DATA_PT_RADIUS)
     .attr('material', 'color: #4385f4')
-    .attr('position', (d, i) => {
-      const x = this.xScale((d as VRScatterPoint).x);
-      const y = this.yScale((d as VRScatterPoint).y);
-      const z = this.zScale((d as VRScatterPoint).z);
+    .attr('position', (d: VRScatterPoint, i) => {
+      const x = this.xScale(d.x);
+      const y = this.yScale(d.y);
+      const z = this.zScale(d.z);
       return `${x} ${y} ${z}`;
     })
     .each((d, i, g) => {
