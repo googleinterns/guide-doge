@@ -123,6 +123,15 @@ export class Scatterplot{
 
 changeScales(xMapping: number, yMapping: number, zMapping: number){
   d3.select(this.dataPointContainer).selectAll(this.shape).data(this.data).remove();
+  if (xMapping === 0){
+    xMapping = 10;
+  }
+  if (yMapping === 0){
+    yMapping = 10;
+  }
+  if (zMapping === 0){
+    zMapping = 10;
+  }
   this.XGRID_BOUND = xMapping;
   this.YGRID_BOUND = yMapping;
   this.ZGRID_BOUND = zMapping;

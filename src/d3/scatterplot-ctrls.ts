@@ -264,9 +264,8 @@ createSpeedCtrls(sign: string){
         labelPos = zScalePos.label;
         labelName = 'Z-Scale';
     } else if (dim === 'all'){
+        // if all scales chosen, then defaults/resets to scale of x bounds
         xScaleDelta = 10;
-        yScaleDelta = 10;
-        zScaleDelta = 10;
         positivePos = allScalePos.increment;
         negativePos = allScalePos.decrement;
         labelPos = allScalePos.label;
@@ -274,17 +273,32 @@ createSpeedCtrls(sign: string){
       }    
     scaleTilePos.setAttribute('position', positivePos);
     (scaleTilePos as AFRAME.Entity).addEventListener('mousedown', () => {
-    this.scatter.changeScales(
-        this.scatter.getGridBound('x') + xScaleDelta,
-        this.scatter.getGridBound('y') + yScaleDelta,
-        this.scatter.getGridBound('z') + zScaleDelta);
-    });    
+      if (dim === 'all'){
+        this.scatter.changeScales(
+          this.scatter.getGridBound('x') + xScaleDelta,
+          this.scatter.getGridBound('x') + xScaleDelta,
+          this.scatter.getGridBound('x') + xScaleDelta);
+      } else {
+          this.scatter.changeScales(
+          this.scatter.getGridBound('x') + xScaleDelta,
+          this.scatter.getGridBound('y') + yScaleDelta,
+          this.scatter.getGridBound('z') + zScaleDelta);
+      }
+    });
+
     scaleTileNeg.setAttribute('position', negativePos);
     (scaleTileNeg as AFRAME.Entity).addEventListener('mousedown', () => {
-    this.scatter.changeScales(
-        this.scatter.getGridBound('x') - xScaleDelta,
-        this.scatter.getGridBound('y') - yScaleDelta,
-        this.scatter.getGridBound('z') - zScaleDelta);
+      if (dim === 'all'){
+        this.scatter.changeScales(
+          this.scatter.getGridBound('x') - xScaleDelta,
+          this.scatter.getGridBound('x') - xScaleDelta,
+          this.scatter.getGridBound('x') - xScaleDelta);
+      } else {
+          this.scatter.changeScales(
+          this.scatter.getGridBound('x') - xScaleDelta,
+          this.scatter.getGridBound('y') - yScaleDelta,
+          this.scatter.getGridBound('z') - zScaleDelta);
+      }
     });   
     labelTile.setAttribute('position', labelPos);
     labelTile.setAttribute('text', `value: ${labelName}; align: center; color: black; shader: msdf; font: ${ROBOTO};`);
