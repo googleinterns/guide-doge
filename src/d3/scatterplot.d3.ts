@@ -44,10 +44,10 @@ export class Scatterplot{
     container.appendChild(this.dataPointContainer);
     container.appendChild(this.dataTextContainer);
     if (this.data.length > 0 && !this.loaded){
-      this.generateText();
       this.generatePts();
       this.setColor('blue');
       this.generateText();
+
     }
     this.createSky('gray');
     this.createGridPlane();
@@ -63,9 +63,9 @@ export class Scatterplot{
         const camPos = document.querySelector('[camera]').object3D.position;
         if (event.code === 'KeyQ'){
           camPos.set(
-            document.querySelector('[camera]').object3D.position.x,
-            document.querySelector('[camera]').object3D.position.y + 1,
-            document.querySelector('[camera]').object3D.position.z
+            camPos.x,
+            camPos.y + 1,
+            camPos.z
           );
         }
         if (event.code === 'KeyZ'){
@@ -120,7 +120,7 @@ export class Scatterplot{
       const x = this.xScale((d as VRScatterPoint).x);
       const y = this.yScale((d as VRScatterPoint).y);
       const z = this.zScale((d as VRScatterPoint).z);
-      return `${x} ${y} ${z}`;
+      return `${x.toFixed(2)} ${y.toFixed(2)} ${z.toFixed(2)}`;
     })
     .each((d, i, g) => {
       // (g[i] as AFRAME.Entity).setAttribute('hover_cards', '');
@@ -148,7 +148,7 @@ export class Scatterplot{
       .attr('geometry', 'primitive: plane; height: auto; width: .5')
       .attr('position', (d, i) => {
         // added padding for z-fighting - when merged with hover feature, can set to z = -1 (or other constant)
-        return `${.25} ${-.25} ${-(.5 + i * .005)}`;
+        return `${0} ${-.15} ${-(.5 + i * .005)}`;
       })
       .attr('material', 'color: blue')
       // d is data at index, i within
