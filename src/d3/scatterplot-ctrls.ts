@@ -1,5 +1,7 @@
 import * as AFRAME from 'aframe';
 import { Scatterplot } from './scatterplot.d3';
+import { rollup } from 'd3';
+const ROBOTO = 'https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/roboto/Roboto-Medium.json';
 
 const tilePos: Record<string, string> = {
   ['xPos']: '-1.25 1 -4',
@@ -10,42 +12,42 @@ const tilePos: Record<string, string> = {
   ['zNeg']: '1.25 .5 -4',
 };
 const speedPos: Record<string, string> = {
-    ['minus']: '-.5 1.75 -3',
-    ['plus']: '.5 1.75 -3',
-    ['label']: '0 1.7 -3.01',
+    ['minus']: '-.05 .05 -.25',
+    ['plus']: '.05 .05 -.25',
+    ['label']: '0 .05 -.26',
 };
 const xScalePos: Record<string, string> = {
-    ['decrement']: '-.5 1.35 -3',
-    ['increment']: '.5 1.35 -3',
-    ['label']: '0 1.3 -3.01',
+    ['decrement']: '-.05 .023 -.25',
+    ['increment']: '.05 .023 -.25',
+    ['label']: '0 .017 -.26',
 };
 
 const yScalePos: Record<string, string> = {
-    ['decrement']: '-.5 .95 -3',
-    ['increment']: '.5 .95 -3',
-    ['label']: '0 .9 -3.01',
+    ['decrement']: '-.05 -0.002 -.25',
+    ['increment']: '.05 -0.002 -.25',
+    ['label']: '0 -0.008 -.26',
 };
 
 const zScalePos: Record<string, string> = {
-    ['decrement']: '-.5 .55 -3',
-    ['increment']: '.5 .55 -3',
-    ['label']: '0 .5 -3.01',
+    ['decrement']: '-.05 -0.027 -.25',
+    ['increment']: '.05 -0.027 -.25',
+    ['label']: '0 -0.033 -.26',
 };
 
 const allScalePos: Record<string, string> = {
-    ['decrement']: '-.5 .15 -3',
-    ['increment']: '.5 .15 -3',
-    ['label']: '0 .1 -3.01',
+    ['decrement']: '-.05 -.052 -.25',
+    ['increment']: '.05 -.052 -.25',
+    ['label']: '0 -.058 -.26',
 };
 
 const toggleBarPos: Record<string, string> = {
-  ['bar']: '0 -.10 -3',
-  ['label']: '0 -.15 -3.01',
-}
+  ['bar']: '0 -.073 -.25',
+  ['label']: '0 -.075 -.24',
+};
 
 const bckgrdPos: Record<string, string> = {
-  ['place']: '0 .8 -3.02',
-}
+  ['place']: '0 -.01 -.27',
+};
 
 const dimensions = ['x', 'y', 'z'];
 
@@ -116,8 +118,8 @@ createNavTile(dim: string){
     }
     (navTilePos as AFRAME.Entity).setAttribute('position', positivePos);
     (navTileNeg as AFRAME.Entity).setAttribute('position', negativePos);
-    (navTilePos as AFRAME.Entity).setAttribute('material', `color: white; opacity: .75; src: ${imagePos}`);
-    (navTileNeg as AFRAME.Entity).setAttribute('material', `color: white; opacity: .75; src: ${imageNeg}`);
+    (navTilePos as AFRAME.Entity).setAttribute('material', `color: black; opacity: .95; src: ${imagePos}`);
+    (navTileNeg as AFRAME.Entity).setAttribute('material', `color: black; opacity: .95; src: ${imageNeg}`);
     var intervalPos; 
     var intervalNeg;
     // set event listeners with scatter.DAYDREAM... delta in order to have updated speeds
@@ -182,11 +184,11 @@ createCtrlPanel(){
 //create speedctrls and 'speed' label based on sign parameter
 createSpeedCtrls(sign: string){
     const speedTile = document.createElement('a-entity') as AFRAME.Entity;
-    speedTile.className = 'clickable';
+    speedTile.className = 'toggle';
     document.querySelector('[camera]').appendChild(speedTile);
     // document.getElementById('ctrls')!.appendChild(navTile);
     if (sign === 'plus'){
-      speedTile.setAttribute('geometry', 'primitive: plane; height: .4; width: .4');
+      speedTile.setAttribute('geometry', 'primitive: plane; height: .025; width: .025');
       speedTile.setAttribute('position', speedPos.plus);
       speedTile.setAttribute('material', 'color: white; opacity: .75; src: ../assets/plus.png;');
       (speedTile as AFRAME.Entity).addEventListener('mousedown', () => {
@@ -194,21 +196,20 @@ createSpeedCtrls(sign: string){
         console.log(this.scatter.getDaydreamNavSpeed());
       });
       } else if (sign === 'neg'){
-          speedTile.setAttribute('geometry', 'primitive: plane; height: .4; width: .4');
+          speedTile.setAttribute('geometry', 'primitive: plane; height: .025; width: .025');
           speedTile.setAttribute('position', speedPos.minus);
           speedTile.setAttribute('material', 'color: white; opacity: .75; src: ../assets/negative.png');
           (speedTile as AFRAME.Entity).addEventListener('mousedown', () => {
             if (this.scatter.DAYDREAM_NAV_SPEED > 0){
               this.scatter.setDaydreamNavSpeed(this.scatter.getDaydreamNavSpeed() - .1);
-              console.log(this.scatter.getDaydreamNavSpeed());
             }
           });
       } 
       else if (sign === 'label'){
           // speedTile.setAttribute('geometry', 'primitive: plane; height: auto; width: auto');
           speedTile.setAttribute('position', speedPos.label);
-          speedTile.setAttribute('text', `value: Speed; align: center; color: black; shader: msdf; font: https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/rubikmonoone/RubikMonoOne-Regular.json;`);
-          speedTile.setAttribute('scale', '3 3 1');  
+          speedTile.setAttribute('text', `value: Speed; align: center; color: black; shader: msdf; font: ${ROBOTO};`);
+          speedTile.setAttribute('scale', '.2 .2 1');  
           speedTile.addEventListener('mousedown', () => {
           });   
       }
@@ -216,19 +217,19 @@ createSpeedCtrls(sign: string){
 
   createScaleCtrls(dim: string){
     const scaleTilePos = document.createElement('a-entity') as AFRAME.Entity;
-    scaleTilePos.className = 'clickable';
+    scaleTilePos.className = 'toggle';
     document.querySelector('[camera]').appendChild(scaleTilePos);
     const scaleTileNeg = document.createElement('a-entity') as AFRAME.Entity;
-    scaleTileNeg.className = 'clickable';
+    scaleTileNeg.className = 'toggle';
     document.querySelector('[camera]').appendChild(scaleTileNeg);
     const labelTile = document.createElement('a-entity') as AFRAME.Entity;
-    labelTile.className = 'clickable';
+    labelTile.className = 'toggle';
     document.querySelector('[camera]').appendChild(labelTile);
 
-    scaleTilePos.setAttribute('geometry', 'primitive: plane; height: .4; width: .4');  
-    scaleTilePos.setAttribute('material', 'color: white; opacity: .75; src: ../assets/plus.png;');
-    scaleTileNeg.setAttribute('geometry', 'primitive: plane; height: .4; width: .4');  
-    scaleTileNeg.setAttribute('material', 'color: white; opacity: .75; src: ../assets/negative.png;');
+    scaleTilePos.setAttribute('geometry', 'primitive: plane; height: .025; width: .025');  
+    scaleTilePos.setAttribute('material', 'color: black; opacity: .95; src: ../assets/plus.png;');
+    scaleTileNeg.setAttribute('geometry', 'primitive: plane; height: .025; width: .025');  
+    scaleTileNeg.setAttribute('material', 'color: black; opacity: .95; src: ../assets/negative.png;');
     var xScaleDelta = 0;
     var yScaleDelta = 0;
     var zScaleDelta = 0;
@@ -254,7 +255,7 @@ createSpeedCtrls(sign: string){
         negativePos = zScalePos.decrement;
         labelPos = zScalePos.label;
         labelName = 'Z-Scale';
-    } else if (dim === 'z'){
+    } else if (dim === 'all'){
         xScaleDelta = 10;
         yScaleDelta = 10;
         zScaleDelta = 10;
@@ -280,26 +281,32 @@ createSpeedCtrls(sign: string){
         this.scatter.getGridBound('z') - zScaleDelta);
     });   
     labelTile.setAttribute('position', labelPos);
-    labelTile.setAttribute('text', `value: ${labelName}; align: center; color: black; shader: msdf; font: https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/rubikmonoone/RubikMonoOne-Regular.json;`);
-    labelTile.setAttribute('scale', '3 3 1');    
+    labelTile.setAttribute('text', `value: ${labelName}; align: center; color: black; shader: msdf; font: ${ROBOTO};`);
+    labelTile.setAttribute('scale', '.2 .2 1');    
   }
 
   private createToggleBar(){
     const toggleBar = document.createElement('a-entity');
     document.querySelector('[camera]').appendChild(toggleBar);
-    toggleBar.setAttribute('geometry', 'primitive: plane; height: .1; width: 1.2');
-    toggleBar.setAttribute('material', 'color: white; opacity: .75');
+    toggleBar.setAttribute('geometry', 'primitive: plane; height: .01; width:.075');
+    toggleBar.setAttribute('material', 'color: #4385f4; opacity: .75');
     toggleBar.setAttribute('position', toggleBarPos.bar);
     const toggleText = document.createElement('a-entity');
     document.querySelector('[camera]').appendChild(toggleText);
     toggleText.setAttribute('position', toggleBarPos.label);
-    toggleText.setAttribute('text', 'value: Open; align: center; color: black; shader: msdf; font: https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/rubikmonoone/RubikMonoOne-Regular.json;');
-    toggleText.setAttribute('scale', '3 3 1');
+    toggleText.setAttribute('text', `value: Open; align: center; color: black; shader: msdf; font: ${ROBOTO};`);
+    toggleText.setAttribute('scale', '.2 .2 1');
     toggleBar.addEventListener('mousedown', () => {
-      const controlItems = document.getElementsByClassName('clickable');
-      for (let item of (controlItems as unknown as Array<Element>)){
-        (item as AFRAME.Entity).setAttribute('visible', !this.showCtrls);
-      }
+      const controlItems = document.getElementsByClassName('toggle');
+        if (this.showCtrls){
+          for (let item of (controlItems as unknown as Array<Element>)){
+            (item as AFRAME.Entity).setAttribute('visible', !this.showCtrls);
+            // document.removeChild(item);
+          }
+        }
+        else{
+          this.createCtrlPanel;
+        }
       this.showCtrls = !this.showCtrls;
       toggleText.setAttribute('text', () => {
         var text = '';
@@ -307,7 +314,7 @@ createSpeedCtrls(sign: string){
           text = 'Close';
         else
           text = 'Open';
-        return `value: \n${text}; align: center; color: black; shader: msdf; font: https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/rubikmonoone/RubikMonoOne-Regular.json;`;
+        return `value: \n${text}; align: center; color: black; shader: msdf; font: ${ROBOTO};`;
       });
     });
   }
@@ -315,8 +322,8 @@ createSpeedCtrls(sign: string){
   private createBackground(){
     const bckgrd = document.createElement('a-entity');
     document.querySelector('[camera]').appendChild(bckgrd);
-    bckgrd.setAttribute('geometry', 'primitive: plane; height: 2.3; width: 1.5');
-    bckgrd.setAttribute('material', 'color: black; opacity: .55');
+    bckgrd.setAttribute('geometry', 'primitive: plane; height: .170; width: .135');
+    bckgrd.setAttribute('material', 'color: #4385f4; opacity: .5;');
     bckgrd.setAttribute('position', bckgrdPos.place);
   }
 }

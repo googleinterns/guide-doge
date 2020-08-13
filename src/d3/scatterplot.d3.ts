@@ -54,7 +54,7 @@ export class Scatterplot{
     this.dataPointContainer = document.createElement('a-entity');
     this.dataPointContainer.className = 'dataPts';
     container.appendChild(this.dataPointContainer);
-    this.createSky('gray');
+    this.createSky('lightgray');
     this.createGridPlane();
     
     if (!this.loaded){
@@ -66,6 +66,7 @@ export class Scatterplot{
      
       if (this.data.length > 0){
         this.generatePts();
+        this.setColor('#4385f4');
       }
       this.generateText();
       const control = new Controls(this);
