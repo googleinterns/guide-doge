@@ -46,7 +46,8 @@ export class Scatterplot{
   }
 
   init(container: HTMLElement, data: VRScatterPoint[], metrics: string[], dataType: MetaType){
-    this.data = data;
+    // this.data = data;
+    this.demoDS();
     this.metrics = metrics;
     this.dataType = dataType;
     this.container = container;
@@ -120,6 +121,22 @@ export class Scatterplot{
     this.yScale = d3.scaleLinear().domain([0, maxYValue]).range([0, yMapping]);
     this.zScale = d3.scaleLinear().domain([0, maxZValue]).range([0, zMapping]);
   }
+getRand(min, max) {
+    return Math.random() * (max - min) + min;
+ }
+ demoDS(){
+  var data: VRScatterPoint[] = [];
+  for (var i = 0; i < 100; i++) {
+    for (var j = 0; j < this.getRand(5, 10); j++) {
+      data.push({
+        categories: {}, 
+        x: Math.round(i + this.getRand(-5, 5)),
+        y: Math.round(i + this.getRand(-5, 5)),
+        z: Math.round(i + this.getRand(-5, 5))});
+    }
+  }
+  this.data = data;
+}
 
 changeScales(xMapping: number, yMapping: number, zMapping: number){
   d3.select(this.dataPointContainer).selectAll(this.shape).data(this.data).remove();
