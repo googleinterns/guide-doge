@@ -63,8 +63,91 @@ export class Controls{
     this.addQZCtrls();
     this.createNavTiles(this.scatter.DAYDREAM_NAV_SPEED);
     this.createCtrlPanel(); 
+    this.addDemoKeys();
   }
 
+  addDemoKeys(){
+    document.addEventListener('keydown', (event) => {
+      if (event.code === 'Minus'){
+        if (this.scatter.DAYDREAM_NAV_SPEED > .1){
+          this.scatter.setDaydreamNavSpeed(this.scatter.getDaydreamNavSpeed() - .1);
+          console.log(this.scatter.getDaydreamNavSpeed());
+        } 
+      }
+      if (event.code === 'Equal'){
+        this.scatter.setDaydreamNavSpeed(this.scatter.getDaydreamNavSpeed() + .1);
+        console.log(this.scatter.getDaydreamNavSpeed());
+      }
+      // increase x scale
+      if (event.code === 'Numpad9' || event.code === 'Digit9'){
+        this.scatter.changeScales(
+          this.scatter.getGridBound('x') + 10,
+          this.scatter.getGridBound('y'),
+          this.scatter.getGridBound('z'));
+      }
+      // decrease x scale
+      if (event.code === 'Numpad7' || event.code === 'Digit7'){
+        this.scatter.changeScales(
+          this.scatter.getGridBound('x') - 10,
+          this.scatter.getGridBound('y'),
+          this.scatter.getGridBound('z'));
+      }
+       // increase y scale
+       if (event.code === 'Numpad6' || event.code === 'Digit6'){
+        this.scatter.changeScales(
+          this.scatter.getGridBound('x'),
+          this.scatter.getGridBound('y') + 10,
+          this.scatter.getGridBound('z'));
+      }
+      // decrease y scale
+      if (event.code === 'Numpad4' || event.code === 'Digit4'){
+        this.scatter.changeScales(
+          this.scatter.getGridBound('x'),
+          this.scatter.getGridBound('y') - 10,
+          this.scatter.getGridBound('z'));
+      }
+      // increase z scale
+      if (event.code === 'Numpad3' || event.code === 'Digit3'){
+      this.scatter.changeScales(
+        this.scatter.getGridBound('x'),
+        this.scatter.getGridBound('y'),
+        this.scatter.getGridBound('z') + 10);
+      }
+      // decrease z scale
+      if (event.code === 'Numpad1' || event.code === 'Digit1'){
+        this.scatter.changeScales(
+          this.scatter.getGridBound('x'),
+          this.scatter.getGridBound('y'),
+          this.scatter.getGridBound('z') - 10);
+      }
+      if (event.code === 'Numpad8' || event.code === 'Digit8'){
+        this.scatter.changeScales(
+          this.scatter.getGridBound('x') + 10,
+          this.scatter.getGridBound('x') + 10,
+          this.scatter.getGridBound('x') + 10);
+      }
+      if (event.code === 'Numpad5' || event.code === 'Digit5'){
+        this.scatter.changeScales(
+          this.scatter.getGridBound('x') - 10,
+          this.scatter.getGridBound('x') - 10,
+          this.scatter.getGridBound('x') - 10);
+      }
+      if(event.code === 'KeyT'){
+        const nonTxtControlItems = document.getElementsByClassName('nonTextToggle');
+        for (let item of (nonTxtControlItems as unknown as Array<Element>)){
+          if (!this.showCtrls)
+            (item as AFRAME.Entity).setAttribute('scale', '1 1 1');
+          else
+            (item as AFRAME.Entity).setAttribute('scale', '.01 .01 .01');
+        }
+        const controlItems = document.getElementsByClassName('toggle');
+        for (let item of (controlItems as unknown as Array<Element>)){
+          (item as AFRAME.Entity).setAttribute('visible', !this.showCtrls);
+        }
+        this.showCtrls = !this.showCtrls;
+      }
+    });
+  }
 
   addQZCtrls(){
     document.addEventListener('keydown', (event) => {
@@ -208,9 +291,9 @@ createSpeedCtrls(sign: string){
           speedTile.setAttribute('position', speedPos.minus);
           speedTile.setAttribute('material', 'color: black; opacity: .95; src: ../assets/negative.png');
           (speedTile as AFRAME.Entity).addEventListener('mousedown', () => {
-            if (this.scatter.DAYDREAM_NAV_SPEED > 0){
+            if (this.scatter.DAYDREAM_NAV_SPEED > .1){
               this.scatter.setDaydreamNavSpeed(this.scatter.getDaydreamNavSpeed() - .1);
-            }
+            } 
           });
       } 
       else if (sign === 'label'){
