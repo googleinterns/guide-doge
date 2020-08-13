@@ -123,14 +123,18 @@ export class Controls{
       if (event.code === 'Numpad8' || event.code === 'Digit8'){
         this.scatter.changeScales(
           this.scatter.getGridBound('x') + 10,
-          this.scatter.getGridBound('x') + 10,
-          this.scatter.getGridBound('x') + 10);
+          this.scatter.getGridBound('y') + 10,
+          this.scatter.getGridBound('z') + 10);
       }
       if (event.code === 'Numpad5' || event.code === 'Digit5'){
         this.scatter.changeScales(
           this.scatter.getGridBound('x') - 10,
-          this.scatter.getGridBound('x') - 10,
-          this.scatter.getGridBound('x') - 10);
+          this.scatter.getGridBound('y') - 10,
+          this.scatter.getGridBound('z') - 10);
+      }
+      if (event.code === 'Numpad0' || event.code === 'Digit0'){
+        this.scatter.changeScales(
+          50, 50, 50);
       }
       if(event.code === 'KeyT'){
         const nonTxtControlItems = document.getElementsByClassName('nonTextToggle');
