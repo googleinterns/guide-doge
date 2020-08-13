@@ -140,14 +140,14 @@ getRand(min, max) {
 
 changeScales(xMapping: number, yMapping: number, zMapping: number){
   d3.select(this.dataPointContainer).selectAll(this.shape).data(this.data).remove();
-  if (xMapping === 0){
-    xMapping = 10;
+  if (xMapping < 0){
+    xMapping = 0;
   }
-  if (yMapping === 0){
-    yMapping = 10;
+  if (yMapping < 0){
+    yMapping = 0;
   }
-  if (zMapping === 0){
-    zMapping = 10;
+  if (zMapping < 0){
+    zMapping = 0;
   }
   this.XGRID_BOUND = xMapping;
   this.YGRID_BOUND = yMapping;
