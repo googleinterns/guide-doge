@@ -36,32 +36,32 @@ export function queryFactory(dataPoints: TimeSeriesPoint[][]) {
       });
     }
 
-    const ANGMX = Math.atan(500 / 800);
-    const uPositiveCorrelated = trapmfL(-ANGMX / 8, ANGMX / 8);
-    const uNegativeCorrelated = trapmfR(-ANGMX / 8, ANGMX / 8);
-    const uSmall = trapmfR(0.5, 0.6);
-    const uLarge = trapmf(0.5, 0.6, 0.9, 0.95);
-    const uPerfect = trapmfL(0.9, 0.95);
+    const uPositiveCorrelated = trapmfL(0, 0);
+    const uNegativeCorrelated = trapmfR(0, 0);
+    const uWeak = trapmfR(0.6, 0.7);
+    const uStrong = trapmfL(0.6, 0.7);
 
-    const uCorrelations: [string, MembershipFunction][] = [
-      ['small', uSmall],
-      ['large', uLarge],
-      ['perfect', uPerfect]
+    const uQnaitifiers: [string, MembershipFunction][] = [
+      ['weak', uWeak],
+      ['strong', uStrong],
     ];
 
-    const uDirections: [string, MembershipFunction][] = [
+    const uCorrelations: [string, MembershipFunction][] = [
       ['positive', uPositiveCorrelated],
       ['negative', uNegativeCorrelated],
     ];
 
     const correlationModel = linearRegression(activeUserRevenuePoints);
     const summaries: Summary[] = [];
-    for (const [correlation, uCorrelation] of uCorrelations) {
-      for (const [direction, uDirection] of uDirections) {
-        const t = Math.min(uCorrelation(correlationModel.r2), uDirection(correlationModel.gradient));
-        const equation = `Revenue = ${correlationModel.gradient} * ActiveUsers ${correlationModel.yIntercept >= 0 ? '+' : '-'} ${Math.abs(correlationModel.yIntercept)}`;
+    for (const [quantifier, uQuantifier] of uQnaitifiers) {
+      for (const [correlation, uCorrelation] of uCorrelations) {
+        const t = Math.min(uQuantifier(correlationModel.r2), uCorrelation(correlationModel.gradient));
+
+        const equationText = `${Math.abs(correlationModel.gradient)} dollars ${correlationModel.gradient >= 0 ? 'gain' : 'loss'} per user increase`;
+        const summaryText = `There is a <b>${quantifier} ${correlation}</b> linear correlation between active users and revenue (<b>${equationText}</b>)`;
+
         summaries.push({
-          text: `There is <b>${correlation} ${direction}</b> linear association between active users and revenue <b>(${equation}, R2=${correlationModel.r2})</b>.`,
+          text: summaryText,
           validity: t
         });
       }
