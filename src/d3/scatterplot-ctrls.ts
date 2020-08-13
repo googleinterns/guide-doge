@@ -53,9 +53,11 @@ const dimensions = ['x', 'y', 'z'];
 
 export class Controls{
   showCtrls: boolean;
+  loadingFlag: boolean;
   scatter: Scatterplot;
 
   constructor(scatter: Scatterplot){
+    this.loadingFlag = true;
     this.showCtrls = true;
     this.scatter = scatter;
     this.addQZCtrls();
@@ -179,14 +181,21 @@ createCtrlPanel(){
     }
     this.createScaleCtrls('all');
     this.createToggleBar();
+    this.invisibleToggleElem();
+}
+
+invisibleToggleElem(){
+  const elems = document.getElementsByClassName('toggle');
+  for (let elem of (elems as unknown as Array<Element>)){
+    (elem as AFRAME.Entity).setAttribute('visible', false);
+  }
 }
 
 //create speedctrls and 'speed' label based on sign parameter
 createSpeedCtrls(sign: string){
     const speedTile = document.createElement('a-entity') as AFRAME.Entity;
-    speedTile.className = 'toggle';
+    speedTile.className = 'toggle nonTextToggle';
     document.querySelector('[camera]').appendChild(speedTile);
-    // document.getElementById('ctrls')!.appendChild(navTile);
     if (sign === 'plus'){
       speedTile.setAttribute('geometry', 'primitive: plane; height: .25; width: .25');
       speedTile.setAttribute('position', speedPos.plus);
@@ -205,21 +214,21 @@ createSpeedCtrls(sign: string){
           });
       } 
       else if (sign === 'label'){
-          // speedTile.setAttribute('geometry', 'primitive: plane; height: auto; width: auto');
-          speedTile.setAttribute('position', speedPos.label);
-          speedTile.setAttribute('text', `value: Speed; align: center; color: black; shader: msdf; font: ${ROBOTO};`);
-          speedTile.setAttribute('scale', '2 2 1');  
-          speedTile.addEventListener('mousedown', () => {
-          });   
+        const speedLabelTile = document.createElement('a-entity') as AFRAME.Entity;
+        document.querySelector('[camera]').appendChild(speedLabelTile);
+        speedLabelTile.className = 'toggle';
+        speedLabelTile.setAttribute('position', speedPos.label);
+        speedLabelTile.setAttribute('text', `value: Speed; align: center; color: black; shader: msdf; font: ${ROBOTO};`);
+        speedLabelTile.setAttribute('scale', '2 2 1');    
       }
   }
 
   createScaleCtrls(dim: string){
     const scaleTilePos = document.createElement('a-entity') as AFRAME.Entity;
-    scaleTilePos.className = 'toggle';
+    scaleTilePos.className = 'toggle nonTextToggle';
     document.querySelector('[camera]').appendChild(scaleTilePos);
     const scaleTileNeg = document.createElement('a-entity') as AFRAME.Entity;
-    scaleTileNeg.className = 'toggle';
+    scaleTileNeg.className = 'toggle nonTextToggle';
     document.querySelector('[camera]').appendChild(scaleTileNeg);
     const labelTile = document.createElement('a-entity') as AFRAME.Entity;
     labelTile.className = 'toggle';
@@ -294,16 +303,17 @@ createSpeedCtrls(sign: string){
     toggleText.setAttribute('text', `value: Open; align: center; color: black; shader: msdf; font: ${ROBOTO};`);
     toggleText.setAttribute('scale', '2 2 1');
     toggleBar.addEventListener('mousedown', () => {
-      const controlItems = document.getElementsByClassName('toggle');
-        // if (this.showCtrls){
-          for (let item of (controlItems as unknown as Array<Element>)){
-            (item as AFRAME.Entity).setAttribute('visible', !this.showCtrls);
-            // document.removeChild(item);
-          }
-        // }
-        // else{
-          // this.createCtrlPanel;
-        // }
+      const nonTxtControlItems = document.getElementsByClassName('nonTextToggle');
+        for (let item of (nonTxtControlItems as unknown as Array<Element>)){
+          if (!this.showCtrls)
+            (item as AFRAME.Entity).setAttribute('scale', '1 1 1');
+          else
+            (item as AFRAME.Entity).setAttribute('scale', '.01 .01 .01');
+        }
+        const controlItems = document.getElementsByClassName('toggle');
+        for (let item of (controlItems as unknown as Array<Element>)){
+          (item as AFRAME.Entity).setAttribute('visible', !this.showCtrls);
+        }
       this.showCtrls = !this.showCtrls;
       toggleText.setAttribute('text', () => {
         var text = '';
@@ -319,6 +329,7 @@ createSpeedCtrls(sign: string){
   private createBackground(){
     const bckgrd = document.createElement('a-entity');
     document.querySelector('[camera]').appendChild(bckgrd);
+    bckgrd.className = 'toggle nonTextToggle';
     bckgrd.setAttribute('geometry', 'primitive: plane; height: 1.5; width: 1');
     bckgrd.setAttribute('material', 'color: #4385f4; opacity: .75;');
     bckgrd.setAttribute('position', bckgrdPos.place);
