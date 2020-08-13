@@ -179,6 +179,9 @@ export class Controls{
           camPos.z - this.scatter.DAYDREAM_NAV_SPEED
         );
       }
+      console.log(this.scatter.getGridBound('x'));
+      console.log(this.scatter.getGridBound('y'));
+      console.log(this.scatter.getGridBound('z'));
     });
   }
 
