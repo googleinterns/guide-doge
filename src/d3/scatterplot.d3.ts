@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import { VRScatterPoint } from '../datasets/queries/vr.query';
 import { MetaType } from '../datasets/metas/types';
 import { Controls } from './scatterplot-ctrls';
+import { xml } from 'd3';
 const PROXY_FLAG = '__keyboard-controls-proxy';
 const DATA_PT_RADIUS = .05;
 // const CAM_Y_ROTATION = AFRAME.THREE.MathUtils.degToRad(135);
@@ -139,6 +140,11 @@ getRand(min, max) {
 
 changeScales(xMapping: number, yMapping: number, zMapping: number){
   d3.select(this.dataPointContainer).selectAll(this.shape).data(this.data).remove();
+  if (xMapping === 0 && yMapping === 0 && zMapping === 0){
+    xMapping = 10;
+    yMapping = 10;
+    zMapping = 10;
+  }
   if (xMapping === 0){
     xMapping = 10;
   }

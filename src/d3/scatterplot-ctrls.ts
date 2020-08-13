@@ -146,6 +146,35 @@ export class Controls{
         }
         this.showCtrls = !this.showCtrls;
       }
+      const camPos = document.querySelector('[camera]').object3D.position;
+      if (event.code === 'KeyL'){
+        camPos.set(
+          camPos.x + this.scatter.DAYDREAM_NAV_SPEED,
+          camPos.y,
+          camPos.z
+        );
+      }
+      if (event.code === 'KeyJ'){
+        camPos.set(
+          camPos.x - this.scatter.DAYDREAM_NAV_SPEED,
+          camPos.y,
+          camPos.z
+        );
+      }
+      if (event.code === 'KeyI'){
+        camPos.set(
+          camPos.x,
+          camPos.y,
+          camPos.z  + this.scatter.DAYDREAM_NAV_SPEED
+        );
+      }
+      if (event.code === 'KeyK'){
+        camPos.set(
+          camPos.x,
+          camPos.y,
+          camPos.z - this.scatter.DAYDREAM_NAV_SPEED
+        );
+      }
     });
   }
 
