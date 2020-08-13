@@ -57,10 +57,10 @@ export class Scatterplot{
     this.dataPointContainer.className = 'dataPts';
     container.appendChild(this.dataPointContainer);
     this.createSky('lightgray');
-    this.createGridPlane();
     
     if (!this.loaded){
     setTimeout(() => {
+      this.createGridPlane();
       this.DAYDREAM_NAV_SPEED = .1;
       this.dataTextContainer = document.createElement('a-entity');
       this.dataTextContainer.className = 'dataTxt';
