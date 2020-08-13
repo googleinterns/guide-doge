@@ -227,7 +227,7 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
     xGrid.id = 'xGrid';
     xGrid.className = 'grids';
     this.container!.appendChild(xGrid);
-    xGrid.object3D.add(new AFRAME.THREE.GridHelper(this.XGRID_BOUND * 2, this.XGRID_BOUND * 2, 0xffffff, 0xffffff));
+    xGrid.object3D.add(new AFRAME.THREE.GridHelper(this.XGRID_BOUND * 4, this.XGRID_BOUND * 2, 0xffffff, 0xffffff));
     d3.select(this.container).select('#xGrid').attr('position', '0 0 0');
     d3.select(this.container).select('#xGrid').attr('rotation', '0 0 0');
 
