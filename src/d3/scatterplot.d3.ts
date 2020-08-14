@@ -129,7 +129,7 @@ export class Scatterplot{
     this.zScale = this.dimScales(maxZValue, this.ZGRID_BOUND);
   }
 
-  private dimScales(maxVal: number, gridBound: number): d3.ScaleLinear<number, number> {
+  dimScales(maxVal: number, gridBound: number): d3.ScaleLinear<number, number> {
     // scale positions based on largest value found in xyz to absVal(maxGridDimension)
     return d3.scaleLinear().domain([0, maxVal]).range([0, gridBound]);
   }

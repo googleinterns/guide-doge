@@ -92,11 +92,14 @@ export class Controls{
     if (this.camera === null){
       document.createElement('a-camera');
     }
-    for (const dimension of dimensions){
-      this.createNavTile(dimension);
-  }
+    this.createNavTiles();
     this.createCtrlPanel();
     this.addDemoKeys();
+  }
+  createNavTiles(){
+    for (const dimension of dimensions){
+      this.createNavTile(dimension);
+    }
   }
   // in web desktop version, there is no laser pointer to adjust ctrls/position
   // addDemoKeys allows for user to still use all ctrls through keyboard interface

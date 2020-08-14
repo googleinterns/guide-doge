@@ -159,6 +159,11 @@ describe('Checking ctrl functions', () => {
     scatterplot.setDaydreamNavSpeed(1);
     expect(scatterplot.getDaydreamNavSpeed()).toEqual(1);
   });
+  it('for working dimScale', () => {
+    scatterplot.init(element, scatterPlotData1, [], MetaType.SCATTER_PLOT);
+    const scale = scatterplot.dimScales(10, 10);
+    expect(scale != null).toBe(true);
+  });
 });
 
 // returns array of actual position vectors
