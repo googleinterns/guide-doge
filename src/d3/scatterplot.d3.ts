@@ -57,7 +57,7 @@ export class Scatterplot{
     this.dataType = dataType;
     this.checkForDSChange();
     this.DAYDREAM_NAV_SPEED = .1;
-    this.dataPointContainer = this.('a-entity', 'points');
+    this.dataPointContainer = this.createEntity('a-entity', 'points');
     this.dataTextContainer = this.createEntity('a-entity', 'cards');
     container.appendChild(this.dataPointContainer);
     container.appendChild(this.dataTextContainer);
@@ -68,6 +68,7 @@ export class Scatterplot{
       this.generateText();
     }
 
+    // add setTimeout to allow time for camera entity to load
     setTimeout(() => {
       this.dataTextContainer = this.createEntity('a-entity', 'cards');
       if (document.querySelector('[camera]') != null){
@@ -77,13 +78,15 @@ export class Scatterplot{
         this.generatePts();
       }
       this.generateText();
+      // only load controls once -> component will call init everytime dataset preference is changed
       if (this.loadControls){
         const control = new Controls(this);
       }
     }, 2000);
-  this.loaded = true;
-}
+    this.loaded = true;
+  }
 
+  // when dataset changes, current selections of points and text cards need to be cleared for new selection
   checkForDSChange(){
     if (document.getElementById('points') != null && document.getElementById('cards') != null){
       this.loadControls = false;
@@ -92,32 +95,15 @@ export class Scatterplot{
       points!.parentNode!.removeChild(points as Node);
       cards!.parentNode!.removeChild(cards as Node);
     }
+  }
 
+  // allow for abtracted pattern when calling to create cardSelection and selection of points
   private createEntity(entity: string, id: string): HTMLElement {
     const retEntity = document.createElement(entity);
     retEntity.id = id;
     return retEntity;
   }
-
-  setDaydreamNavSpeed(setSpeed: number){
-    this.DAYDREAM_NAV_SPEED = setSpeed;
-  }
-
-  getDaydreamNavSpeed(): number{
-    return this.DAYDREAM_NAV_SPEED;
-  }
-
-  getGridBound(dimension: string): number{
-    if (dimension === 'x'){
-      return this.XGRID_BOUND;
-    } else if (dimension === 'y'){
-        return this.YGRID_BOUND;
-    } else if (dimension === 'z'){
-        return this.ZGRID_BOUND;
-    }
-    return this.XGRID_BOUND;
-  }
-
+  // restrict spatial positioning of elements in a-scene, so that they remain close enough to user (camera in a-scene) to be seen/visited
   private scalePosition(xMapping: number, yMapping: number, zMapping: number){
     let maxXValue = this.data[0].x;
     let maxYValue = this.data[0].y;
@@ -133,35 +119,15 @@ export class Scatterplot{
         maxZValue = pt.z;
       }
     }
-
     // scale positions based on largest value found in xyz to absVal(maxGridDimension)
     this.xScale = this.dimScales(maxXValue, this.XGRID_BOUND);
     this.yScale = this.dimScales(maxYValue, this.YGRID_BOUND);
     this.zScale = this.dimScales(maxZValue, this.ZGRID_BOUND);
   }
 
-changeScales(xMapping: number, yMapping: number, zMapping: number){
-  d3.select(this.dataPointContainer).selectAll(this.shape).data(this.data).remove();
-  if (xMapping < 0){
-    xMapping = 0;
-  }
-  if (yMapping < 0){
-    yMapping = 0;
-  }
-  if (zMapping < 0){
-    zMapping = 0;
-  }
-
-  this.XGRID_BOUND = xMapping;
-  this.YGRID_BOUND = yMapping;
-  this.ZGRID_BOUND = zMapping;
-  this.generatePts();
-  this.redrawGridPlane();
-}
-
   private dimScales(maxVal: number, gridBound: number): d3.ScaleLinear<number, number> {
-       // scale positions based on largest value found in xyz to absVal(maxGridDimension)
-      return d3.scaleLinear().domain([0, maxVal]).range([0, gridBound]);
+    // scale positions based on largest value found in xyz to absVal(maxGridDimension)
+    return d3.scaleLinear().domain([0, maxVal]).range([0, gridBound]);
   }
 
   private generatePts() {
@@ -180,10 +146,11 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
       const z = this.zScale(d.z);
       return `${x.toFixed(2)} ${y.toFixed(2)} ${z.toFixed(2)}`;
     })
+    // addEventListeners to spheres on whether to show corresponding cards/text or not
     .each((d, i, g) => {
       (g[i] as AFRAME.Entity).addEventListener('mouseenter', () => {
         const hoverIdx = i;
-         // disable next line bc d,i are necessary even if shadowed from .each
+         // disable next line bc d,i are necessary in method signature even if shadowed from .each
         // tslint:disable-next-line
         this.cardSelection.filter((d, i) => { return i === hoverIdx})
         .attr('visible', true)
@@ -191,7 +158,7 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
       });
       (g[i] as AFRAME.Entity).addEventListener('mouseleave', () => {
         const hoverIdx = i;
-        // disable next line bc d,i are necessary even if shadowed from .each
+        // disable next line bc d,i are necessary in method signature even if shadowed from .each
         // tslint:disable-next-line
         this.cardSelection.filter((d, i) =>  i === hoverIdx)
         .attr('visible', false)
@@ -200,6 +167,7 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
     });
   }
 
+  // create display in view hover cards with segment/metric information
   private generateText(){
     // enter identifies any DOM elements to be added when # array elements doesn't match
     d3.select(this.dataTextContainer).selectAll('a-entity').data(this.data).enter().append('a-entity');
@@ -219,10 +187,13 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
         shader: msdf;
         font: https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/roboto/Roboto-Medium.json;`;
       })
+      // default to not showing cards - only show when mouse/laser intersects with corresponding data point
       .attr('visible', false)
-      .attr('position', '0 0 -2');
+      // default to placing behind camera (so as not to obstruct laser intersection with points)
+      .attr('position', '0 0 2');
   }
 
+  // redrawGridPlane called when scale is changed for any of the dimensions
   private redrawGridPlane(){
     (this.container as Node)!.removeChild((document.getElementById('xGrid') as Node)!);
     (this.container as Node)!.removeChild((document.getElementById('yGrid') as Node)!);
@@ -232,6 +203,7 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
 
   private createGridPlane()
   {
+    // create X-Grid element in ascene
     const xGrid = document.createElement('a-entity');
     xGrid.className = 'grids';
     xGrid.id = 'xGrid';
@@ -241,6 +213,7 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
     d3.select(this.container).select('#xGrid').attr('position', '0 0 0');
     d3.select(this.container).select('#xGrid').attr('rotation', '0 0 0');
 
+    // create Y-Grid element in ascene
     const yGrid = document.createElement('a-entity');
     yGrid.className = 'grids';
     yGrid.id = 'yGrid';
@@ -250,6 +223,7 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
     d3.select(this.container).select('#yGrid').attr('position', '0 0 0');
     d3.select(this.container).select('#yGrid').attr('rotation', '0 0 -90');
 
+    // create Z-Grid element in ascene
     const zGrid = document.createElement('a-entity');
     zGrid.className = 'grids';
     zGrid.id = 'zGrid';
@@ -260,6 +234,7 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
     d3.select(this.container).select('#zGrid').attr('rotation', '-90 0 0');
   }
 
+  // createSky creates a sky background of color in a-scene
   private createSky(color: string | number){
     const sky = document.createElement('a-sky');
     sky.id = 'sky';
@@ -267,5 +242,45 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
     d3.select(this.container).selectAll('#sky').attr('color', () => {
       return color;
     });
+  }
+
+  setDaydreamNavSpeed(setSpeed: number){
+    this.DAYDREAM_NAV_SPEED = setSpeed;
+  }
+
+  getDaydreamNavSpeed(): number{
+    return this.DAYDREAM_NAV_SPEED;
+  }
+
+  getGridBound(dimension: string): number{
+    if (dimension === 'x'){
+      return this.XGRID_BOUND;
+    } else if (dimension === 'y'){
+        return this.YGRID_BOUND;
+    } else if (dimension === 'z'){
+        return this.ZGRID_BOUND;
+    }
+    // if all fail, return XGRID_BOUND by default
+    return this.XGRID_BOUND;
+  }
+
+  // allow for Control class to change scales of a-scene environment
+  // Control will pass in new scales for each dimension
+  changeScales(xMapping: number, yMapping: number, zMapping: number){
+    d3.select(this.dataPointContainer).selectAll(this.shape).data(this.data).remove();
+    if (xMapping < 0){
+      xMapping = 0;
+    }
+    if (yMapping < 0){
+      yMapping = 0;
+    }
+    if (zMapping < 0){
+      zMapping = 0;
+    }
+    this.XGRID_BOUND = xMapping;
+    this.YGRID_BOUND = yMapping;
+    this.ZGRID_BOUND = zMapping;
+    this.generatePts();
+    this.redrawGridPlane();
   }
 }

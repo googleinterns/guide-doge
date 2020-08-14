@@ -65,15 +65,15 @@ export class VRScatterPlotComponent implements OnInit {
         // TODO: write error handling for cases outside of SCATTER_PLOT
         case MetaType.TABBED_CHARTS: {
           this.datasetPref = (dataset.metas[0] as any).metas[0];
-          alert('You chose an invalid dataset. Please choose either VRScatterplot or VRScatterPlot2.');
+          alert('You chose an invalid dataset. Please choose a VRScatterplot-compatible dataset.');
           break;
         }
         case MetaType.LINE_CHART: {
-          alert('You chose an invalid dataset. Please choose either VRScatterplot or VRScatterPlot2.');
+          alert('You chose an invalid dataset. Please choose a VRScatterplot-compatible dataset.');
           break;
         }
         case MetaType.GEO_MAP: {
-          alert('You chose an invalid dataset. Please choose either VRScatterplot or VRScatterPlot2.');
+          alert('You chose an invalid dataset. Please choose a VRScatterplot-compatible dataset.');
           break;
         }
       }

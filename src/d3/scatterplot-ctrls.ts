@@ -3,6 +3,7 @@ import { Scatterplot } from './scatterplot.d3';
 import { rollup } from 'd3';
 const ROBOTO = 'https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/roboto/Roboto-Medium.json';
 
+// define spatial placement of navigation tiles in a-scene
 const tilePos: Record<string, string> = {
   ['xPos']: '-1.15 1 -4',
   ['xNeg']: '-2.15 1 -4',
@@ -11,42 +12,77 @@ const tilePos: Record<string, string> = {
   ['zPos']: '1.25 1.5 -4',
   ['zNeg']: '1.25 .5 -4',
 };
+
+// define spatial placement of speed tiles in a-scene
 const speedPos: Record<string, string> = {
     ['minus']: '-.35 .5 -2',
     ['plus']: '.35 .5 -2',
     ['label']: '0 .45 -2',
 };
+
+// define spatial placement of x-scale tiles in a-scene
 const xScalePos: Record<string, string> = {
     ['decrement']: '-.35 .25 -2',
     ['increment']: '.35 .25 -2',
     ['label']: '0 .2 -2',
 };
 
+// define spatial placement of y-scale tiles in a-scene
 const yScalePos: Record<string, string> = {
     ['decrement']: '-.35 0 -2',
     ['increment']: '.35 0 -2',
     ['label']: '0 -.05 -2',
 };
 
+// define spatial placement of z-scale tiles in a-scene
 const zScalePos: Record<string, string> = {
     ['decrement']: '-.35 -0.25 -2',
     ['increment']: '.35 -0.25 -2',
     ['label']: '0 -0.3 -2',
 };
 
+// define spatial placement of all-scale tiles in a-scene
 const allScalePos: Record<string, string> = {
     ['decrement']: '-.35 -.5 -2',
     ['increment']: '.35 -.5 -2',
     ['label']: '0 -.55 -2',
 };
 
+// define spatial placement of ctrl panel toggle bar in a-scene
 const toggleBarPos: Record<string, string> = {
   ['bar']: '0 -.725 -2',
   ['label']: '0 -.775 -1.98',
 };
 
+// define spatial placement of ctrl panel background in a-scene
 const bckgrdPos: Record<string, string> = {
   ['place']: '0 -.1 -2.01',
+};
+
+// constants to add to corresponding scales after 'keydown' event listener
+const scaleControls = {
+  9: {x: 10, y: 0, z: 0},
+  7: {x: -10, y: 0, z: 0},
+  6: {x: 0, y: 10, z: 0},
+  4: {x: 0, y: -10, z: 0},
+  3: {x: 0, y: 0, z: 10},
+  1: {x: 0, y: 0, z: -10},
+  8: {x: 10, y: 10, z: 10},
+  5: {x: -10, y: -10, z: -10},
+};
+
+const speedControls = {
+  Minus: {val: -.1},
+  Equal: {val: .1},
+};
+
+const mvmtControls = {
+  I: {dim: 'z', direction: 1},
+  K: {dim: 'z', direction: -1},
+  Q: {dim: 'y', direction: 1},
+  Z: {dim: 'y', direction: -1},
+  L: {dim: 'x', direction: 1},
+  J: {dim: 'x', direction: -1},
 };
 
 const dimensions = ['x', 'y', 'z'];
@@ -67,147 +103,82 @@ export class Controls{
     if (this.camera === null){
       document.createElement('a-camera');
     }
-    this.addQZCtrls();
     this.createNavTiles(this.scatter.DAYDREAM_NAV_SPEED);
-    this.createCtrlPanel(); 
+    this.createCtrlPanel();
     this.addDemoKeys();
   }
 
+  // in web desktop version, there is no laser pointer to adjust ctrls/position
+  // addDemoKeys allows for user to still use all ctrls through keyboard interface
   addDemoKeys(){
     document.addEventListener('keydown', (event) => {
-      if (event.code === 'Minus'){
-        if (this.scatter.DAYDREAM_NAV_SPEED > .1){
-          this.scatter.setDaydreamNavSpeed(this.scatter.getDaydreamNavSpeed() - .1);
-          console.log(this.scatter.getDaydreamNavSpeed());
-        } 
+      // add controls to increase/decrease speed of movement in space with either ijkl mvmt or daydream ctrl panel
+      for (const [sign, value] of Object.entries(speedControls)) {
+        if ([sign].includes(event.code)) {
+          console.log(value.val);
+          this.scatter.setDaydreamNavSpeed(this.scatter.getDaydreamNavSpeed() + value.val);
+        }
       }
-      if (event.code === 'Equal'){
-        this.scatter.setDaydreamNavSpeed(this.scatter.getDaydreamNavSpeed() + .1);
-        console.log(this.scatter.getDaydreamNavSpeed());
+      // add controls to change scale of x, y, z or all dimensions
+      for (const [digit, offsets] of Object.entries(scaleControls)) {
+        if (['Numpad' + digit, 'Digit' + digit].includes(event.code)) {
+          this.scatter.changeScales(this.scatter.getGridBound('x') + offsets.x,
+          this.scatter.getGridBound('y') + offsets.y,
+          this.scatter.getGridBound('z') + offsets.z);
+        }
       }
-      // increase x scale
-      if (event.code === 'Numpad9' || event.code === 'Digit9'){
-        this.scatter.changeScales(
-          this.scatter.getGridBound('x') + 10,
-          this.scatter.getGridBound('y'),
-          this.scatter.getGridBound('z'));
-      }
-      // decrease x scale
-      if (event.code === 'Numpad7' || event.code === 'Digit7'){
-        this.scatter.changeScales(
-          this.scatter.getGridBound('x') - 10,
-          this.scatter.getGridBound('y'),
-          this.scatter.getGridBound('z'));
-      }
-       // increase y scale
-       if (event.code === 'Numpad6' || event.code === 'Digit6'){
-        this.scatter.changeScales(
-          this.scatter.getGridBound('x'),
-          this.scatter.getGridBound('y') + 10,
-          this.scatter.getGridBound('z'));
-      }
-      // decrease y scale
-      if (event.code === 'Numpad4' || event.code === 'Digit4'){
-        this.scatter.changeScales(
-          this.scatter.getGridBound('x'),
-          this.scatter.getGridBound('y') - 10,
-          this.scatter.getGridBound('z'));
-      }
-      // increase z scale
-      if (event.code === 'Numpad3' || event.code === 'Digit3'){
-      this.scatter.changeScales(
-        this.scatter.getGridBound('x'),
-        this.scatter.getGridBound('y'),
-        this.scatter.getGridBound('z') + 10);
-      }
-      // decrease z scale
-      if (event.code === 'Numpad1' || event.code === 'Digit1'){
-        this.scatter.changeScales(
-          this.scatter.getGridBound('x'),
-          this.scatter.getGridBound('y'),
-          this.scatter.getGridBound('z') - 10);
-      }
-      if (event.code === 'Numpad8' || event.code === 'Digit8'){
-        this.scatter.changeScales(
-          this.scatter.getGridBound('x') + 10,
-          this.scatter.getGridBound('y') + 10,
-          this.scatter.getGridBound('z') + 10);
-      }
-      if (event.code === 'Numpad5' || event.code === 'Digit5'){
-        this.scatter.changeScales(
-          this.scatter.getGridBound('x') - 10,
-          this.scatter.getGridBound('y') - 10,
-          this.scatter.getGridBound('z') - 10);
-      }
+      // reset scale back to initial loading scale, where each point's distance from origin per dim. is from 0 to 50
       if (event.code === 'Numpad0' || event.code === 'Digit0'){
         this.scatter.changeScales(
           50, 50, 50);
       }
-      if(event.code === 'KeyT'){
+
+      const camPos = document.querySelector('[camera]').object3D.position;
+      // create movement on keyboard with adjustable speed (speed ctrls diretly affect mvmt of ijkl + qz mvmt)
+      for (const [key, value] of Object.entries(mvmtControls)) {
+        if (['Key' + key].includes(event.code)) {
+          if (value.dim === 'x'){
+            camPos.set(
+              camPos.x + value.direction * this.scatter.DAYDREAM_NAV_SPEED,
+              camPos.y,
+              camPos.z
+            );
+          }
+          if (value.dim === 'y'){
+            camPos.set(
+              camPos.x,
+              camPos.y + value.direction * this.scatter.DAYDREAM_NAV_SPEED,
+              camPos.z
+            );
+          }
+          if (value.dim === 'z'){
+            camPos.set(
+              camPos.x,
+              camPos.y,
+              camPos.z + value.direction * this.scatter.DAYDREAM_NAV_SPEED
+            );
+          }
+        }
+      }
+      // toggle on/off the Control Panel
+      // since there is no laser in desktop version, must use key to toggle panel
+      if (event.code === 'KeyT'){
         const nonTxtControlItems = document.getElementsByClassName('nonTextToggle');
-        for (let item of (nonTxtControlItems as unknown as Array<Element>)){
-          if (!this.showCtrls)
+        for (const item of (nonTxtControlItems as unknown as Array<Element>)){
+          if (!this.showCtrls){
             (item as AFRAME.Entity).setAttribute('scale', '1 1 1');
-          else
+        }
+          else{
+            // panel will obstruct cursor => scale size down to keep from entity intersection conflict
             (item as AFRAME.Entity).setAttribute('scale', '.01 .01 .01');
+          }
         }
         const controlItems = document.getElementsByClassName('toggle');
-        for (let item of (controlItems as unknown as Array<Element>)){
+        for (const item of (controlItems as unknown as Array<Element>)){
+          // toggle on/off the ctrl panel
           (item as AFRAME.Entity).setAttribute('visible', !this.showCtrls);
         }
         this.showCtrls = !this.showCtrls;
-      }
-      const camPos = document.querySelector('[camera]').object3D.position;
-      if (event.code === 'KeyL'){
-        camPos.set(
-          camPos.x + this.scatter.DAYDREAM_NAV_SPEED,
-          camPos.y,
-          camPos.z
-        );
-      }
-      if (event.code === 'KeyJ'){
-        camPos.set(
-          camPos.x - this.scatter.DAYDREAM_NAV_SPEED,
-          camPos.y,
-          camPos.z
-        );
-      }
-      if (event.code === 'KeyI'){
-        camPos.set(
-          camPos.x,
-          camPos.y,
-          camPos.z  + this.scatter.DAYDREAM_NAV_SPEED
-        );
-      }
-      if (event.code === 'KeyK'){
-        camPos.set(
-          camPos.x,
-          camPos.y,
-          camPos.z - this.scatter.DAYDREAM_NAV_SPEED
-        );
-      }
-      console.log(this.scatter.getGridBound('x'));
-      console.log(this.scatter.getGridBound('y'));
-      console.log(this.scatter.getGridBound('z'));
-    });
-  }
-
-  addQZCtrls(){
-    document.addEventListener('keydown', (event) => {
-      const camPos = (this.camera as AFRAME.Entity).object3D.position;
-      if (event.code === 'KeyQ'){
-        camPos.set(
-          camPos.x,
-          camPos.y + this.scatter.DAYDREAM_NAV_SPEED,
-          camPos.z
-        );
-      }
-      if (event.code === 'KeyZ'){
-        camPos.set(
-          camPos.x,
-          camPos.y - this.scatter.DAYDREAM_NAV_SPEED,
-          camPos.z
-        );
       }
     });
   }
@@ -315,15 +286,16 @@ export class Controls{
     this.invisibleToggleElem();
   }
 
-invisibleToggleElem(){
-  const elems = document.getElementsByClassName('toggle');
-  for (const elem of (elems as unknown as Array<Element>)){
-    (elem as AFRAME.Entity).setAttribute('visible', false);
+  // make ctrl panel invisible upon load
+  invisibleToggleElem(){
+    const elems = document.getElementsByClassName('toggle');
+    for (const elem of (elems as unknown as Array<Element>)){
+      (elem as AFRAME.Entity).setAttribute('visible', false);
+    }
   }
-}
 
-// create speedctrls and 'speed' label based on sign parameter
-createSpeedCtrls(sign: string){
+  // create speedctrls and 'speed' label based on sign parameter
+  createSpeedCtrls(sign: string){
     const speedTile = document.createElement('a-entity') as AFRAME.Entity;
     speedTile.className = 'toggle nonTextToggle';
     this.cameraAppendChild(speedTile);
@@ -354,6 +326,8 @@ createSpeedCtrls(sign: string){
       }
   }
 
+  // make positive and negative tile for scale adjustment
+  // dim: string defines unique attributes of tile, such as src picture, position, which dimension it is re-scaling, etc
   createScaleCtrls(dim: string){
     const scaleTilePos = document.createElement('a-entity') as AFRAME.Entity;
     scaleTilePos.className = 'toggle nonTextToggle';
@@ -436,6 +410,7 @@ createSpeedCtrls(sign: string){
     labelTile.setAttribute('scale', '2 2 1');
   }
 
+  // create bar to toggle control panel on/off in desktop (KeyT) or mobile version (mousedown)
   private createToggleBar(){
     const toggleBar = document.createElement('a-entity');
     this.cameraAppendChild(toggleBar);
@@ -474,6 +449,7 @@ createSpeedCtrls(sign: string){
     bckgrd.setAttribute('position', bckgrdPos.place);
   }
 
+  // check to make sure camera is not null before trying to append a child to it
   private cameraAppendChild(element: HTMLElement){
     if (this.camera !== null){
       this.camera.appendChild(element);
