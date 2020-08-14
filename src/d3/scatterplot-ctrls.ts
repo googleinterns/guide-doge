@@ -2,7 +2,6 @@ import * as AFRAME from 'aframe';
 import { Scatterplot } from './scatterplot.d3';
 import { rollup } from 'd3';
 const ROBOTO = 'https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/roboto/Roboto-Medium.json';
-
 // define spatial placement of navigation tiles in a-scene
 const tilePos: Record<string, string> = {
   ['xPos']: '-1.15 1 -4',
@@ -12,53 +11,45 @@ const tilePos: Record<string, string> = {
   ['zPos']: '1.25 1.5 -4',
   ['zNeg']: '1.25 .5 -4',
 };
-
 // define spatial placement of speed tiles in a-scene
 const speedPos: Record<string, string> = {
     ['minus']: '-.35 .5 -2',
     ['plus']: '.35 .5 -2',
     ['label']: '0 .45 -2',
 };
-
 // define spatial placement of x-scale tiles in a-scene
 const xScalePos: Record<string, string> = {
     ['decrement']: '-.35 .25 -2',
     ['increment']: '.35 .25 -2',
     ['label']: '0 .2 -2',
 };
-
 // define spatial placement of y-scale tiles in a-scene
 const yScalePos: Record<string, string> = {
     ['decrement']: '-.35 0 -2',
     ['increment']: '.35 0 -2',
     ['label']: '0 -.05 -2',
 };
-
 // define spatial placement of z-scale tiles in a-scene
 const zScalePos: Record<string, string> = {
     ['decrement']: '-.35 -0.25 -2',
     ['increment']: '.35 -0.25 -2',
     ['label']: '0 -0.3 -2',
 };
-
 // define spatial placement of all-scale tiles in a-scene
 const allScalePos: Record<string, string> = {
     ['decrement']: '-.35 -.5 -2',
     ['increment']: '.35 -.5 -2',
     ['label']: '0 -.55 -2',
 };
-
 // define spatial placement of ctrl panel toggle bar in a-scene
 const toggleBarPos: Record<string, string> = {
   ['bar']: '0 -.725 -2',
   ['label']: '0 -.775 -1.98',
 };
-
 // define spatial placement of ctrl panel background in a-scene
 const bckgrdPos: Record<string, string> = {
   ['place']: '0 -.1 -2.01',
 };
-
 // constants to add to corresponding scales after 'keydown' event listener
 const scaleControls = {
   9: {x: 10, y: 0, z: 0},
@@ -70,12 +61,10 @@ const scaleControls = {
   8: {x: 10, y: 10, z: 10},
   5: {x: -10, y: -10, z: -10},
 };
-
 const speedControls = {
   Minus: {val: -.1},
   Equal: {val: .1},
 };
-
 const mvmtControls = {
   I: {dim: 'z', direction: 1},
   K: {dim: 'z', direction: -1},
@@ -84,9 +73,7 @@ const mvmtControls = {
   L: {dim: 'x', direction: 1},
   J: {dim: 'x', direction: -1},
 };
-
 const dimensions = ['x', 'y', 'z'];
-
 const ADD_SPEED = .1;
 
 export class Controls{
@@ -107,7 +94,6 @@ export class Controls{
     this.createCtrlPanel();
     this.addDemoKeys();
   }
-
   // in web desktop version, there is no laser pointer to adjust ctrls/position
   // addDemoKeys allows for user to still use all ctrls through keyboard interface
   addDemoKeys(){
@@ -132,7 +118,6 @@ export class Controls{
         this.scatter.changeScales(
           50, 50, 50);
       }
-
       const camPos = document.querySelector('[camera]').object3D.position;
       // create movement on keyboard with adjustable speed (speed ctrls diretly affect mvmt of ijkl + qz mvmt)
       for (const [key, value] of Object.entries(mvmtControls)) {
@@ -182,14 +167,12 @@ export class Controls{
       }
     });
   }
-
   // abstracted calling of creating navigation tiles (3 dimensions - pos/neg direction)
   createNavTiles(DAYDREAM_NAV_SPEED: number){
     for (const dimension of dimensions){
         this.createNavTile(dimension);
     }
   }
-
   // create 6 arrows - 3 per dimension - to allow for movement in scene
   createNavTile(dim: string){
     let rigPos: any;
@@ -273,7 +256,6 @@ export class Controls{
     });
     (navTileNeg as AFRAME.Entity).addEventListener('mouseup', () => { clearInterval(intervalNeg); });
   }
-
   // abstracted calling to create collapsible control panel with speed and scale adjustments
   createCtrlPanel(){
     this.createBackground();
@@ -287,7 +269,6 @@ export class Controls{
     this.createToggleBar();
     this.invisibleToggleElem();
   }
-
   // make ctrl panel invisible upon load
   invisibleToggleElem(){
     const elems = document.getElementsByClassName('toggle');
@@ -295,7 +276,6 @@ export class Controls{
       (elem as AFRAME.Entity).setAttribute('visible', false);
     }
   }
-
   // create speedctrls and 'speed' label based on sign parameter
   createSpeedCtrls(sign: string){
     const speedTile = document.createElement('a-entity') as AFRAME.Entity;
@@ -327,7 +307,6 @@ export class Controls{
         speedLabelTile.setAttribute('scale', '2 2 1');
       }
   }
-
   // make positive and negative tile for scale adjustment
   // dim: string defines unique attributes of tile, such as src picture, position, which dimension it is re-scaling, etc
   createScaleCtrls(dim: string){
@@ -392,7 +371,6 @@ export class Controls{
           this.scatter.getGridBound('z') + zScaleDelta);
       }
     });
-
     scaleTileNeg.setAttribute('position', negativePos);
     (scaleTileNeg as AFRAME.Entity).addEventListener('mousedown', () => {
       if (dim === 'all'){
@@ -411,7 +389,6 @@ export class Controls{
     labelTile.setAttribute('text', `value: ${labelName}; align: center; color: black; shader: msdf; font: ${ROBOTO};`);
     labelTile.setAttribute('scale', '2 2 1');
   }
-
   // create bar to toggle control panel on/off in desktop (KeyT) or mobile version (mousedown)
   createToggleBar(){
     const toggleBar = document.createElement('a-entity');
@@ -442,7 +419,6 @@ export class Controls{
       this.showCtrls = !this.showCtrls;
     });
   }
-
   createBackground(){
     const bckgrd = document.createElement('a-entity');
     bckgrd.className = 'background';
@@ -452,7 +428,6 @@ export class Controls{
     bckgrd.setAttribute('material', 'color: #4385f4; opacity: .75;');
     bckgrd.setAttribute('position', bckgrdPos.place);
   }
-
   // check to make sure camera is not null before trying to append a child to it
   private cameraAppendChild(element: HTMLElement){
     if (this.camera !== null){
