@@ -5,7 +5,8 @@ import { MetaType } from '../datasets/metas/types';
 import { Controls } from './scatterplot-ctrls';
 const PROXY_FLAG = '__keyboard-controls-proxy';
 const DATA_PT_RADIUS = .05;
-// const CAM_Y_ROTATION = AFRAME.THREE.MathUtils.degToRad(135);
+const ROBOTO = 'https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/roboto/Roboto-Medium.json;';
+const AILERON_FONT = 'https://cdn.aframe.io/fonts/Aileron-Semibold.fnt';
 
 const speedPos: Record<string, string> = {
     ['minus']: '-.75 1.5 -4',
@@ -39,10 +40,13 @@ export class Scatterplot{
     dataType: MetaType;
     loaded = false;
     cameraRig: HTMLElement = document.createElement('a-entity');
+    camera: HTMLElement;
+
 
 
   constructor(shape: string) {
     this.shape = shape;
+    this.loaded = false;
   }
 
   init(container: HTMLElement, data: VRScatterPoint[], metrics: string[], dataType: MetaType){
@@ -51,8 +55,7 @@ export class Scatterplot{
     this.dataType = dataType;
     this.container = container;
     this.dataType = dataType;
-    this.dataPointContainer = document.createElement('a-entity');
-    this.dataPointContainer.className = 'dataPts';
+    this.dataPointContainer = this.createEntity('a-entity', 'points');
     container.appendChild(this.dataPointContainer);
     this.createSky('lightgray');
     this.createGridPlane();
@@ -60,8 +63,7 @@ export class Scatterplot{
     if (!this.loaded){
     setTimeout(() => {
       this.DAYDREAM_NAV_SPEED = .1;
-      this.dataTextContainer = document.createElement('a-entity');
-      this.dataTextContainer.className = 'dataTxt';
+      this.dataTextContainer = this.createEntity('a-entity', 'cards');
       document.querySelector('[camera]').appendChild(this.dataTextContainer);
      
       if (this.data.length > 0){
@@ -75,12 +77,14 @@ export class Scatterplot{
   }
   this.loaded = true;
 }
-  // private createCtrlTools(){
-  //   addQZCtrls(this);
-  //   createNavTiles(this.DAYDREAM_NAV_SPEED, this);
-  //   createCtrlPanel(this); 
-  // }
-  setDaydreamNavSpeed(setSpeed: number){
+
+  private createEntity(entity: string, id: string): HTMLElement {
+    const retEntity = document.createElement(entity);
+    retEntity.id = id;
+    return retEntity;
+  }  
+
+setDaydreamNavSpeed(setSpeed: number){
     this.DAYDREAM_NAV_SPEED = setSpeed;
   }
 
@@ -99,7 +103,6 @@ export class Scatterplot{
     return this.XGRID_BOUND;
   }
 
-
   private scalePosition(xMapping: number, yMapping: number, zMapping: number){
     let maxXValue = this.data[0].x;
     let maxYValue = this.data[0].y;
@@ -115,10 +118,11 @@ export class Scatterplot{
         maxZValue = pt.z;
       }
     }
+
     // scale positions based on largest value found in xyz to absVal(maxGridDimension)
-    this.xScale = d3.scaleLinear().domain([0, maxXValue]).range([0, xMapping]);
-    this.yScale = d3.scaleLinear().domain([0, maxYValue]).range([0, yMapping]);
-    this.zScale = d3.scaleLinear().domain([0, maxZValue]).range([0, zMapping]);
+    this.xScale = this.dimScales(maxXValue);
+    this.yScale = this.dimScales(maxYValue);
+    this.zScale = this.dimScales(maxZValue);
   }
 
 changeScales(xMapping: number, yMapping: number, zMapping: number){
@@ -132,12 +136,18 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
   if (zMapping === 0){
     zMapping = 10;
   }
+
   this.XGRID_BOUND = xMapping;
   this.YGRID_BOUND = yMapping;
   this.ZGRID_BOUND = zMapping;
   this.generatePts();
   this.redrawGridPlane();
 }
+
+  private dimScales(maxVal: number): d3.ScaleLinear<number, number> {
+       // scale positions based on largest value found in xyz to absVal(maxGridDimension)
+      return d3.scaleLinear().domain([0, maxVal]).range([0, this.GRID_BOUND]);
+  }
 
   private generatePts() {
     this.scalePosition(this.XGRID_BOUND, this.YGRID_BOUND, this.ZGRID_BOUND);
@@ -152,16 +162,19 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
       const x = this.xScale((d as VRScatterPoint).x);
       const y = this.yScale((d as VRScatterPoint).y);
       const z = this.zScale((d as VRScatterPoint).z);
-      return `${x} ${y} ${z}`;
+      return `${x.toFixed(2)} ${y.toFixed(2)} ${z.toFixed(2)}`;
     })
     .each((d, i, g) => {
-      // (g[i] as AFRAME.Entity).setAttribute('hover_cards', '');
       (g[i] as AFRAME.Entity).addEventListener('mouseenter', () => {
         const hoverIdx = i;
+         // disable next line bc d,i are necessary even if shadowed from .each
+        // tslint:disable-next-line
         this.cardSelection.filter((d, i) => { return i === hoverIdx})
         .attr('visible', true) 
         .attr('position', '0 -.15 -.5');
       });
+       // disable next line bc d,i are necessary even if shadowed from .each
+        // tslint:disable-next-line
       (g[i] as AFRAME.Entity).addEventListener('mouseleave', () => {
         const hoverIdx = i;
         this.cardSelection.filter((d, i) => { return i === hoverIdx})
@@ -181,7 +194,6 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
       .attr('text', (d, i) => {
         const categories = (d as VRScatterPoint).categories.browser + ', ' + (d as VRScatterPoint).categories.country
           + ', ' + (d as VRScatterPoint).categories.source;
-        // for (let categChild of (d as VRScatterPoint).categories)
         const x = (d as VRScatterPoint).x;
         const y = (d as VRScatterPoint).y;
         const z = (d as VRScatterPoint).z;
@@ -247,18 +259,3 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
     });
   }
 }
-
-AFRAME.registerComponent('rotate_cards', {
-  tick() {
-    // need to include rig to account for initial rotation of camera rig
-    const rigRot = (document.getElementById('rig') as AFRAME.Entity).object3D.rotation;
-    const camRot = (document.querySelector('[camera]') as AFRAME.Entity).object3D.rotation;
-    this.el.object3D.rotation.set(
-       rigRot.x + camRot.x,
-       rigRot.y + camRot.y,
-       rigRot.z + camRot.z,
-    );
-  }
-});
-
-

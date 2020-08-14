@@ -2,9 +2,10 @@ import { Scatterplot } from './scatterplot.d3';
 import { TimeSeriesPoint } from '../datasets/queries/time-series.query';
 import { VRScatterPoint } from '../datasets/queries/vr.query';
 import { MetaType } from '../datasets/metas/types';
-import * as d3 from 'd3';
+import * as AFRAME from 'aframe';
 
 import { Vector3 } from 'three';
+import { AFrame } from 'aframe';
 
 describe('VR Scatter Plot', () => {
   const shape = 'a-sphere';
@@ -12,38 +13,79 @@ describe('VR Scatter Plot', () => {
   let scatterplot: Scatterplot;
   const scatterPlotData1: VRScatterPoint[]  = [];
   scatterPlotData1.push({categories: {}, x: 20, y: 10, z: 5});
+  const expPosArray1 = [ {x: 50, y: 50, z: 50}];
+  // need to ignore line for `` formatting to not cause error
+  // tslint:disable-next-line
+  const scatterPlotTxt1: string[] = [`undefined, undefined, undefined Position:\n\nActive Users (x): ${scatterPlotData1[0].x}\n\nRevenue (y): ${scatterPlotData1[0].y.toFixed(2)}\n\nEvent Count (z): ${scatterPlotData1[0].z}`];
+
   const scatterPlotData8: VRScatterPoint[] = [];
   for (let i = 0; i < 8; i++){
-    scatterPlotData8.push({categories: {}, x: i * 20, y: i * 10, z: i * 5});
+    scatterPlotData8.push({categories: {}, x: i * 5, y: i * 10, z: i * 20});
   }
+  const expPosArray8 = [
+    {x: 0, y: 0, z: 0},
+    {x: 7.14, y: 7.14, z: 7.14},
+    {x: 14.29, y: 14.29, z: 14.29},
+    {x: 21.43, y: 21.43, z: 21.43},
+    {x: 28.57, y: 28.57, z: 28.57},
+    {x: 35.71, y: 35.71, z: 35.71},
+    {x: 42.86, y: 42.86, z: 42.86},
+    {x: 50, y: 50, z: 50}];
+  const expPosDataArray8 = [
+    {x: 0, y: 0, z: 0},
+    {x: 5, y: 10, z: 20},
+    {x: 10, y: 20, z: 40},
+    {x: 15, y: 30, z: 60},
+    {x: 20, y: 40, z: 80},
+    {x: 25, y: 50, z: 100},
+    {x: 30, y: 60, z: 120},
+    {x: 35, y: 70, z: 140}];
+  const scatterPlotTxt8: string[] = [];
+  for (let i = 0; i < 8; i++){
+    scatterPlotTxt8.push(
+    `undefined, undefined, undefined Position:\n\nActive Users (x): ${expPosDataArray8[i].x}\n\nRevenue (y): ${expPosDataArray8[i].y.toFixed(2)}\n\nEvent Count (z): ${expPosDataArray8[i].z}`);
+  }
+
   beforeEach( () =>  {
     element = document.createElement('a-scene');
     scatterplot = new Scatterplot(shape);
-
   });
+
   it('places no points bc 1:1 correspondence with empty element array', () => {
     scatterplot.init(element, [], [], MetaType.SCATTER_PLOT);
     const expectedPosArray = [];
     const result = getPosition(element, shape);
     expect(result).toEqual(expectedPosArray);
   });
+
   it('places points for each element in a one element array', () => {
-    scatterplot.init(element, scatterPlotData1, [], MetaType.SCATTER_PLOT);
-    const posArray = [{ x: 20, y: 10, z: 5 }];
-    const expectedPosArray = scalePosition(posArray);
+    scatterplot.init(element, scatterPlotData1, ['Active Users', 'Revenue', 'Event Count'], MetaType.SCATTER_PLOT);
     const result = getPosition(element, shape);
-    expect(result).toEqual(expectedPosArray);
+    expect(result).toEqual(expPosArray1);
   });
+
   it('places points for each element in a eight element array', () => {
-    scatterplot.init(element, scatterPlotData8, [], MetaType.SCATTER_PLOT);
-    const posArray = [
-      { x: 0, y: 0, z: 0 }, { x: 20, y: 10, z: 5 },
-      { x: 40, y: 20, z: 10 }, { x: 60, y: 30, z: 15 },
-      { x: 80, y: 40, z: 20 }, { x: 100, y: 50, z: 25 },
-     { x: 120, y: 60, z: 30 }, { x: 140, y: 70, z: 35 }];
-    const expectedPosArray = scalePosition(posArray);
+    scatterplot.init(element, scatterPlotData8, ['Active Users', 'Revenue', 'Event Count'], MetaType.SCATTER_PLOT);
     const result = getPosition(element, shape);
-    expect(result).toEqual(expectedPosArray);
+    expect(result).toEqual(expPosArray8);
+  });
+
+  it('checks for content of hovercards of 0 element array', () => {
+    scatterplot.init(element, [], [], MetaType.SCATTER_PLOT);
+    const result = getPositionData(element);
+    expect(result).toEqual([]);
+  });
+
+  it('checks for content of hovercards of 1 element array', () => {
+    scatterplot.init(element, scatterPlotData1, ['Active Users', 'Revenue', 'Event Count'],  MetaType.SCATTER_PLOT);
+    const result = getPositionData(element);
+    expect(result).toEqual(scatterPlotTxt1);
+  });
+
+  it('checks for content of hovercards of 8 element array', () => {
+    scatterplot.init(element, scatterPlotData8, ['Active Users', 'Revenue', 'Event Count'], MetaType.SCATTER_PLOT);
+    const result = getPositionData(element);
+    expect(result).toEqual(scatterPlotTxt8);
   });
 });
 
@@ -94,16 +136,11 @@ function getPosition(element: HTMLElement, shape: string): Array<{x: number, y: 
   return positionArray;
 }
 
-function scalePosition(posArray: Array<{x: number, y: number, z: number}>): Array<{x: number, y: number, z: number}>{
-  // scaleFactor based on GRID_BOUND in scatterplot.d3.ts
-  const scaleFactor = 50;
-  // largest number in each dimension is last element
-  const xScale = d3.scaleLinear().domain([0, posArray[posArray.length - 1].x]).range([0, scaleFactor]);
-  const yScale = d3.scaleLinear().domain([0, posArray[posArray.length - 1].y]).range([0, scaleFactor]);
-  const zScale = d3.scaleLinear().domain([0, posArray[posArray.length - 1].z]).range([0, scaleFactor]);
-  const scaledPosArray: Array<{x: number, y: number, z: number}> = [];
-  for (const pt of posArray){
-    scaledPosArray.push({x: xScale(pt.x), y: yScale(pt.y), z: zScale(pt.z)});
+function getPositionData(element: HTMLElement): string[]{
+  const childrenArray = element.getElementsByTagName('a-entity').namedItem('dataTxt')!.querySelectorAll('a-entity');
+  const positionDataArray: string[] = [];
+  for (const child of (childrenArray as any)){
+    positionDataArray.push((child as any).components.text.attrValue.value);
   }
-  return scaledPosArray;
+  return positionDataArray;
 }
