@@ -16,7 +16,7 @@ describe('VR Scatter Plot', () => {
   const expPosArray1 = [ {x: 50, y: 50, z: 50}];
   // need to ignore line for `` formatting to not cause error
   // tslint:disable-next-line
-  const scatterPlotTxt1: string[] = [`undefined, undefined, undefined Position:\n\nActive Users (x): ${scatterPlotData1[0].x}\n\nRevenue (y): ${scatterPlotData1[0].y.toFixed(2)}\n\nEvent Count (z): ${scatterPlotData1[0].z}`];
+  const scatterPlotTxt1: string[] = [`undefined, undefined, undefined Position:\n\n--Active Users (x): ${scatterPlotData1[0].x}\n\n--Revenue (y): ${scatterPlotData1[0].y.toFixed(2)}\n\n--Event Count (z): ${scatterPlotData1[0].z}`];
 
   const scatterPlotData8: VRScatterPoint[] = [];
   for (let i = 0; i < 8; i++){
@@ -43,11 +43,12 @@ describe('VR Scatter Plot', () => {
   const scatterPlotTxt8: string[] = [];
   for (let i = 0; i < 8; i++){
     scatterPlotTxt8.push(
-    `undefined, undefined, undefined Position:\n\nActive Users (x): ${expPosDataArray8[i].x}\n\nRevenue (y): ${expPosDataArray8[i].y.toFixed(2)}\n\nEvent Count (z): ${expPosDataArray8[i].z}`);
+    `undefined, undefined, undefined Position:\n\n--Active Users (x): ${expPosDataArray8[i].x}\n\n--Revenue (y): ${expPosDataArray8[i].y.toFixed(2)}\n\n--Event Count (z): ${expPosDataArray8[i].z}`);
   }
 
   beforeEach( () =>  {
     element = document.createElement('a-scene');
+    element.appendChild(document.createElement('a-camera'));
     scatterplot = new Scatterplot(shape);
   });
 
@@ -97,6 +98,7 @@ describe('Checking for presence of', () => {
   beforeEach( () =>  {
     element = document.createElement('a-scene');
     scatterplot = new Scatterplot('a-sphere');
+    element.appendChild(document.createElement('a-camera'));
     scatterplot.init(element, [], [], MetaType.SCATTER_PLOT);
     grids = element.getElementsByClassName('grids');
   });
@@ -126,6 +128,31 @@ describe('Checking for presence of', () => {
   });
 });
 
+describe('Checking ctrl functions', () => {
+  let element: HTMLElement;
+  let scatterplot: Scatterplot;
+  let grids: HTMLCollectionOf<Element>;
+  const scatterPlotData1: VRScatterPoint[]  = [];
+  scatterPlotData1.push({categories: {}, x: 20, y: 10, z: 5});
+
+  beforeEach( () =>  {
+    element = document.createElement('a-scene');
+    scatterplot = new Scatterplot('a-sphere');
+    element.appendChild(document.createElement('a-camera'));
+    scatterplot.init(element, scatterPlotData1, [], MetaType.SCATTER_PLOT);
+    grids = element.getElementsByClassName('grids');
+  });
+  it('for getting speed', () => {
+    scatterplot.init(element, scatterPlotData1, [], MetaType.SCATTER_PLOT);
+    expect(scatterplot.getDaydreamNavSpeed()).toEqual(.1);
+  });
+
+  it('for getting scales', () => {
+    scatterplot.init(element, scatterPlotData1, [], MetaType.SCATTER_PLOT);
+    expect(scatterplot.getGridBound('x')).toEqual(50);
+  });
+});
+
 // returns array of actual position vectors
 function getPosition(element: HTMLElement, shape: string): Array<{x: number, y: number, z: number}>{
   const childrenArray = element.querySelectorAll(shape);
@@ -137,7 +164,7 @@ function getPosition(element: HTMLElement, shape: string): Array<{x: number, y: 
 }
 
 function getPositionData(element: HTMLElement): string[]{
-  const childrenArray = element.getElementsByTagName('a-entity').namedItem('dataTxt')!.querySelectorAll('a-entity');
+  const childrenArray = element.getElementsByTagName('a-entity').namedItem('cards')!.querySelectorAll('a-entity');
   const positionDataArray: string[] = [];
   for (const child of (childrenArray as any)){
     positionDataArray.push((child as any).components.text.attrValue.value);
