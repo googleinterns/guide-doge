@@ -103,9 +103,7 @@ export class Scatterplot{
   createNavTile(dim: string, velocity: number){
     const rigPos = (document.getElementById('rig') as AFRAME.Entity).object3D.position;
     const navTile = document.createElement('a-entity');
-    // document.querySelector('[camera]').appendChild(navTile);
     document.querySelector('[camera]').appendChild(navTile);
-    // this.container!.appendChild(navTile);
     (navTile as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: .5; width: .5');
     if (dim === 'x'){
       if (velocity > 0){
@@ -199,7 +197,6 @@ export class Scatterplot{
       return `${x.toFixed(2)} ${y.toFixed(2)} ${z.toFixed(2)}`;
     })
     .each((d, i, g) => {
-      // (g[i] as AFRAME.Entity).setAttribute('hover_cards', '');
       (g[i] as AFRAME.Entity).addEventListener('mouseenter', () => {
         const hoverIdx = i;
         // disable next line bc d,i are necessary even if shadowed from .each
@@ -225,7 +222,6 @@ export class Scatterplot{
       .attr('text', (d, i) => {
         const categories = (d as VRScatterPoint).categories.browser + ', ' + (d as VRScatterPoint).categories.country
           + ', ' + (d as VRScatterPoint).categories.source;
-        // for (let categChild of (d as VRScatterPoint).categories)
         const x = (d as VRScatterPoint).x;
         const y = (d as VRScatterPoint).y;
         const z = (d as VRScatterPoint).z;
