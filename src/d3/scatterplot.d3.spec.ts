@@ -146,10 +146,18 @@ describe('Checking ctrl functions', () => {
     scatterplot.init(element, scatterPlotData1, [], MetaType.SCATTER_PLOT);
     expect(scatterplot.getDaydreamNavSpeed()).toEqual(.1);
   });
-
   it('for getting scales', () => {
     scatterplot.init(element, scatterPlotData1, [], MetaType.SCATTER_PLOT);
     expect(scatterplot.getGridBound('x')).toEqual(50);
+  });
+  it('working createEntity function', () => {
+    const entity = scatterplot.createEntity('a-entity', 'test');
+    expect(entity != null).toBeTrue();
+  });
+  it('for getting speed', () => {
+    scatterplot.init(element, scatterPlotData1, [], MetaType.SCATTER_PLOT);
+    scatterplot.setDaydreamNavSpeed(1);
+    expect(scatterplot.getDaydreamNavSpeed()).toEqual(1);
   });
 });
 

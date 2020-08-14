@@ -102,7 +102,7 @@ export class Scatterplot{
   }
 
   // allow for abtracted pattern when calling to create cardSelection and selection of points
-  private createEntity(entity: string, id: string): HTMLElement {
+ createEntity(entity: string, id: string): HTMLElement {
     const retEntity = document.createElement(entity);
     retEntity.id = id;
     return retEntity;

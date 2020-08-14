@@ -90,7 +90,9 @@ export class Controls{
     if (this.camera === null){
       document.createElement('a-camera');
     }
-    this.createNavTiles(this.scatter.DAYDREAM_NAV_SPEED);
+    for (const dimension of dimensions){
+      this.createNavTile(dimension);
+  }
     this.createCtrlPanel();
     this.addDemoKeys();
   }
@@ -167,12 +169,7 @@ export class Controls{
       }
     });
   }
-  // abstracted calling of creating navigation tiles (3 dimensions - pos/neg direction)
-  createNavTiles(DAYDREAM_NAV_SPEED: number){
-    for (const dimension of dimensions){
-        this.createNavTile(dimension);
-    }
-  }
+
   // create 6 arrows - 3 per dimension - to allow for movement in scene
   createNavTile(dim: string){
     let rigPos: any;
