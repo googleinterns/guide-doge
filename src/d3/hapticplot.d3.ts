@@ -7,7 +7,7 @@ const POINT_SIZE = 0.01;
 const DEFAULT_COLOR = '#F0A202';
 const HOVER_COLOR = 'red';
 const SKY_COLOR = '#4d4d4d';
-const ASSETS_FOLDER = '../../assets/';
+const ASSETS_FOLDER = 'assets/marimbaNotes/';
 
 export class Hapticplot{
     private data: number[];
