@@ -7,6 +7,8 @@ import { timeSeriesPointToNumPoint } from '../utils/time-series';
 export interface LinearRegressionResult {
   gradient: number;
   gradientAngleRad: number;
+  yIntercept: number;
+  r2: number;
   prediction: NumPoint[];
   absoluteErrorMean: number;
   absoluteErrorStd: number;
@@ -16,6 +18,8 @@ export function linearRegression(points: NumPoint[]): LinearRegressionResult {
   const pairs = points.map(pointToPair);
   const result = regression.linear(pairs);
   const gradient = result.equation[0];
+  const yIntercept = result.equation[1];
+  const r2 = result.r2;
   const gradientAngleRad = Math.atan(gradient);
   const prediction = result.points.map(pairToPoint);
 
@@ -29,6 +33,8 @@ export function linearRegression(points: NumPoint[]): LinearRegressionResult {
   return {
     gradient,
     gradientAngleRad,
+    yIntercept,
+    r2,
     prediction,
     absoluteErrorMean,
     absoluteErrorStd,
