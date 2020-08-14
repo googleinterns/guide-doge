@@ -42,6 +42,7 @@ export class Scatterplot{
     loadControls = true;
     cameraRig: HTMLElement = document.createElement('a-entity');
     camera: HTMLElement;
+    control: Controls;
 
 
   constructor(shape: string) {
@@ -79,11 +80,14 @@ export class Scatterplot{
       }
       this.generateText();
       // only load controls once -> component will call init everytime dataset preference is changed
-      if (this.loadControls){
-        const control = new Controls(this);
-      }
+      // if (this.loadControls){
+      //   this.control = new Controls(this);
+      // }
     }, 2000);
     this.loaded = true;
+    if (this.loadControls){
+      this.control = new Controls(this);
+    }
   }
 
   // when dataset changes, current selections of points and text cards need to be cleared for new selection
@@ -282,5 +286,9 @@ export class Scatterplot{
     this.ZGRID_BOUND = zMapping;
     this.generatePts();
     this.redrawGridPlane();
+  }
+
+  returnAScene(): HTMLElement | null{
+    return this.container;
   }
 }

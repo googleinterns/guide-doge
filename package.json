@@ -10,7 +10,8 @@
     "Daniel Yule <danielyule@google.com>",
     "Michael Fitzpatrick <mfitz@google.com>",
     "Jinseo Park <jinseo@google.com>",
-    "Harrison Pearl <hspearl@google.com>"
+    "Harrison Pearl <hspearl@google.com>",
+    "Carlos Villapudua <cvillapudua@google.com>"
   ],
   "scripts": {
     "ng": "ng",

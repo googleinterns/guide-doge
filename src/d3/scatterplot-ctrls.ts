@@ -200,8 +200,10 @@ export class Controls{
       rigPos = document.createElement('a-camera').object3D.position;
     }
     const navTilePos = document.createElement('a-entity');
+    navTilePos.className = 'navigation';
     this.cameraAppendChild(navTilePos);
     const navTileNeg = document.createElement('a-entity');
+    navTileNeg.className = 'navigation';
     this.cameraAppendChild(navTileNeg);
     (navTilePos as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: .75; width: .75');
     (navTileNeg as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: .75; width: .75');
@@ -297,7 +299,7 @@ export class Controls{
   // create speedctrls and 'speed' label based on sign parameter
   createSpeedCtrls(sign: string){
     const speedTile = document.createElement('a-entity') as AFRAME.Entity;
-    speedTile.className = 'toggle nonTextToggle';
+    speedTile.className = 'toggle nonTextToggle speed';
     this.cameraAppendChild(speedTile);
     if (sign === 'plus'){
       speedTile.setAttribute('geometry', 'primitive: plane; height: .25; width: .25');
@@ -411,8 +413,9 @@ export class Controls{
   }
 
   // create bar to toggle control panel on/off in desktop (KeyT) or mobile version (mousedown)
-  private createToggleBar(){
+  createToggleBar(){
     const toggleBar = document.createElement('a-entity');
+    toggleBar.className = 'toggleBar';
     this.cameraAppendChild(toggleBar);
     toggleBar.setAttribute('geometry', 'primitive: plane; height: .15; width:.75');
     toggleBar.setAttribute('material', 'color: #4385f4; opacity: 1');
@@ -440,8 +443,9 @@ export class Controls{
     });
   }
 
-  private createBackground(){
+  createBackground(){
     const bckgrd = document.createElement('a-entity');
+    bckgrd.className = 'background';
     this.cameraAppendChild(bckgrd);
     bckgrd.className = 'toggle nonTextToggle';
     bckgrd.setAttribute('geometry', 'primitive: plane; height: 1.5; width: 1');
@@ -453,6 +457,9 @@ export class Controls{
   private cameraAppendChild(element: HTMLElement){
     if (this.camera !== null){
       this.camera.appendChild(element);
+    }
+    else {
+     this.scatter.returnAScene()!.appendChild(element);
     }
   }
 }
