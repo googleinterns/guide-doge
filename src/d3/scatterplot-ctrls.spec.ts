@@ -40,13 +40,7 @@ describe('Checking scatterplot-ctrl functions', () => {
     expect(bgPresent).toEqual(true);
   });
   it('for checking for ctrl panel toggle', () => {
-    control.createToggleBar();
-    const tbPresent = (document.getElementsByClassName('toggleBar') != null);
-    expect(tbPresent).toEqual(true);
-  });
-  it('for checking for ctrl panel toggle', () => {
-    control.createCtrlPanel();
-    const tbPresent = (document.getElementsByClassName('toggle') != null);
-    expect(tbPresent).toEqual(true);
+    control.addDemoKeys();
+    expect(control.keyEventsLoaded).toEqual(true);
   });
 });

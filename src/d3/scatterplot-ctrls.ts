@@ -81,8 +81,10 @@ export class Controls{
   loadingFlag: boolean;
   scatter: Scatterplot;
   camera: HTMLElement;
+  keyEventsLoaded: boolean;
 
   constructor(scatter: Scatterplot){
+    this.keyEventsLoaded = false;
     this.loadingFlag = true;
     this.showCtrls = true;
     this.scatter = scatter;
@@ -168,6 +170,7 @@ export class Controls{
         this.showCtrls = !this.showCtrls;
       }
     });
+    this.keyEventsLoaded = true;
   }
 
   // create 6 arrows - 3 per dimension - to allow for movement in scene
@@ -264,10 +267,6 @@ export class Controls{
     }
     this.createScaleCtrls('all');
     this.createToggleBar();
-    this.invisibleToggleElem();
-  }
-  // make ctrl panel invisible upon load
-  invisibleToggleElem(){
     const elems = document.getElementsByClassName('toggle');
     for (const elem of (elems as unknown as Array<Element>)){
       (elem as AFRAME.Entity).setAttribute('visible', false);
