@@ -16,7 +16,7 @@ describe('VR Scatter Plot', () => {
   const expPosArray1 = [ {x: 50, y: 50, z: 50}];
   // need to ignore line for `` formatting to not cause error
   // tslint:disable-next-line
-  const scatterPlotTxt1: string[] = [`POSITION:\n\nActive Users (x): ${scatterPlotData1[0].x}\n\nRevenue (y): ${scatterPlotData1[0].y}\n\nEvent Count (z): ${scatterPlotData1[0].z}`];
+  const scatterPlotTxt1: string[] = [`undefined, undefined, undefined Position:\n\nActive Users (x): ${scatterPlotData1[0].x}\n\nRevenue (y): ${scatterPlotData1[0].y.toFixed(2)}\n\nEvent Count (z): ${scatterPlotData1[0].z}`];
 
   const scatterPlotData8: VRScatterPoint[] = [];
   for (let i = 0; i < 8; i++){
@@ -43,7 +43,7 @@ describe('VR Scatter Plot', () => {
   const scatterPlotTxt8: string[] = [];
   for (let i = 0; i < 8; i++){
     scatterPlotTxt8.push(
-    `POSITION:\n\nActive Users (x): ${expPosDataArray8[i].x}\n\nRevenue (y): ${expPosDataArray8[i].y}\n\nEvent Count (z): ${expPosDataArray8[i].z}`);
+    `undefined, undefined, undefined Position:\n\nActive Users (x): ${expPosDataArray8[i].x}\n\nRevenue (y): ${expPosDataArray8[i].y.toFixed(2)}\n\nEvent Count (z): ${expPosDataArray8[i].z}`);
   }
 
   beforeEach( () =>  {

@@ -4,7 +4,8 @@ import { VRScatterPoint } from '../datasets/queries/vr.query';
 import { MetaType } from '../datasets/metas/types';
 const PROXY_FLAG = '__keyboard-controls-proxy';
 const DATA_PT_RADIUS = .05;
-// const CAM_Y_ROTATION = AFRAME.THREE.MathUtils.degToRad(135);
+const ROBOTO = 'https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/roboto/Roboto-Medium.json;';
+const AILERON_FONT = 'https://cdn.aframe.io/fonts/Aileron-Semibold.fnt';
 
 export interface ScatterPlotStyle {
   color: string | number;
@@ -12,7 +13,6 @@ export interface ScatterPlotStyle {
 }
 
 export class Scatterplot{
-    readonly AILERON_FONT = 'https://cdn.aframe.io/fonts/Aileron-Semibold.fnt';
     private GRID_BOUND = 50;
     private data: VRScatterPoint[];
     private shape: string;
@@ -21,16 +21,28 @@ export class Scatterplot{
     private dataTextContainer: HTMLElement;
     private metrics: string[];
     private cardSelection: any;
+    private DAYDREAM_NAV_SPEED;
     xScale: d3.ScaleLinear<number, number>;
     yScale: d3.ScaleLinear<number, number>;
     zScale: d3.ScaleLinear<number, number>;
     dataType: MetaType;
-    loaded = false;
+    loaded: boolean;
+    tilePos: Record<string, string> = {
+      ['xPos']: '-1 1 -4',
+      ['xNeg']: '-2 1 -4',
+      ['yPos']: '-1.5 1.5 -4',
+      ['yNeg']: '-1.5 .5 -4',
+      ['zPos']: '1 1.5 -4',
+      ['zNeg']: '1 .5 -4',
+  };
+    cameraRig: HTMLElement = document.createElement('a-entity');
     camera: HTMLElement;
+
 
 
   constructor(shape: string) {
     this.shape = shape;
+    this.loaded = false;
   }
 
   init(container: HTMLElement, data: VRScatterPoint[], metrics: string[], dataType: MetaType){
@@ -39,20 +51,24 @@ export class Scatterplot{
     this.dataType = dataType;
     this.container = container;
     this.dataType = dataType;
+
     this.dataPointContainer = this.createEntity('a-entity', 'dataPts');
     this.dataTextContainer = this.createEntity('a-entity', 'dataTxt');
     container.appendChild(this.dataPointContainer);
     container.appendChild(this.dataTextContainer);
+    this.DAYDREAM_NAV_SPEED = .1;
     if (this.data.length > 0 && !this.loaded){
       this.generatePts();
       this.setColor('blue');
       this.generateText();
-
     }
     this.createSky('gray');
     this.createGridPlane();
+    this.createNavTools();
     this.loaded = true;
 
+  }
+  private createNavTools(){
     window.onload = () => {
       this.dataTextContainer = this.createEntity('a-entity', 'dataTxt');
       this.generateText();
@@ -76,7 +92,65 @@ export class Scatterplot{
           );
         }
       });
+      this.createNavTile('x', this.DAYDREAM_NAV_SPEED);
+      this.createNavTile('x', -this.DAYDREAM_NAV_SPEED);
+      this.createNavTile('y', this.DAYDREAM_NAV_SPEED);
+      this.createNavTile('y', -this.DAYDREAM_NAV_SPEED);
+      this.createNavTile('z', this.DAYDREAM_NAV_SPEED);
+      this.createNavTile('z', -this.DAYDREAM_NAV_SPEED);
     };
+  }
+  createNavTile(dim: string, velocity: number){
+    const rigPos = (document.getElementById('rig') as AFRAME.Entity).object3D.position;
+    const navTile = document.createElement('a-entity');
+    document.querySelector('[camera]').appendChild(navTile);
+    (navTile as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: .5; width: .5');
+    if (dim === 'x'){
+      if (velocity > 0){
+        (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.xPos);
+        (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/right_arrow.png');
+      } else {
+        (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.xNeg);
+        (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/left_arrow.png');
+      }
+      (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
+        rigPos.set(
+          rigPos.x + velocity,
+          rigPos.y,
+          rigPos.z
+        );
+      });
+    } else if (dim === 'y'){
+      if (velocity > 0){
+        (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.yPos);
+        (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/up_arrow.png');
+      } else {
+        (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.yNeg);
+        (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/down_arrow.png');
+      }
+      (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
+        rigPos.set(
+          rigPos.x,
+          rigPos.y + velocity,
+          rigPos.z
+        );
+      });
+    } else if (dim === 'z'){
+      if (velocity > 0){
+        (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.zPos);
+        (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/up_arrow.png');
+      } else {
+        (navTile as AFRAME.Entity).setAttribute('position', this.tilePos.zNeg);
+        (navTile as AFRAME.Entity).setAttribute('material', 'color: white; opacity: .75; src: ../assets/down_arrow.png');
+      }
+      (navTile as AFRAME.Entity).addEventListener('mousedown', () => {
+        rigPos.set(
+          rigPos.x,
+          rigPos.y,
+          rigPos.z + velocity
+        );
+      });
+    }
   }
 
   private createEntity(entity: string, id: string): HTMLElement {
@@ -123,7 +197,6 @@ export class Scatterplot{
       return `${x.toFixed(2)} ${y.toFixed(2)} ${z.toFixed(2)}`;
     })
     .each((d, i, g) => {
-      // (g[i] as AFRAME.Entity).setAttribute('hover_cards', '');
       (g[i] as AFRAME.Entity).addEventListener('mouseenter', () => {
         const hoverIdx = i;
         // disable next line bc d,i are necessary even if shadowed from .each
@@ -140,27 +213,30 @@ export class Scatterplot{
   }
 
   private generateText(){
-    this.scalePosition();
     // enter identifies any DOM elements to be added when # array elements doesn't match
     d3.select(this.dataTextContainer).selectAll('a-entity').data(this.data).enter().append('a-entity');
     this.cardSelection =  d3.select(this.dataTextContainer).selectAll('a-entity');
     this.cardSelection
       .attr('geometry', 'primitive: plane; height: auto; width: .5')
-      .attr('position', (d, i) => {
-        // added padding for z-fighting - when merged with hover feature, can set to z = -1 (or other constant)
-        return `${0} ${-.15} ${-(.5 + i * .005)}`;
+      .attr('material', 'color: blue; opacity: .5')
+      .attr('text', (d, i) => {
+        const categories = (d as VRScatterPoint).categories.browser + ', ' + (d as VRScatterPoint).categories.country
+          + ', ' + (d as VRScatterPoint).categories.source;
+        const x = (d as VRScatterPoint).x;
+        const y = (d as VRScatterPoint).y;
+        const z = (d as VRScatterPoint).z;
+        return `value: ${categories} Position:\n\n${this.metrics[0]} (x): ${x}\n\n${this.metrics[1]} (y): ${y.toFixed(2)}\n\n${this.metrics[2]} (z): ${z};
+        xOffset: ${DATA_PT_RADIUS / 3};
+        shader: msdf;
+        font: ${ROBOTO}`;
       })
-      .attr('material', 'color: blue')
-      // d is data at index, i within
-      // select all shapes within given container
-    .attr('text', (d, i) => {
-      const x = (d as VRScatterPoint).x;
-      const y = (d as VRScatterPoint).y;
-      const z = (d as VRScatterPoint).z;
-      return `
-      value: POSITION:\n\n${this.metrics[0]} (x): ${x}\n\n${this.metrics[1]} (y): ${y}\n\n${this.metrics[2]} (z): ${z}`;
-    })
-    .attr('visible', true);
+      .attr('visible', false)
+      .attr('position', (d, i) => {
+        const x = this.xScale((d as VRScatterPoint).x);
+        const y = this.yScale((d as VRScatterPoint).y);
+        const z = this.zScale((d as VRScatterPoint).z);
+        return `${0} ${0} ${-(.15)}`;
+      });
   }
 
   private setColor(color) {

@@ -1,8 +1,10 @@
 <a-scene #ascene embedded style="position: absolute;">
-  <a-camera>
-    <a-cursor position="0 0 -1"></a-cursor>
-  </a-camera>
-  <a-entity cursor laser-controls="hand: right" raycaster></a-entity>
+    <a-entity id="rig" rotation="0 -135 0">
+        <a-camera>
+            <a-cursor position="0 0 -1"></a-cursor>
+        </a-camera>
+        <a-entity raycaster laser-controls="hand: right"></a-entity>
+  </a-entity>
 </a-scene>
 <aside class="sidebar">
     <h2 class="sidebar-title">Customization</h2>
