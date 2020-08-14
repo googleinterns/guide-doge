@@ -84,6 +84,8 @@ export class LineChartAudificationComponent implements AudificationPreference, O
   }
 
   ngOnInit() {
+    this.screenReaderComponent.breakSilence(tA11y(AUDIFICATION.BREAK_SILENCE));
+
     combineLatest([
       this.host.data$,
       this.datumIndex$,
@@ -177,7 +179,7 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     }
     await this.melody.prepare();
     if (this.readBefore) {
-      const waited = await this.readOutCurrentDatum();
+      const waited = await this.readOutCurrentDatum(false);
       if (!waited) {
         return false;
       }
@@ -223,7 +225,7 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     return this.screenReaderComponent.readOut(reorderedLabels.join(', '));
   }
 
-  private async readOutCurrentDatum() {
+  private async readOutCurrentDatum(shouldBreakSilence = true) {
     if (!this.melody) {
       return false;
     }
@@ -231,7 +233,7 @@ export class LineChartAudificationComponent implements AudificationPreference, O
     return this.screenReaderComponent.readOut(t(AUDIFICATION.ACTIVE_POINT, {
       x: formatX(x),
       y: formatY(y),
-    }));
+    }), shouldBreakSilence);
   }
 
   private readOutInstructions() {

@@ -51,15 +51,22 @@ const bckgrdPos: Record<string, string> = {
 
 const dimensions = ['x', 'y', 'z'];
 
+const ADD_SPEED = .1;
+
 export class Controls{
   showCtrls: boolean;
   loadingFlag: boolean;
   scatter: Scatterplot;
+  camera: HTMLElement;
 
   constructor(scatter: Scatterplot){
     this.loadingFlag = true;
     this.showCtrls = true;
     this.scatter = scatter;
+    this.camera = document.querySelector('[camera]');
+    if (this.camera === null){
+      document.createElement('a-camera');
+    }
     this.addQZCtrls();
     this.createNavTiles(this.scatter.DAYDREAM_NAV_SPEED);
     this.createCtrlPanel(); 
@@ -187,7 +194,7 @@ export class Controls{
 
   addQZCtrls(){
     document.addEventListener('keydown', (event) => {
-      const camPos = document.querySelector('[camera]').object3D.position;
+      const camPos = (this.camera as AFRAME.Entity).object3D.position;
       if (event.code === 'KeyQ'){
         camPos.set(
           camPos.x,
@@ -205,26 +212,32 @@ export class Controls{
     });
   }
 
-// abstracted calling of creating navigation tiles (3 dimensions - pos/neg direction)
-createNavTiles(DAYDREAM_NAV_SPEED: number){
-  for (let dimension of dimensions){
-      this.createNavTile(dimension);
+  // abstracted calling of creating navigation tiles (3 dimensions - pos/neg direction)
+  createNavTiles(DAYDREAM_NAV_SPEED: number){
+    for (const dimension of dimensions){
+        this.createNavTile(dimension);
+    }
   }
-}
 
-// create 6 arrows - 3 per dimenstion - to allow for movement in scene
-createNavTile(dim: string){
-    var rigPos = (document.getElementById('rig') as AFRAME.Entity).object3D.position;
+  // create 6 arrows - 3 per dimension - to allow for movement in scene
+  createNavTile(dim: string){
+    let rigPos: any;
+    if (document.getElementById('rig') as AFRAME.Entity != null){
+      rigPos = (document.getElementById('rig') as AFRAME.Entity).object3D.position;
+    }
+    else{
+      rigPos = document.createElement('a-camera').object3D.position;
+    }
     const navTilePos = document.createElement('a-entity');
-    document.querySelector('[camera]').appendChild(navTilePos);
+    this.cameraAppendChild(navTilePos);
     const navTileNeg = document.createElement('a-entity');
-    document.querySelector('[camera]').appendChild(navTileNeg);
+    this.cameraAppendChild(navTileNeg);
     (navTilePos as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: .75; width: .75');
     (navTileNeg as AFRAME.Entity).setAttribute('geometry', 'primitive: plane; height: .75; width: .75');
-    var positivePos = '';
-    var negativePos = '';
-    var imagePos = '../assets/up_arrow.png';
-    var imageNeg = '../assets/down_arrow.png';
+    let positivePos = '';
+    let negativePos = '';
+    let imagePos = '../assets/up_arrow.png';
+    let imageNeg = '../assets/down_arrow.png';
     if (dim === 'x'){
       positivePos = tilePos.xPos;
       negativePos = tilePos.xNeg;
@@ -241,35 +254,35 @@ createNavTile(dim: string){
     (navTileNeg as AFRAME.Entity).setAttribute('position', negativePos);
     (navTilePos as AFRAME.Entity).setAttribute('material', `color: black; opacity: .95; src: ${imagePos}`);
     (navTileNeg as AFRAME.Entity).setAttribute('material', `color: black; opacity: .95; src: ${imageNeg}`);
-    var intervalPos; 
-    var intervalNeg;
+    let intervalPos;
+    let intervalNeg;
     // set event listeners with scatter.DAYDREAM... delta in order to have updated speeds
     (navTilePos as AFRAME.Entity).addEventListener('mousedown', () => {
-        intervalPos = setInterval(() => {
-          var xDelta = 0;
-          var yDelta = 0;
-          var zDelta = 0;
-          if (dim === 'x'){
-              // add negative bc camera is turned around
-              xDelta = -this.scatter.DAYDREAM_NAV_SPEED;
-          } else if (dim === 'y'){
-              yDelta = this.scatter.DAYDREAM_NAV_SPEED;
-          } else if (dim === 'z'){
-              zDelta = this.scatter.DAYDREAM_NAV_SPEED;
-          }
-          rigPos.set(
-              rigPos.x + xDelta,
-              rigPos.y + yDelta,
-              rigPos.z + zDelta
-          );
-        }, 200);
-      });
-      (navTilePos as AFRAME.Entity).addEventListener('mouseup', () => { clearInterval(intervalPos);});
+      intervalPos = setInterval(() => {
+        let xDelta = 0;
+        let yDelta = 0;
+        let zDelta = 0;
+        if (dim === 'x'){
+            // add negative bc camera is turned around
+            xDelta = -this.scatter.DAYDREAM_NAV_SPEED;
+        } else if (dim === 'y'){
+            yDelta = this.scatter.DAYDREAM_NAV_SPEED;
+        } else if (dim === 'z'){
+            zDelta = this.scatter.DAYDREAM_NAV_SPEED;
+        }
+        rigPos.set(
+            rigPos.x + xDelta,
+            rigPos.y + yDelta,
+            rigPos.z + zDelta
+        );
+      }, 200);
+    });
+    (navTilePos as AFRAME.Entity).addEventListener('mouseup', () => { clearInterval(intervalPos); });
     (navTileNeg as AFRAME.Entity).addEventListener('mousedown', () => {
       intervalNeg = setInterval(() => {
-        var xDelta = 0;
-        var yDelta = 0;
-        var zDelta = 0;
+        let xDelta = 0;
+        let yDelta = 0;
+        let zDelta = 0;
         if (dim === 'x'){
           // add negative bc camera is turned around
           xDelta = -this.scatter.DAYDREAM_NAV_SPEED;
@@ -285,13 +298,12 @@ createNavTile(dim: string){
         );
       }, 200);
     });
-    (navTileNeg as AFRAME.Entity).addEventListener('mouseup', () => { clearInterval(intervalNeg);}); 
+    (navTileNeg as AFRAME.Entity).addEventListener('mouseup', () => { clearInterval(intervalNeg); });
   }
-  
 
-// abstracted calling to create collapsible control panel with speed and scale adjustments
-createCtrlPanel(){
-  this.createBackground();
+  // abstracted calling to create collapsible control panel with speed and scale adjustments
+  createCtrlPanel(){
+    this.createBackground();
     this.createSpeedCtrls('plus');
     this.createSpeedCtrls('neg');
     this.createSpeedCtrls('label');
@@ -301,69 +313,69 @@ createCtrlPanel(){
     this.createScaleCtrls('all');
     this.createToggleBar();
     this.invisibleToggleElem();
-}
+  }
 
 invisibleToggleElem(){
   const elems = document.getElementsByClassName('toggle');
-  for (let elem of (elems as unknown as Array<Element>)){
+  for (const elem of (elems as unknown as Array<Element>)){
     (elem as AFRAME.Entity).setAttribute('visible', false);
   }
 }
 
-//create speedctrls and 'speed' label based on sign parameter
+// create speedctrls and 'speed' label based on sign parameter
 createSpeedCtrls(sign: string){
     const speedTile = document.createElement('a-entity') as AFRAME.Entity;
     speedTile.className = 'toggle nonTextToggle';
-    document.querySelector('[camera]').appendChild(speedTile);
+    this.cameraAppendChild(speedTile);
     if (sign === 'plus'){
       speedTile.setAttribute('geometry', 'primitive: plane; height: .25; width: .25');
       speedTile.setAttribute('position', speedPos.plus);
       speedTile.setAttribute('material', 'color: black; opacity: .95; src: ../assets/plus.png;');
       (speedTile as AFRAME.Entity).addEventListener('mousedown', () => {
-        this.scatter.setDaydreamNavSpeed(this.scatter.getDaydreamNavSpeed() + .1);
+        this.scatter.setDaydreamNavSpeed(this.scatter.getDaydreamNavSpeed() + ADD_SPEED);
       });
       } else if (sign === 'neg'){
           speedTile.setAttribute('geometry', 'primitive: plane; height: .25; width: .25');
           speedTile.setAttribute('position', speedPos.minus);
           speedTile.setAttribute('material', 'color: black; opacity: .95; src: ../assets/negative.png');
           (speedTile as AFRAME.Entity).addEventListener('mousedown', () => {
-            if (this.scatter.DAYDREAM_NAV_SPEED > .1){
-              this.scatter.setDaydreamNavSpeed(this.scatter.getDaydreamNavSpeed() - .1);
-            } 
+            if (this.scatter.DAYDREAM_NAV_SPEED > 0){
+              this.scatter.setDaydreamNavSpeed(this.scatter.getDaydreamNavSpeed() - ADD_SPEED);
+            }
           });
-      } 
+      }
       else if (sign === 'label'){
         const speedLabelTile = document.createElement('a-entity') as AFRAME.Entity;
-        document.querySelector('[camera]').appendChild(speedLabelTile);
+        this.cameraAppendChild(speedLabelTile);
         speedLabelTile.className = 'toggle';
         speedLabelTile.setAttribute('position', speedPos.label);
         speedLabelTile.setAttribute('text', `value: Speed; align: center; color: black; shader: msdf; font: ${ROBOTO};`);
-        speedLabelTile.setAttribute('scale', '2 2 1');    
+        speedLabelTile.setAttribute('scale', '2 2 1');
       }
   }
 
   createScaleCtrls(dim: string){
     const scaleTilePos = document.createElement('a-entity') as AFRAME.Entity;
     scaleTilePos.className = 'toggle nonTextToggle';
-    document.querySelector('[camera]').appendChild(scaleTilePos);
+    this.cameraAppendChild(scaleTilePos);
     const scaleTileNeg = document.createElement('a-entity') as AFRAME.Entity;
     scaleTileNeg.className = 'toggle nonTextToggle';
-    document.querySelector('[camera]').appendChild(scaleTileNeg);
+    this.cameraAppendChild(scaleTileNeg);
     const labelTile = document.createElement('a-entity') as AFRAME.Entity;
     labelTile.className = 'toggle';
-    document.querySelector('[camera]').appendChild(labelTile);
+    this.cameraAppendChild(labelTile);
 
-    scaleTilePos.setAttribute('geometry', 'primitive: plane; height: .25; width: .25');  
+    scaleTilePos.setAttribute('geometry', 'primitive: plane; height: .25; width: .25');
     scaleTilePos.setAttribute('material', 'color: black; opacity: .95; src: ../assets/plus.png;');
-    scaleTileNeg.setAttribute('geometry', 'primitive: plane; height: .25; width: .25');  
+    scaleTileNeg.setAttribute('geometry', 'primitive: plane; height: .25; width: .25');
     scaleTileNeg.setAttribute('material', 'color: black; opacity: .95; src: ../assets/negative.png;');
-    var xScaleDelta = 0;
-    var yScaleDelta = 0;
-    var zScaleDelta = 0;
-    var positivePos = '';
-    var negativePos = '';
-    var labelPos = '';
-    var labelName = '';
+    let xScaleDelta = 0;
+    let yScaleDelta = 0;
+    let zScaleDelta = 0;
+    let positivePos = '';
+    let negativePos = '';
+    let labelPos = '';
+    let labelName = '';
     if (dim === 'x'){
       xScaleDelta = 10;
       positivePos = xScalePos.increment;
@@ -389,7 +401,7 @@ createSpeedCtrls(sign: string){
         negativePos = allScalePos.decrement;
         labelPos = allScalePos.label;
         labelName = 'XYZ-Scale';
-      }    
+      }
     scaleTilePos.setAttribute('position', positivePos);
     (scaleTilePos as AFRAME.Entity).addEventListener('mousedown', () => {
       if (dim === 'all'){
@@ -418,46 +430,54 @@ createSpeedCtrls(sign: string){
           this.scatter.getGridBound('y') - yScaleDelta,
           this.scatter.getGridBound('z') - zScaleDelta);
       }
-    });   
+    });
     labelTile.setAttribute('position', labelPos);
     labelTile.setAttribute('text', `value: ${labelName}; align: center; color: black; shader: msdf; font: ${ROBOTO};`);
-    labelTile.setAttribute('scale', '2 2 1');    
+    labelTile.setAttribute('scale', '2 2 1');
   }
 
   private createToggleBar(){
     const toggleBar = document.createElement('a-entity');
-    document.querySelector('[camera]').appendChild(toggleBar);
+    this.cameraAppendChild(toggleBar);
     toggleBar.setAttribute('geometry', 'primitive: plane; height: .15; width:.75');
     toggleBar.setAttribute('material', 'color: #4385f4; opacity: 1');
     toggleBar.setAttribute('position', toggleBarPos.bar);
     const toggleText = document.createElement('a-entity');
-    document.querySelector('[camera]').appendChild(toggleText);
+    this.cameraAppendChild(toggleText);
     toggleText.setAttribute('position', toggleBarPos.label);
     toggleText.setAttribute('text', `value: Control Panel; align: center; color: black; shader: msdf; font: ${ROBOTO};`);
     toggleText.setAttribute('scale', '2 2 1');
     toggleBar.addEventListener('mousedown', () => {
       const nonTxtControlItems = document.getElementsByClassName('nonTextToggle');
-        for (let item of (nonTxtControlItems as unknown as Array<Element>)){
-          if (!this.showCtrls)
-            (item as AFRAME.Entity).setAttribute('scale', '1 1 1');
-          else
-            (item as AFRAME.Entity).setAttribute('scale', '.01 .01 .01');
+      for (const item of (nonTxtControlItems as unknown as Array<Element>)){
+        if (!this.showCtrls){
+          (item as AFRAME.Entity).setAttribute('scale', '1 1 1');
         }
-        const controlItems = document.getElementsByClassName('toggle');
-        for (let item of (controlItems as unknown as Array<Element>)){
-          (item as AFRAME.Entity).setAttribute('visible', !this.showCtrls);
+        else{
+          (item as AFRAME.Entity).setAttribute('scale', '.01 .01 .01');
         }
+      }
+      const controlItems = document.getElementsByClassName('toggle');
+      for (const item of (controlItems as unknown as Array<Element>)){
+        (item as AFRAME.Entity).setAttribute('visible', !this.showCtrls);
+      }
       this.showCtrls = !this.showCtrls;
     });
   }
 
   private createBackground(){
     const bckgrd = document.createElement('a-entity');
-    document.querySelector('[camera]').appendChild(bckgrd);
+    this.cameraAppendChild(bckgrd);
     bckgrd.className = 'toggle nonTextToggle';
     bckgrd.setAttribute('geometry', 'primitive: plane; height: 1.5; width: 1');
     bckgrd.setAttribute('material', 'color: #4385f4; opacity: .75;');
     bckgrd.setAttribute('position', bckgrdPos.place);
+  }
+
+  private cameraAppendChild(element: HTMLElement){
+    if (this.camera !== null){
+      this.camera.appendChild(element);
+    }
   }
 }
 

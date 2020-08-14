@@ -8,7 +8,10 @@ export interface Preference {
   enabled: boolean;
 }
 
-export type PreferenceWithMeta<T extends Preference> = T & { _meta: PreferenceMeta<T> };
+export type PreferenceWithMeta<T extends Preference> = T & {
+  _meta: PreferenceMeta<T>;
+  _meta_name?: string;
+};
 
 export interface AudificationPreference extends Preference {
   lowestPitch: number;
@@ -19,6 +22,8 @@ export interface AudificationPreference extends Preference {
 }
 
 export type DataTablePreference = Preference;
+
+export type GeoMapNavigationPreference = Preference;
 
 export interface SummarizationPreference extends Preference {
   validityThreshold: number;
@@ -35,7 +40,7 @@ export type DatasetPreference =
 export type BaseDatasetPreference<T extends string, U> = { name: T } & U;
 
 export type UserWGNDatasetPreference = BaseDatasetPreference<'UserWhiteNoiseDataset', UserWhiteNoiseDataset.Config & Preference>;
-export type DummyDatasetPreference =  BaseDatasetPreference<'DummyDataset', DummyDataset.Config & Preference>;
+export type DummyDatasetPreference = BaseDatasetPreference<'DummyDataset', DummyDataset.Config & Preference>;
 export type VRScatterplotPreference = BaseDatasetPreference<'VRScatterplotDataset', VRScatterplotDataset.Config & Preference>;
 export type VRScatterplot2Preference = BaseDatasetPreference<'VRScatterplotDataset2', VRScatterplot2Dataset.Config & Preference>;
 
