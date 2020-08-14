@@ -36,6 +36,8 @@ export class Scatterplot{
       ['zNeg']: '1 .5 -4',
   };
     cameraRig: HTMLElement = document.createElement('a-entity');
+    camera: HTMLElement;
+
 
 
   constructor(shape: string) {
@@ -48,43 +50,42 @@ export class Scatterplot{
     this.dataType = dataType;
     this.container = container;
     this.dataType = dataType;
-    this.dataPointContainer = document.createElement('a-entity');
-    this.dataPointContainer.className = 'dataPts';
-    // this.dataTextContainer = document.createElement('a-entity');
-    // this.dataTextContainer.className = 'dataTxt';
+
+    this.dataPointContainer = this.createEntity('a-entity', 'dataPts');
+    this.dataTextContainer = this.createEntity('a-entity', 'dataTxt');
     container.appendChild(this.dataPointContainer);
     // container.appendChild(this.dataTextContainer);
     this.DAYDREAM_NAV_SPEED = .1;
     if (this.data.length > 0 && !this.loaded){
-      // this.generateText();
       this.generatePts();
+      this.setColor('blue');
     }
     this.createSky('gray');
     this.createGridPlane();
     this.createNavTools();
     this.loaded = true;
+
   }
   private createNavTools(){
     window.onload = () => {
-      this.dataTextContainer = document.createElement('a-entity');
-      this.dataTextContainer.className = 'dataTxt';
+      this.dataTextContainer = this.createEntity('a-entity', 'dataTxt');
       this.generateText();
-      document.querySelector('[camera]').appendChild(this.dataTextContainer);
-      this.cameraRig = document.getElementById('rig')!;
-      console.log(document.getElementById('rig')!);
-      document.addEventListener('keydown', (event) => {
+      this.camera = document.querySelector('[camera]');
+      this.camera.appendChild(this.dataTextContainer);
+      this.container!.removeChild(this.dataTextContainer);
+      window.addEventListener('keydown', (event) => {
         const camPos = document.querySelector('[camera]').object3D.position;
         if (event.code === 'KeyQ'){
           camPos.set(
             camPos.x,
-            camPos.y + .2,
+            camPos.y + 1,
             camPos.z
           );
         }
         if (event.code === 'KeyZ'){
           camPos.set(
             camPos.x,
-            camPos.y - .2,
+            camPos.y - 1,
             camPos.z
           );
         }
@@ -95,9 +96,7 @@ export class Scatterplot{
     this.createNavTile('y', -this.DAYDREAM_NAV_SPEED);
     this.createNavTile('z', this.DAYDREAM_NAV_SPEED);
     this.createNavTile('z', -this.DAYDREAM_NAV_SPEED);
-      
     };
-    
   }
   createNavTile(dim: string, velocity: number){
     let rigPos = (document.getElementById('rig') as AFRAME.Entity).object3D.position;
@@ -154,6 +153,12 @@ export class Scatterplot{
     }
   }
 
+  private createEntity(entity: string, id: string): HTMLElement {
+    const retEntity = document.createElement(entity);
+    retEntity.id = id;
+    return retEntity;
+  }
+
   private scalePosition(){
     let maxXValue = this.data[0].x;
     let maxYValue = this.data[0].y;
@@ -169,10 +174,14 @@ export class Scatterplot{
         maxZValue = pt.z;
       }
     }
-    // scale positions based on largest value found in xyz to absVal(maxGridDimension)
-    this.xScale = d3.scaleLinear().domain([0, maxXValue]).range([0, this.GRID_BOUND]);
-    this.yScale = d3.scaleLinear().domain([0, maxYValue]).range([0, this.GRID_BOUND]);
-    this.zScale = d3.scaleLinear().domain([0, maxZValue]).range([0, this.GRID_BOUND]);
+    this.xScale = this.dimScales(maxXValue);
+    this.yScale = this.dimScales(maxYValue);
+    this.zScale = this.dimScales(maxZValue);
+  }
+
+  private dimScales(maxVal: number): d3.ScaleLinear<number, number> {
+     // scale positions based on largest value found in xyz to absVal(maxGridDimension)
+    return d3.scaleLinear().domain([0, maxVal]).range([0, this.GRID_BOUND]);
   }
 
   private generatePts() {
@@ -185,18 +194,21 @@ export class Scatterplot{
       const x = this.xScale((d as VRScatterPoint).x);
       const y = this.yScale((d as VRScatterPoint).y);
       const z = this.zScale((d as VRScatterPoint).z);
-      return `${x} ${y} ${z}`;
+      return `${x.toFixed(2)} ${y.toFixed(2)} ${z.toFixed(2)}`;
     })
     .each((d, i, g) => {
       // (g[i] as AFRAME.Entity).setAttribute('hover_cards', '');
       (g[i] as AFRAME.Entity).addEventListener('mouseenter', () => {
         const hoverIdx = i;
-        console.log(this.cardSelection);
-        this.cardSelection.filter((d, i) => { return i === hoverIdx}).attr('visible', true);
+        // disable next line bc d,i are necessary even if shadowed from .each
+        // tslint:disable-next-line
+        this.cardSelection.filter((d, i) => i === hoverIdx).attr('visible', true);
       });
       (g[i] as AFRAME.Entity).addEventListener('mouseleave', () => {
         const hoverIdx = i;
-        this.cardSelection.filter((d, i) => { return i === hoverIdx}).attr('visible', false);
+        // disable next line bc d,i are necessary even if shadowed from .each
+        // tslint:disable-next-line
+        this.cardSelection.filter((d, i) => i === hoverIdx).attr('visible', false);
       });
     });
   }
@@ -215,8 +227,8 @@ export class Scatterplot{
         const x = (d as VRScatterPoint).x;
         const y = (d as VRScatterPoint).y;
         const z = (d as VRScatterPoint).z;
-        return `
-        value: \n${categories} Position:\n\n\t  ${this.metrics[0]} (x): ${x}\n\n\t${this.metrics[1]}(y): ${y.toFixed(2)}\n\n\t${this.metrics[2]} (z): ${z}\n;
+        return
+        `value: \n${categories} Position:\n\n\t  ${this.metrics[0]} (x): ${x}\n\n\t${this.metrics[1]}(y): ${y.toFixed(2)}\n\n\t${this.metrics[2]} (z): ${z}\n;
         xOffset: ${DATA_PT_RADIUS / 3};
         shader: msdf; 
         font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/rubikmonoone/RubikMonoOne-Regular.json;`;
@@ -236,8 +248,7 @@ export class Scatterplot{
     });
   }
 
-  private createGridPlane()
-  {
+  private createGridPlane(){
     const xGrid = document.createElement('a-entity');
     xGrid.className = 'grids';
     xGrid.id = 'xGrid';
@@ -275,18 +286,3 @@ export class Scatterplot{
     });
   }
 }
-
-AFRAME.registerComponent('rotate_cards', {
-  tick() {
-    // need to include rig to account for initial rotation of camera rig
-    const rigRot = (document.getElementById('rig') as AFRAME.Entity).object3D.rotation;
-    const camRot = (document.querySelector('[camera]') as AFRAME.Entity).object3D.rotation;
-    this.el.object3D.rotation.set(
-       rigRot.x + camRot.x,
-       rigRot.y + camRot.y,
-       rigRot.z + camRot.z,
-    );
-  }
-});
-
-
