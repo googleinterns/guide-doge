@@ -1,11 +1,15 @@
 import * as d3 from 'd3';
 import { Hapticplot } from './hapticplot.d3';
-import { Entity, Scene } from 'aframe';
+import { Entity, Scene, Component } from 'aframe';
 import { Vector3 } from 'three';
 import 'aframe-extras';
 import 'super-hands';
 import 'aframe-haptics-component';
+import { Guidance } from 'src/aframe_components/custom-components';
 
+const POINT_SIZE = 0.02;
+const DEFAULT_COLOR = '#F0A202';
+const HOVER_COLOR = 'red';
 
 describe('VR Haptic Plot', () => {
   const shape = 'a-sphere';
@@ -13,10 +17,6 @@ describe('VR Haptic Plot', () => {
   let controller: HTMLElement;
   let hapticplot: Hapticplot;
   let graphScale: d3.ScaleLinear<number, number>;
-
-  const POINT_SIZE = 0.01;
-  const DEFAULT_COLOR = '#F0A202';
-  const HOVER_COLOR = 'red';
 
   beforeEach( () =>  {
     // Scene and Controller Mock Setup
@@ -26,6 +26,7 @@ describe('VR Haptic Plot', () => {
     controller.setAttribute('super-hands', '');
     controller.setAttribute('oculus-touch-controls', 'hand: left');
     controller.setAttribute('haptics', 'force: 0');
+    controller.setAttribute('guide', '');
     (controller as Entity).sceneEl = (scene as Scene);
     scene.appendChild(controller);
     hapticplot = new Hapticplot(shape);
@@ -42,25 +43,21 @@ describe('VR Haptic Plot', () => {
 
   it('places points for each datum in a one datum array', () => {
     const dataArray = [10];
-    graphScale.domain([0, d3.max(dataArray) as number])  // max of dataset
-      .range([0, 0.5]);
     hapticplot.init(scene, dataArray);
-    const expectedPosArray = [new Vector3(0, 1.5, -1)];
+    const expectedPosArray = [new Vector3(0, 1.7, -0.35)];
     const result = getPositions(scene, shape);
     expect(result).toEqual(expectedPosArray);
   });
 
   it('places points for each datum in a three datum array', () => {
     const dataArray = [0, 10, 20];
-    graphScale.domain([0, d3.max(dataArray) as number])  // max of dataset
-      .range([0, 0.5]);
     hapticplot.init(scene, [0, 10, 20]);
-    const expectedPosArray = [new Vector3(0, 1, -1), new Vector3(1 / 6, 1.25, -1), new Vector3(1 / 3, 1.5, -1)];
+    const expectedPosArray = [new Vector3(0, 1, -0.35), new Vector3((0.7 / 3), 1.35, -0.35), new Vector3((0.7 / 3) * 2, 1.7, -0.35)];
     const result = getPositions(scene, shape);
     expect(result).toEqual(expectedPosArray);
   });
 
-  it('places points for each datum and sets the correct color property on the resulting shape entities', () => {
+  it('places points for each datum and sets the correct color property on the resulting data points', () => {
     hapticplot.init(scene, [10, 20, 30]);
     const expectedColorArray = [DEFAULT_COLOR, DEFAULT_COLOR , DEFAULT_COLOR];
     const result = getColors(scene, shape);
@@ -81,17 +78,22 @@ describe('VR Haptic Plot', () => {
     expect(result).toEqual(expectedAttrArray);
   });
 
-  it('places points for each datum and sets the correct color property on the resulting shape entities after a hover event', () => {
+  it('sets the correct color property on shape entities after a hover event', () => {
     hapticplot.init(scene, [10, 20, 30]);
     const expectedAttrArray = [HOVER_COLOR, HOVER_COLOR, HOVER_COLOR];
     const result = getHoveredColor(scene, shape);
     expect(result).toEqual(expectedAttrArray);
   });
 
+  it('sets the correct color property on shape entities after a hover-end event', () => {
+    hapticplot.init(scene, [10, 20, 30]);
+    const expectedAttrArray = [DEFAULT_COLOR, DEFAULT_COLOR, DEFAULT_COLOR];
+    const result = getHoverEndedColor(scene, shape);
+    expect(result).toEqual(expectedAttrArray);
+  });
+
   it('initilizes the controller entitys and attaches the haptic component', () => {
-    const expectedRes = true;
-    const result = hasHaptics(controller);
-    expect(result).toEqual(expectedRes);
+    expect(hasHaptics(controller)).toEqual(true);
   });
 
   it('initilizes data points with sound components', () => {
@@ -102,6 +104,40 @@ describe('VR Haptic Plot', () => {
   it('attaches audio triggers to initilized data points', () => {
     hapticplot.init(scene, [10, 20, 30]);
     expect(hasSoundTriggers(scene, shape)).toEqual(true);
+  });
+
+  it('controller has guidance component', () => {
+    expect(hasGuidance(controller)).toEqual(true);
+  });
+
+  it('guide component initizes currentInterval with value intervalDuration (100ms)', () => {
+    const dataArray = [10];
+    hapticplot.init(scene, dataArray);
+    expect(getGuidanceInterval(controller)).toEqual(100);
+  });
+
+  it('when controller is near a datapoint, guidance component has haptic intensity between 0 and 1', () => {
+    const dataArray = [10];
+    hapticplot.init(scene, dataArray);
+    expect(getGuidanceHapticIntensity(controller) > 0 && getGuidanceHapticIntensity(controller) < 1).toEqual(true);
+  });
+
+  it('when controller is in contact with datapoint, guidance component has haptic intensity 1 in front half of interval', () => {
+    const dataArray = [10];
+    hapticplot.init(scene, dataArray);
+    expect(getIntervalIntensityFront(controller)).toEqual(1);
+  });
+
+  it('when controller is in contact with datapoint, guidance component has haptic intensity 0 in back half of interval', () => {
+    const dataArray = [10];
+    hapticplot.init(scene, dataArray);
+    expect(getIntervalIntensityBack(controller)).toEqual(0);
+  });
+
+  it('when haptic guidance interval elapses, the current interval is reset to 100ms', () => {
+    const dataArray = [10];
+    hapticplot.init(scene, dataArray);
+    expect(getIntervalReset(controller)).toEqual(100);
   });
 
 });
@@ -140,6 +176,16 @@ function getHoveredColor(scene: HTMLElement, shape: string): (string | null)[]{
   return Array.from(scene.querySelectorAll(shape)).map((point: Element) => point.getAttribute('color'));
 }
 
+// Returns an array of each generated objects color, after a hover event has occured
+function getHoverEndedColor(scene: HTMLElement, shape: string): (string | null)[]{
+  const shapes = scene.querySelectorAll(shape);
+  for (const point of shapes){
+    point.dispatchEvent(new Event('hover-start'));
+    point.dispatchEvent(new Event('hover-end'));
+  }
+  return Array.from(scene.querySelectorAll(shape)).map((point: Element) => point.getAttribute('color'));
+}
+
 // Checks the given controller for a haptic component
 function hasHaptics(controller: HTMLElement): boolean{
   return (controller as Entity).components.hasOwnProperty('haptics');
@@ -168,4 +214,52 @@ function hasSoundTriggers(scene: HTMLElement, shape: string): boolean{
     }
   }
   return true;
+}
+
+// Returns true if controller has the guide component attached
+function hasGuidance(controller: HTMLElement): boolean{
+  return (controller as Entity).components.hasOwnProperty('guide');
+}
+
+// Initilizes the guide component, and returns the currInterval
+function getGuidanceInterval(controller: HTMLElement): number{
+  const controllerEntity = controller as Entity;
+  controllerEntity.components.guide.init();
+  return (controllerEntity.components.guide as Guidance).state.currInterval;
+}
+
+// Returns haptic intensity when the controller is near a data point
+function getGuidanceHapticIntensity(controller: HTMLElement): number{
+  const controllerEntity = controller as Entity;
+  controllerEntity.object3D.position.set(0, 1.5, -0.35);
+  controllerEntity.components.guide.init();
+  controllerEntity.components.guide.tick!(1, 1);
+  return (controllerEntity.components.guide as Guidance).state.intensity;
+}
+
+// Returns haptic intensity during the first half of the vibration interval when the controller is in contact with a data point
+function getIntervalIntensityFront(controller: HTMLElement): number{
+  const controllerEntity = controller as Entity;
+  controllerEntity.object3D.position.set(0, 1.7, -0.35);
+  controllerEntity.components.guide.init();
+  controllerEntity.components.guide.tick!(1, 1);
+  return (controllerEntity.components.guide as Guidance).state.intensity;
+}
+
+// Returns haptic intensity during the second half of the vibration interval when the controller is in contact with a data point
+function getIntervalIntensityBack(controller: HTMLElement): number{
+  const controllerEntity = controller as Entity;
+  controllerEntity.object3D.position.set(0, 1.7, -0.35);
+  controllerEntity.components.guide.init();
+  controllerEntity.components.guide.tick!(65, 65);
+  return (controllerEntity.components.guide as Guidance).state.intensity;
+}
+
+// Returns the current inteval value after a tick of duration 100ms
+function getIntervalReset(controller: HTMLElement): number{
+  const controllerEntity = controller as Entity;
+  controllerEntity.object3D.position.set(0, 1.7, -0.35);
+  controllerEntity.components.guide.init();
+  controllerEntity.components.guide.tick!(100, 100);
+  return (controllerEntity.components.guide as Guidance).state.currInterval;
 }
