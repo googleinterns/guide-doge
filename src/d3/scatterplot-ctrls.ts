@@ -51,6 +51,8 @@ const bckgrdPos: Record<string, string> = {
 
 const dimensions = ['x', 'y', 'z'];
 
+const ADD_SPEED = .1;
+
 export class Controls{
   showCtrls: boolean;
   loadingFlag: boolean;
@@ -210,7 +212,7 @@ createSpeedCtrls(sign: string){
       speedTile.setAttribute('position', speedPos.plus);
       speedTile.setAttribute('material', 'color: black; opacity: .95; src: ../assets/plus.png;');
       (speedTile as AFRAME.Entity).addEventListener('mousedown', () => {
-        this.scatter.setDaydreamNavSpeed(this.scatter.getDaydreamNavSpeed() + .1);
+        this.scatter.setDaydreamNavSpeed(this.scatter.getDaydreamNavSpeed() + ADD_SPEED);
       });
       } else if (sign === 'neg'){
           speedTile.setAttribute('geometry', 'primitive: plane; height: .25; width: .25');
@@ -218,7 +220,7 @@ createSpeedCtrls(sign: string){
           speedTile.setAttribute('material', 'color: black; opacity: .95; src: ../assets/negative.png');
           (speedTile as AFRAME.Entity).addEventListener('mousedown', () => {
             if (this.scatter.DAYDREAM_NAV_SPEED > 0){
-              this.scatter.setDaydreamNavSpeed(this.scatter.getDaydreamNavSpeed() - .1);
+              this.scatter.setDaydreamNavSpeed(this.scatter.getDaydreamNavSpeed() - ADD_SPEED);
             }
           });
       }

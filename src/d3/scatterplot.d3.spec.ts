@@ -128,6 +128,31 @@ describe('Checking for presence of', () => {
   });
 });
 
+describe('Checking ctrl functions', () => {
+  let element: HTMLElement;
+  let scatterplot: Scatterplot;
+  let grids: HTMLCollectionOf<Element>;
+  const scatterPlotData1: VRScatterPoint[]  = [];
+  scatterPlotData1.push({categories: {}, x: 20, y: 10, z: 5});
+
+  beforeEach( () =>  {
+    element = document.createElement('a-scene');
+    scatterplot = new Scatterplot('a-sphere');
+    element.appendChild(document.createElement('a-camera'));
+    scatterplot.init(element, scatterPlotData1, [], MetaType.SCATTER_PLOT);
+    grids = element.getElementsByClassName('grids');
+  });
+  it('for getting speed', () => {
+    scatterplot.init(element, scatterPlotData1, [], MetaType.SCATTER_PLOT);
+    expect(scatterplot.getDaydreamNavSpeed()).toEqual(.1);
+  });
+
+  it('for getting scales', () => {
+    scatterplot.init(element, scatterPlotData1, [], MetaType.SCATTER_PLOT);
+    expect(scatterplot.getGridBound('x')).toEqual(50);
+  });
+});
+
 // returns array of actual position vectors
 function getPosition(element: HTMLElement, shape: string): Array<{x: number, y: number, z: number}>{
   const childrenArray = element.querySelectorAll(shape);

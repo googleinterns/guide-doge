@@ -54,6 +54,7 @@ export class Scatterplot{
     this.dataType = dataType;
     this.container = container;
     this.dataType = dataType;
+    this.DAYDREAM_NAV_SPEED = .1;
     this.dataPointContainer = this.createEntity('a-entity', 'points');
     this.dataTextContainer = this.createEntity('a-entity', 'cards');
     container.appendChild(this.dataPointContainer);
@@ -66,7 +67,6 @@ export class Scatterplot{
     }
 
     setTimeout(() => {
-      this.DAYDREAM_NAV_SPEED = .1;
       this.dataTextContainer = this.createEntity('a-entity', 'cards');
       if (document.querySelector('[camera]') != null){
         document.querySelector('[camera]').appendChild(this.dataTextContainer);
@@ -220,9 +220,9 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
   }
 
   private redrawGridPlane(){
-    this.container!.removeChild(document.getElementById('xGrid')!);
-    this.container!.removeChild(document.getElementById('yGrid')!);
-    this.container!.removeChild(document.getElementById('zGrid')!);
+    (this.container as Node)!.removeChild((document.getElementById('xGrid') as Node))!;
+    (this.container as Node)!.removeChild((document.getElementById('yGrid') as Node)!);
+    (this.container as Node)!.removeChild((document.getElementById('zGrid') as Node)!);
     this.createGridPlane();
   }
 
