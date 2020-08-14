@@ -27,11 +27,11 @@ export class Scatterplot{
     private ZGRID_BOUND = 50;
     private data: VRScatterPoint[];
     private shape: string;
-    private container: HTMLElement | null;
     private dataPointContainer: HTMLElement;
     private dataTextContainer: HTMLElement;
     private metrics: string[];
     private cardSelection: any;
+    container: HTMLElement | null;
     ptSelection: any;
     DAYDREAM_NAV_SPEED;
     xScale: d3.ScaleLinear<number, number>;
@@ -286,9 +286,5 @@ export class Scatterplot{
     this.ZGRID_BOUND = zMapping;
     this.generatePts();
     this.redrawGridPlane();
-  }
-
-  returnAScene(): HTMLElement | null{
-    return this.container;
   }
 }

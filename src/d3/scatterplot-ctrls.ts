@@ -459,7 +459,7 @@ export class Controls{
       this.camera.appendChild(element);
     }
     else {
-     this.scatter.returnAScene()!.appendChild(element);
+     this.scatter.container!.appendChild(element);
     }
   }
 }

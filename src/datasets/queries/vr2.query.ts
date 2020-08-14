@@ -52,7 +52,7 @@ export function createVRData<S>(rows: ResultRow[], item: LegendItem): VRData<S> 
   const points: VRScatterPoint[] = [];
   let k = 0;
   for (let i = 0; i < 100; i++) {
-    for (let j = 0; j < getRand(5, 10); j++) {
+    for (let j = 0; j < 7; j++) {
       points.push({
         categories: {browser: browsers[k % browsers.length],
           country: countries[k % countries.length],
