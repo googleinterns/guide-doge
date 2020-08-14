@@ -59,15 +59,15 @@ export function create(config: Config): Dataset {
     expIncreasingFactor,
   );
 
-  const visitCountMeasure: Measure = {
-    name: 'visitCount',
+  const activeUserMeasure: Measure = {
+    name: 'activeUsers',
     scope: Scope.USER,
     type: MeasureType.COUNT,
   };
 
 
   const categories = [dateCategory, userIDCategory];
-  const measures = [visitCountMeasure];
+  const measures = [activeUserMeasure];
 
   const generateCubeConfig = {
     avgHits: 10000,
@@ -81,42 +81,22 @@ export function create(config: Config): Dataset {
 
   const dataCube = generateCube(categories, measures, generateCubeConfig);
 
-  const visitCountQuerySummariesFactory = combineQuerySummariesFactories(
+  const activeUserQuerySummariesFactory = combineQuerySummariesFactories(
     TrendPartialSummarization.queryFactory,
   );
 
   const lineChartMeta = createLineChartMeta(
-    'Visit Count',
+    'Active Users',
     createTimeSeriesQuery(dataCube, [{
-      label: 'Visit Count',
-      measureName: 'visitCount',
-      querySummariesFactory: visitCountQuerySummariesFactory,
+      label: 'activeUsers',
+      measureName: 'activeUsers',
+      querySummariesFactory: activeUserQuerySummariesFactory,
     }]),
   );
 
 
   const metas = [
     lineChartMeta,
-    createLineChartMeta(
-      'Visit Count',
-      (opt) => {
-        const points = lineChartMeta.queryData(opt)[0].points;
-        return [{
-          label: 'Visit Count - Smoothed',
-          points: exponentialMovingAverage(normalizePointsY(points)),
-          querySummaries: TrendPartialSummarization.queryFactory(points),
-          style: {
-            color: 'green'
-          },
-        }, {
-          label: 'Visit Count',
-          points: normalizePointsY(points),
-          style: {
-            opacity: 0.5,
-          },
-        }];
-      },
-    ),
   ];
 
   return {
