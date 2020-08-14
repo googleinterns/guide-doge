@@ -220,7 +220,7 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
   }
 
   private redrawGridPlane(){
-    (this.container as Node)!.removeChild((document.getElementById('xGrid') as Node))!;
+    (this.container as Node)!.removeChild((document.getElementById('xGrid') as Node)!);
     (this.container as Node)!.removeChild((document.getElementById('yGrid') as Node)!);
     (this.container as Node)!.removeChild((document.getElementById('zGrid') as Node)!);
     this.createGridPlane();
