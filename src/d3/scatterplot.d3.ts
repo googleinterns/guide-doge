@@ -12,8 +12,7 @@ const speedPos: Record<string, string> = {
     ['minus']: '-.75 1.5 -4',
     ['plus']: '.25 1.5 -4',
     ['label']: '-.25 1.5 -4',
-   
-  };
+};
 
 export interface ScatterPlotStyle {
   color: string | number;
@@ -56,35 +55,42 @@ export class Scatterplot{
     this.container = container;
     this.dataType = dataType;
     this.dataPointContainer = this.createEntity('a-entity', 'points');
+    this.dataTextContainer = this.createEntity('a-entity', 'cards');
     container.appendChild(this.dataPointContainer);
+    container.appendChild(this.dataTextContainer);
     this.createSky('lightgray');
     this.createGridPlane();
-    
-    if (!this.loaded){
+    if (this.data.length > 0){
+      this.generatePts();
+      this.generateText();
+    }
+
     setTimeout(() => {
       this.DAYDREAM_NAV_SPEED = .1;
       this.dataTextContainer = this.createEntity('a-entity', 'cards');
-      document.querySelector('[camera]').appendChild(this.dataTextContainer);
-     
+      if (document.querySelector('[camera]') != null){
+        document.querySelector('[camera]').appendChild(this.dataTextContainer);
+      }
       if (this.data.length > 0){
         this.generatePts();
         this.setColor('#4385f4');
       }
       this.generateText();
       const control = new Controls(this);
-      // this.createCtrlTools();
-    }, 2000);
+      if (this.dataTextContainer.parentNode === this.container){
+        this.container!.removeChild(this.dataTextContainer);
+      }
+    }, 3000);
+    this.loaded = true;
   }
-  this.loaded = true;
-}
 
   private createEntity(entity: string, id: string): HTMLElement {
     const retEntity = document.createElement(entity);
     retEntity.id = id;
     return retEntity;
-  }  
+  }
 
-setDaydreamNavSpeed(setSpeed: number){
+  setDaydreamNavSpeed(setSpeed: number){
     this.DAYDREAM_NAV_SPEED = setSpeed;
   }
 
@@ -93,11 +99,11 @@ setDaydreamNavSpeed(setSpeed: number){
   }
 
   getGridBound(dimension: string): number{
-    if(dimension === 'x'){
+    if (dimension === 'x'){
       return this.XGRID_BOUND;
-    } else if(dimension === 'y'){
+    } else if (dimension === 'y'){
         return this.YGRID_BOUND;
-    } else if(dimension === 'z'){
+    } else if (dimension === 'z'){
         return this.ZGRID_BOUND;
     }
     return this.XGRID_BOUND;
@@ -120,9 +126,9 @@ setDaydreamNavSpeed(setSpeed: number){
     }
 
     // scale positions based on largest value found in xyz to absVal(maxGridDimension)
-    this.xScale = this.dimScales(maxXValue);
-    this.yScale = this.dimScales(maxYValue);
-    this.zScale = this.dimScales(maxZValue);
+    this.xScale = this.dimScales(maxXValue, this.XGRID_BOUND);
+    this.yScale = this.dimScales(maxYValue, this.YGRID_BOUND);
+    this.zScale = this.dimScales(maxZValue, this.ZGRID_BOUND);
   }
 
 changeScales(xMapping: number, yMapping: number, zMapping: number){
@@ -144,9 +150,9 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
   this.redrawGridPlane();
 }
 
-  private dimScales(maxVal: number): d3.ScaleLinear<number, number> {
+  private dimScales(maxVal: number, gridBound: number): d3.ScaleLinear<number, number> {
        // scale positions based on largest value found in xyz to absVal(maxGridDimension)
-      return d3.scaleLinear().domain([0, maxVal]).range([0, this.GRID_BOUND]);
+      return d3.scaleLinear().domain([0, maxVal]).range([0, gridBound]);
   }
 
   private generatePts() {
@@ -170,14 +176,14 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
          // disable next line bc d,i are necessary even if shadowed from .each
         // tslint:disable-next-line
         this.cardSelection.filter((d, i) => { return i === hoverIdx})
-        .attr('visible', true) 
-        .attr('position', '0 -.15 -.5');
+        .attr('visible', true)
+        .attr('position', '0 0 -.5');
       });
-       // disable next line bc d,i are necessary even if shadowed from .each
-        // tslint:disable-next-line
       (g[i] as AFRAME.Entity).addEventListener('mouseleave', () => {
         const hoverIdx = i;
-        this.cardSelection.filter((d, i) => { return i === hoverIdx})
+        // disable next line bc d,i are necessary even if shadowed from .each
+        // tslint:disable-next-line
+        this.cardSelection.filter((d, i) =>  i === hoverIdx)
         .attr('visible', false)
         .attr('position', '0 0 2');
       });
@@ -198,13 +204,13 @@ changeScales(xMapping: number, yMapping: number, zMapping: number){
         const y = (d as VRScatterPoint).y;
         const z = (d as VRScatterPoint).z;
         return `
-        value: \n${categories} Position:\n\n\t--${this.metrics[0]} (x): ${x}\n\n\t--${this.metrics[1]} (y): ${y.toFixed(2)}\n\n\t--${this.metrics[2]} (z): ${z};
+        value: ${categories} Position:\n\n--${this.metrics[0]} (x): ${x}\n\n--${this.metrics[1]} (y): ${y.toFixed(2)}\n\n--${this.metrics[2]} (z): ${z};
         xOffset: ${DATA_PT_RADIUS / 3};
-        shader: msdf; 
-        font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/roboto/Roboto-Medium.json;`;
+        shader: msdf;
+        font: https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/roboto/Roboto-Medium.json;`;
       })
       .attr('visible', false)
-      .attr('position', '0 0 2');
+      .attr('position', '0 0 -2');
   }
 
   private setColor(color) {
