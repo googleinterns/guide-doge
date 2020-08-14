@@ -4,7 +4,8 @@ import { VRScatterPoint } from '../datasets/queries/vr.query';
 import { MetaType } from '../datasets/metas/types';
 const PROXY_FLAG = '__keyboard-controls-proxy';
 const DATA_PT_RADIUS = .05;
-// const CAM_Y_ROTATION = AFRAME.THREE.MathUtils.degToRad(135);
+const ROBOTO = 'https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/roboto/Roboto-Medium.json;';
+const AILERON_FONT = 'https://cdn.aframe.io/fonts/Aileron-Semibold.fnt';
 
 export interface ScatterPlotStyle {
   color: string | number;
@@ -12,7 +13,6 @@ export interface ScatterPlotStyle {
 }
 
 export class Scatterplot{
-    readonly AILERON_FONT = 'https://cdn.aframe.io/fonts/Aileron-Semibold.fnt';
     private GRID_BOUND = 50;
     private data: VRScatterPoint[];
     private shape: string;
@@ -26,7 +26,7 @@ export class Scatterplot{
     yScale: d3.ScaleLinear<number, number>;
     zScale: d3.ScaleLinear<number, number>;
     dataType: MetaType;
-    loaded = false;
+    loaded: boolean;
     tilePos: Record<string, string> = {
       ['xPos']: '-1 1 -4',
       ['xNeg']: '-2 1 -4',
@@ -42,6 +42,7 @@ export class Scatterplot{
 
   constructor(shape: string) {
     this.shape = shape;
+    this.loaded = false;
   }
 
   init(container: HTMLElement, data: VRScatterPoint[], metrics: string[], dataType: MetaType){
@@ -54,11 +55,12 @@ export class Scatterplot{
     this.dataPointContainer = this.createEntity('a-entity', 'dataPts');
     this.dataTextContainer = this.createEntity('a-entity', 'dataTxt');
     container.appendChild(this.dataPointContainer);
-    // container.appendChild(this.dataTextContainer);
+    container.appendChild(this.dataTextContainer);
     this.DAYDREAM_NAV_SPEED = .1;
     if (this.data.length > 0 && !this.loaded){
       this.generatePts();
       this.setColor('blue');
+      this.generateText();
     }
     this.createSky('gray');
     this.createGridPlane();
@@ -90,16 +92,16 @@ export class Scatterplot{
           );
         }
       });
-    this.createNavTile('x', this.DAYDREAM_NAV_SPEED);
-    this.createNavTile('x', -this.DAYDREAM_NAV_SPEED);
-    this.createNavTile('y', this.DAYDREAM_NAV_SPEED);
-    this.createNavTile('y', -this.DAYDREAM_NAV_SPEED);
-    this.createNavTile('z', this.DAYDREAM_NAV_SPEED);
-    this.createNavTile('z', -this.DAYDREAM_NAV_SPEED);
+      this.createNavTile('x', this.DAYDREAM_NAV_SPEED);
+      this.createNavTile('x', -this.DAYDREAM_NAV_SPEED);
+      this.createNavTile('y', this.DAYDREAM_NAV_SPEED);
+      this.createNavTile('y', -this.DAYDREAM_NAV_SPEED);
+      this.createNavTile('z', this.DAYDREAM_NAV_SPEED);
+      this.createNavTile('z', -this.DAYDREAM_NAV_SPEED);
     };
   }
   createNavTile(dim: string, velocity: number){
-    let rigPos = (document.getElementById('rig') as AFRAME.Entity).object3D.position;
+    const rigPos = (document.getElementById('rig') as AFRAME.Entity).object3D.position;
     const navTile = document.createElement('a-entity');
     // document.querySelector('[camera]').appendChild(navTile);
     document.querySelector('[camera]').appendChild(navTile);
@@ -227,18 +229,17 @@ export class Scatterplot{
         const x = (d as VRScatterPoint).x;
         const y = (d as VRScatterPoint).y;
         const z = (d as VRScatterPoint).z;
-        return
-        `value: \n${categories} Position:\n\n\t  ${this.metrics[0]} (x): ${x}\n\n\t${this.metrics[1]}(y): ${y.toFixed(2)}\n\n\t${this.metrics[2]} (z): ${z}\n;
+        return `value: ${categories} Position:\n\n${this.metrics[0]} (x): ${x}\n\n${this.metrics[1]} (y): ${y.toFixed(2)}\n\n${this.metrics[2]} (z): ${z};
         xOffset: ${DATA_PT_RADIUS / 3};
-        shader: msdf; 
-        font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/rubikmonoone/RubikMonoOne-Regular.json;`;
+        shader: msdf;
+        font: ${ROBOTO}`;
       })
       .attr('visible', false)
       .attr('position', (d, i) => {
         const x = this.xScale((d as VRScatterPoint).x);
         const y = this.yScale((d as VRScatterPoint).y);
         const z = this.zScale((d as VRScatterPoint).z);
-        return `${0} ${0} ${-(.25)}`;
+        return `${0} ${0} ${-(.15)}`;
       });
   }
 
