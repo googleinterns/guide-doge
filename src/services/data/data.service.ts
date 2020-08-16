@@ -1,5 +1,5 @@
 import { OnDestroy } from '@angular/core';
-import { takeUntil, throttleTime, distinctUntilChanged, pluck, filter, map } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, pluck, takeUntil, throttleTime } from 'rxjs/operators';
 import { asyncScheduler, ReplaySubject, Subject } from 'rxjs';
 import { PreferenceService } from '../preference/preference.service';
 import { datasets } from '../../datasets';
@@ -17,8 +17,9 @@ export class DataService implements OnDestroy {
       .pipe(throttleTime(500, asyncScheduler, { leading: true, trailing: true }))
       .pipe(filter(preference => preference.name === preference._meta_name))
       .pipe(distinctUntilChanged((prev, curr) => Object.keys(curr._meta).every(k => prev[k] === curr[k])))
-      .subscribe(preference => {
-        this.dataset$.next(datasets[preference.name].create(preference));
+      .subscribe(async preference => {
+        const dataset = await datasets[preference.name].create(preference);
+        this.dataset$.next(dataset);
       });
 
     const datasetNames = Object.keys(datasets);
