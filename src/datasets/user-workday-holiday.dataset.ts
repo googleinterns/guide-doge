@@ -9,9 +9,7 @@ import { DAY } from '../utils/timeUnits';
 import { combineQuerySummariesFactories } from './summarizations/utils/commons';
 import { normalizePointsY } from './summarizations/utils/commons';
 import { exponentialMovingAverage } from './summarizations/libs/trend';
-import * as WorkdayHolidayAbsoluteSummarization from './summarizations/workday-holiday-absolute.summarization';
-import * as WorkdayHolidayRelativeSummarization from './summarizations/workday-holiday-relative.summarization';
-import * as TrendPartialSummarization from './summarizations/trend-partial.summarization';
+import * as TrendSummarization from './summarizations/trend-weekly-comparsion-average.summarization';
 
 export interface Config {
   dailyWeightStd: number;
@@ -72,7 +70,7 @@ export function create(config: Config): Dataset {
   const dataCube = generateCube(categories, measures, generateCubeConfig);
 
   const activeUserQuerySummariesFactory = combineQuerySummariesFactories(
-    TrendPartialSummarization.queryFactory,
+    TrendSummarization.queryFactory,
   );
 
   const lineChartMeta = createLineChartMeta(

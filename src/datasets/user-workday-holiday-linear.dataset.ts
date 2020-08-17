@@ -6,9 +6,9 @@ import { createTimeSeriesQuery } from './queries/time-series.query';
 import { createLineChartMeta } from './metas/line-chart.meta';
 import { PreferenceMeta } from '../services/preference/types';
 import { DAY } from '../utils/timeUnits';
+import { centeredMovingAverage, additiveDecomposition } from './summarizations/libs/trend';
 import { combineQuerySummariesFactories } from './summarizations/utils/commons';
-import * as TrendPartialSummarization from './summarizations/trend-partial.summarization';
-
+import * as TrendSummarization from './summarizations/trend-weekly-comparsion-average.summarization';
 
 export interface Config {
   dailyWeightStd: number;
@@ -81,7 +81,7 @@ export function create(config: Config): Dataset {
   const dataCube = generateCube(categories, measures, generateCubeConfig);
 
   const activeUserQuerySummariesFactory = combineQuerySummariesFactories(
-    TrendPartialSummarization.queryFactory,
+    TrendSummarization.queryFactory,
   );
 
   const lineChartMeta = createLineChartMeta(
@@ -138,7 +138,7 @@ function generateDateCategory(
   if (linearIncreasingFactor < 0) {
     for (let i = 0; i < values.length / 2; i++) {
       const j = values.length - i - 1;
-      const t =  values[j].weight;
+      const t = values[j].weight;
       values[j].weight = values[i].weight;
       values[i].weight = t;
     }
