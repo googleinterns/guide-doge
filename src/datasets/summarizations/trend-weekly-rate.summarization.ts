@@ -30,7 +30,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const centeredMovingAverageHalfWindowSize = 4;
     const normalizedTrendPoints = centeredMovingAverage(normalizedYPoints, centeredMovingAverageHalfWindowSize);
     const {
-      seasonPoints: normalizedSeasonPoints,
+      detrendPoints: normalizedDetrendPoints,
     } = additiveDecomposition(normalizedYPoints, normalizedTrendPoints, ({ x }) => x.getDay());
 
     const uWeekend = (p: TimeSeriesPoint) => p.x.getDay() === 5 ? 0.2 : +(p.x.getDay() === 0 || p.x.getDay() === 6);
@@ -41,10 +41,10 @@ export function queryFactory(points: TimeSeriesPoint[]) {
 
     // Only consider weeks with more than 3 days when creating summaries
     // Weeks with 3 days or less are considered to belong to last/next 30 days
-    const normalizedSeasonWeekPointArrays = groupPointsByXWeek(normalizedSeasonPoints).filter(weekPoints => weekPoints.length >= 4);
-    const nWeeks = normalizedSeasonWeekPointArrays.length;
+    const normalizedDetrendeekPointArrays = groupPointsByXWeek(normalizedDetrendPoints).filter(weekPoints => weekPoints.length >= 4);
+    const nWeeks = normalizedDetrendeekPointArrays.length;
 
-    const weekdayWeekendDiffPoints = normalizedSeasonWeekPointArrays.map(weekPoints => {
+    const weekdayWeekendDiffPoints = normalizedDetrendeekPointArrays.map(weekPoints => {
       const week = weekPoints[0].x;
       const weekdayPoints = weekPoints.filter(isWeekday);
       const weekendPoints = weekPoints.filter(isWeekend);
