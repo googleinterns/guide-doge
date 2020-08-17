@@ -3,6 +3,7 @@ import * as math from 'mathjs';
 import { TimeSeriesPoint, NumPoint } from '../../metas/types';
 import { normalizePoints, pointToPair, pairToPoint } from '../utils/commons';
 import { timeSeriesPointToNumPoint } from '../utils/time-series';
+import { sum } from '../../../utils/misc';
 
 export interface LinearRegressionResult {
   gradient: number;
@@ -145,5 +146,24 @@ export function exponentialMovingAverage(points: TimeSeriesPoint[], alpha = 0.3)
     x: points[i].x,
     y: S,
   }));
+  return smoothedPoints;
+}
+
+export function centeredMovingAverage(points: TimeSeriesPoint[], k: number): TimeSeriesPoint[] {
+  const L = points.length;
+  const smoothedPoints: TimeSeriesPoint[] = [];
+  for (let i = 0; i < points.length; i++) {
+    const lSumPoints = points.slice(Math.max(0, i - k), Math.min(L, i + k));
+    const rSumPoints = points.slice(Math.max(0, i - k + 1), Math.min(L, i + k + 1));
+
+    const lSum = sum(lSumPoints.map(({ y }) => y));
+    const rSum = sum(rSumPoints.map(({ y }) => y));
+
+    const smoothedY = 0.5 * (lSum / lSumPoints.length + rSum / rSumPoints.length);
+    smoothedPoints.push({
+      x: points[i].x,
+      y: smoothedY,
+    });
+  }
   return smoothedPoints;
 }
