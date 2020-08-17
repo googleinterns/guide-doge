@@ -48,7 +48,7 @@ export function groupPointsByXWeek(points: TimeSeriesPoint[]): TimeSeriesPoint[]
 
 export function timeSeriesPointToNumPoint(point: TimeSeriesPoint) {
   return {
-    x: point.x.getTime(),
+    x: point.x.getTime() / DAY,
     y: point.y,
   };
 }
