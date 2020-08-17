@@ -8,7 +8,7 @@ import { PreferenceMeta } from '../services/preference/types';
 import { DAY } from '../utils/timeUnits';
 import { centeredMovingAverage, additiveDecomposition } from './summarizations/libs/trend';
 import { combineQuerySummariesFactories } from './summarizations/utils/commons';
-import * as TrendSummarization from './summarizations/trend-weekly-comparison-rate.summarization';
+import * as TrendSummarization from './summarizations/trend-weekly-rate.summarization';
 
 export interface Config {
   dailyWeightStd: number;
