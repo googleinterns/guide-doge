@@ -167,3 +167,50 @@ export function centeredMovingAverage(points: TimeSeriesPoint[], k: number): Tim
   }
   return smoothedPoints;
 }
+
+export type GroupIdentifier = string | number;
+export interface DecompositionResult {
+  detrendPoints: TimeSeriesPoint[];
+  seasonPoints: TimeSeriesPoint[];
+  residualPoints: TimeSeriesPoint[];
+}
+
+export function additiveDecomposition(
+  points: TimeSeriesPoint[],
+  trendPoints: TimeSeriesPoint[],
+  groupFn: (point: TimeSeriesPoint) => GroupIdentifier): DecompositionResult {
+
+  const detrendPoints = points.map(({ x, y }, i) => ({
+    x,
+    y: y - trendPoints[i].y,
+  }));
+
+  const groups: Record<GroupIdentifier, TimeSeriesPoint[]> = {};
+
+  for (const point of detrendPoints) {
+    const gid = groupFn(point);
+    groups[gid] = [point, ...(groups[gid] ?? [])];
+  }
+
+  const groupAverages: Record<GroupIdentifier, number> = {};
+  for (const [gid, gpoints] of Object.entries(groups)) {
+    const s = sum(gpoints.map(({ y }) => y));
+    const average = s / gpoints.length;
+    groupAverages[gid] = average;
+  }
+
+  const seasonPoints = points.map(({ x, y }) => ({
+    x,
+    y: groupAverages[groupFn({ x, y })],
+  }));
+  const residualPoints = points.map(({ x, y }, i) => ({
+    x,
+    y: y - trendPoints[i].y - seasonPoints[i].y,
+  }));
+
+  return {
+    detrendPoints,
+    seasonPoints,
+    residualPoints,
+  };
+}
