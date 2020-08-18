@@ -96,6 +96,23 @@ export function queryFactory(points: TimeSeriesPoint[]) {
         text,
         validity: 1.0,
       });
+
+      if (!isWeekdayWeekendEqual) {
+        const fridayPoint = weekPointArrays[i].find(({ x }) => x.getDay() === 5);
+        const saturdayPoint = weekPointArrays[i].find(({ x }) => x.getDay() === 6);
+
+        if (fridayPoint && saturdayPoint) {
+          const yDiff = saturdayPoint.y - fridayPoint.y;
+          const yDiffAbsolute = Math.abs(yDiff);
+          const yDiffDynamicDescriptor = yDiff >= 0 ? 'increased' : 'decreased';
+
+          const friSatDiffText = `The active users from Friday to Saturday <b>${yDiffDynamicDescriptor} by ${yDiffAbsolute}</b> users in the <b>${ordinalTexts[i]} week.`
+          summaries.push({
+            text: friSatDiffText,
+            validity: 1.0,
+          });
+        }
+      }
     }
     return summaries;
   });
