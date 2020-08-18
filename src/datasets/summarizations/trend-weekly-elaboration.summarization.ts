@@ -64,6 +64,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const uMostPercentage = trapmfL(0.6, 0.7);
     const uEqualDiff = ({ y }) => trapmfR(0.05, 0.1)(y);
     const weekdayWeekendEqualValidity = sigmaCountQA(weekdayWeekendDiffPoints, uMostPercentage, uEqualDiff);
+    const isWeekdayWeekendEqual = weekdayWeekendEqualValidity > 0.7;
 
     // Only consider weeks with more than 3 days when creating summaries
     // Weeks with 3 days or less are considered to belong to last/next 30 days
@@ -71,7 +72,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
 
     // TODO: Create rate comparison summaries with fuzzy logic for both weekday and overall points
     const regressionResults = weekPointArrays.map(weekPoints => {
-      if (weekdayWeekendEqualValidity > 0.7) {
+      if (isWeekdayWeekendEqual) {
         return linearRegression(weekPoints.map(timeSeriesPointToNumPoint));
       } else {
         return linearRegression(weekPoints.filter(isWeekday).map(timeSeriesPointToNumPoint));
@@ -84,7 +85,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     for (let i = 0; i < nWeeks; i++) {
       const weekRate = regressionResults[i].gradient + 1e-4;
       const weekRateAbsolute = Math.abs(weekRate);
-      const weekdayWeekendDescriptor = weekdayWeekendEqualValidity > 0.7 ? '' : 'of weekdays ';
+      const weekdayWeekendDescriptor = isWeekdayWeekendEqual ? '' : 'of weekdays ';
 
       const dynamicDescriptor = weekRate >= 0 ? 'increasing' : 'decreasing';
 
