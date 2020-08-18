@@ -9,7 +9,7 @@ import { DAY } from '../utils/timeUnits';
 import { combineQuerySummariesFactories } from './summarizations/utils/commons';
 import { normalizePointsY } from './summarizations/utils/commons';
 import { exponentialMovingAverage } from './summarizations/libs/trend';
-import * as TrendSummarization from './summarizations/trend-weekly-rate.summarization';
+import * as TrendSummarization from './summarizations/trend-weekly-elaboration.summarization';
 
 export interface Config {
   dailyWeightStd: number;
