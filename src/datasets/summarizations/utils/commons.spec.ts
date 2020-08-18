@@ -177,39 +177,67 @@ describe('normalizePointsY', () => {
   ];
 
   it('should take 0 as min and max y-values of input for normalization by default.', () => {
-    expect(normalizePointsY(points)).toEqual([
+    const expectedResult = [
       { x: 10, y: 0.5 },
       { x: 12, y: 0.6 },
       { x: 15, y: 0.75 },
       { x: 20, y: 1.0 },
-    ]);
+    ];
+    const normalizedYPoints = normalizePointsY(points);
+
+    expect(normalizedYPoints.length).toBe(points.length);
+    normalizedYPoints.map((point, i) => {
+      expect(point.x).toBeCloseTo(expectedResult[i].x, 4);
+      expect(point.y).toBeCloseTo(expectedResult[i].y, 4);
+    });
   });
 
   it('should use chart y-axis min limit for normalization if provided.', () => {
-    expect(normalizePointsY(points, { min: 10 })).toEqual([
+    const expectedResult = [
       { x: 10, y: 0 },
       { x: 12, y: 0.2 },
       { x: 15, y: 0.5 },
       { x: 20, y: 1.0 },
-    ]);
+    ];
+    const normalizedYPoints = normalizePointsY(points, { min: 10 });
+
+    expect(normalizedYPoints.length).toBe(points.length);
+    normalizedYPoints.map((point, i) => {
+      expect(point.x).toBeCloseTo(expectedResult[i].x, 4);
+      expect(point.y).toBeCloseTo(expectedResult[i].y, 4);
+    });
   });
 
   it('should use chart y-axis max limit for normalization if provided.', () => {
-    expect(normalizePointsY(points, { max: 40 })).toEqual([
+    const expectedResult = [
       { x: 10, y: 0.25 },
       { x: 12, y: 0.3 },
       { x: 15, y: 0.375 },
       { x: 20, y: 0.5 },
-    ]);
+    ];
+    const normalizedYPoints = normalizePointsY(points, { max: 40 });
+
+    expect(normalizedYPoints.length).toBe(points.length);
+    normalizedYPoints.map((point, i) => {
+      expect(point.x).toBeCloseTo(expectedResult[i].x, 4);
+      expect(point.y).toBeCloseTo(expectedResult[i].y, 4);
+    });
   });
 
   it('should use chart y-axis limits for normalization if provided.', () => {
-    expect(normalizePointsY(points, { min: 0, max: 100 })).toEqual([
+    const expectedResult = [
       { x: 10, y: 0.1 },
       { x: 12, y: 0.12 },
       { x: 15, y: 0.15 },
       { x: 20, y: 0.2 },
-    ]);
+    ];
+    const normalizedYPoints = normalizePointsY(points, { min: 0, max: 100 });
+
+    expect(normalizedYPoints.length).toBe(points.length);
+    normalizedYPoints.map((point, i) => {
+      expect(point.x).toBeCloseTo(expectedResult[i].x, 4);
+      expect(point.y).toBeCloseTo(expectedResult[i].y, 4);
+    });
   });
 });
 
@@ -223,15 +251,27 @@ describe('normalizePoints', () => {
   ];
 
   it('should normalize x-values and y-values.', () => {
-    expect(normalizePoints(points)).toEqual(normalizePointsX(normalizePointsY(points)));
-    expect(normalizePoints(points)).toEqual(normalizePointsY(normalizePointsX(points)));
+    const expectedResult = normalizePointsX(normalizePointsY(points));
+    const normalizeYPoints = normalizePoints(points);
+
+    expect(normalizeYPoints.length).toBe(points.length);
+    normalizeYPoints.map((point, i) => {
+      expect(point.x).toBeCloseTo(expectedResult[i].x, 4);
+      expect(point.y).toBeCloseTo(expectedResult[i].y, 4);
+    });
   });
 
   it('should normalize x-values and y-values based on chart xlim and ylim.', () => {
     const xlim = { min: 0, max: 100 };
     const ylim = { min: 10, max: 40 };
 
-    expect(normalizePoints(points, xlim, ylim)).toEqual(normalizePointsX(normalizePointsY(points, ylim), xlim));
-    expect(normalizePoints(points, xlim, ylim)).toEqual(normalizePointsY(normalizePointsX(points, xlim), ylim));
+    const expectedResult = normalizePointsX(normalizePointsY(points, ylim), xlim);
+    const normalizeYPoints = normalizePoints(points, xlim, ylim);
+
+    expect(normalizeYPoints.length).toBe(points.length);
+    normalizeYPoints.map((point, i) => {
+      expect(point.x).toBeCloseTo(expectedResult[i].x, 4);
+      expect(point.y).toBeCloseTo(expectedResult[i].y, 4);
+    });
   });
 });
