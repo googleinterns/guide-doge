@@ -65,11 +65,11 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const uEqualDiff = ({ y }) => trapmfR(0.05, 0.1)(y);
     const weekdayWeekendEqualValidity = sigmaCountQA(weekdayWeekendDiffPoints, uMostPercentage, uEqualDiff);
 
-    const ANGMX = Math.atan(500 / 800);
+    const ANGMX = Math.PI / 2;
     const uQuicklyIncreasingLinearTrend = trapmfL(ANGMX / 2, ANGMX * 5 / 8);
-    const uIncreasingLinearTrend = trapmf(ANGMX / 8, ANGMX / 4, ANGMX / 2, ANGMX * 5 / 8);
-    const uConstantLinearTrend = trapmf(-ANGMX / 4, -ANGMX / 8, ANGMX / 8, ANGMX / 4);
-    const uDecreasingLinearTrend = trapmf(-ANGMX * 5 / 8, -ANGMX / 2, -ANGMX / 4, -ANGMX / 8);
+    const uIncreasingLinearTrend = trapmf(ANGMX / 16, ANGMX / 8, ANGMX / 2, ANGMX * 5 / 8);
+    const uConstantLinearTrend = trapmf(-ANGMX / 8, -ANGMX / 16, ANGMX / 16, ANGMX / 8);
+    const uDecreasingLinearTrend = trapmf(-ANGMX * 5 / 8, -ANGMX / 2, -ANGMX / 8, -ANGMX / 16);
     const uQuicklyDecreasingLinearTrend = trapmfR(-ANGMX * 5 / 8, -ANGMX / 2);
 
     const uSmallRegressionError = trapmfR(0.75, 1.0);
