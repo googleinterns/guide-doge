@@ -73,7 +73,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const uDecreasingLinearTrend = trapmf(-ANGMX * 5 / 8, -ANGMX / 2, -ANGMX / 8, -ANGMX / 16);
     const uQuicklyDecreasingLinearTrend = trapmfR(-ANGMX * 5 / 8, -ANGMX / 2);
 
-    const uSmallRegressionError = trapmfR(0.75, 1.0);
+    const uSmallRegressionStd = trapmfR(0.09, 0.14);
 
     const uLinearTrends: [string, MembershipFunction][] = [
       ['quickly increasing', uQuicklyIncreasingLinearTrend],
@@ -94,13 +94,13 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const weekendNormalizedPoints = normalizedPoints.filter((_, i) => isWeekend(points[i]));
 
     const overallLinearModel = linearRegression(normalizedPoints);
-    const overallLinearTrendValidity = uSmallRegressionError(overallLinearModel.absoluteErrorStd);
+    const overallLinearTrendValidity = uSmallRegressionStd(overallLinearModel.errorStd);
 
     const weekdayLinearModel = linearRegression(weekdayNormalizedPoints);
-    const weekdayLinearTrendValidity = uSmallRegressionError(weekdayLinearModel.absoluteErrorStd);
+    const weekdayLinearTrendValidity = uSmallRegressionStd(weekdayLinearModel.errorStd);
 
     const weekendLinearModel = linearRegression(weekendNormalizedPoints);
-    const weekendLinearTrendValidity = uSmallRegressionError(weekendLinearModel.absoluteErrorStd);
+    const weekendLinearTrendValidity = uSmallRegressionStd(weekendLinearModel.errorStd);
 
     const overallLinearTrendSummariesValidity = weekdayWeekendEqualValidity;
 

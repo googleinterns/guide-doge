@@ -11,8 +11,8 @@ export interface LinearRegressionResult {
   yIntercept: number;
   r2: number;
   prediction: NumPoint[];
+  errorStd: number;
   absoluteErrorMean: number;
-  absoluteErrorStd: number;
 }
 
 export function linearRegression(points: NumPoint[]): LinearRegressionResult {
@@ -25,11 +25,11 @@ export function linearRegression(points: NumPoint[]): LinearRegressionResult {
   const prediction = result.points.map(pairToPoint);
 
   const errors = points.map(({ y }, i) => {
-    return math.abs(y - prediction[i].y);
+    return y - prediction[i].y;
   });
 
-  const absoluteErrorMean = math.mean(errors);
-  const absoluteErrorStd = math.std(errors);
+  const errorStd = math.std(errors);
+  const absoluteErrorMean = math.mean(errors.map(e => Math.abs(e)));
 
   return {
     gradient,
@@ -37,8 +37,8 @@ export function linearRegression(points: NumPoint[]): LinearRegressionResult {
     yIntercept,
     r2,
     prediction,
+    errorStd,
     absoluteErrorMean,
-    absoluteErrorStd,
   };
 }
 
