@@ -1,7 +1,7 @@
 import * as regression from 'regression';
 import * as math from 'mathjs';
 import { TimeSeriesPoint, NumPoint } from '../../metas/types';
-import { normalizePoints, pointToPair, pairToPoint } from '../utils/commons';
+import { normalizePointsX, normalizePointsY, pointToPair, pairToPoint } from '../utils/commons';
 import { timeSeriesPointToNumPoint } from '../utils/time-series';
 import { sum } from '../../../utils/misc';
 
@@ -58,9 +58,13 @@ export interface TimeSeriesPartialTrend {
 }
 
 
-export function normalizedUniformPartiallyLinearEpsApprox(points: TimeSeriesPoint[], eps: number): TimeSeriesPartialTrend[] {
+export function normalizedUniformPartiallyLinearEpsApprox(
+  points: TimeSeriesPoint[],
+  eps: number,
+  normalizeY = true): TimeSeriesPartialTrend[] {
   const numPoints = points.map(timeSeriesPointToNumPoint);
-  const normalizedPoints = normalizePoints(numPoints, {}, { min: 0 });
+  const normalizedXPoints = normalizePointsX(numPoints);
+  const normalizedPoints = normalizeY ? normalizePointsY(normalizedXPoints) : normalizedXPoints;
 
   if (normalizedPoints.length <= 1) {
     return [];
