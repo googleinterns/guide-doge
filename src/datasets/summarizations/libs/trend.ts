@@ -1,12 +1,15 @@
 import * as regression from 'regression';
 import * as math from 'mathjs';
 import { TimeSeriesPoint, NumPoint } from '../../metas/types';
-import { normalizePoints, pointToPair, pairToPoint } from '../utils/commons';
+import { normalizePointsX, normalizePointsY, pointToPair, pairToPoint } from '../utils/commons';
 import { timeSeriesPointToNumPoint } from '../utils/time-series';
+import { sum } from '../../../utils/misc';
 
 export interface LinearRegressionResult {
   gradient: number;
   gradientAngleRad: number;
+  yIntercept: number;
+  r2: number;
   prediction: NumPoint[];
   absoluteErrorMean: number;
   absoluteErrorStd: number;
@@ -16,6 +19,8 @@ export function linearRegression(points: NumPoint[]): LinearRegressionResult {
   const pairs = points.map(pointToPair);
   const result = regression.linear(pairs);
   const gradient = result.equation[0];
+  const yIntercept = result.equation[1];
+  const r2 = result.r2;
   const gradientAngleRad = Math.atan(gradient);
   const prediction = result.points.map(pairToPoint);
 
@@ -29,6 +34,8 @@ export function linearRegression(points: NumPoint[]): LinearRegressionResult {
   return {
     gradient,
     gradientAngleRad,
+    yIntercept,
+    r2,
     prediction,
     absoluteErrorMean,
     absoluteErrorStd,
@@ -51,9 +58,13 @@ export interface TimeSeriesPartialTrend {
 }
 
 
-export function normalizedUniformPartiallyLinearEpsApprox(points: TimeSeriesPoint[], eps: number): TimeSeriesPartialTrend[] {
+export function normalizedUniformPartiallyLinearEpsApprox(
+  points: TimeSeriesPoint[],
+  eps: number,
+  normalizeY = true): TimeSeriesPartialTrend[] {
   const numPoints = points.map(timeSeriesPointToNumPoint);
-  const normalizedPoints = normalizePoints(numPoints, {}, { min: 0 });
+  const normalizedXPoints = normalizePointsX(numPoints);
+  const normalizedPoints = normalizeY ? normalizePointsY(normalizedXPoints) : normalizedXPoints;
 
   if (normalizedPoints.length <= 1) {
     return [];
@@ -124,4 +135,86 @@ function intersectCone(c1: Cone2D, c2: Cone2D): Cone2D | null {
   } else {
     return null;
   }
+}
+
+export function exponentialMovingAverage(points: TimeSeriesPoint[], alpha = 0.3): TimeSeriesPoint[] {
+  const N = points.length;
+  const ys = points.map(({ y }) => y);
+
+  const Ss = new Array(N).fill(0);
+  for (let i = 0; i < N; i++) {
+    Ss[i] = alpha * ys[i] + (1.0 - alpha) * (Ss[i - 1] ?? ys[i]);
+  }
+
+  const smoothedPoints = Ss.map((S, i) => ({
+    x: points[i].x,
+    y: S,
+  }));
+  return smoothedPoints;
+}
+
+export function centeredMovingAverage(points: TimeSeriesPoint[], k: number): TimeSeriesPoint[] {
+  const L = points.length;
+  const smoothedPoints: TimeSeriesPoint[] = [];
+  for (let i = 0; i < points.length; i++) {
+    const lSumPoints = points.slice(Math.max(0, i - k), Math.min(L, i + k));
+    const rSumPoints = points.slice(Math.max(0, i - k + 1), Math.min(L, i + k + 1));
+
+    const lSum = sum(lSumPoints.map(({ y }) => y));
+    const rSum = sum(rSumPoints.map(({ y }) => y));
+
+    const smoothedY = 0.5 * (lSum / lSumPoints.length + rSum / rSumPoints.length);
+    smoothedPoints.push({
+      x: points[i].x,
+      y: smoothedY,
+    });
+  }
+  return smoothedPoints;
+}
+
+export type GroupIdentifier = string | number;
+export interface DecompositionResult {
+  detrendPoints: TimeSeriesPoint[];
+  seasonPoints: TimeSeriesPoint[];
+  residualPoints: TimeSeriesPoint[];
+}
+
+export function additiveDecomposition(
+  points: TimeSeriesPoint[],
+  trendPoints: TimeSeriesPoint[],
+  groupFn: (point: TimeSeriesPoint) => GroupIdentifier): DecompositionResult {
+
+  const detrendPoints = points.map(({ x, y }, i) => ({
+    x,
+    y: y - trendPoints[i].y,
+  }));
+
+  const groups: Record<GroupIdentifier, TimeSeriesPoint[]> = {};
+
+  for (const point of detrendPoints) {
+    const gid = groupFn(point);
+    groups[gid] = [point, ...(groups[gid] ?? [])];
+  }
+
+  const groupAverages: Record<GroupIdentifier, number> = {};
+  for (const [gid, gpoints] of Object.entries(groups)) {
+    const s = sum(gpoints.map(({ y }) => y));
+    const average = s / gpoints.length;
+    groupAverages[gid] = average;
+  }
+
+  const seasonPoints = points.map(({ x, y }) => ({
+    x,
+    y: groupAverages[groupFn({ x, y })],
+  }));
+  const residualPoints = points.map(({ x, y }, i) => ({
+    x,
+    y: y - trendPoints[i].y - seasonPoints[i].y,
+  }));
+
+  return {
+    detrendPoints,
+    seasonPoints,
+    residualPoints,
+  };
 }

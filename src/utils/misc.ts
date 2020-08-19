@@ -21,6 +21,15 @@ export function mod(a: number, n: number) {
 }
 
 /**
+ * Returns the sum of the numbers in array.
+ *
+ * @param array The array of number to iterate over
+ */
+export function sum(array: number[]): number {
+  return array.reduce((p, v) => p + v, 0);
+}
+
+/**
  * Asynchronously waits for the given duration.
  *
  * @param duration The duration (in ms) to wait for.

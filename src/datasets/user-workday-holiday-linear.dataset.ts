@@ -6,12 +6,10 @@ import { createTimeSeriesQuery } from './queries/time-series.query';
 import { createLineChartMeta } from './metas/line-chart.meta';
 import { PreferenceMeta } from '../services/preference/types';
 import { DAY } from '../utils/timeUnits';
+import { centeredMovingAverage, additiveDecomposition } from './summarizations/libs/trend';
 import { combineQuerySummariesFactories } from './summarizations/utils/commons';
-import * as WorkdayHolidayAbsoluteSummarization from './summarizations/workday-holiday-absolute.summarization';
-import * as WorkdayHolidayRelativeSummarization from './summarizations/workday-holiday-relative.summarization';
-import * as TrendSummarization from './summarizations/trend.summarization';
-import * as TrendRegressionSummarization from './summarizations/trend-regression.summarization';
-
+import { groupPointsByXWeek } from './summarizations/utils/time-series';
+import * as TrendSummarization from './summarizations/trend-weekly-pattern.summarization';
 
 export interface Config {
   dailyWeightStd: number;
@@ -61,15 +59,15 @@ export function create(config: Config): Dataset {
     linearIncreasingFactor,
   );
 
-  const visitCountMeasure: Measure = {
-    name: 'visitCount',
+  const activeUserMeasure: Measure = {
+    name: 'activeUsers',
     scope: Scope.USER,
     type: MeasureType.COUNT,
   };
 
 
   const categories = [dateCategory, userIDCategory];
-  const measures = [visitCountMeasure];
+  const measures = [activeUserMeasure];
 
   const generateCubeConfig = {
     avgHits: 10000,
@@ -83,17 +81,16 @@ export function create(config: Config): Dataset {
 
   const dataCube = generateCube(categories, measures, generateCubeConfig);
 
-  const visitCountQuerySummariesFactory = combineQuerySummariesFactories(
+  const activeUserQuerySummariesFactory = combineQuerySummariesFactories(
     TrendSummarization.queryFactory,
-    TrendRegressionSummarization.queryFactory,
   );
 
   const lineChartMeta = createLineChartMeta(
-    'Visit Count',
+    'Active Users',
     createTimeSeriesQuery(dataCube, [{
-      label: 'Visit Count',
-      measureName: 'visitCount',
-      querySummariesFactory: visitCountQuerySummariesFactory,
+      label: 'Active Users',
+      measureName: 'activeUsers',
+      querySummariesFactory: activeUserQuerySummariesFactory,
     }]),
   );
 
@@ -142,7 +139,7 @@ function generateDateCategory(
   if (linearIncreasingFactor < 0) {
     for (let i = 0; i < values.length / 2; i++) {
       const j = values.length - i - 1;
-      const t =  values[j].weight;
+      const t = values[j].weight;
       values[j].weight = values[i].weight;
       values[i].weight = t;
     }
