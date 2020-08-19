@@ -11,18 +11,60 @@ import {
 } from './libs/protoform';
 import {
   linearRegression,
+  centeredMovingAverage,
+  additiveDecomposition,
 } from './libs/trend';
 import {
   timeSeriesPointToNumPoint,
   groupPointsByXWeek,
 } from './utils/time-series';
 import {
-  normalizePoints
+  normalizePoints,
+  normalizePointsY,
 } from './utils/commons';
+import { sum } from '../../utils/misc';
 
 export function queryFactory(points: TimeSeriesPoint[]) {
   return cacheSummaries(() => {
-    // The size of the chart is fixed to 800 * 500
+    const normalizedYPoints = normalizePointsY(points);
+
+    const centeredMovingAverageHalfWindowSize = 4;
+    const normalizedTrendPoints = centeredMovingAverage(normalizedYPoints, centeredMovingAverageHalfWindowSize);
+    const {
+      seasonPoints: normalizedSeasonPoints,
+    } = additiveDecomposition(normalizedYPoints, normalizedTrendPoints, ({ x }) => x.getDay());
+
+    const uWeekend = (p: TimeSeriesPoint) => p.x.getDay() === 5 ? 0.2 : +(p.x.getDay() === 0 || p.x.getDay() === 6);
+    const uWeekday = (p: TimeSeriesPoint) => 1 - uWeekend(p);
+
+    const isWeekend = (p: TimeSeriesPoint) => uWeekend(p) > 0.5;
+    const isWeekday = (p: TimeSeriesPoint) => uWeekday(p) > 0.5;
+
+    // Only consider weeks with more than 3 days when creating summaries
+    // Weeks with 3 days or less are considered to belong to last/next 30 days
+    const normalizedSeasonWeekPointArrays = groupPointsByXWeek(normalizedSeasonPoints).filter(weekPoints => weekPoints.length >= 4);
+
+    const weekdayWeekendDiffPoints = normalizedSeasonWeekPointArrays.map(weekPoints => {
+      const week = weekPoints[0].x;
+      const weekdayPoints = weekPoints.filter(isWeekday);
+      const weekendPoints = weekPoints.filter(isWeekend);
+      const weekdayPointsYSum = sum(weekdayPoints.map(({ y }) => y));
+      const weekendPointsYSum = sum(weekdayPoints.map(({ y }) => y));
+
+      if (weekdayPoints.length === 0 || weekendPoints.length === 0) {
+        return { x: week, y: -1 };
+      } else {
+        const weekdayPointsYAverage = weekdayPointsYSum / weekdayPoints.length;
+        const weekendPointsYAverage = weekendPointsYSum / weekendPoints.length;
+        const weekdayWeekendDiff = Math.abs(weekdayPointsYAverage - weekendPointsYAverage);
+        return { x: week, y: weekdayWeekendDiff };
+      }
+    }).filter(({ y }) => y >= 0);
+
+    const uMostPercentage = trapmfL(0.6, 0.7);
+    const uEqualDiff = ({ y }) => trapmfR(0.05, 0.1)(y);
+    const weekdayWeekendEqualValidity = sigmaCountQA(weekdayWeekendDiffPoints, uMostPercentage, uEqualDiff);
+
     const ANGMX = Math.atan(500 / 800);
     const uQuicklyIncreasingLinearTrend = trapmfL(ANGMX / 2, ANGMX * 5 / 8);
     const uIncreasingLinearTrend = trapmf(ANGMX / 8, ANGMX / 4, ANGMX / 2, ANGMX * 5 / 8);
@@ -31,34 +73,6 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const uQuicklyDecreasingLinearTrend = trapmfR(-ANGMX * 5 / 8, -ANGMX / 2);
 
     const uSmallRegressionError = trapmfR(0.75, 1.0);
-
-    const uWeekend = (p: TimeSeriesPoint) => p.x.getDay() === 5 ? 0.2 : +(p.x.getDay() === 0 || p.x.getDay() === 6);
-    const uWeekday = (p: TimeSeriesPoint) => 1 - uWeekend(p);
-
-    const isWeekend = (p: TimeSeriesPoint) => uWeekend(p) > 0.5;
-    const isWeekday = (p: TimeSeriesPoint) => uWeekday(p) > 0.5;
-
-    const weekdayWeekendRatioPoints = groupPointsByXWeek(points).map(weekPoints => {
-      const week = weekPoints[0].x;
-      const wWeekdays = weekPoints.reduce((p, v) => p + uWeekday(v), 0);
-      const wWeekends = weekPoints.reduce((p, v) => p + uWeekend(v), 0);
-      const sWeekdays = weekPoints.reduce((p, v) => p + v.y * uWeekday(v), 0);
-      const sWeekends = weekPoints.reduce((p, v) => p + v.y * uWeekend(v), 0);
-
-      if (wWeekdays < 1e-7 || wWeekends < 1e-7) {
-        return { x: week, y: -1 };
-      } else {
-        const avgWeekday = sWeekdays / wWeekdays;
-        const avgHoliday = sWeekends / wWeekends;
-        const weekdayHolidayRatio = avgWeekday / avgHoliday;
-        return { x: week, y: weekdayHolidayRatio };
-      }
-    }).filter(({ y }) => y >= 0);
-
-    const uMostPercentage = trapmfL(0.6, 0.7);
-    const uEqualTraffic = ({ y }) => trapmf(0.8, 0.85, 1.15, 1.2)(y);
-    const weekdayWeekendEqualValidity = sigmaCountQA(weekdayWeekendRatioPoints, uMostPercentage, uEqualTraffic);
-
 
     const uLinearTrends: [string, MembershipFunction][] = [
       ['quickly increasing', uQuicklyIncreasingLinearTrend],
