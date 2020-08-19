@@ -106,6 +106,10 @@ export function queryFactory(points: TimeSeriesPoint[]) {
         }
       }
     }).filter(summary => summary) as Summary[];
-    return summaries;
+
+    return [{
+      name: 'Trend Partial Elaboration',
+      summaries,
+    }];
   });
 }

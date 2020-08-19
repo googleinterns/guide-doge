@@ -36,6 +36,9 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       });
     }
 
-    return summaries;
+    return [{
+      name: 'Weekly Comparison - Average',
+      summaries
+    }];
   });
 }

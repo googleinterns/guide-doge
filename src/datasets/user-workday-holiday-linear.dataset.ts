@@ -9,7 +9,13 @@ import { DAY } from '../utils/timeUnits';
 import { centeredMovingAverage, additiveDecomposition } from './summarizations/libs/trend';
 import { combineQuerySummariesFactories } from './summarizations/utils/commons';
 import { groupPointsByXWeek } from './summarizations/utils/time-series';
-import * as TrendSummarization from './summarizations/trend-weekly-pattern.summarization';
+import * as TrendRegressionSummarization from './summarizations/trend-regression.summarization';
+import * as TrendPartialSummarization from './summarizations/trend-partial.summarization';
+import * as TrendWeeklyComparisonAverage from './summarizations/trend-weekly-comparison-average.summarization';
+import * as TrendWeeklyComparisonRate from './summarizations/trend-weekly-comparison-average.summarization';
+import * as TrendWeeklyElaboration from './summarizations/trend-weekly-elaboration.summarization';
+import * as TrendWeeklyPattern from './summarizations/trend-weekly-pattern.summarization';
+import * as WorkdayHolidayRelative from './summarizations/workday-holiday-relative.summarization';
 
 export interface Config {
   dailyWeightStd: number;
@@ -82,7 +88,13 @@ export function create(config: Config): Dataset {
   const dataCube = generateCube(categories, measures, generateCubeConfig);
 
   const activeUserQuerySummariesFactory = combineQuerySummariesFactories(
-    TrendSummarization.queryFactory,
+    WorkdayHolidayRelative.queryFactory,
+    TrendRegressionSummarization.queryFactory,
+    TrendWeeklyPattern.queryFactory,
+    TrendWeeklyElaboration.queryFactory,
+    TrendWeeklyComparisonAverage.queryFactory,
+    TrendWeeklyComparisonRate.queryFactory,
+    TrendPartialSummarization.queryFactory,
   );
 
   const lineChartMeta = createLineChartMeta(

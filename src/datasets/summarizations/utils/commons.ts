@@ -1,8 +1,8 @@
-import { Summary, QuerySummariesFactory } from '../types';
+import { SummaryGroup, QuerySummariesFactory } from '../types';
 import { XYPoint, NumPoint } from '../../metas/types';
 
-export function cacheSummaries(f: () => Summary[]): () => Summary[] {
-  let cache: Summary[] | null = null;
+export function cacheSummaries(f: () => SummaryGroup[]): () => SummaryGroup[] {
+  let cache: SummaryGroup[] | null = null;
   return () => {
     if (!cache) {
       cache = f();
@@ -21,9 +21,8 @@ export function cacheSummaries(f: () => Summary[]): () => Summary[] {
 export function combineQuerySummariesFactories<PointT>(
   ...queryFactories: QuerySummariesFactory<PointT>[]): QuerySummariesFactory<PointT> {
   return (points: PointT[]) => () => {
-    const summaries = queryFactories.map(f => f(points)());
-    const summariesFlat = ([] as Summary[]).concat(...summaries);
-    return summariesFlat;
+    const summaryGroups = queryFactories.map(f => f(points)());
+    return summaryGroups.flat();
   };
 }
 

@@ -58,6 +58,9 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       }
     }
 
-    return summaries;
+    return [{
+      name: 'Trend - Protoform',
+      summaries
+    }];
   });
 }

@@ -5,4 +5,9 @@ export interface Summary {
   validity: number;
 }
 
-export type QuerySummariesFactory<PointT> = (points: PointT[]) => () => Summary[];
+export interface SummaryGroup {
+  name: string;
+  summaries: Summary[];
+}
+
+export type QuerySummariesFactory<PointT> = (points: PointT[]) => () => SummaryGroup[];

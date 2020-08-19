@@ -156,6 +156,9 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       });
     }
 
-    return summaries;
+    return [{
+      name: 'Weekly Pattern',
+      summaries
+    }];
   });
 }

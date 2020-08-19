@@ -52,6 +52,10 @@ export function queryFactory(points: TimeSeriesPoint[]) {
         }
       }
     }
-    return summaries;
+
+    return [{
+      name: 'Workday Holiday - Absolute',
+      summaries
+    }];
   });
 }
