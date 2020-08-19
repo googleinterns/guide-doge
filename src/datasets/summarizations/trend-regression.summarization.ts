@@ -23,6 +23,7 @@ import {
   normalizePointsY,
 } from './utils/commons';
 import { sum } from '../../utils/misc';
+import { formatY } from '../../utils/formatters';
 
 export function queryFactory(points: TimeSeriesPoint[]) {
   return cacheSummaries(() => {
@@ -82,7 +83,12 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       ['quickly decreasing', uQuicklyDecreasingLinearTrend],
     ];
 
-    const summaries: Summary[] = [];
+    // TODO: Move denormalization information to normalization utils
+    const ymin = 0;
+    const ymax = Math.max(...points.map(({ y }) => y));
+    const xdiff = 800 / 500 / points.length;
+    const denormalizeGradient = g => (g * xdiff) * (ymax - ymin) - ymin;
+
     const normalizedPoints = normalizePoints(points.map(timeSeriesPointToNumPoint));
     const weekdayNormalizedPoints = normalizedPoints.filter((_, i) => isWeekday(points[i]));
     const weekendNormalizedPoints = normalizedPoints.filter((_, i) => isWeekend(points[i]));
@@ -98,13 +104,22 @@ export function queryFactory(points: TimeSeriesPoint[]) {
 
     const overallLinearTrendSummariesValidity = weekdayWeekendEqualValidity;
 
+    const summaries: Summary[] = [];
     for (const [linearTrend, uLinearTrend] of uLinearTrends) {
       const validity = Math.min(
         overallLinearTrendSummariesValidity,
         overallLinearTrendValidity,
         uLinearTrend(overallLinearModel.gradientAngleRad),
       );
-      const text = `The <b>overall</b> trend is <b>${linearTrend === 'constant' ? '' : 'linearly '}${linearTrend}</b>.`;
+      const rate = denormalizeGradient(overallLinearModel.gradient);
+      const rateAbsolute = Math.abs(rate);
+
+      let text;
+      if (linearTrend === 'constant') {
+        text = `The <b>overall</b> active users <b>remained similar</b>.`;
+      } else {
+        text = `The <b>overall</b> active users was <b>linearly ${linearTrend}</b> by <b>${formatY(rateAbsolute)}</b> users per day.`;
+      }
       summaries.push({
         validity,
         text,
@@ -117,7 +132,15 @@ export function queryFactory(points: TimeSeriesPoint[]) {
         weekdayLinearTrendValidity,
         uLinearTrend(weekdayLinearModel.gradientAngleRad),
       );
-      const text = `The <b>weekday</b> trend is <b>${linearTrend === 'constant' ? '' : 'linearly '}${linearTrend}</b>.`;
+      const rate = denormalizeGradient(weekdayLinearModel.gradient);
+      const rateAbsolute = Math.abs(rate);
+
+      let text;
+      if (linearTrend === 'constant') {
+        text = `The active users <b>of weekdays</b> <b>remained similar</b>.`;
+      } else {
+        text = `The active users <b>of weekdays</b> was <b>linearly ${linearTrend}</b> by <b>${formatY(rateAbsolute)}</b> users per day.`;
+      }
       summaries.push({
         validity,
         text,
@@ -130,7 +153,15 @@ export function queryFactory(points: TimeSeriesPoint[]) {
         weekendLinearTrendValidity,
         uLinearTrend(weekendLinearModel.gradientAngleRad),
       );
-      const text = `The <b>weekend</b> trend is <b>${linearTrend === 'constant' ? '' : 'linearly '}${linearTrend}</b>.`;
+      const rate = denormalizeGradient(weekendLinearModel.gradient);
+      const rateAbsolute = Math.abs(rate);
+
+      let text;
+      if (linearTrend === 'constant') {
+        text = `The active users <b>of weekends</b> <b>remained similar</b>.`;
+      } else {
+        text = `The active users <b>of weekends</b> was <b>linearly ${linearTrend}</b> by <b>${formatY(rateAbsolute)}</b> users per day.`;
+      }
       summaries.push({
         validity,
         text,
