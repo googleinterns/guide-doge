@@ -96,18 +96,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const weekendLinearModel = linearRegression(weekendNormalizedPoints);
     const weekendLinearTrendValidity = uSmallRegressionError(weekendLinearModel.absoluteErrorStd);
 
-    const overallLinearTrendSummariesValidity = Math.max(
-      weekdayWeekendEqualValidity,
-      ...uLinearTrends.map(([_, uLinearTrend]) =>
-        Math.min(
-          overallLinearTrendValidity,
-          uLinearTrend(overallLinearModel.gradientAngleRad),
-          weekdayLinearTrendValidity,
-          uLinearTrend(weekdayLinearModel.gradientAngleRad),
-          weekendLinearTrendValidity,
-          uLinearTrend(weekendLinearModel.gradientAngleRad),
-        )),
-    );
+    const overallLinearTrendSummariesValidity = weekdayWeekendEqualValidity;
 
     for (const [linearTrend, uLinearTrend] of uLinearTrends) {
       const validity = Math.min(
