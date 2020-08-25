@@ -58,7 +58,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
 
     // The x-value(day) of the first point in the array is always Monday
     const weeklyPatternPoints = normalizedYSeasonPoints.slice(0, 7) as NormalizedYPoint<Date>[];
-    const weeklyPatternTrends = normalizedUniformPartiallyLinearEpsApprox(weeklyPatternPoints, 0.02);
+    const weeklyPatternTrends = normalizedUniformPartiallyLinearEpsApprox(weeklyPatternPoints, 0.02, false);
 
     const applyTrendAngleWithWeight = (f: MembershipFunction) => ({ cone }: TimeSeriesPartialTrend) => {
       const avgAngleRad = (cone.endAngleRad + cone.startAngleRad) / 2;
