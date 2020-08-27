@@ -3,11 +3,12 @@ import * as THREE from 'three';
 import { Entity } from 'aframe';
 import { sanitizeUrl } from '@braintree/sanitize-url';
 
-const POINT_SIZE = 0.01;
+const POINT_SIZE = 0.02;
 const DEFAULT_COLOR = '#F0A202';
 const HOVER_COLOR = 'red';
 const SKY_COLOR = '#4d4d4d';
 const ASSETS_FOLDER = 'assets/marimbaNotes/';
+const GRAPH_SIZE = 1.4;
 
 export class Hapticplot{
     private data: number[];
@@ -27,7 +28,7 @@ export class Hapticplot{
     // Creates a linear mapping from this.data to graph positions, haptic intensities, and audio selection
     this.graphScale = d3.scaleLinear()
       .domain([0, d3.max(this.data) as number])  // max of dataset
-      .range([0, 0.5]);
+      .range([0, GRAPH_SIZE / 2]);
     this.hapticScale = d3.scaleLinear()
       .domain([0, d3.max(this.data) as number])  // max of dataset
       .range([0, 1]);
@@ -83,9 +84,9 @@ export class Hapticplot{
    * @param point the point whos position is being set
    */
   private setPosition(datum, index, point){
-    const x = (0.5 / this.data.length) * index;
+    const x = ((GRAPH_SIZE / 2) / this.data.length) * index;
     const y = this.graphScale(datum) + 1;
-    const z = -1;
+    const z = -GRAPH_SIZE / 4;
     (point as Entity).object3D.position.set(x, y, z);
   }
 
@@ -108,10 +109,11 @@ export class Hapticplot{
    * @param size The radius of the point being hovered
    */
   private onHoverStart(point, hapticIntensity, hoverColor, size){
-    d3.event.detail?.hand?.components.haptics.pulse(hapticIntensity, 5000);
     d3.select(point)
-      .attr('color', hoverColor)
-      .attr('radius', size + (hapticIntensity / 60));
+      .attr('color', hoverColor);
+    if (point.components?.sound?.isPlaying){
+      point.components.sound.stopSound();
+    }
   }
 
   /**
@@ -121,10 +123,8 @@ export class Hapticplot{
    * @param size The radius of the point no longer being hovered
    */
   private onHoverEnd(point, defaultColor, size){
-    d3.event.detail?.hand?.components.haptics.pulse(0, 1);
     d3.select(point)
-      .attr('color', defaultColor)
-      .attr('radius', size);
+      .attr('color', defaultColor);
   }
 
   /**
@@ -144,25 +144,25 @@ export class Hapticplot{
     const xGrid = document.createElement('a-entity');
     xGrid.id = 'xGrid';
     this.container!.appendChild(xGrid);
-    xGrid.object3D.add(new THREE.GridHelper(1, 50, 0xffffff, 0xffffff));
+    xGrid.object3D.add(new THREE.GridHelper(GRAPH_SIZE, 50, 0xffffff, 0xffffff));
     d3.select(this.container).select('#xGrid')
-      .attr('position', '0 1 -1')
+      .attr('position', `0 1 -${GRAPH_SIZE / 4}`)
       .attr('rotation', '0 0 0');
 
     const yGrid = document.createElement('a-entity');
     yGrid.id = 'yGrid';
     this.container!.appendChild(yGrid);
-    yGrid.object3D.add(new THREE.GridHelper(1, 50, 0xffffff, 0xffffff));
+    yGrid.object3D.add(new THREE.GridHelper(GRAPH_SIZE, 50, 0xffffff, 0xffffff));
     d3.select(this.container).select('#yGrid')
-      .attr('position', '0 1 -1')
+      .attr('position', `0 1 -${GRAPH_SIZE / 4}`)
       .attr('rotation', '0 0 -90');
 
     const zGrid = document.createElement('a-entity');
     zGrid.id = 'zGrid';
     this.container!.appendChild(zGrid);
-    zGrid.object3D.add(new THREE.GridHelper(1, 50, 0xffffff, 0xffffff));
+    zGrid.object3D.add(new THREE.GridHelper(GRAPH_SIZE, 50, 0xffffff, 0xffffff));
     d3.select(this.container).select('#zGrid')
-      .attr('position', '0 1 -1')
+      .attr('position', `0 1 -${GRAPH_SIZE / 4}`)
       .attr('rotation', '-90 0 0');
   }
 }
