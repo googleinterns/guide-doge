@@ -3,6 +3,7 @@ import { TabbedChartsMeta } from './tabbed-charts.meta';
 import { VRScatterplotMeta } from './vr-scatter-plot.meta';
 import { GeoMapMeta } from './geo-map.meta';
 import { A11yModuleImporter } from '../../directives/a11y/a11y.directive';
+import { SummarizationMeta } from '../../services/summarization/types';
 
 export interface BaseMeta<T extends MetaType> {
   type: T;
@@ -12,6 +13,7 @@ export interface BaseMeta<T extends MetaType> {
 
 export interface DataMeta<T extends MetaType, QueryT> extends BaseMeta<T> {
   queryData: QueryT;
+  summarizationMetas?: SummarizationMeta[];
 }
 
 export interface XYChartMeta<T extends MetaType, QueryT> extends DataMeta<T, QueryT> {

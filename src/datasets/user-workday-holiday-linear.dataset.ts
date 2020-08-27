@@ -102,9 +102,18 @@ export function create(config: Config): Dataset {
     createTimeSeriesQuery(dataCube, [{
       label: 'Active Users',
       measureName: 'activeUsers',
-      querySummariesFactory: activeUserQuerySummariesFactory,
     }]),
   );
+
+  lineChartMeta.summarizationMetas = [
+    {
+      datumLabel: 'Active Users',
+      summarizationName: 'TrendRegression',
+    }, {
+      datumLabel: 'Active Users',
+      summarizationName: 'WeekdayHolidayRelative',
+    }
+  ];
 
   const metas = [
     lineChartMeta,

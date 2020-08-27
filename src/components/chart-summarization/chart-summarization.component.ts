@@ -2,6 +2,9 @@ import { Component, Inject, Input, NgZone, OnDestroy, OnInit, ViewChild } from '
 import { LineChartComponent } from '../line-chart/line-chart.component';
 import { SummaryGroup } from '../../datasets/summarizations/types';
 import { MatAccordion } from '@angular/material/expansion';
+import { map } from 'rxjs/operators';
+import { SummarizationControlService } from '../../services/summarization/summarization-control.service';
+import { TrendRegressionSummarizationService } from '../../services/summarization/trend-regression.summarization.service';
 
 @Component({
   selector: 'app-summarization',
@@ -14,37 +17,34 @@ export class ChartSummarizationComponent implements OnInit {
   @Input() validityThreshold: number;
   @ViewChild(MatAccordion) accordion: MatAccordion;
 
-  summaryGroups: SummaryGroup[];
+  summaryGroups: SummaryGroup[] = [];
 
   constructor(
     @Inject('host') private host: LineChartComponent,
+    private summarizationControlService: SummarizationControlService,
+    private ts: TrendRegressionSummarizationService,
     private zone: NgZone,
-  ) { }
+  ) {
+  }
 
   get datum() {
     // TODO: Support multiple legend items summarization
     return this.host.data[0];
   }
 
-  get querySumaries() {
-    return this.datum.querySummaries;
-  }
-
-  get hasSummaries() {
-    return this.summaryGroups && this.summaryGroups.length > 0;
-  }
-
   ngOnInit(): void {
-    if (this.querySumaries) {
-      this.summaryGroups = this.querySumaries().map(sumaryGroup => ({
-        ...sumaryGroup,
-        summaries: sumaryGroup.summaries
-          .filter(({ validity }) => validity >= (this.validityThreshold ?? 0.0))
-          .sort(({ validity: va }, { validity: vb }) => vb - va),
-      }));
-    } else {
-      this.summaryGroups = [];
-    }
+    this.host.data$.subscribe(this.summarizationControlService.data$);
+    this.summarizationControlService.summaries$(this.host.summarizationMetas)
+      .pipe(map(summaryGroups => {
+        return summaryGroups.map(sumaryGroup => ({
+          ...sumaryGroup,
+          summaries: sumaryGroup.summaries
+            .filter(({ validity }) => validity >= (this.validityThreshold ?? 0.0))
+            .sort(({ validity: va }, { validity: vb }) => vb - va),
+        }));
+      }))
+      .subscribe(summaryGroups => {
+        this.summaryGroups = summaryGroups;
+      });
   }
-
 }

@@ -4,7 +4,6 @@ import { DAY } from '../../utils/timeUnits';
 import { DataCube } from '../../models/data-cube/data-cube.model';
 import { ResultRow } from '../../models/data-cube/types';
 import { unique } from '../../utils/misc';
-import { SummaryGroup } from '../summarizations/types';
 
 export interface TimeSeriesQueryOptions {
   range: [Date, Date];
@@ -14,7 +13,6 @@ export interface TimeSeriesDatum<S> {
   label: string;
   style?: Partial<S>;
   points: TimeSeriesPoint[];
-  querySummaries?: () => SummaryGroup[];
 }
 
 export type TimeSeriesQuery<S> = (options: TimeSeriesQueryOptions) => TimeSeriesDatum<S>[];
@@ -30,7 +28,6 @@ export type LegendItem<S> = {
   periodOffset?: number;
   /* The size of time window for taking the sum of all dates within the window */
   windowSize?: number;
-  querySummariesFactory?: (points: TimeSeriesPoint[]) => () => SummaryGroup[];
 };
 
 /**
@@ -86,7 +83,6 @@ function createTimeSeriesDatum<S>(rows: ResultRow[], startDate: Date, endDate: D
     measureName,
     periodOffset = 0,
     windowSize = DAY,
-    querySummariesFactory,
     style,
   } = item;
 
@@ -135,10 +131,6 @@ function createTimeSeriesDatum<S>(rows: ResultRow[], startDate: Date, endDate: D
     style,
     points,
   };
-
-  if (querySummariesFactory) {
-    datum.querySummaries = querySummariesFactory(points);
-  }
 
   return datum;
 }

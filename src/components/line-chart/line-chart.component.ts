@@ -54,6 +54,10 @@ export class LineChartComponent extends A11yHostComponent implements RenderOptio
     this.activePoint$.next(activePoint);
   }
 
+  get summarizationMetas() {
+    return this.meta.summarizationMetas ?? [];
+  }
+
   get VISUALIZATION() {
     return t(GUIDE_DOGE.VISUALIZATION);
   }
