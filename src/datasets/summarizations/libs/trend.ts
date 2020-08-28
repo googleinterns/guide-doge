@@ -50,7 +50,9 @@ export interface TimeSeriesPartialTrend {
   cone: Cone2D;
 }
 
-
+// Kacprzyk, Janusz, Anna Wilbik, and S. Zadrożny.
+// "Linguistic summarization of time series using a fuzzy quantifier driven aggregation."
+// Fuzzy Sets and Systems 159.12 (2008): 1485-1499.
 export function normalizedUniformPartiallyLinearEpsApprox(points: TimeSeriesPoint[], eps: number): TimeSeriesPartialTrend[] {
   const numPoints = points.map(timeSeriesPointToNumPoint);
   const normalizedPoints = normalizePoints(numPoints, {}, { min: 0 });
