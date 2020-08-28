@@ -1,4 +1,4 @@
-
+import * as math from 'mathjs';
 import { Summary } from './types';
 import { TimeSeriesPoint } from '../metas/types';
 import { cacheSummaries } from './utils/commons';
@@ -40,18 +40,18 @@ export function queryFactory(points: TimeSeriesPoint[]) {
 
     const weekdayWeekendRatioPoints = groupPointsByXWeek(points).map(weekPoints => {
       const week = weekPoints[0].x;
-      const wWeekdays = weekPoints.reduce((p, v) => p + uWeekday(v), 0);
-      const wWeekends = weekPoints.reduce((p, v) => p + uWeekend(v), 0);
-      const sWeekdays = weekPoints.reduce((p, v) => p + v.y * uWeekday(v), 0);
-      const sWeekends = weekPoints.reduce((p, v) => p + v.y * uWeekend(v), 0);
+      const wWeekdays = math.sum(weekPoints.map(uWeekday));
+      const wWeekends = math.sum(weekPoints.map(uWeekend));
+      const sWeekdays = math.sum(weekPoints.map(p => p.y * uWeekday(p)));
+      const sWeekends = math.sum(weekPoints.map(p => p.y * uWeekend(p)));
 
       if (wWeekdays < 1e-7 || wWeekends < 1e-7) {
         return { x: week, y: -1 };
       } else {
         const avgWeekday = sWeekdays / wWeekdays;
-        const avgHoliday = sWeekends / wWeekends;
-        const weekdayHolidayRatio = avgWeekday / avgHoliday;
-        return { x: week, y: weekdayHolidayRatio };
+        const avgWeekend = sWeekends / wWeekends;
+        const weekdayWeekendRatio = avgWeekday / avgWeekend;
+        return { x: week, y: weekdayWeekendRatio };
       }
     }).filter(({ y }) => y >= 0);
 
