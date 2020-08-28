@@ -46,7 +46,7 @@ export interface TimeSeriesPartialTrend {
   idxEnd: number;
   timeStart: Date;
   timeEnd: Date;
-  pctSpan: number;
+  percentageSpan: number;
   cone: Cone2D;
 }
 
@@ -82,7 +82,7 @@ export function normalizedUniformPartiallyLinearEpsApprox(points: TimeSeriesPoin
         idxEnd: j,
         timeStart: points[i].x,
         timeEnd: points[j].x,
-        pctSpan: normalizedPoints[j].x - normalizedPoints[i].x,
+        percentageSpan: normalizedPoints[j].x - normalizedPoints[i].x,
         cone: coneij,
       });
 

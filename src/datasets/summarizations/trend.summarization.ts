@@ -18,9 +18,9 @@ export function queryFactory(points: TimeSeriesPoint[]) {
 
     const trends = normalizedUniformPartiallyLinearEpsApprox(points, 0.01);
 
-    const applyTrendAngleWithWeight = (f: MembershipFunction) => ({ pctSpan, cone }: TimeSeriesPartialTrend) => {
+    const applyTrendAngleWithWeight = (f: MembershipFunction) => ({ percentageSpan, cone }: TimeSeriesPartialTrend) => {
       const avgAngleRad = (cone.endAngleRad + cone.startAngleRad) / 2;
-      return f(avgAngleRad) * pctSpan * trends.length;
+      return f(avgAngleRad) * percentageSpan * trends.length;
     };
 
     const uQuicklyIncreasingTrend = applyTrendAngleWithWeight(trapmfL(MAX_ANGLE / 2, MAX_ANGLE * 3 / 5));
