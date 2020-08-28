@@ -19,8 +19,8 @@ export function linearRegression(points: NumPoint[]): LinearRegressionResult {
   const gradientAngleRad = Math.atan(gradient);
   const prediction = result.points.map(pairToPoint);
 
-  const errors = points.map(({ y }, i) => {
-    return math.abs(y - prediction[i].y);
+  const errors = points.map((point, i) => {
+    return Math.abs(point.y - prediction[i].y);
   });
 
   const absoluteErrorMean = math.mean(errors);
