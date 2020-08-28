@@ -23,12 +23,12 @@ import {
 export function queryFactory(points: TimeSeriesPoint[]) {
   return cacheSummaries(() => {
     // The size of the chart is fixed to 800 * 500
-    const ANGMX = Math.atan(500 / 800);
-    const uQuicklyIncreasingLinearTrend = trapmfL(ANGMX / 2, ANGMX * 5 / 8);
-    const uIncreasingLinearTrend = trapmf(ANGMX / 8, ANGMX / 4, ANGMX / 2, ANGMX * 5 / 8);
-    const uConstantLinearTrend = trapmf(-ANGMX / 4, -ANGMX / 8, ANGMX / 8, ANGMX / 4);
-    const uDecreasingLinearTrend = trapmf(-ANGMX * 5 / 8, -ANGMX / 2, -ANGMX / 4, -ANGMX / 8);
-    const uQuicklyDecreasingLinearTrend = trapmfR(-ANGMX * 5 / 8, -ANGMX / 2);
+    const MAX_ANGLE = Math.atan(500 / 800);
+    const uQuicklyIncreasingLinearTrend = trapmfL(MAX_ANGLE / 2, MAX_ANGLE * 5 / 8);
+    const uIncreasingLinearTrend = trapmf(MAX_ANGLE / 8, MAX_ANGLE / 4, MAX_ANGLE / 2, MAX_ANGLE * 5 / 8);
+    const uConstantLinearTrend = trapmf(-MAX_ANGLE / 4, -MAX_ANGLE / 8, MAX_ANGLE / 8, MAX_ANGLE / 4);
+    const uDecreasingLinearTrend = trapmf(-MAX_ANGLE * 5 / 8, -MAX_ANGLE / 2, -MAX_ANGLE / 4, -MAX_ANGLE / 8);
+    const uQuicklyDecreasingLinearTrend = trapmfR(-MAX_ANGLE * 5 / 8, -MAX_ANGLE / 2);
 
     const uSmallRegressionError = trapmfR(0.75, 1.0);
 
