@@ -1,5 +1,6 @@
-import { linearRegression, normalizedUniformPartiallyLinearEpsApprox, LinearRegressionResult } from './trend';
-import { NumPoint } from '../../metas/types';
+import * as math from 'mathjs';
+import { linearRegression, normalizedUniformPartiallyLinearEpsApprox, LinearRegressionResult, TimeSeriesPartialTrend } from './trend';
+import { NumPoint, TimeSeriesPoint } from '../../metas/types';
 
 describe('linearRegression', () => {
   const testData: [NumPoint[], LinearRegressionResult][] = [
@@ -71,6 +72,73 @@ describe('linearRegression', () => {
     for (const [points, expectedResult] of testData) {
       const result = linearRegression(points);
       expect(result.absoluteErrorStd).toBeCloseTo(expectedResult.absoluteErrorStd, 4);
+    }
+  });
+});
+
+describe('normalizedUniformPartiallyLinearEpsApprox', () => {
+  const testData: [TimeSeriesPoint[], number][] = [
+    [
+      [
+        { x: new Date(2020, 6, 1), y: 100 },
+        { x: new Date(2020, 6, 2), y: 200 },
+        { x: new Date(2020, 6, 3), y: 300 },
+      ],
+      0.1,
+    ],
+    [
+      [
+        { x: new Date(2020, 6, 1), y: 100 },
+        { x: new Date(2020, 6, 2), y: 200 },
+        { x: new Date(2020, 6, 3), y: 100 },
+      ],
+      0.1,
+    ]
+  ];
+
+  it('should return index intervals covering entire points array.', () => {
+    for (const [points, eps] of testData) {
+      const result = normalizedUniformPartiallyLinearEpsApprox(points, eps);
+      expect(result[0].idxStart).toBe(0);
+      expect(result[result.length - 1].idxEnd).toBe(points.length - 1);
+    }
+  });
+
+  it('should return continuous index interval.', () => {
+    for (const [points, eps] of testData) {
+      const result = normalizedUniformPartiallyLinearEpsApprox(points, eps);
+      for (let i = 1; i < result.length; i++) {
+        expect(result[i].idxStart).toBe(result[i - 1].idxEnd);
+      }
+    }
+  });
+
+  it('should return x-values of points as time start and time end.', () => {
+    for (const [points, eps] of testData) {
+      const result = normalizedUniformPartiallyLinearEpsApprox(points, eps);
+      for (const partialTrend of result) {
+        expect(partialTrend.timeStart).toEqual(points[partialTrend.idxStart].x);
+        expect(partialTrend.timeEnd).toEqual(points[partialTrend.idxEnd].x);
+      }
+    }
+  });
+
+  it('should return correct time percentage span.', () => {
+    for (const [points, eps] of testData) {
+      const totalTimeSpan = points[points.length - 1].x.getTime() - points[0].x.getTime();
+      const result = normalizedUniformPartiallyLinearEpsApprox(points, eps);
+      for (const partialTrend of result) {
+        const trendTimeSpan = points[partialTrend.idxEnd].x.getTime() - points[partialTrend.idxStart].x.getTime();
+        expect(partialTrend.percentageSpan).toBeCloseTo(trendTimeSpan / totalTimeSpan, 4);
+      }
+    }
+  });
+
+  it('should have percentage spans sum to one.', () => {
+    for (const [points, eps] of testData) {
+      const result = normalizedUniformPartiallyLinearEpsApprox(points, eps);
+      const percentageSpanSum = math.sum(result.map(trend => trend.percentageSpan));
+      expect(percentageSpanSum).toBeCloseTo(1.0, 4);
     }
   });
 });
