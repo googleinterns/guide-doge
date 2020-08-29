@@ -32,7 +32,19 @@ export function queryFactory(points: TimeSeriesPoint[]) {
 
     const uSmallRegressionError = trapmfR(0.75, 1.0);
 
-    const uWeekend = (p: TimeSeriesPoint) => p.x.getDay() === 5 ? 0.2 : +(p.x.getDay() === 0 || p.x.getDay() === 6);
+    const uWeekend = (p: TimeSeriesPoint) => {
+      const dayOfWeek = p.x.getDay();
+      switch (dayOfWeek) {
+        case 5: // Friday
+          return 0.2;
+        case 6: // Saturday
+        case 0: // Sunday
+          return 1;
+        default: // All other days
+          return 0;
+      }
+    };
+
     const uWeekday = (p: TimeSeriesPoint) => 1 - uWeekend(p);
 
     const isWeekend = (p: TimeSeriesPoint) => uWeekend(p) > 0.5;
