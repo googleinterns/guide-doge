@@ -1,4 +1,3 @@
-import * as math from 'mathjs';
 import { queryFactory } from './trend-regression.summarization';
 import { TimeSeriesPoint } from '../metas/types';
 
