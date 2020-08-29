@@ -107,6 +107,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
         )),
     );
 
+    // Create summaries describing linear trend of overall points
     for (const [linearTrend, uLinearTrend] of uLinearTrends) {
       const validity = Math.min(
         overallLinearTrendSummariesValidity,
@@ -120,6 +121,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       });
     }
 
+    // Create summaries describing linear trend of weekday points
     for (const [linearTrend, uLinearTrend] of uLinearTrends) {
       const validity = Math.min(
         1.0 - overallLinearTrendSummariesValidity,
@@ -133,6 +135,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       });
     }
 
+    // Create summaries describing linear trend of weekend points
     for (const [linearTrend, uLinearTrend] of uLinearTrends) {
       const validity = Math.min(
         1.0 - overallLinearTrendSummariesValidity,
