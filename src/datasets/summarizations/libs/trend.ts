@@ -130,16 +130,16 @@ function intersectCone(c1: Cone2D, c2: Cone2D): Cone2D | null {
 
 export function exponentialMovingAverage(points: TimeSeriesPoint[], alpha = 0.3): TimeSeriesPoint[] {
   const N = points.length;
-  const ys = points.map(({ y }) => y);
+  const yValues = points.map(({ y }) => y);
 
-  const Ss = new Array(N).fill(0);
+  const smoothedYValues = new Array(N).fill(0);
   for (let i = 0; i < N; i++) {
-    Ss[i] = alpha * ys[i] + (1.0 - alpha) * (Ss[i - 1] ?? ys[i]);
+    smoothedYValues[i] = alpha * yValues[i] + (1.0 - alpha) * (smoothedYValues[i - 1] ?? yValues[i]);
   }
 
-  const smoothedPoints = Ss.map((S, i) => ({
+  const smoothedPoints = smoothedYValues.map((y, i) => ({
     x: points[i].x,
-    y: S,
+    y,
   }));
   return smoothedPoints;
 }
