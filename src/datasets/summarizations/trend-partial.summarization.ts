@@ -1,3 +1,4 @@
+import * as math from 'mathjs';
 import { Summary } from './types';
 import { TimeSeriesPoint } from '../metas/types';
 import { cacheSummaries } from './utils/commons';
@@ -13,7 +14,7 @@ import {
   normalizedUniformPartiallyLinearEpsApprox,
   TimeSeriesPartialTrend,
 } from './libs/trend';
-import { formatX } from '../../utils/formatters';
+import { formatX, formatY } from '../../utils/formatters';
 
 export function queryFactory(points: TimeSeriesPoint[]) {
   return cacheSummaries(() => {
@@ -28,21 +29,21 @@ export function queryFactory(points: TimeSeriesPoint[]) {
 
     const MAX_ANGLE = Math.atan(500 / 800);
 
-    const uIncreasingTrend = applyTrendAngleWithWeight(trapmfL(MAX_ANGLE / 8, MAX_ANGLE / 4));
-    const uConstantTrend = applyTrendAngleWithWeight(trapmf(-MAX_ANGLE / 4, -MAX_ANGLE / 8, MAX_ANGLE / 8, MAX_ANGLE / 4));
-    const uDecreasingTrend = applyTrendAngleWithWeight(trapmfR(-MAX_ANGLE / 4, -MAX_ANGLE / 8));
+    const uIncreasingDynamic = applyTrendAngleWithWeight(trapmfL(MAX_ANGLE / 8, MAX_ANGLE / 4));
+    const uConstantDynamic = applyTrendAngleWithWeight(trapmf(-MAX_ANGLE / 4, -MAX_ANGLE / 8, MAX_ANGLE / 8, MAX_ANGLE / 4));
+    const uDecreasingDynamic = applyTrendAngleWithWeight(trapmfR(-MAX_ANGLE / 4, -MAX_ANGLE / 8));
 
-    const uTrends: [string, PointMembershipFunction<TimeSeriesPartialTrend>][] = [
-      ['increasing', uIncreasingTrend],
-      ['constant', uConstantTrend],
-      ['decreasing', uDecreasingTrend],
+    const uDynamics: [string, PointMembershipFunction<TimeSeriesPartialTrend>][] = [
+      ['increased', uIncreasingDynamic],
+      ['similar', uConstantDynamic],
+      ['decreased', uDecreasingDynamic],
     ];
 
     const validityThreshold = 0.7;
 
     const mergePartialTrends = (a: TimeSeriesPartialTrend, b: TimeSeriesPartialTrend): TimeSeriesPartialTrend[] => {
-      for (const [_, uTrend] of uTrends) {
-        if (uTrend(a) >= validityThreshold && uTrend(b) >= validityThreshold) {
+      for (const [_, uDynamic] of uDynamics) {
+        if (uDynamic(a) >= validityThreshold && uDynamic(b) >= validityThreshold) {
           const indexStart = Math.min(a.indexStart, b.indexStart);
           const indexEnd = Math.max(a.indexEnd, b.indexEnd);
           const timeStart = points[indexStart].x;
@@ -76,37 +77,27 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       }
     }
 
-    const summaries: Summary[] = mergedPartialTrends.map(trend => {
-      for (const [text, uTrend] of uTrends) {
-        if (uTrend(trend) >= validityThreshold) {
-          const timeStart = formatX(trend.timeStart);
-          const timeEnd = formatX(trend.timeEnd);
-          if (text === 'increasing') {
-            const diff = Math.abs(points[trend.indexEnd].y - points[trend.indexStart].y);
-            return {
-              text: `The traffic from <b>${timeStart}</b> to <b>${timeEnd}</b> <b>increased by ${diff.toFixed(2)}</b>.`,
-              validity: 1.0,
-            };
-          } else if (text === 'decreasing') {
-            const diff = Math.abs(points[trend.indexEnd].y - points[trend.indexStart].y);
-            return {
-              text: `The traffic from <b>${timeStart}</b> to <b>${timeEnd}</b> <b>decreased by ${diff.toFixed(2)}</b>.`,
-              validity: 1.0,
-            };
-          } else {
-            let avg = 0;
-            for (let i = trend.indexStart; i <= trend.indexEnd; i++) {
-              avg += points[i].y;
-            }
-            avg /= trend.indexEnd - trend.indexStart + 1;
-            return {
-              text: `The traffic from <b>${timeStart}</b> to <b>${timeEnd}</b> is <b>constant around ${avg.toFixed(2)}</b>.`,
-              validity: 1.0,
-            };
-          }
+    const summaries: Summary[] = [];
+    for (const partialTrend of mergedPartialTrends) {
+      for (const [dynamic, uDynamic] of uDynamics) {
+        const timeStart = formatX(partialTrend.timeStart);
+        const timeEnd = formatX(partialTrend.timeEnd);
+        if (dynamic === 'increased' || dynamic === 'decreased') {
+          const yAbsoluteDiff = Math.abs(points[partialTrend.indexEnd].y - points[partialTrend.indexStart].y);
+          const text = `The traffic from <b>${timeStart}</b> to <b>${timeEnd}</b>  <b>${dynamic} by ${formatY(yAbsoluteDiff)}</b>.`;
+          const validity = uDynamic(partialTrend);
+          summaries.push({ text, validity });
+        } else {
+          // y-values are similar
+          const ySum = math.sum(math.range(partialTrend.indexStart, partialTrend.indexEnd + 1).map(i => points[i].y));
+          const yAverage = ySum / (partialTrend.indexEnd - partialTrend.indexStart + 1);
+
+          const text = `The traffic from <b>${timeStart}</b> to <b>${timeEnd}</b> is <b>${dynamic} around ${formatY(yAverage)}</b>.`;
+          const validity = uDynamic(partialTrend);
+          summaries.push({ text, validity });
         }
       }
-    }).filter(summary => summary) as Summary[];
+    }
     return summaries;
   });
 }
