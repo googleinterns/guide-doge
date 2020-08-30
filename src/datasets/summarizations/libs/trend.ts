@@ -42,8 +42,8 @@ export interface Cone2D {
 }
 
 export interface TimeSeriesPartialTrend {
-  idxStart: number;
-  idxEnd: number;
+  indexStart: number;
+  indexEnd: number;
   timeStart: Date;
   timeEnd: Date;
   percentageSpan: number;
@@ -80,8 +80,8 @@ export function normalizedUniformPartiallyLinearEpsApprox(points: TimeSeriesPoin
       } while (intersectCone(coneij, coneik) !== null);
 
       trends.push({
-        idxStart: i,
-        idxEnd: j,
+        indexStart: i,
+        indexEnd: j,
         timeStart: points[i].x,
         timeEnd: points[j].x,
         percentageSpan: normalizedPoints[j].x - normalizedPoints[i].x,

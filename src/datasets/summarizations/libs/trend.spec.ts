@@ -99,8 +99,8 @@ describe('normalizedUniformPartiallyLinearEpsApprox', () => {
   it('should return index intervals covering entire points array.', () => {
     for (const [points, eps] of testData) {
       const result = normalizedUniformPartiallyLinearEpsApprox(points, eps);
-      expect(result[0].idxStart).toBe(0);
-      expect(result[result.length - 1].idxEnd).toBe(points.length - 1);
+      expect(result[0].indexStart).toBe(0);
+      expect(result[result.length - 1].indexEnd).toBe(points.length - 1);
     }
   });
 
@@ -108,7 +108,7 @@ describe('normalizedUniformPartiallyLinearEpsApprox', () => {
     for (const [points, eps] of testData) {
       const result = normalizedUniformPartiallyLinearEpsApprox(points, eps);
       for (let i = 1; i < result.length; i++) {
-        expect(result[i].idxStart).toBe(result[i - 1].idxEnd);
+        expect(result[i].indexStart).toBe(result[i - 1].indexEnd);
       }
     }
   });
@@ -117,8 +117,8 @@ describe('normalizedUniformPartiallyLinearEpsApprox', () => {
     for (const [points, eps] of testData) {
       const result = normalizedUniformPartiallyLinearEpsApprox(points, eps);
       for (const partialTrend of result) {
-        expect(partialTrend.timeStart).toEqual(points[partialTrend.idxStart].x);
-        expect(partialTrend.timeEnd).toEqual(points[partialTrend.idxEnd].x);
+        expect(partialTrend.timeStart).toEqual(points[partialTrend.indexStart].x);
+        expect(partialTrend.timeEnd).toEqual(points[partialTrend.indexEnd].x);
       }
     }
   });
@@ -128,7 +128,7 @@ describe('normalizedUniformPartiallyLinearEpsApprox', () => {
       const totalTimeSpan = points[points.length - 1].x.getTime() - points[0].x.getTime();
       const result = normalizedUniformPartiallyLinearEpsApprox(points, eps);
       for (const partialTrend of result) {
-        const trendTimeSpan = points[partialTrend.idxEnd].x.getTime() - points[partialTrend.idxStart].x.getTime();
+        const trendTimeSpan = points[partialTrend.indexEnd].x.getTime() - points[partialTrend.indexStart].x.getTime();
         expect(partialTrend.percentageSpan).toBeCloseTo(trendTimeSpan / totalTimeSpan, 4);
       }
     }

@@ -1,7 +1,7 @@
 import { queryFactory } from './trend-regression.summarization';
 import { TimeSeriesPoint } from '../metas/types';
 
-fdescribe('queryFactory', () => {
+describe('queryFactory', () => {
   const overallQuicklyIncreasingPoints: TimeSeriesPoint[] = [];
   for (let i = 1; i <= 31; i++) {
     const x = new Date(2020, 6, i);
