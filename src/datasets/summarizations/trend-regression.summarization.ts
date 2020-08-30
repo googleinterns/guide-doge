@@ -1,4 +1,4 @@
-
+import * as math from 'mathjs';
 import { Summary } from './types';
 import { TimeSeriesPoint } from '../metas/types';
 import { cacheSummaries } from './utils/commons';
@@ -23,16 +23,28 @@ import {
 export function queryFactory(points: TimeSeriesPoint[]) {
   return cacheSummaries(() => {
     // The size of the chart is fixed to 800 * 500
-    const ANGMX = Math.atan(500 / 800);
-    const uQuicklyIncreasingLinearTrend = trapmfL(ANGMX / 2, ANGMX * 5 / 8);
-    const uIncreasingLinearTrend = trapmf(ANGMX / 8, ANGMX / 4, ANGMX / 2, ANGMX * 5 / 8);
-    const uConstantLinearTrend = trapmf(-ANGMX / 4, -ANGMX / 8, ANGMX / 8, ANGMX / 4);
-    const uDecreasingLinearTrend = trapmf(-ANGMX * 5 / 8, -ANGMX / 2, -ANGMX / 4, -ANGMX / 8);
-    const uQuicklyDecreasingLinearTrend = trapmfR(-ANGMX * 5 / 8, -ANGMX / 2);
+    const MAX_ANGLE = Math.atan(500 / 800);
+    const uQuicklyIncreasingLinearTrend = trapmfL(MAX_ANGLE / 2, MAX_ANGLE * 5 / 8);
+    const uIncreasingLinearTrend = trapmf(MAX_ANGLE / 8, MAX_ANGLE / 4, MAX_ANGLE / 2, MAX_ANGLE * 5 / 8);
+    const uConstantLinearTrend = trapmf(-MAX_ANGLE / 4, -MAX_ANGLE / 8, MAX_ANGLE / 8, MAX_ANGLE / 4);
+    const uDecreasingLinearTrend = trapmf(-MAX_ANGLE * 5 / 8, -MAX_ANGLE / 2, -MAX_ANGLE / 4, -MAX_ANGLE / 8);
+    const uQuicklyDecreasingLinearTrend = trapmfR(-MAX_ANGLE * 5 / 8, -MAX_ANGLE / 2);
 
     const uSmallRegressionError = trapmfR(0.75, 1.0);
 
-    const uWeekend = (p: TimeSeriesPoint) => p.x.getDay() === 5 ? 0.2 : +(p.x.getDay() === 0 || p.x.getDay() === 6);
+    const uWeekend = (p: TimeSeriesPoint) => {
+      const dayOfWeek = p.x.getDay();
+      switch (dayOfWeek) {
+        case 5: // Friday
+          return 0.2;
+        case 6: // Saturday
+        case 0: // Sunday
+          return 1;
+        default: // All other days
+          return 0;
+      }
+    };
+
     const uWeekday = (p: TimeSeriesPoint) => 1 - uWeekend(p);
 
     const isWeekend = (p: TimeSeriesPoint) => uWeekend(p) > 0.5;
@@ -40,18 +52,18 @@ export function queryFactory(points: TimeSeriesPoint[]) {
 
     const weekdayWeekendRatioPoints = groupPointsByXWeek(points).map(weekPoints => {
       const week = weekPoints[0].x;
-      const wWeekdays = weekPoints.reduce((p, v) => p + uWeekday(v), 0);
-      const wWeekends = weekPoints.reduce((p, v) => p + uWeekend(v), 0);
-      const sWeekdays = weekPoints.reduce((p, v) => p + v.y * uWeekday(v), 0);
-      const sWeekends = weekPoints.reduce((p, v) => p + v.y * uWeekend(v), 0);
+      const wWeekdays = math.sum(weekPoints.map(uWeekday));
+      const wWeekends = math.sum(weekPoints.map(uWeekend));
+      const sWeekdays = math.sum(weekPoints.map(p => p.y * uWeekday(p)));
+      const sWeekends = math.sum(weekPoints.map(p => p.y * uWeekend(p)));
 
       if (wWeekdays < 1e-7 || wWeekends < 1e-7) {
         return { x: week, y: -1 };
       } else {
         const avgWeekday = sWeekdays / wWeekdays;
-        const avgHoliday = sWeekends / wWeekends;
-        const weekdayHolidayRatio = avgWeekday / avgHoliday;
-        return { x: week, y: weekdayHolidayRatio };
+        const avgWeekend = sWeekends / wWeekends;
+        const weekdayWeekendRatio = avgWeekday / avgWeekend;
+        return { x: week, y: weekdayWeekendRatio };
       }
     }).filter(({ y }) => y >= 0);
 
@@ -95,6 +107,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
         )),
     );
 
+    // Create summaries describing linear trend of overall points
     for (const [linearTrend, uLinearTrend] of uLinearTrends) {
       const validity = Math.min(
         overallLinearTrendSummariesValidity,
@@ -108,6 +121,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       });
     }
 
+    // Create summaries describing linear trend of weekday points
     for (const [linearTrend, uLinearTrend] of uLinearTrends) {
       const validity = Math.min(
         1.0 - overallLinearTrendSummariesValidity,
@@ -121,6 +135,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       });
     }
 
+    // Create summaries describing linear trend of weekend points
     for (const [linearTrend, uLinearTrend] of uLinearTrends) {
       const validity = Math.min(
         1.0 - overallLinearTrendSummariesValidity,

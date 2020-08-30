@@ -19,8 +19,8 @@ export function linearRegression(points: NumPoint[]): LinearRegressionResult {
   const gradientAngleRad = Math.atan(gradient);
   const prediction = result.points.map(pairToPoint);
 
-  const errors = points.map(({ y }, i) => {
-    return math.abs(y - prediction[i].y);
+  const errors = points.map((point, i) => {
+    return Math.abs(point.y - prediction[i].y);
   });
 
   const absoluteErrorMean = math.mean(errors);
@@ -42,15 +42,17 @@ export interface Cone2D {
 }
 
 export interface TimeSeriesPartialTrend {
-  idxStart: number;
-  idxEnd: number;
+  indexStart: number;
+  indexEnd: number;
   timeStart: Date;
   timeEnd: Date;
-  pctSpan: number;
+  percentageSpan: number;
   cone: Cone2D;
 }
 
-
+// Kacprzyk, Janusz, Anna Wilbik, and S. Zadrożny.
+// "Linguistic summarization of time series using a fuzzy quantifier driven aggregation."
+// Fuzzy Sets and Systems 159.12 (2008): 1485-1499.
 export function normalizedUniformPartiallyLinearEpsApprox(points: TimeSeriesPoint[], eps: number): TimeSeriesPartialTrend[] {
   const numPoints = points.map(timeSeriesPointToNumPoint);
   const normalizedPoints = normalizePoints(numPoints, {}, { min: 0 });
@@ -78,11 +80,11 @@ export function normalizedUniformPartiallyLinearEpsApprox(points: TimeSeriesPoin
       } while (intersectCone(coneij, coneik) !== null);
 
       trends.push({
-        idxStart: i,
-        idxEnd: j,
+        indexStart: i,
+        indexEnd: j,
         timeStart: points[i].x,
         timeEnd: points[j].x,
-        pctSpan: normalizedPoints[j].x - normalizedPoints[i].x,
+        percentageSpan: normalizedPoints[j].x - normalizedPoints[i].x,
         cone: coneij,
       });
 

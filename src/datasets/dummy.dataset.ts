@@ -22,13 +22,17 @@ export const configMeta: PreferenceMeta<Config> = {
 };
 
 export function create(config: Config): Dataset {
-  const time = new Date(Date.now() - 100 * DAY);
+  const startDaysBeforeNow = 100;
+  const expContinuousGrowthRate = 0.1;
+
+  const startDate = new Date(Date.now() - startDaysBeforeNow * DAY);
   const data: XYPoint<Date, number>[] = [];
-  const rand = random.normal(0, 500);
-  for (let i = 1; i <= 100; i++) {
+  const rand = random.normal(0, 250);
+
+  for (let i = 1; i <= startDaysBeforeNow; i++) {
     data.push({
-      x: new Date(time.getTime() + i * DAY),
-      y: Math.exp(i / 10) + config.offset + rand(),
+      x: new Date(startDate.getTime() + i * DAY),
+      y: Math.exp(i * expContinuousGrowthRate) + config.offset + rand(),
     });
   }
 
