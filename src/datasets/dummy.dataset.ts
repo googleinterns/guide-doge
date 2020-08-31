@@ -19,15 +19,15 @@ export const configMeta: PreferenceMeta<Config> = {
 };
 
 export function create(config: Config): Dataset {
-  const startDaysBeforeNow = 100;
+  const pointsLength = 100;
   const expContinuousGrowthRate = 0.1;
 
-  const startDate = new Date(Date.now() - startDaysBeforeNow * DAY);
-  const data: XYPoint<Date, number>[] = [];
+  const points: XYPoint<Date, number>[] = [];
+  const startDate = new Date(Date.now() - pointsLength * DAY);
   const rand = random.normal(0, 250);
 
-  for (let i = 1; i <= startDaysBeforeNow; i++) {
-    data.push({
+  for (let i = 1; i <= pointsLength; i++) {
+    points.push({
       x: new Date(startDate.getTime() + i * DAY),
       y: Math.exp(i * expContinuousGrowthRate) + config.offset + rand(),
     });
@@ -37,8 +37,8 @@ export function create(config: Config): Dataset {
     'Line Chart',
     (options: TimeSeriesQueryOptions) => [{
       label: 'Dummy Data',
-      points: data,
-      querySummaries: TrendSummarization.queryFactory(data),
+      points,
+      querySummaries: TrendSummarization.queryFactory(points),
     }],
   );
 
