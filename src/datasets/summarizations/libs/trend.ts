@@ -42,17 +42,32 @@ export interface Cone2D {
 }
 
 export interface TimeSeriesPartialTrend {
+  /* The index of the trend's first point in points array */
   indexStart: number;
+  /* The index of the trend's last point in points array */
   indexEnd: number;
+  /* The time (x-value) of the trend's first point */
   timeStart: Date;
+  /* The time (x-value) of the trend's last point */
   timeEnd: Date;
+  /* The time span percentage of the trend to the total time span of points array */
   percentageSpan: number;
+  /* The intersection of cones formed by the points belong to the trend */
   cone: Cone2D;
 }
 
-// Kacprzyk, Janusz, Anna Wilbik, and S. Zadrożny.
-// "Linguistic summarization of time series using a fuzzy quantifier driven aggregation."
-// Fuzzy Sets and Systems 159.12 (2008): 1485-1499.
+/**
+ * Create an array of partial trends which approximate the normalized time-series points.
+ * The x-values and y-values of points are normalized first regarding the size of chart before extracting trends.
+ * The partial trends are approximated with linear uniform partially eps-approximation.
+ *
+ * Reference:
+ *  Kacprzyk, Janusz, Anna Wilbik, and S. Zadrożny. "Linguistic summarization of time series using a fuzzy quantifier driven aggregation.",
+ *    Fuzzy Sets and Systems 159.12 (2008): 1485-1499.
+ *
+ * @param points The time-series points to extract partial trends.
+ * @param eps Radius of circle around points when finding the intersection of cones for a partial trend.
+ */
 export function normalizedUniformPartiallyLinearEpsApprox(points: TimeSeriesPoint[], eps: number): TimeSeriesPartialTrend[] {
   const numPoints = points.map(timeSeriesPointToNumPoint);
   const normalizedPoints = normalizePoints(numPoints, {}, { min: 0 });
