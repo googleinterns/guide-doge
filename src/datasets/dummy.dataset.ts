@@ -18,6 +18,10 @@ export const configMeta: PreferenceMeta<Config> = {
   },
 };
 
+/**
+ * Creates an exponential growth dataset with daily granularity.
+ * Start date is 100 days ago and end date is today.
+ */
 export function create(config: Config): Dataset {
   const pointsLength = 100;
   const expContinuousGrowthRate = 0.1;
