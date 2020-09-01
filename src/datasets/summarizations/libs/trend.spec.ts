@@ -143,7 +143,7 @@ describe('normalizedUniformPartiallyLinearEpsApprox', () => {
   });
 });
 
-fdescribe('exponentialMovingAverage', () => {
+describe('exponentialMovingAverage', () => {
 
   const testData = [
     {
