@@ -159,7 +159,7 @@ export function exponentialMovingAverage(points: TimeSeriesPoint[], alpha = 0.3)
   const N = points.length;
   const yValues = points.map(({ y }) => y);
 
-  const smoothedYValues = new Array(N).fill(0);
+  const smoothedYValues: number[] = new Array(N);
   for (let i = 0; i < N; i++) {
     smoothedYValues[i] = alpha * yValues[i] + (1.0 - alpha) * (smoothedYValues[i - 1] ?? yValues[i]);
   }
