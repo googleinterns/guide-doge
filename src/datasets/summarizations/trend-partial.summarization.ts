@@ -10,8 +10,8 @@ import {
   trapmfR,
 } from './libs/protoform';
 import {
-  exponentialMovingAverage,
-  normalizedUniformPartiallyLinearEpsApprox,
+  createExponentialMovingAveragePoints,
+  createPartialTrends,
   TimeSeriesPartialTrend,
 } from './libs/trend';
 import { formatX, formatY } from '../../utils/formatters';
@@ -19,8 +19,8 @@ import { formatX, formatY } from '../../utils/formatters';
 export function queryFactory(points: TimeSeriesPoint[]) {
   return cacheSummaries(() => {
 
-    const smoothedPoints = exponentialMovingAverage(points);
-    const partialTrends = normalizedUniformPartiallyLinearEpsApprox(smoothedPoints, 0.01);
+    const smoothedPoints = createExponentialMovingAveragePoints(points);
+    const partialTrends = createPartialTrends(smoothedPoints, 0.01);
 
     const applyTrendAngleWithWeight = (f: MembershipFunction) => ({ cone }: TimeSeriesPartialTrend) => {
       const avgAngleRad = (cone.endAngleRad + cone.startAngleRad) / 2;

@@ -1,6 +1,6 @@
 import * as regression from 'regression';
 import * as math from 'mathjs';
-import { TimeSeriesPoint, NumPoint } from '../../metas/types';
+import { TimeSeriesPoint, NumPoint, XYPoint } from '../../metas/types';
 import { normalizePoints, pointToPair, pairToPoint } from '../utils/commons';
 import { timeSeriesPointToNumPoint } from '../utils/time-series';
 
@@ -155,7 +155,22 @@ function intersectCone(c1: Cone2D, c2: Cone2D): Cone2D | null {
   }
 }
 
-export function exponentialMovingAverage(points: TimeSeriesPoint[], alpha = 0.3): TimeSeriesPoint[] {
+/**
+ * Create an array of points with smoothed y-values using exponential moving average.
+ * The exponential moving average for a series of y-values(Y) are calculated with the following recursive formula:
+ * ```
+ * if (t == 0) {
+ *   S[t] = Y[0]
+ * } else {
+ *   S[t] = alpha * Y[t] + (1 - alpha) * Y[t - 1]
+ * }
+ * ```
+ *
+ * @param points The time-series points to apply exponential moving average.
+ * @param alpha The degree of weighting decrease, should be a constant smoothing factor between 0 and 1.
+ * A higher alpha discounts older observations faster.
+ */
+export function createExponentialMovingAveragePoints<T>(points: XYPoint<T, number>[], alpha = 0.3): XYPoint<T, number>[] {
   const N = points.length;
   const yValues = points.map(({ y }) => y);
 
