@@ -6,7 +6,7 @@ import { XYPoint } from './metas/types';
 import { createLineChartMeta } from './metas/line-chart.meta';
 import { TimeSeriesQueryOptions } from './queries/time-series.query';
 import { normalizePointsY } from './summarizations/utils/commons';
-import { exponentialMovingAverage } from './summarizations/libs/trend';
+import { createExponentialMovingAveragePoints } from './summarizations/libs/trend';
 import * as TrendSummarization from './summarizations/trend.summarization';
 import * as TrendPartialSummarization from './summarizations/trend-partial.summarization';
 
@@ -56,14 +56,14 @@ export function create(config: Config): Dataset {
       (options: TimeSeriesQueryOptions) => [
         {
           label: 'Dummy Data',
-          points: exponentialMovingAverage(data),
-          querySummaries: TrendPartialSummarization.queryFactory(data),
+          points: createExponentialMovingAveragePoints(points),
+          querySummaries: TrendPartialSummarization.queryFactory(points),
           style: {
             color: 'green',
           },
         }, {
           label: 'Dummy Data',
-          points: data,
+          points,
           style: {
             opacity: 0.5,
           },

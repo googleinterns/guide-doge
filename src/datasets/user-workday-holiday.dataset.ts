@@ -8,7 +8,7 @@ import { PreferenceMeta } from '../services/preference/types';
 import { DAY } from '../utils/timeUnits';
 import { combineQuerySummariesFactories } from './summarizations/utils/commons';
 import { normalizePointsY } from './summarizations/utils/commons';
-import { exponentialMovingAverage } from './summarizations/libs/trend';
+import { createExponentialMovingAveragePoints } from './summarizations/libs/trend';
 import * as WorkdayHolidayAbsoluteSummarization from './summarizations/workday-holiday-absolute.summarization';
 import * as WorkdayHolidayRelativeSummarization from './summarizations/workday-holiday-relative.summarization';
 import * as TrendPartialSummarization from './summarizations/trend-partial.summarization';
@@ -90,10 +90,9 @@ export function create(config: Config): Dataset {
       'Visit Count',
       (opt) => {
         const points = lineChartMeta.queryData(opt)[0].points;
-        const smoothedPoints = exponentialMovingAverage(points);
         return [{
           label: 'Visit Count - Smoothed',
-          points: exponentialMovingAverage(normalizePointsY(points)),
+          points: createExponentialMovingAveragePoints(normalizePointsY(points)),
           querySummaries: TrendPartialSummarization.queryFactory(points),
           style: {
             color: 'green',
