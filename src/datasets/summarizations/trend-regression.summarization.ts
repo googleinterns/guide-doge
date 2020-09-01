@@ -50,6 +50,9 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const isWeekend = (p: TimeSeriesPoint) => uWeekend(p) > 0.5;
     const isWeekday = (p: TimeSeriesPoint) => uWeekday(p) > 0.5;
 
+    // Create an array of weekly points, where the y-value is the ratio AverageWeekdayY / AverageWeekendY of each week
+    // The x-value is the time(x-value) of the first point in the week. If a week does not have any weekday points or
+    // weekend points, e.g. first week and last week of a month, the created weekly points will not include that week.
     const weekdayWeekendRatioPoints = groupPointsByXWeek(points).map(weekPoints => {
       const week = weekPoints[0].x;
       const wWeekdays = math.sum(weekPoints.map(uWeekday));
