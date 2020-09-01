@@ -1,5 +1,6 @@
 import * as regression from 'regression';
 import * as math from 'mathjs';
+import { MembershipFunction } from './protoform';
 import { TimeSeriesPoint, NumPoint, XYPoint } from '../../metas/types';
 import { normalizePoints, pointToPair, pairToPoint } from '../utils/commons';
 import { timeSeriesPointToNumPoint } from '../utils/time-series';
@@ -153,6 +154,18 @@ function intersectCone(c1: Cone2D, c2: Cone2D): Cone2D | null {
   } else {
     return null;
   }
+}
+
+/**
+ * A function decorator that maps the cone angle of the input partial trend to the membership function.
+ *
+ * @param mf: The membership function that takes the cone angle as input.
+ */
+export function mapConeAngle(mf: MembershipFunction) {
+  return ({ cone }: TimeSeriesPartialTrend) => {
+    const coneAngleRadAverage = (cone.endAngleRad + cone.startAngleRad) / 2;
+    return mf(coneAngleRadAverage);
+  };
 }
 
 /**

@@ -19,16 +19,17 @@ import {
 import {
   normalizePoints
 } from './utils/commons';
+import { chartDiagonalAngle } from './utils/constants';
 
 export function queryFactory(points: TimeSeriesPoint[]) {
   return cacheSummaries(() => {
-    // The size of the chart is fixed to 800 * 500
-    const MAX_ANGLE = Math.atan(500 / 800);
-    const uQuicklyIncreasingLinearTrend = trapmfL(MAX_ANGLE / 2, MAX_ANGLE * 5 / 8);
-    const uIncreasingLinearTrend = trapmf(MAX_ANGLE / 8, MAX_ANGLE / 4, MAX_ANGLE / 2, MAX_ANGLE * 5 / 8);
-    const uConstantLinearTrend = trapmf(-MAX_ANGLE / 4, -MAX_ANGLE / 8, MAX_ANGLE / 8, MAX_ANGLE / 4);
-    const uDecreasingLinearTrend = trapmf(-MAX_ANGLE * 5 / 8, -MAX_ANGLE / 2, -MAX_ANGLE / 4, -MAX_ANGLE / 8);
-    const uQuicklyDecreasingLinearTrend = trapmfR(-MAX_ANGLE * 5 / 8, -MAX_ANGLE / 2);
+    const uQuicklyIncreasingLinearTrend = trapmfL(chartDiagonalAngle / 2, chartDiagonalAngle * 5 / 8);
+    const uIncreasingLinearTrend = trapmf(
+      chartDiagonalAngle / 8, chartDiagonalAngle / 4, chartDiagonalAngle / 2, chartDiagonalAngle * 5 / 8);
+    const uConstantLinearTrend = trapmf(-chartDiagonalAngle / 4, -chartDiagonalAngle / 8, chartDiagonalAngle / 8, chartDiagonalAngle / 4);
+    const uDecreasingLinearTrend = trapmf(
+      -chartDiagonalAngle * 5 / 8, -chartDiagonalAngle / 2, -chartDiagonalAngle / 4, -chartDiagonalAngle / 8);
+    const uQuicklyDecreasingLinearTrend = trapmfR(-chartDiagonalAngle * 5 / 8, -chartDiagonalAngle / 2);
 
     const uSmallRegressionError = trapmfR(0.75, 1.0);
 

@@ -10,28 +10,23 @@ import {
   trapmfR,
 } from './libs/protoform';
 import {
+  mapConeAngle,
   createExponentialMovingAveragePoints,
   createPartialTrends,
   TimeSeriesPartialTrend,
 } from './libs/trend';
 import { formatX, formatY } from '../../utils/formatters';
+import { chartDiagonalAngle } from './utils/constants';
 
 export function queryFactory(points: TimeSeriesPoint[]) {
   return cacheSummaries(() => {
-
     const smoothedPoints = createExponentialMovingAveragePoints(points);
     const partialTrends = createPartialTrends(smoothedPoints, 0.01);
 
-    const applyTrendAngleWithWeight = (f: MembershipFunction) => ({ cone }: TimeSeriesPartialTrend) => {
-      const avgAngleRad = (cone.endAngleRad + cone.startAngleRad) / 2;
-      return f(avgAngleRad);
-    };
-
-    const MAX_ANGLE = Math.atan(500 / 800);
-
-    const uIncreasingDynamic = applyTrendAngleWithWeight(trapmfL(MAX_ANGLE / 8, MAX_ANGLE / 4));
-    const uConstantDynamic = applyTrendAngleWithWeight(trapmf(-MAX_ANGLE / 4, -MAX_ANGLE / 8, MAX_ANGLE / 8, MAX_ANGLE / 4));
-    const uDecreasingDynamic = applyTrendAngleWithWeight(trapmfR(-MAX_ANGLE / 4, -MAX_ANGLE / 8));
+    const uIncreasingDynamic = mapConeAngle(trapmfL(chartDiagonalAngle / 8, chartDiagonalAngle / 4));
+    const uConstantDynamic = mapConeAngle(
+      trapmf(-chartDiagonalAngle / 4, -chartDiagonalAngle / 8, chartDiagonalAngle / 8, chartDiagonalAngle / 4));
+    const uDecreasingDynamic = mapConeAngle(trapmfR(-chartDiagonalAngle / 4, -chartDiagonalAngle / 8));
 
     const uDynamics: [string, PointMembershipFunction<TimeSeriesPartialTrend>][] = [
       ['increased', uIncreasingDynamic],
