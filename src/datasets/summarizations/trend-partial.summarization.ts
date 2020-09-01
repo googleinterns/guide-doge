@@ -42,7 +42,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const validityThreshold = 0.7;
 
     const mergePartialTrends = (a: TimeSeriesPartialTrend, b: TimeSeriesPartialTrend): TimeSeriesPartialTrend[] => {
-      for (const [_, uDynamic] of uDynamics) {
+      for (const uDynamic of [uIncreasingDynamic, uConstantDynamic, uDecreasingDynamic]) {
         if (uDynamic(a) >= validityThreshold && uDynamic(b) >= validityThreshold) {
           const indexStart = Math.min(a.indexStart, b.indexStart);
           const indexEnd = Math.max(a.indexEnd, b.indexEnd);
