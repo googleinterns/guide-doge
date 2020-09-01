@@ -54,21 +54,23 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     // The x-value is the time(x-value) of the first point in the week. If a week does not have any weekday points or
     // weekend points, e.g. first week and last week of a month, the created weekly points will not include that week.
     const weekdayWeekendRatioPoints = groupPointsByXWeek(points).map(weekPoints => {
-      const week = weekPoints[0].x;
-      const wWeekdays = math.sum(weekPoints.map(uWeekday));
-      const wWeekends = math.sum(weekPoints.map(uWeekend));
-      const sWeekdays = math.sum(weekPoints.map(p => p.y * uWeekday(p)));
-      const sWeekends = math.sum(weekPoints.map(p => p.y * uWeekend(p)));
+      const startDateOfWeek = weekPoints[0].x;
+      // The weights are the membership degree values of weekday and weekend
+      const weekdayWeightSum = math.sum(weekPoints.map(uWeekday));
+      const weekendWeightSum = math.sum(weekPoints.map(uWeekend));
+      const weightedWeekdayYSum = math.sum(weekPoints.map(p => p.y * uWeekday(p)));
+      const weightedWeekendYSum = math.sum(weekPoints.map(p => p.y * uWeekend(p)));
 
-      if (wWeekdays < 1e-7 || wWeekends < 1e-7) {
-        return { x: week, y: -1 };
+      if (weekdayWeightSum < 1e-7 || weekendWeightSum < 1e-7) {
+        // No weekday points or weekend points in this week
+        return { x: startDateOfWeek, y: null };
       } else {
-        const avgWeekday = sWeekdays / wWeekdays;
-        const avgWeekend = sWeekends / wWeekends;
-        const weekdayWeekendRatio = avgWeekday / avgWeekend;
-        return { x: week, y: weekdayWeekendRatio };
+        const weightedWeekdayYAverage = weightedWeekdayYSum / weekdayWeightSum;
+        const weightedWeekendYAverage = weightedWeekendYSum / weekendWeightSum;
+        const weekdayWeekendRatio = weightedWeekdayYAverage / weightedWeekendYAverage;
+        return { x: startDateOfWeek, y: weekdayWeekendRatio };
       }
-    }).filter(({ y }) => y >= 0);
+    }).filter(({ y }) => y !== null) as TimeSeriesPoint[];
 
     const uMostPercentage = trapmfL(0.6, 0.7);
     const uEqualTraffic = ({ y }) => trapmf(0.8, 0.85, 1.15, 1.2)(y);
