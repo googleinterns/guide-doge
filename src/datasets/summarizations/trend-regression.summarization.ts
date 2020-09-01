@@ -10,7 +10,7 @@ import {
   sigmaCountQA,
 } from './libs/protoform';
 import {
-  linearRegression,
+  createLinearModel,
 } from './libs/trend';
 import {
   timeSeriesPointToNumPoint,
@@ -85,13 +85,13 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const weekdayNormalizedPoints = normalizedPoints.filter((_, i) => isWeekday(points[i]));
     const weekendNormalizedPoints = normalizedPoints.filter((_, i) => isWeekend(points[i]));
 
-    const overallLinearModel = linearRegression(normalizedPoints);
+    const overallLinearModel = createLinearModel(normalizedPoints);
     const overallLinearTrendValidity = uSmallRegressionError(overallLinearModel.absoluteErrorStd);
 
-    const weekdayLinearModel = linearRegression(weekdayNormalizedPoints);
+    const weekdayLinearModel = createLinearModel(weekdayNormalizedPoints);
     const weekdayLinearTrendValidity = uSmallRegressionError(weekdayLinearModel.absoluteErrorStd);
 
-    const weekendLinearModel = linearRegression(weekendNormalizedPoints);
+    const weekendLinearModel = createLinearModel(weekendNormalizedPoints);
     const weekendLinearTrendValidity = uSmallRegressionError(weekendLinearModel.absoluteErrorStd);
 
     const overallLinearTrendSummariesValidity = Math.max(
