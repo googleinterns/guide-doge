@@ -10,7 +10,7 @@ import {
   sigmaCountQA,
 } from './libs/protoform';
 import {
-  linearRegression,
+  createLinearModel,
 } from './libs/trend';
 import {
   timeSeriesPointToNumPoint,
@@ -50,22 +50,27 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const isWeekend = (p: TimeSeriesPoint) => uWeekend(p) > 0.5;
     const isWeekday = (p: TimeSeriesPoint) => uWeekday(p) > 0.5;
 
+    // Create an array of weekly points, where the y-value is the ratio AverageWeekdayY / AverageWeekendY of each week
+    // The x-value is the time(x-value) of the first point in the week. If a week does not have any weekday points or
+    // weekend points, e.g. first week and last week of a month, the created weekly points will not include that week.
     const weekdayWeekendRatioPoints = groupPointsByXWeek(points).map(weekPoints => {
-      const week = weekPoints[0].x;
-      const wWeekdays = math.sum(weekPoints.map(uWeekday));
-      const wWeekends = math.sum(weekPoints.map(uWeekend));
-      const sWeekdays = math.sum(weekPoints.map(p => p.y * uWeekday(p)));
-      const sWeekends = math.sum(weekPoints.map(p => p.y * uWeekend(p)));
+      const startDateOfWeek = weekPoints[0].x;
+      // The weights are the membership degree values of weekday and weekend
+      const weekdayWeightSum = math.sum(weekPoints.map(uWeekday));
+      const weekendWeightSum = math.sum(weekPoints.map(uWeekend));
+      const weightedWeekdayYSum = math.sum(weekPoints.map(p => p.y * uWeekday(p)));
+      const weightedWeekendYSum = math.sum(weekPoints.map(p => p.y * uWeekend(p)));
 
-      if (wWeekdays < 1e-7 || wWeekends < 1e-7) {
-        return { x: week, y: -1 };
+      if (weekdayWeightSum < 1e-7 || weekendWeightSum < 1e-7) {
+        // No weekday points or weekend points in this week
+        return { x: startDateOfWeek, y: null };
       } else {
-        const avgWeekday = sWeekdays / wWeekdays;
-        const avgWeekend = sWeekends / wWeekends;
-        const weekdayWeekendRatio = avgWeekday / avgWeekend;
-        return { x: week, y: weekdayWeekendRatio };
+        const weightedWeekdayYAverage = weightedWeekdayYSum / weekdayWeightSum;
+        const weightedWeekendYAverage = weightedWeekendYSum / weekendWeightSum;
+        const weekdayWeekendRatio = weightedWeekdayYAverage / weightedWeekendYAverage;
+        return { x: startDateOfWeek, y: weekdayWeekendRatio };
       }
-    }).filter(({ y }) => y >= 0);
+    }).filter(({ y }) => y !== null) as TimeSeriesPoint[];
 
     const uMostPercentage = trapmfL(0.6, 0.7);
     const uEqualTraffic = ({ y }) => trapmf(0.8, 0.85, 1.15, 1.2)(y);
@@ -85,13 +90,13 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const weekdayNormalizedPoints = normalizedPoints.filter((_, i) => isWeekday(points[i]));
     const weekendNormalizedPoints = normalizedPoints.filter((_, i) => isWeekend(points[i]));
 
-    const overallLinearModel = linearRegression(normalizedPoints);
+    const overallLinearModel = createLinearModel(normalizedPoints);
     const overallLinearTrendValidity = uSmallRegressionError(overallLinearModel.absoluteErrorStd);
 
-    const weekdayLinearModel = linearRegression(weekdayNormalizedPoints);
+    const weekdayLinearModel = createLinearModel(weekdayNormalizedPoints);
     const weekdayLinearTrendValidity = uSmallRegressionError(weekdayLinearModel.absoluteErrorStd);
 
-    const weekendLinearModel = linearRegression(weekendNormalizedPoints);
+    const weekendLinearModel = createLinearModel(weekendNormalizedPoints);
     const weekendLinearTrendValidity = uSmallRegressionError(weekendLinearModel.absoluteErrorStd);
 
     const overallLinearTrendSummariesValidity = Math.max(

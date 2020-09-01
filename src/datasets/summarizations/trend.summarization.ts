@@ -9,18 +9,18 @@ import {
   trapmfR,
   sigmaCountQA,
 } from './libs/protoform';
-import { normalizedUniformPartiallyLinearEpsApprox, TimeSeriesPartialTrend } from './libs/trend';
+import { createPartialTrends, TimeSeriesPartialTrend } from './libs/trend';
 
 export function queryFactory(points: TimeSeriesPoint[]) {
   return cacheSummaries(() => {
     // The size of the chart is fixed to 800 * 500
     const MAX_ANGLE = Math.atan(500 / 800);
 
-    const trends = normalizedUniformPartiallyLinearEpsApprox(points, 0.01);
+    const partialTrends = createPartialTrends(points, 0.01);
 
     const applyTrendAngleWithWeight = (f: MembershipFunction) => ({ percentageSpan, cone }: TimeSeriesPartialTrend) => {
       const avgAngleRad = (cone.endAngleRad + cone.startAngleRad) / 2;
-      return f(avgAngleRad) * percentageSpan * trends.length;
+      return f(avgAngleRad) * percentageSpan * partialTrends.length;
     };
 
     const uQuicklyIncreasingTrend = applyTrendAngleWithWeight(trapmfL(MAX_ANGLE / 2, MAX_ANGLE * 3 / 5));
@@ -50,7 +50,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const summaries: Summary[] = [];
     for (const [quantifier, uPercentage] of uPercentages) {
       for (const [trend, uTrend] of uTrends) {
-        const t = sigmaCountQA(trends, uPercentage, uTrend);
+        const t = sigmaCountQA(partialTrends, uPercentage, uTrend);
         summaries.push({
           text: `trends that took <b>${quantifier}</b> of the time are <b>${trend}</b>.`,
           validity: t

@@ -1,9 +1,9 @@
 import * as math from 'mathjs';
-import { linearRegression, normalizedUniformPartiallyLinearEpsApprox, LinearRegressionResult, TimeSeriesPartialTrend } from './trend';
+import { createLinearModel, createPartialTrends, LinearModel, TimeSeriesPartialTrend } from './trend';
 import { NumPoint, TimeSeriesPoint } from '../../metas/types';
 
-describe('linearRegression', () => {
-  const testData: [NumPoint[], LinearRegressionResult][] = [
+describe('createLinearModel', () => {
+  const testData: [NumPoint[], LinearModel][] = [
     [
       [{ x: 1, y: 3 }, { x: 2, y: 4 }, { x: 3, y: 5 }],
       {
@@ -38,40 +38,40 @@ describe('linearRegression', () => {
 
   it('should return correct gradient.', () => {
     for (const [points, expectedResult] of testData) {
-      const result = linearRegression(points);
-      expect(result.gradient).toBeCloseTo(expectedResult.gradient, 4);
+      const model = createLinearModel(points);
+      expect(model.gradient).toBeCloseTo(expectedResult.gradient, 4);
     }
   });
 
   it('should return correct gradient angle in radius.', () => {
     for (const [points, expectedResult] of testData) {
-      const result = linearRegression(points);
-      expect(result.gradientAngleRad).toBeCloseTo(expectedResult.gradientAngleRad, 4);
+      const model = createLinearModel(points);
+      expect(model.gradientAngleRad).toBeCloseTo(expectedResult.gradientAngleRad, 4);
     }
   });
 
   it('should return correct prediction.', () => {
     for (const [points, expectedResult] of testData) {
-      const result = linearRegression(points);
-      expect(result.prediction.length).toBe(expectedResult.prediction.length);
-      for (let i = 0; i < result.prediction.length; i++) {
-        expect(result.prediction[i].x).toBeCloseTo(expectedResult.prediction[i].x, 4);
-        expect(result.prediction[i].y).toBeCloseTo(expectedResult.prediction[i].y, 4);
+      const model = createLinearModel(points);
+      expect(model.prediction.length).toBe(expectedResult.prediction.length);
+      for (let i = 0; i < model.prediction.length; i++) {
+        expect(model.prediction[i].x).toBeCloseTo(expectedResult.prediction[i].x, 4);
+        expect(model.prediction[i].y).toBeCloseTo(expectedResult.prediction[i].y, 4);
       }
     }
   });
 
   it('should return correct absolute error mean.', () => {
     for (const [points, expectedResult] of testData) {
-      const result = linearRegression(points);
-      expect(result.absoluteErrorMean).toBeCloseTo(expectedResult.absoluteErrorMean, 4);
+      const model = createLinearModel(points);
+      expect(model.absoluteErrorMean).toBeCloseTo(expectedResult.absoluteErrorMean, 4);
     }
   });
 
   it('should return correct absolute error standard deviation.', () => {
     for (const [points, expectedResult] of testData) {
-      const result = linearRegression(points);
-      expect(result.absoluteErrorStd).toBeCloseTo(expectedResult.absoluteErrorStd, 4);
+      const model = createLinearModel(points);
+      expect(model.absoluteErrorStd).toBeCloseTo(expectedResult.absoluteErrorStd, 4);
     }
   });
 });
@@ -98,25 +98,25 @@ describe('normalizedUniformPartiallyLinearEpsApprox', () => {
 
   it('should return index intervals covering entire points array.', () => {
     for (const [points, eps] of testData) {
-      const result = normalizedUniformPartiallyLinearEpsApprox(points, eps);
-      expect(result[0].indexStart).toBe(0);
-      expect(result[result.length - 1].indexEnd).toBe(points.length - 1);
+      const partialTrends = createPartialTrends(points, eps);
+      expect(partialTrends[0].indexStart).toBe(0);
+      expect(partialTrends[partialTrends.length - 1].indexEnd).toBe(points.length - 1);
     }
   });
 
   it('should return continuous index interval.', () => {
     for (const [points, eps] of testData) {
-      const result = normalizedUniformPartiallyLinearEpsApprox(points, eps);
-      for (let i = 1; i < result.length; i++) {
-        expect(result[i].indexStart).toBe(result[i - 1].indexEnd);
+      const partialTrends = createPartialTrends(points, eps);
+      for (let i = 1; i < partialTrends.length; i++) {
+        expect(partialTrends[i].indexStart).toBe(partialTrends[i - 1].indexEnd);
       }
     }
   });
 
   it('should return x-values of points as time start and time end.', () => {
     for (const [points, eps] of testData) {
-      const result = normalizedUniformPartiallyLinearEpsApprox(points, eps);
-      for (const partialTrend of result) {
+      const partialTrends = createPartialTrends(points, eps);
+      for (const partialTrend of partialTrends) {
         expect(partialTrend.timeStart).toEqual(points[partialTrend.indexStart].x);
         expect(partialTrend.timeEnd).toEqual(points[partialTrend.indexEnd].x);
       }
@@ -126,8 +126,8 @@ describe('normalizedUniformPartiallyLinearEpsApprox', () => {
   it('should return correct time percentage span.', () => {
     for (const [points, eps] of testData) {
       const totalTimeSpan = points[points.length - 1].x.getTime() - points[0].x.getTime();
-      const result = normalizedUniformPartiallyLinearEpsApprox(points, eps);
-      for (const partialTrend of result) {
+      const partialTrends = createPartialTrends(points, eps);
+      for (const partialTrend of partialTrends) {
         const trendTimeSpan = points[partialTrend.indexEnd].x.getTime() - points[partialTrend.indexStart].x.getTime();
         expect(partialTrend.percentageSpan).toBeCloseTo(trendTimeSpan / totalTimeSpan, 4);
       }
@@ -136,8 +136,8 @@ describe('normalizedUniformPartiallyLinearEpsApprox', () => {
 
   it('should have percentage spans sum to one.', () => {
     for (const [points, eps] of testData) {
-      const result = normalizedUniformPartiallyLinearEpsApprox(points, eps);
-      const percentageSpanSum = math.sum(result.map(trend => trend.percentageSpan));
+      const partialTrends = createPartialTrends(points, eps);
+      const percentageSpanSum = math.sum(partialTrends.map(trend => trend.percentageSpan));
       expect(percentageSpanSum).toBeCloseTo(1.0, 4);
     }
   });
