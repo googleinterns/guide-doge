@@ -1,10 +1,8 @@
 import { queryFactory } from './trend-regression.summarization';
 import { TimeSeriesPoint } from '../metas/types';
-import { Summary } from './types';
+import { hasHighValidity, hasLowValidity, isTextPartsInSummary, andNotSummaryFilters } from './utils/tests';
 
 describe('queryFactory', () => {
-  const hasHighValidity = ({ validity }) => validity >= 0.7;
-  const hasLowValidity = (summary: Summary) => !hasHighValidity(summary);
 
   const overallQuicklyIncreasingPoints: TimeSeriesPoint[] = [];
   for (let i = 1; i <= 31; i++) {
@@ -46,7 +44,7 @@ describe('queryFactory', () => {
 
   it('should create summaries describing overall linear trend.', () => {
     const summaries = queryFactory(overallQuicklyIncreasingPoints)();
-    const isOverallQuicklyIncreasingSummary = ({ text }) => text.includes('overall') && text.includes('linearly quickly increasing');
+    const isOverallQuicklyIncreasingSummary = isTextPartsInSummary('overall', 'linearly quickly increasing');
 
     const overallQuicklyIncreasingSummaries = summaries.filter(isOverallQuicklyIncreasingSummary);
     const otherSummaries = summaries.filter(s => !isOverallQuicklyIncreasingSummary(s));
@@ -58,12 +56,13 @@ describe('queryFactory', () => {
 
   it('should create summaries describing weekday and weekend linear trends.', () => {
     const summaries = queryFactory(weekdayQuicklyIncreasingWeekendConstantPoints)();
-    const isWeekdayQuicklyIncreasingSummary = ({ text }) => text.includes('weekday') && text.includes('linearly quickly increasing');
-    const isWeekendConstantSummary = ({ text }) => text.includes('weekend') && text.includes('constant');
+    const isWeekdayQuicklyIncreasingSummary = isTextPartsInSummary('weekday', 'linearly quickly increasing');
+    const isWeekendConstantSummary = isTextPartsInSummary('weekend', 'constant');
+    const isOtherSummary = andNotSummaryFilters(isWeekdayQuicklyIncreasingSummary, isWeekendConstantSummary);
 
     const weekdayQuicklyIncreasingSummaries = summaries.filter(isWeekdayQuicklyIncreasingSummary);
     const weekendConstantSummarues = summaries.filter(isWeekendConstantSummary);
-    const otherSummaries = summaries.filter(s => !isWeekdayQuicklyIncreasingSummary(s) && !isWeekendConstantSummary(s));
+    const otherSummaries = summaries.filter(isOtherSummary);
 
     expect(weekdayQuicklyIncreasingSummaries.length).toBe(1);
     expect(weekdayQuicklyIncreasingSummaries.every(hasHighValidity)).toBeTrue();
