@@ -1,31 +1,44 @@
 import * as regression from 'regression';
 import * as math from 'mathjs';
-import { TimeSeriesPoint, NumPoint } from '../../metas/types';
+import { MembershipFunction } from './protoform';
+import { TimeSeriesPoint, NumPoint, XYPoint } from '../../metas/types';
 import { normalizePoints, pointToPair, pairToPoint } from '../utils/commons';
 import { timeSeriesPointToNumPoint } from '../utils/time-series';
 import { sum } from '../../../utils/misc';
 
-export interface LinearRegressionResult {
+export interface LinearModel {
+  /* The gradient of linear model, which is the coefficient m in equation y = mx + c */
   gradient: number;
+  /* The angle between the 2D linear model (slope) and x-axis in radius */
   gradientAngleRad: number;
+  /* The points with x-values from input points and predicted y-values */
   yIntercept: number;
   r2: number;
   prediction: NumPoint[];
+  /* The mean of absolute errors between y-values of input points and predicted y-values */
   absoluteErrorMean: number;
+  /* The standard deviation of absolute errors between y-values of input points and predicted y-values */
   absoluteErrorStd: number;
 }
 
-export function linearRegression(points: NumPoint[]): LinearRegressionResult {
+/**
+ * Create a linear model that the numerical X-Y points fit with coefficients m and c in equation
+ * y = mx + c with linear regression. It minimize the residual sum of squares between the y-values
+ * of input points, and the predicted y-values by the linear approximation.
+ *
+ * @param points The numerical X-Y points to fit a linear model
+ */
+export function createLinearModel(points: NumPoint[]): LinearModel {
   const pairs = points.map(pointToPair);
   const result = regression.linear(pairs);
   const gradient = result.equation[0];
   const yIntercept = result.equation[1];
   const r2 = result.r2;
   const gradientAngleRad = Math.atan(gradient);
-  const prediction = result.points.map(pairToPoint);
+  const prediction = model.points.map(pairToPoint);
 
-  const errors = points.map(({ y }, i) => {
-    return math.abs(y - prediction[i].y);
+  const errors = points.map((point, i) => {
+    return Math.abs(point.y - prediction[i].y);
   });
 
   const absoluteErrorMean = math.mean(errors);
@@ -49,16 +62,33 @@ export interface Cone2D {
 }
 
 export interface TimeSeriesPartialTrend {
-  idxStart: number;
-  idxEnd: number;
+  /* The index of the trend's first point in points array */
+  indexStart: number;
+  /* The index of the trend's last point in points array */
+  indexEnd: number;
+  /* The time (x-value) of the trend's first point */
   timeStart: Date;
+  /* The time (x-value) of the trend's last point */
   timeEnd: Date;
-  pctSpan: number;
+  /* The time span percentage of the trend to the total time span of points array */
+  percentageSpan: number;
+  /* The intersection of cones formed by the points belong to the trend */
   cone: Cone2D;
 }
 
-
-export function normalizedUniformPartiallyLinearEpsApprox(points: TimeSeriesPoint[], eps: number): TimeSeriesPartialTrend[] {
+/**
+ * Create an array of partial trend which approximate the normalized time-series points with uniform partially
+ * linear eps-approximation. The x-values and y-values of points are normalized first regarding the size of
+ * chart before extracting trends.
+ *
+ * Reference:
+ *  Kacprzyk, Janusz, Anna Wilbik, and S. Zadrożny. "Linguistic summarization of time series using a fuzzy quantifier driven aggregation.",
+ *    Fuzzy Sets and Systems 159.12 (2008): 1485-1499.
+ *
+ * @param points The time-series points to extract partial trends.
+ * @param eps Radius of circle around points when finding the intersection of cones for a partial trend.
+ */
+export function createPartialTrends(points: TimeSeriesPoint[], eps: number): TimeSeriesPartialTrend[] {
   const numPoints = points.map(timeSeriesPointToNumPoint);
   const normalizedPoints = normalizePoints(numPoints, {}, { min: 0 });
 
@@ -72,7 +102,7 @@ export function normalizedUniformPartiallyLinearEpsApprox(points: TimeSeriesPoin
     let coneij: Cone2D;
     while (j < normalizedPoints.length) {
       let k = j;
-      let coneik = calcCone(normalizedPoints[i], normalizedPoints[k], eps);
+      let coneik = createCone(normalizedPoints[i], normalizedPoints[k], eps);
       coneij = coneik;
       do {
         coneij = intersectCone(coneij, coneik) as Cone2D;
@@ -81,15 +111,15 @@ export function normalizedUniformPartiallyLinearEpsApprox(points: TimeSeriesPoin
         if (k === normalizedPoints.length) {
           break;
         }
-        coneik = calcCone(normalizedPoints[i], normalizedPoints[k], eps);
+        coneik = createCone(normalizedPoints[i], normalizedPoints[k], eps);
       } while (intersectCone(coneij, coneik) !== null);
 
       trends.push({
-        idxStart: i,
-        idxEnd: j,
+        indexStart: i,
+        indexEnd: j,
         timeStart: points[i].x,
         timeEnd: points[j].x,
-        pctSpan: normalizedPoints[j].x - normalizedPoints[i].x,
+        percentageSpan: normalizedPoints[j].x - normalizedPoints[i].x,
         cone: coneij,
       });
 
@@ -100,7 +130,7 @@ export function normalizedUniformPartiallyLinearEpsApprox(points: TimeSeriesPoin
   }
 }
 
-function calcCone(p1: NumPoint, p2: NumPoint, eps: number): Cone2D {
+function createCone(p1: NumPoint, p2: NumPoint, eps: number): Cone2D {
   const { x: x1, y: y1 } = p1;
   const { x: x2, y: y2 } = p2;
   const dx = x2 - x1;
@@ -133,18 +163,45 @@ function intersectCone(c1: Cone2D, c2: Cone2D): Cone2D | null {
   }
 }
 
-export function exponentialMovingAverage(points: TimeSeriesPoint[], alpha = 0.3): TimeSeriesPoint[] {
-  const N = points.length;
-  const ys = points.map(({ y }) => y);
+/**
+ * A function decorator that maps the cone angle of the input partial trend to the membership function.
+ *
+ * @param mf: The membership function that takes the cone angle as input.
+ */
+export function mapConeAngle(mf: MembershipFunction) {
+  return ({ cone }: TimeSeriesPartialTrend) => {
+    const coneAngleRadAverage = (cone.endAngleRad + cone.startAngleRad) / 2;
+    return mf(coneAngleRadAverage);
+  };
+}
 
-  const Ss = new Array(N).fill(0);
+/**
+ * Create an array of points with smoothed y-values using exponential moving average.
+ * The exponential moving average for a series of y-values(Y) are calculated with the following recursive formula:
+ * ```
+ * if (t == 0) {
+ *   S[t] = Y[0]
+ * } else {
+ *   S[t] = alpha * Y[t] + (1 - alpha) * Y[t - 1]
+ * }
+ * ```
+ *
+ * @param points The time-series points to apply exponential moving average.
+ * @param alpha The degree of weighting decrease, should be a constant smoothing factor between 0 and 1.
+ * A higher alpha discounts older observations faster.
+ */
+export function createExponentialMovingAveragePoints<T>(points: XYPoint<T, number>[], alpha = 0.3): XYPoint<T, number>[] {
+  const N = points.length;
+  const yValues = points.map(({ y }) => y);
+
+  const smoothedYValues: number[] = new Array(N);
   for (let i = 0; i < N; i++) {
-    Ss[i] = alpha * ys[i] + (1.0 - alpha) * (Ss[i - 1] ?? ys[i]);
+    smoothedYValues[i] = alpha * yValues[i] + (1.0 - alpha) * (smoothedYValues[i - 1] ?? yValues[i]);
   }
 
-  const smoothedPoints = Ss.map((S, i) => ({
+  const smoothedPoints = smoothedYValues.map((y, i) => ({
     x: points[i].x,
-    y: S,
+    y,
   }));
   return smoothedPoints;
 }

@@ -2,11 +2,12 @@ import { LineChartMeta } from './line-chart.meta';
 import { TabbedChartsMeta } from './tabbed-charts.meta';
 import { VRScatterplotMeta } from './vr-scatter-plot.meta';
 import { GeoMapMeta } from './geo-map.meta';
-
+import { A11yModuleImporter } from '../../directives/a11y/a11y.directive';
 
 export interface BaseMeta<T extends MetaType> {
   type: T;
   title: string;
+  a11yModuleImporters?: A11yModuleImporter[];
 }
 
 export interface DataMeta<T extends MetaType, QueryT> extends BaseMeta<T> {

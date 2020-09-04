@@ -1,4 +1,4 @@
-<!-- Creates an embedded scene element.
+<!-- Creates an embedded a-frame virtual reality scene element.
   - sets up controller tracking, models, and haptics.
   -places an interactable box object in the scene
 -->
@@ -6,8 +6,9 @@
   <a-assets></a-assets>
   <a-entity>
     <a-camera></a-camera>
-    <a-entity sphere-collider super-hands oculus-touch-controls="hand: left;" haptics="force: 0"></a-entity>
-    <a-entity sphere-collider super-hands oculus-touch-controls="hand: right;" haptics="force: 0"></a-entity>
+    <a-entity guide sphere-collider="radius: 0.001;" super-hands oculus-touch-controls="hand: left;" haptics="force: 0"></a-entity>
+    <a-entity guide sphere-collider="radius: 0.001;" super-hands oculus-touch-controls="hand: right;" haptics="force: 0"></a-entity>
   </a-entity>
-  <a-box hoverable grabbable stretchable draggable dropppable color="green" position="-1 0 -1"></a-box>
 </a-scene>
+
+
