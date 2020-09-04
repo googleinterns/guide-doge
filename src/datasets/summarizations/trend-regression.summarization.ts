@@ -1,5 +1,5 @@
 import * as math from 'mathjs';
-import { Summary } from './types';
+import { Summary, SummaryVariableOptionPair } from './types';
 import { TimeSeriesPoint } from '../metas/types';
 import { cacheSummaries } from './utils/commons';
 import {
@@ -78,7 +78,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const weekdayWeekendEqualValidity = sigmaCountQA(weekdayWeekendRatioPoints, uMostPercentage, uEqualTraffic);
 
 
-    const uLinearTrends: [string, MembershipFunction][] = [
+    const uLinearTrends: SummaryVariableOptionPair<MembershipFunction>[] = [
       ['quickly increasing', uQuicklyIncreasingLinearTrend],
       ['increasing', uIncreasingLinearTrend],
       ['constant', uConstantLinearTrend],

@@ -1,4 +1,4 @@
-import { Summary } from './types';
+import { Summary, SummaryVariableOptionPair } from './types';
 import { TimeSeriesPoint } from '../metas/types';
 import { cacheSummaries } from './utils/commons';
 import {
@@ -32,13 +32,13 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const uHalfPercentage = trapmf(0.3, 0.4, 0.6, 0.7);
     const uFewPercentage = trapmf(0.1, 0.2, 0.3, 0.4);
 
-    const uPercentages: [string, MembershipFunction][] = [
+    const uPercentages: SummaryVariableOptionPair<MembershipFunction>[] = [
       ['most', uMostPercentage],
       ['half', uHalfPercentage],
       ['few', uFewPercentage],
     ];
 
-    const uTrends: [string, PointMembershipFunction<TimeSeriesPartialTrend>][] = [
+    const uTrends: SummaryVariableOptionPair<PointMembershipFunction<TimeSeriesPartialTrend>>[] = [
       ['quickly increasing', uQuicklyIncreasingTrend],
       ['increasing', uIncreasingTrend],
       ['constant', uConstantTrend],

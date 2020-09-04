@@ -1,5 +1,5 @@
 import * as math from 'mathjs';
-import { Summary } from './types';
+import { Summary, SummaryVariableOptionPair } from './types';
 import { TimeSeriesPoint } from '../metas/types';
 import { cacheSummaries } from './utils/commons';
 import {
@@ -28,7 +28,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       trapmf(-chartDiagonalAngle / 4, -chartDiagonalAngle / 8, chartDiagonalAngle / 8, chartDiagonalAngle / 4));
     const uDecreasingDynamic = mapConeAngle(trapmfR(-chartDiagonalAngle / 4, -chartDiagonalAngle / 8));
 
-    const uDynamics: [string, PointMembershipFunction<TimeSeriesPartialTrend>][] = [
+    const uDynamics: SummaryVariableOptionPair<PointMembershipFunction<TimeSeriesPartialTrend>>[] = [
       ['increased', uIncreasingDynamic],
       ['similar', uConstantDynamic],
       ['decreased', uDecreasingDynamic],
