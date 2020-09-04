@@ -1,5 +1,6 @@
 @import "./utils/constants";
 @import "https://fonts.googleapis.com/css2?family=Quicksand:wght@700&family=Roboto:wght@300;500&display=swap";
+@import "./d3";
 
 @include mat-core();
 @include angular-material-theme($guide-doge-theme);
@@ -59,4 +60,10 @@ kbd {
   line-height: 1;
   padding: 2px 4px;
   white-space: nowrap;
+}
+
+a {
+  color: mat-color($guide-doge-primary);
+  font-weight: 500;
+  cursor: pointer;
 }

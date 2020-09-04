@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core';
-import { SummarizationDirective } from './summarization.directive';
+import { A11yDirective } from './a11y.directive';
 import { PreferenceModule } from '../../services/preference/preference.module';
 
 @NgModule({
   declarations: [
-    SummarizationDirective,
+    A11yDirective,
   ],
   imports: [
     PreferenceModule,
   ],
   exports: [
-    SummarizationDirective,
+    A11yDirective,
   ],
 })
-export class SummarizationModule {
+export class A11yModule {
 }

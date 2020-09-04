@@ -1,0 +1,26 @@
+@import "../utils/constants";
+
+$color-land: #EEEEEE;
+$color-boundary: #DDDDDD;
+$color-border: #CCCCCC;
+$color-active: #AAAAAA;
+
+.geo_map-land {
+  fill: $color-land;
+}
+
+.geo_map-boundary {
+  fill: none;
+  stroke: $color-boundary;
+  stroke-width: 1px;
+}
+
+.geo_map-territory {
+  stroke: $color-border;
+  cursor: pointer;
+
+  &.active {
+    stroke: $color-active;
+    stroke-width: 2px;
+  }
+}
