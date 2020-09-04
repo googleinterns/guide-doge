@@ -29,6 +29,9 @@ export interface ScatterPlotMeta<T extends MetaType, QueryT> extends DataMeta<T,
   yLabel?: string;
   zLabel?: string;
 }
+export type TimeSeriesPoint = XYPoint<Date, number>;
+
+export type NumPoint = XYPoint<number, number>;
 
 export interface ScatterPoint<S> {
   categories: S;

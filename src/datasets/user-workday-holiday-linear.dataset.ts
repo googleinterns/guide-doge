@@ -9,10 +9,14 @@ import { DAY } from '../utils/timeUnits';
 import { combineQuerySummariesFactories } from './summarizations/utils/commons';
 import * as WorkdayHolidayAbsoluteSummarization from './summarizations/workday-holiday-absolute.summarization';
 import * as WorkdayHolidayRelativeSummarization from './summarizations/workday-holiday-relative.summarization';
+import * as TrendSummarization from './summarizations/trend.summarization';
+import * as TrendRegressionSummarization from './summarizations/trend-regression.summarization';
+
 
 export interface Config {
   dailyWeightStd: number;
   workdayHolidayActiveRatio: number;
+  linearIncreasingFactor: number;
 }
 
 export const configMeta: PreferenceMeta<Config> = {
@@ -23,6 +27,10 @@ export const configMeta: PreferenceMeta<Config> = {
   workdayHolidayActiveRatio: {
     type: 'number',
     defaultValue: 10,
+  },
+  linearIncreasingFactor: {
+    type: 'number',
+    defaultValue: 5,
   },
 };
 
@@ -42,9 +50,16 @@ export function create(config: Config): Dataset {
   const {
     dailyWeightStd,
     workdayHolidayActiveRatio,
+    linearIncreasingFactor,
   } = config;
 
-  const dateCategory = generateDateCategory(startDate, endDate, dailyWeightStd, workdayHolidayActiveRatio);
+  const dateCategory = generateDateCategory(
+    startDate,
+    endDate,
+    dailyWeightStd,
+    workdayHolidayActiveRatio,
+    linearIncreasingFactor,
+  );
 
   const visitCountMeasure: Measure = {
     name: 'visitCount',
@@ -69,8 +84,8 @@ export function create(config: Config): Dataset {
   const dataCube = generateCube(categories, measures, generateCubeConfig);
 
   const visitCountQuerySummariesFactory = combineQuerySummariesFactories(
-    WorkdayHolidayAbsoluteSummarization.queryFactory,
-    WorkdayHolidayRelativeSummarization.queryFactory,
+    TrendSummarization.queryFactory,
+    TrendRegressionSummarization.queryFactory,
   );
 
   const lineChartMeta = createLineChartMeta(
@@ -93,29 +108,46 @@ export function create(config: Config): Dataset {
 }
 
 
-function generateDateCategory(startDate: Date, endDate: Date, dailyVariance: number, workdayToHolidayUserActiveRatio: number): Category {
+function generateDateCategory(
+  startDate: Date,
+  endDate: Date,
+  dailyVariance: number,
+  workdayToHolidayUserActiveRatio: number,
+  linearIncreasingFactor: number,
+): Category {
   const dailyThunk = random.normal(0, dailyVariance);
   const values: CategoryValue[] = [];
-  const date = new Date(startDate);
 
   const holidayWeightMean = 1;
   const workdayWeightMean = workdayToHolidayUserActiveRatio * holidayWeightMean;
   const normalizeFactor = 1 / (holidayWeightMean * 2 + workdayWeightMean * 5);
 
+  const date = new Date(startDate);
   for (let i = 0; date <= endDate; i++) {
+    let weight = Math.pow(i, Math.abs(linearIncreasingFactor));
+
     if (date.getDay() === 0 || date.getDay() === 6) {
-      values.push({
-        name: date.getTime(),
-        weight: Math.max(holidayWeightMean + dailyThunk(), 0) * normalizeFactor * Math.exp(i / 10),
-      });
+      weight *= Math.max(holidayWeightMean + dailyThunk(), 0) * normalizeFactor;
     } else {
-      values.push({
-        name: date.getTime(),
-        weight: Math.max(workdayWeightMean + dailyThunk()) * normalizeFactor * Math.exp(i / 10),
-      });
+      weight *= Math.max(workdayWeightMean + dailyThunk()) * normalizeFactor;
     }
+
+    values.push({
+      name: date.getTime(),
+      weight
+    });
     date.setTime(date.getTime() + DAY);
   }
+
+  if (linearIncreasingFactor < 0) {
+    for (let i = 0; i < values.length / 2; i++) {
+      const j = values.length - i - 1;
+      const t =  values[j].weight;
+      values[j].weight = values[i].weight;
+      values[i].weight = t;
+    }
+  }
+
 
   return {
     name: 'date',

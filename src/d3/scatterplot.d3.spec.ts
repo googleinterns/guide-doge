@@ -1,5 +1,5 @@
 import { Scatterplot } from './scatterplot.d3';
-import { TimeSeriesPoint } from '../datasets/queries/time-series.query';
+import { TimeSeriesPoint } from '../datasets/metas/types';
 import { VRScatterPoint } from '../datasets/queries/vr.query';
 import { MetaType } from '../datasets/metas/types';
 import * as AFRAME from 'aframe';

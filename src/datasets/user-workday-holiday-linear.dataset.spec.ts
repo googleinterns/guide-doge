@@ -1,17 +1,17 @@
-import * as UserWorkdayHolidayExpDataset from './user-workday-holiday-exp.dataset';
+import * as UserWorkdayHolidayLinearDataset from './user-workday-holiday-linear.dataset';
 import { Dataset } from './types';
 import { createDefault } from '../utils/preferences';
 import { DAY } from '../utils/timeUnits';
 import { DataCube } from '../models/data-cube/data-cube.model';
 import { Meta, MetaType } from './metas/types';
 
-describe('UserWorkdayHolidayExpDataset', () => {
+describe('UserWorkdayHolidayLinearDataset', () => {
   let dataset: Dataset;
   let currentTime: number;
 
   beforeEach(() => {
-    const config = createDefault(UserWorkdayHolidayExpDataset.configMeta);
-    dataset = UserWorkdayHolidayExpDataset.create(config);
+    const config = createDefault(UserWorkdayHolidayLinearDataset.configMeta);
+    dataset = UserWorkdayHolidayLinearDataset.create(config);
     currentTime = Date.now();
   });
 

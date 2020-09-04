@@ -1,5 +1,5 @@
 import { Summary } from './types';
-import { TimeSeriesPoint } from '../queries/time-series.query';
+import { TimeSeriesPoint } from '../metas/types';
 import { cacheSummaries } from './utils/commons';
 import {
   PointMembershipFunction,

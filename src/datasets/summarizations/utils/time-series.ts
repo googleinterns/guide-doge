@@ -1,4 +1,4 @@
-import { TimeSeriesPoint } from '../../queries/time-series.query';
+import { TimeSeriesPoint } from '../../metas/types';
 import { DAY, WEEK } from '../../../utils/timeUnits';
 
 /**
@@ -45,3 +45,11 @@ export function groupPointsByXWeek(points: TimeSeriesPoint[]): TimeSeriesPoint[]
   const sortedWeekPointPairs = Object.entries(weekPoints).sort(([wa], [wb]) => Number(wa) - Number(wb));
   return sortedWeekPointPairs.map(([_, currentWeekPoints]) => currentWeekPoints);
 }
+
+export function timeSeriesPointToNumPoint(point: TimeSeriesPoint) {
+  return {
+    x: point.x.getTime(),
+    y: point.y,
+  };
+}
+

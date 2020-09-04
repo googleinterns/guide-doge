@@ -1,5 +1,5 @@
 import { queryFactory } from './workday-holiday-absolute.summarization';
-import { TimeSeriesPoint } from '../queries/time-series.query';
+import { TimeSeriesPoint } from '../metas/types';
 
 describe('queryFactory', () => {
   const points: TimeSeriesPoint[] = [];

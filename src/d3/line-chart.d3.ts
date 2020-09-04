@@ -1,7 +1,7 @@
 import { XYChartD3 } from './xy-chart.d3';
 import * as d3 from 'd3';
 import { LineChartDatum } from '../components/line-chart/line-chart.component';
-import { TimeSeriesPoint } from '../datasets/queries/time-series.query';
+import { TimeSeriesPoint } from '../datasets/metas/types';
 
 export interface LegendItemStyle {
   color: string;

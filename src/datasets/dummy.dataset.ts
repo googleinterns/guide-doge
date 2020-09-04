@@ -5,6 +5,7 @@ import { DAY } from '../utils/timeUnits';
 import { XYPoint } from './metas/types';
 import { createLineChartMeta } from './metas/line-chart.meta';
 import { TimeSeriesQueryOptions } from './queries/time-series.query';
+import * as TrendSummarization from './summarizations/trend.summarization';
 
 export interface Config {
   offset: number;
@@ -17,14 +18,22 @@ export const configMeta: PreferenceMeta<Config> = {
   },
 };
 
+/**
+ * Creates an exponential growth dataset with daily granularity.
+ * Start date is 100 days ago and end date is today.
+ */
 export function create(config: Config): Dataset {
-  const time = new Date(Date.now() - 100 * DAY);
-  const data: XYPoint<Date, number>[] = [];
-  const rand = random.normal(0, 500);
-  for (let i = 1; i <= 100; i++) {
-    data.push({
-      x: new Date(time.getTime() + i * DAY),
-      y: Math.exp(i / 10) + config.offset + rand(),
+  const pointsLength = 100;
+  const expContinuousGrowthRate = 0.1;
+
+  const points: XYPoint<Date, number>[] = [];
+  const startDate = new Date(Date.now() - pointsLength * DAY);
+  const rand = random.normal(0, 250);
+
+  for (let i = 1; i <= pointsLength; i++) {
+    points.push({
+      x: new Date(startDate.getTime() + i * DAY),
+      y: Math.exp(i * expContinuousGrowthRate) + config.offset + rand(),
     });
   }
 
@@ -32,7 +41,8 @@ export function create(config: Config): Dataset {
     'Line Chart',
     (options: TimeSeriesQueryOptions) => [{
       label: 'Dummy Data',
-      points: data,
+      points,
+      querySummaries: TrendSummarization.queryFactory(points),
     }],
   );
 
