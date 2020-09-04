@@ -143,7 +143,7 @@ describe('createPartialTrends', () => {
   });
 });
 
-describe('exponentialMovingAverage', () => {
+describe('createExponentialMovingAveragePoints', () => {
 
   const testData = [
     {
