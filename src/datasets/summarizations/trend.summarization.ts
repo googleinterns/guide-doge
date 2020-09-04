@@ -21,12 +21,12 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       return f(avgAngleRad) * percentageSpan * partialTrends.length;
     };
 
-    const uQuicklyIncreasingTrend = applyTrendAngleWithWeight(trapmfL(chartDiagonalAngle / 2, chartDiagonalAngle * 3 / 5));
-    const uIncreasingTrend = applyTrendAngleWithWeight(trapmfL(chartDiagonalAngle / 8, chartDiagonalAngle / 4));
-    const uConstantTrend = applyTrendAngleWithWeight(
+    const uQuicklyIncreasingDynamic = applyTrendAngleWithWeight(trapmfL(chartDiagonalAngle / 2, chartDiagonalAngle * 3 / 5));
+    const uIncreasingDynamic = applyTrendAngleWithWeight(trapmfL(chartDiagonalAngle / 8, chartDiagonalAngle / 4));
+    const uConstantDynamic = applyTrendAngleWithWeight(
       trapmf(-chartDiagonalAngle / 4, -chartDiagonalAngle / 8, chartDiagonalAngle / 8, chartDiagonalAngle / 4));
-    const uDecreasingTrend = applyTrendAngleWithWeight(trapmfR(-chartDiagonalAngle / 4, -chartDiagonalAngle / 8));
-    const uQuicklyDecreasingTrend = applyTrendAngleWithWeight(trapmfR(-chartDiagonalAngle * 3 / 5, -chartDiagonalAngle / 2));
+    const uDecreasingDynamic = applyTrendAngleWithWeight(trapmfR(-chartDiagonalAngle / 4, -chartDiagonalAngle / 8));
+    const uQuicklyDecreasingDynamic = applyTrendAngleWithWeight(trapmfR(-chartDiagonalAngle * 3 / 5, -chartDiagonalAngle / 2));
 
     const uMostPercentage = trapmfL(0.6, 0.7);
     const uHalfPercentage = trapmf(0.3, 0.4, 0.6, 0.7);
@@ -38,20 +38,20 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       ['few', uFewPercentage],
     ];
 
-    const uTrends: SummaryVariableOptionPair<PointMembershipFunction<TimeSeriesPartialTrend>>[] = [
-      ['quickly increasing', uQuicklyIncreasingTrend],
-      ['increasing', uIncreasingTrend],
-      ['constant', uConstantTrend],
-      ['decreasing', uDecreasingTrend],
-      ['quickly decreasing', uQuicklyDecreasingTrend],
+    const uDynamics: SummaryVariableOptionPair<PointMembershipFunction<TimeSeriesPartialTrend>>[] = [
+      ['quickly increasing', uQuicklyIncreasingDynamic],
+      ['increasing', uIncreasingDynamic],
+      ['constant', uConstantDynamic],
+      ['decreasing', uDecreasingDynamic],
+      ['quickly decreasing', uQuicklyDecreasingDynamic],
     ];
 
     const summaries: Summary[] = [];
     for (const [quantifier, uPercentage] of uPercentages) {
-      for (const [trend, uTrend] of uTrends) {
-        const t = sigmaCountQA(partialTrends, uPercentage, uTrend);
+      for (const [dynamic, uDynamic] of uDynamics) {
+        const t = sigmaCountQA(partialTrends, uPercentage, uDynamic);
         summaries.push({
-          text: `trends that took <b>${quantifier}</b> of the time are <b>${trend}</b>.`,
+          text: `trends that took <b>${quantifier}</b> of the time are <b>${dynamic}</b>.`,
           validity: t
         });
       }
