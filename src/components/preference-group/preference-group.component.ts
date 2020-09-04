@@ -30,7 +30,7 @@ export class PreferenceGroupComponent<T extends Preference> {
       return [];
     }
     const properties = Object.keys(this.preference$.value) as (keyof T)[];
-    return properties.filter(property => property !== 'enabled' && property !== '_meta');
+    return properties.filter(property => property !== 'enabled' && property[0] !== '_');
   }
 
   getI18nValue(key: keyof T) {

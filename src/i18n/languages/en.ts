@@ -2,11 +2,12 @@ import {
   AUDIFICATION,
   AUDIFICATION_PREFERENCE,
   DATA_PREFERENCE,
-  DATA_TABLE_PREFERENCE,
+  GEO_MAP_NAVIGATION,
+  GEO_MAP_NAVIGATION_PREFERENCE,
   GUIDE_DOGE,
   I18n,
-  SUMMARIZATION_PREFERENCE,
   PUNCTUATION,
+  SUMMARIZATION_PREFERENCE,
 } from '../types';
 
 export const en: I18n = {
@@ -29,10 +30,10 @@ export const en: I18n = {
       `The current legend item is '%(label)s'.`,
       en[AUDIFICATION.DOMAIN],
       en[AUDIFICATION.RANGE],
-      'Press <kbd>?</kbd> to read out the instructions.',
     ].join(' <br/>');
   },
   [AUDIFICATION.DOMAIN_UNIT_DAY]: 'a day',
+  [AUDIFICATION.BREAK_SILENCE]: 'Press <kbd>?</kbd> to read out the instructions.',
 
   [DATA_PREFERENCE.enabled]: 'Data Generator',
   [DATA_PREFERENCE.name]: 'Dataset',
@@ -51,8 +52,26 @@ export const en: I18n = {
   [AUDIFICATION_PREFERENCE.readBefore]: 'Read out before playing',
   [AUDIFICATION_PREFERENCE.readAfter]: 'Read out after playing',
 
-  [DATA_TABLE_PREFERENCE.enabled]: 'Data Table',
+  [GEO_MAP_NAVIGATION_PREFERENCE.enabled]: 'Geo Map Navigation',
 
   [SUMMARIZATION_PREFERENCE.enabled]: 'Text Summarization',
+
   [PUNCTUATION.QUESTION_MARK]: 'QUESTION MARK',
+  [PUNCTUATION.SLASH]: 'SLASH',
+  [PUNCTUATION.PLUS]: 'PLUS',
+  [PUNCTUATION.HYPHEN]: 'MINUS',
+
+  [GEO_MAP_NAVIGATION.INSTRUCTIONS]: [
+    'Press <kbd>/</kbd> to search a territory name.',
+    'Press <kbd>+</kbd> or <kbd>-</kbd> to change the primary dimension.',
+    'Press <kbd>ENTER</kbd> to enter the selected subordinate territory.',
+    'Press <kbd>SHIFT</kbd> + <kbd>ENTER</kbd> to exit to the superordinate territory.',
+    'Press <kbd>UP</kbd> or <kbd>DOWN</kbd> to switch among subordinate territories.',
+    'Press <kbd>LEFT</kbd> or <kbd>RIGHT</kbd> to switch among measures.',
+  ].join(' <br/>'),
+  [GEO_MAP_NAVIGATION.UNIT_AND_FILTERING_TERRITORY]: '%(unit)s in %(hierarchical_territories)s.',
+  [GEO_MAP_NAVIGATION.BREAK_SILENCE]: 'Press <kbd>?</kbd> to read out the instructions.',
+  [GEO_MAP_NAVIGATION.ACTIVE_DATUM]: '%(territory)s has %(value)f %(measure)s.',
+  [GEO_MAP_NAVIGATION.ACTIVE_MEASURE]: '%(measure)s of %(value)f in %(territory)s.',
+  [GEO_MAP_NAVIGATION.NOTHING_SELECTED]: 'No territory has been selected.',
 };

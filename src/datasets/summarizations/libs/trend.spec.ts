@@ -76,7 +76,7 @@ describe('createLinearModel', () => {
   });
 });
 
-describe('normalizedUniformPartiallyLinearEpsApprox', () => {
+describe('createPartialTrends', () => {
   const testData: [TimeSeriesPoint[], number][] = [
     [
       [
