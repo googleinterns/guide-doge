@@ -209,16 +209,16 @@ export function createExponentialMovingAveragePoints<T>(points: XYPoint<T, numbe
 }
 
 export function createCenteredMovingAveragePoints(points: TimeSeriesPoint[], k: number): TimeSeriesPoint[] {
-  const L = points.length;
+  const numOfPoints = points.length;
   const smoothedPoints: TimeSeriesPoint[] = [];
   for (let i = 0; i < points.length; i++) {
-    const lSumPoints = points.slice(Math.max(0, i - k), Math.min(L, i + k));
-    const rSumPoints = points.slice(Math.max(0, i - k + 1), Math.min(L, i + k + 1));
+    const leftPoints = points.slice(Math.max(0, i - k), Math.min(numOfPoints, i + k));
+    const rightPoints = points.slice(Math.max(0, i - k + 1), Math.min(numOfPoints, i + k + 1));
 
-    const lSum = sum(lSumPoints.map(({ y }) => y));
-    const rSum = sum(rSumPoints.map(({ y }) => y));
+    const leftPointsSum = sum(leftPoints.map(({ y }) => y));
+    const rightPointsSum = sum(rightPoints.map(({ y }) => y));
 
-    const smoothedY = 0.5 * (lSum / lSumPoints.length + rSum / rSumPoints.length);
+    const smoothedY = 0.5 * (leftPointsSum / leftPoints.length + rightPointsSum / rightPoints.length);
     smoothedPoints.push({
       x: points[i].x,
       y: smoothedY,
@@ -247,20 +247,24 @@ export function additiveDecomposite(
   const groups: Record<GroupIdentifier, TimeSeriesPoint[]> = {};
 
   for (const point of detrendPoints) {
-    const gid = groupFn(point);
-    groups[gid] = [point, ...(groups[gid] ?? [])];
+    const groupId = groupFn(point);
+    if (!groups[groupId]) {
+      groups[groupId] = [point];
+    } else {
+      groups[groupId].push(point);
+    }
   }
 
-  const groupAverages: Record<GroupIdentifier, number> = {};
-  for (const [gid, gpoints] of Object.entries(groups)) {
-    const s = sum(gpoints.map(({ y }) => y));
-    const average = s / gpoints.length;
-    groupAverages[gid] = average;
+  const groupYAverages: Record<GroupIdentifier, number> = {};
+  for (const [groupId, groupPoints] of Object.entries(groups)) {
+    const groupYSum = sum(groupPoints.map(({ y }) => y));
+    const groupYAverage = groupYSum / groupPoints.length;
+    groupYAverages[groupId] = groupYAverage;
   }
 
   const seasonPoints = points.map(({ x, y }) => ({
     x,
-    y: groupAverages[groupFn({ x, y })],
+    y: groupYAverages[groupFn({ x, y })],
   }));
   const residualPoints = points.map(({ x, y }, i) => ({
     x,
