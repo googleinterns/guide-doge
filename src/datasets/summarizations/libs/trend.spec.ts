@@ -1,5 +1,11 @@
 import * as math from 'mathjs';
-import { createLinearModel, createPartialTrends, LinearModel, createExponentialMovingAveragePoints } from './trend';
+import {
+  createLinearModel,
+  createPartialTrends,
+  createExponentialMovingAveragePoints,
+  createCenteredMovingAveragePoints,
+  LinearModel,
+} from './trend';
 import { NumPoint, TimeSeriesPoint } from '../../metas/types';
 
 describe('createLinearModel', () => {
@@ -216,6 +222,74 @@ describe('createExponentialMovingAveragePoints', () => {
     const alpha = 1.0;
 
     const result = createExponentialMovingAveragePoints(points, alpha);
+
+    expect(result.length).toBe(points.length);
+    for (let i = 0; i < result.length; i++) {
+      expect(result[i].x).toBe(points[i].x);
+    }
+  });
+});
+
+
+describe('createCenteredMovingAveragePoints', () => {
+
+  const testData = [
+    {
+      points: [{ x: 1, y: 1 }, { x: 2, y: 1 }, { x: 3, y: 1 }],
+      k: 1,
+      expectedResult: [{ x: 1, y: 1 }, { x: 2, y: 1 }, { x: 3, y: 1 }],
+    },
+    {
+      points: [{ x: 1, y: 1 }, { x: 2, y: 2 }, { x: 3, y: 3 }],
+      k: 1,
+      expectedResult: [{ x: 1, y: 1.25 }, { x: 2, y: 2 }, { x: 3, y: 2.75 }],
+    },
+    {
+      points: [{ x: 1, y: 1 }, { x: 2, y: 2 }, { x: 3, y: 3 }],
+      k: 2,
+      expectedResult: [{ x: 1, y: 1.75 }, { x: 2, y: 2 }, { x: 3, y: 2.25 }],
+    },
+    {
+      points: [{ x: 1, y: 1 }, { x: 2, y: 2 }, { x: 3, y: 3 }],
+      k: 3,
+      expectedResult: [{ x: 1, y: 2 }, { x: 2, y: 2 }, { x: 3, y: 2 }],
+    },
+    {
+      points: [{ x: 1, y: 1 }, { x: 2, y: 7 }, { x: 3, y: 2 }, { x: 4, y: 8 }, { x: 5, y: 3 }],
+      k: 2,
+      expectedResult: [
+        { x: 1, y: 3.6667 },
+        { x: 2, y: 3.9167 },
+        { x: 3, y: 4.75 },
+        { x: 4, y: 4.6667 },
+        { x: 5, y: 4.9167 },
+      ],
+    },
+  ];
+
+  it('should return correct result.', () => {
+    for (const { points, k, expectedResult } of testData) {
+      const result = createCenteredMovingAveragePoints(points, k);
+
+      expect(result.length).toBe(expectedResult.length);
+      for (let i = 0; i < result.length; i++) {
+        expect(result[i].x).toBe(expectedResult[i].x);
+        expect(result[i].y).toBeCloseTo(expectedResult[i].y, 4);
+      }
+    }
+  });
+
+  it('should return x-values of input points.', () => {
+    const points = [
+      { x: new Date(2020, 6, 1), y: 1 },
+      { x: new Date(2020, 6, 2), y: 2 },
+      { x: new Date(2020, 6, 3), y: 3 },
+      { x: new Date(2020, 6, 4), y: 4 },
+      { x: new Date(2020, 6, 5), y: 5 },
+    ];
+    const k = 2;
+
+    const result = createCenteredMovingAveragePoints(points, k);
 
     expect(result.length).toBe(points.length);
     for (let i = 0; i < result.length; i++) {

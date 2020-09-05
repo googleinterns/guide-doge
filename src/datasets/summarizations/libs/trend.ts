@@ -218,9 +218,9 @@ export function createExponentialMovingAveragePoints<T>(points: XYPoint<T, numbe
  * @param k The half window (period) size for computing the left and right average for element
  * in the points array. The actual window (period) size is equal to 2*k.
  */
-export function createCenteredMovingAveragePoints(points: TimeSeriesPoint[], k: number): TimeSeriesPoint[] {
+export function createCenteredMovingAveragePoints<T>(points: XYPoint<T, number>[], k: number): XYPoint<T, number>[] {
   const numOfPoints = points.length;
-  const smoothedPoints: TimeSeriesPoint[] = [];
+  const smoothedPoints: XYPoint<T, number>[] = [];
   for (let i = 0; i < points.length; i++) {
     const leftPoints = points.slice(Math.max(0, i - k), Math.min(numOfPoints, i + k));
     const rightPoints = points.slice(Math.max(0, i - k + 1), Math.min(numOfPoints, i + k + 1));
