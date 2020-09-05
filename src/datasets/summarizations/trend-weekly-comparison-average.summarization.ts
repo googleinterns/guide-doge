@@ -1,4 +1,5 @@
 
+import * as math from 'mathjs';
 import { Summary } from './types';
 import { TimeSeriesPoint } from '../metas/types';
 import { cacheSummaries } from './utils/commons';
@@ -14,14 +15,16 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const weekPointArrays = groupPointsByXWeek(points).filter(weekPoints => weekPoints.length >= 4);
     const numOfWeeks = weekPointArrays.length;
 
-    const weekAverages = weekPointArrays.map(weekPoints => weekPoints.reduce((p, { y }) => p + y, 0) / weekPoints.length);
+    const weekYAverages = weekPointArrays.map(weekPoints =>
+      math.mean(weekPoints.map(({ y }) => y))
+    );
 
     const ordinalTexts = ['first', 'second', 'third', 'fourth', 'fifth'];
 
     const summaries: Summary[] = [];
 
     for (let i = 0; i < numOfWeeks - 1; i++) {
-      const percentageIncrease = (weekAverages[i + 1] - weekAverages[i]) / weekAverages[i] * 100;
+      const percentageIncrease = (weekYAverages[i + 1] - weekYAverages[i]) / weekYAverages[i] * 100;
       const percentageChangeDescriptor = percentageIncrease >= 0 ? 'more' : 'less';
       const percentageIncreaseAbsolute = Math.abs(percentageIncrease);
       const percentageChangeText = percentageIncreaseAbsolute > 5
