@@ -299,7 +299,7 @@ describe('createCenteredMovingAveragePoints', () => {
   });
 });
 
-fdescribe('additiveDecomposite', () => {
+describe('additiveDecomposite', () => {
 
   const testData = [
     {
