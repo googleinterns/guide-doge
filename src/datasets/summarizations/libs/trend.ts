@@ -187,7 +187,7 @@ export function mapConeAngle(mf: MembershipFunction) {
  * }
  * ```
  *
- * @param points The time-series points to apply exponential moving average.
+ * @param points The points to apply exponential moving average.
  * @param alpha The degree of weighting decrease, should be a constant smoothing factor between 0 and 1.
  * A higher alpha discounts older observations faster.
  */
@@ -214,7 +214,7 @@ export function createExponentialMovingAveragePoints<T>(points: XYPoint<T, numbe
  *
  * Reference: https://www.itl.nist.gov/div898/handbook/pmc/section4/pmc422.htm
  *
- * @param points The time-series points to apply centered moving average.
+ * @param points The points to apply centered moving average.
  * @param k The half window (period) size for computing the left and right average for element
  * in the points array. The actual window (period) size is equal to 2*k.
  */
@@ -238,30 +238,50 @@ export function createCenteredMovingAveragePoints<T>(points: XYPoint<T, number>[
 }
 
 export type GroupIdentifier = string | number;
-export interface DecompositionResult {
-  detrendPoints: TimeSeriesPoint[];
-  seasonPoints: TimeSeriesPoint[];
-  residualPoints: TimeSeriesPoint[];
+
+export interface DecompositionResult<T> {
+  detrendedPoints: XYPoint<T, number>[];
+  seasonalPoints: XYPoint<T, number>[];
+  residualPoints: XYPoint<T, number>[];
 }
 
-export function additiveDecomposite(
-  points: TimeSeriesPoint[],
-  trendPoints: TimeSeriesPoint[],
-  groupFn: (point: TimeSeriesPoint) => GroupIdentifier): DecompositionResult {
+/**
+ * Create the detrended, seasonal, and residual points from the input points and trend points arrays with
+ * additive decomposition. The relationships between the input and output are formualted in the following
+ * equations:
+ * - `DetrendedPoints[i].y = Points[i].y - TrendPoints[i].y`
+ * - `Points[i].y = TrendPoints[i].y + SeasonalPoints[i].y + ResidualPoints[i].y`
+ *
+ * Reference:
+ * - https://medium.com/better-programming/a-visual-guide-to-time-series-decomposition-analysis-a1472bb9c930
+ * - https://machinelearningmastery.com/decompose-time-series-data-trend-seasonality/
+ *
+ * @param points The time-series points to apply centered moving average.
+ * @param trendPoints The trend points of the input points array. It can be created by applying smoothing
+ * algorithm on the points array.
+ * @param groupFn The grouping function for computing the seasonal points. It takes a point an return a
+ * group identifier. Points with the same group identifier will be assigned into the same group when computing
+ * the y-value of seasonal point for this group. The group identifier can be created regarding the x-value of the
+ * input point.
+ */
+export function additiveDecomposite<T>(
+  points: XYPoint<T, number>[],
+  trendPoints: XYPoint<T, number>[],
+  groupFn: (point: XYPoint<T, number>) => GroupIdentifier): DecompositionResult<T> {
 
-  const detrendPoints = points.map(({ x, y }, i) => ({
+  const detrendedPoints = points.map(({ x, y }, i) => ({
     x,
     y: y - trendPoints[i].y,
   }));
 
-  const groups: Record<GroupIdentifier, TimeSeriesPoint[]> = {};
+  const groups: Record<GroupIdentifier, XYPoint<T, number>[]> = {};
 
-  for (const point of detrendPoints) {
-    const groupId = groupFn(point);
+  for (const detrendedPoint of detrendedPoints) {
+    const groupId = groupFn(detrendedPoint);
     if (!groups[groupId]) {
-      groups[groupId] = [point];
+      groups[groupId] = [detrendedPoint];
     } else {
-      groups[groupId].push(point);
+      groups[groupId].push(detrendedPoint);
     }
   }
 
@@ -272,18 +292,18 @@ export function additiveDecomposite(
     groupYAverages[groupId] = groupYAverage;
   }
 
-  const seasonPoints = points.map(({ x, y }) => ({
+  const seasonalPoints = points.map(({ x, y }) => ({
     x,
     y: groupYAverages[groupFn({ x, y })],
   }));
   const residualPoints = points.map(({ x, y }, i) => ({
     x,
-    y: y - trendPoints[i].y - seasonPoints[i].y,
+    y: y - trendPoints[i].y - seasonalPoints[i].y,
   }));
 
   return {
-    detrendPoints,
-    seasonPoints,
+    detrendedPoints,
+    seasonalPoints,
     residualPoints,
   };
 }
