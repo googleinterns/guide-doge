@@ -216,7 +216,7 @@ export function createExponentialMovingAveragePoints<T>(points: XYPoint<T, numbe
  *
  * @param points The points to apply centered moving average.
  * @param k The half window (period) size for computing the left and right average for element
- * in the points array. The actual window (period) size is equal to 2*k.
+ * in the points array, should be a positive integer. The actual window (period) size is equal to 2*k.
  */
 export function createCenteredMovingAveragePoints<T>(points: XYPoint<T, number>[], k: number): XYPoint<T, number>[] {
   const numOfPoints = points.length;
