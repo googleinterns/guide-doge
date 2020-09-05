@@ -4,7 +4,6 @@ import { MembershipFunction } from './protoform';
 import { TimeSeriesPoint, NumPoint, XYPoint } from '../../metas/types';
 import { normalizePoints, pointToPair, pairToPoint } from '../utils/commons';
 import { timeSeriesPointToNumPoint } from '../utils/time-series';
-import { sum } from '../../../utils/misc';
 
 export interface LinearModel {
   /* The gradient of linear model, which is the coefficient m in equation y = mx + c */
@@ -215,8 +214,8 @@ export function createCenteredMovingAveragePoints(points: TimeSeriesPoint[], k: 
     const leftPoints = points.slice(Math.max(0, i - k), Math.min(numOfPoints, i + k));
     const rightPoints = points.slice(Math.max(0, i - k + 1), Math.min(numOfPoints, i + k + 1));
 
-    const leftPointsSum = sum(leftPoints.map(({ y }) => y));
-    const rightPointsSum = sum(rightPoints.map(({ y }) => y));
+    const leftPointsSum = math.sum(leftPoints.map(({ y }) => y));
+    const rightPointsSum = math.sum(rightPoints.map(({ y }) => y));
 
     const smoothedY = 0.5 * (leftPointsSum / leftPoints.length + rightPointsSum / rightPoints.length);
     smoothedPoints.push({
@@ -257,7 +256,7 @@ export function additiveDecomposite(
 
   const groupYAverages: Record<GroupIdentifier, number> = {};
   for (const [groupId, groupPoints] of Object.entries(groups)) {
-    const groupYSum = sum(groupPoints.map(({ y }) => y));
+    const groupYSum = math.sum(groupPoints.map(({ y }) => y));
     const groupYAverage = groupYSum / groupPoints.length;
     groupYAverages[groupId] = groupYAverage;
   }
