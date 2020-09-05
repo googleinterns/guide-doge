@@ -6,7 +6,6 @@ import { createTimeSeriesQuery } from './queries/time-series.query';
 import { createLineChartMeta } from './metas/line-chart.meta';
 import { PreferenceMeta } from '../services/preference/types';
 import { DAY } from '../utils/timeUnits';
-import { centeredMovingAverage, additiveDecomposition } from './summarizations/libs/trend';
 import { combineQuerySummariesFactories } from './summarizations/utils/commons';
 import * as TrendSummarization from './summarizations/trend-weekly-comparison-average.summarization';
 

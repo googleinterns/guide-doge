@@ -208,7 +208,7 @@ export function createExponentialMovingAveragePoints<T>(points: XYPoint<T, numbe
   return smoothedPoints;
 }
 
-export function centeredMovingAverage(points: TimeSeriesPoint[], k: number): TimeSeriesPoint[] {
+export function createCenteredMovingAveragePoints(points: TimeSeriesPoint[], k: number): TimeSeriesPoint[] {
   const L = points.length;
   const smoothedPoints: TimeSeriesPoint[] = [];
   for (let i = 0; i < points.length; i++) {
@@ -234,7 +234,7 @@ export interface DecompositionResult {
   residualPoints: TimeSeriesPoint[];
 }
 
-export function additiveDecomposition(
+export function additiveDecomposite(
   points: TimeSeriesPoint[],
   trendPoints: TimeSeriesPoint[],
   groupFn: (point: TimeSeriesPoint) => GroupIdentifier): DecompositionResult {
