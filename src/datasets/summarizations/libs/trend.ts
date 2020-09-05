@@ -11,9 +11,11 @@ export interface LinearModel {
   gradient: number;
   /* The angle between the 2D linear model (slope) and x-axis in radius */
   gradientAngleRad: number;
-  /* The points with x-values from input points and predicted y-values */
+  /* The y-intercept of linear model, which is the coefficient c in equation y = mx + c */
   yIntercept: number;
+  /* The coefficient of determination (R squared) value */
   r2: number;
+  /* The points with x-values from input points and predicted y-values */
   prediction: NumPoint[];
   /* The mean of absolute errors between y-values of input points and predicted y-values */
   absoluteErrorMean: number;
@@ -30,10 +32,10 @@ export interface LinearModel {
  */
 export function createLinearModel(points: NumPoint[]): LinearModel {
   const pairs = points.map(pointToPair);
-  const result = regression.linear(pairs);
-  const gradient = result.equation[0];
-  const yIntercept = result.equation[1];
-  const r2 = result.r2;
+  const model = regression.linear(pairs);
+  const gradient = model.equation[0];
+  const yIntercept = model.equation[1];
+  const r2 = model.r2;
   const gradientAngleRad = Math.atan(gradient);
   const prediction = model.points.map(pairToPoint);
 
