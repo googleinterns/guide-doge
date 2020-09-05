@@ -1,6 +1,6 @@
 import { queryFactory } from './trend-regression.summarization';
 import { TimeSeriesPoint } from '../metas/types';
-import { hasHighValidity, hasLowValidity, isTextPartsInSummary, andNotSummaryFilters } from './utils/tests';
+import { hasHighValidity, hasLowValidity, isTextPartsInSummary, norSummaryFilters } from './utils/tests';
 
 describe('queryFactory', () => {
 
@@ -58,7 +58,7 @@ describe('queryFactory', () => {
     const summaries = queryFactory(weekdayQuicklyIncreasingWeekendConstantPoints)();
     const isWeekdayQuicklyIncreasingSummary = isTextPartsInSummary('weekday', 'linearly quickly increasing');
     const isWeekendConstantSummary = isTextPartsInSummary('weekend', 'constant');
-    const isOtherSummary = andNotSummaryFilters(isWeekdayQuicklyIncreasingSummary, isWeekendConstantSummary);
+    const isOtherSummary = norSummaryFilters(isWeekdayQuicklyIncreasingSummary, isWeekendConstantSummary);
 
     const weekdayQuicklyIncreasingSummaries = summaries.filter(isWeekdayQuicklyIncreasingSummary);
     const weekendConstantSummarues = summaries.filter(isWeekendConstantSummary);

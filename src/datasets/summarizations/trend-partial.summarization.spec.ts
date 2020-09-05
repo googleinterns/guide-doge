@@ -1,6 +1,6 @@
 import { queryFactory } from './trend-partial.summarization';
 import { TimeSeriesPoint } from '../metas/types';
-import { hasHighValidity, hasLowValidity, isTextPartsInSummary, andNotSummaryFilters } from './utils/tests';
+import { hasHighValidity, hasLowValidity, isTextPartsInSummary, norSummaryFilters } from './utils/tests';
 
 describe('queryFactory', () => {
 
@@ -28,7 +28,7 @@ describe('queryFactory', () => {
     }
 
     const isFirstPartSummary = isTextPartsInSummary('July 01', 'July 31', 'increased');
-    const isOtherSummary = andNotSummaryFilters(isFirstPartSummary);
+    const isOtherSummary = norSummaryFilters(isFirstPartSummary);
 
     const summaries = queryFactory(points)();
     const firstPartSummaries = summaries.filter(isFirstPartSummary);
@@ -48,7 +48,7 @@ describe('queryFactory', () => {
     }
 
     const isFirstPartSummary = isTextPartsInSummary('July 01', 'July 31', 'similar');
-    const isOtherSummary = andNotSummaryFilters(isFirstPartSummary);
+    const isOtherSummary = norSummaryFilters(isFirstPartSummary);
 
     const summaries = queryFactory(points)();
     const firstPartSummaries = summaries.filter(isFirstPartSummary);
@@ -69,7 +69,7 @@ describe('queryFactory', () => {
 
     const isFirstPartSummary = isTextPartsInSummary('July 01', 'July 15', 'decreased');
     const isSecondPartSummary = isTextPartsInSummary('July 15', 'July 31', 'increased');
-    const isOtherSummary = andNotSummaryFilters(isFirstPartSummary, isSecondPartSummary);
+    const isOtherSummary = norSummaryFilters(isFirstPartSummary, isSecondPartSummary);
 
     const summaries = queryFactory(points)();
     const firstPartSummaries = summaries.filter(isFirstPartSummary);
