@@ -287,8 +287,7 @@ export function additiveDecomposite<T>(
 
   const groupYAverages: Record<GroupIdentifier, number> = {};
   for (const [groupId, groupPoints] of Object.entries(groups)) {
-    const groupYSum = math.sum(groupPoints.map(({ y }) => y));
-    const groupYAverage = groupYSum / groupPoints.length;
+    const groupYAverage = math.mean(groupPoints.map(({ y }) => y));
     groupYAverages[groupId] = groupYAverage;
   }
 
