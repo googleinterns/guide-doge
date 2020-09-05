@@ -207,6 +207,17 @@ export function createExponentialMovingAveragePoints<T>(points: XYPoint<T, numbe
   return smoothedPoints;
 }
 
+/**
+ * Create an array of points with smoothed y-values using centered moving average. The length of the
+ * returned points array is equal to the length of the input array, where smaller window size is used to compute
+ * left and right averages for points close to the edge of the array to get smoothed y-value.
+ *
+ * Reference: https://www.itl.nist.gov/div898/handbook/pmc/section4/pmc422.htm
+ *
+ * @param points The time-series points to apply centered moving average.
+ * @param k The half window (period) size for computing the left and right average for element
+ * in the points array. The actual window (period) size is equal to 2*k.
+ */
 export function createCenteredMovingAveragePoints(points: TimeSeriesPoint[], k: number): TimeSeriesPoint[] {
   const numOfPoints = points.length;
   const smoothedPoints: TimeSeriesPoint[] = [];
