@@ -1,4 +1,4 @@
-import { Summary } from './types';
+import { Summary, SummaryVariableOptionPair } from './types';
 import { TimeSeriesPoint } from '../metas/types';
 import { cacheSummaries } from './utils/commons';
 import {
@@ -23,18 +23,18 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const uWeekend = ({ x }) => x.getDay() === 5 ? 0.2 : +(x.getDay() === 0 || x.getDay() === 6);
     const uWeekday = (p: TimeSeriesPoint) => 1 - uWeekend(p);
 
-    const uPercentages: [string, MembershipFunction][] = [
+    const uPercentages: SummaryVariableOptionPair<MembershipFunction>[] = [
       ['most', uMostPercentage],
       ['half', uHalfPercentage],
       ['few', uFewPercentage],
     ];
 
-    const uDays: [string, PointMembershipFunction<TimeSeriesPoint>][] = [
+    const uDays: SummaryVariableOptionPair<PointMembershipFunction<TimeSeriesPoint>>[] = [
       ['weekdays', uWeekday],
       ['weekends', uWeekend],
     ];
 
-    const uTraffics: [string, PointMembershipFunction<TimeSeriesPoint>][] = [
+    const uTraffics: SummaryVariableOptionPair<PointMembershipFunction<TimeSeriesPoint>>[] = [
       ['high (Count > 140)', uHighTraffic],
       ['medium (60 < Count < 140)', uMediumTraffic],
       ['low (Count < 60)', uLowTraffic],

@@ -9,6 +9,7 @@ import { DAY } from '../../utils/timeUnits';
 import { LineChartMeta } from '../../datasets/metas/line-chart.meta';
 import { TimeSeriesDatum } from '../../datasets/queries/time-series.query';
 import { TimeSeriesPoint } from '../../datasets/metas/types';
+import { A11yHostComponent } from '../a11y-host/a11y-host.component';
 
 export type LineChartDatum = TimeSeriesDatum<LegendItemStyle>;
 
@@ -17,8 +18,8 @@ export type LineChartDatum = TimeSeriesDatum<LegendItemStyle>;
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.scss'],
 })
-export class LineChartComponent implements RenderOptions<LineChartDatum>, OnChanges, OnInit, OnDestroy {
-  @ViewChild(A11yPlaceholderDirective, { static: true }) a11yPlaceholder: A11yPlaceholderDirective<LineChartComponent>;
+export class LineChartComponent extends A11yHostComponent implements RenderOptions<LineChartDatum>, OnChanges, OnInit, OnDestroy {
+  @ViewChild(A11yPlaceholderDirective, { static: true }) a11yPlaceholder: A11yPlaceholderDirective;
 
   @Input() endDate = new Date();
   @Input() startDate = new Date(this.endDate.getTime() - 30 * DAY);
@@ -37,6 +38,7 @@ export class LineChartComponent implements RenderOptions<LineChartDatum>, OnChan
   constructor(
     public elementRef: ElementRef<HTMLElement>,
   ) {
+    super(elementRef);
     this.lineChartD3 = new LineChartD3(this);
   }
 

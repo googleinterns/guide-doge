@@ -1,4 +1,4 @@
-
+import * as math from 'mathjs';
 import { Summary } from './types';
 import { TimeSeriesPoint } from '../metas/types';
 import { cacheSummaries } from './utils/commons';
@@ -8,9 +8,9 @@ import {
   sigmaCountQA,
 } from './libs/protoform';
 import {
-  linearRegression,
-  centeredMovingAverage,
-  additiveDecomposition,
+  createLinearModel,
+  createCenteredMovingAveragePoints,
+  additiveDecomposite,
 } from './libs/trend';
 import {
   timeSeriesPointToNumPoint,
@@ -19,7 +19,6 @@ import {
 import {
   normalizePointsY,
 } from './utils/commons';
-import { sum } from '../../utils/misc';
 import { formatY } from '../../utils/formatters';
 
 export function queryFactory(points: TimeSeriesPoint[]) {
@@ -28,10 +27,10 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const normalizedYPoints = normalizePointsY(points);
 
     const centeredMovingAverageHalfWindowSize = 4;
-    const normalizedTrendPoints = centeredMovingAverage(normalizedYPoints, centeredMovingAverageHalfWindowSize);
+    const normalizedTrendPoints = createCenteredMovingAveragePoints(normalizedYPoints, centeredMovingAverageHalfWindowSize);
     const {
-      detrendPoints: normalizedDetrendedPoints,
-    } = additiveDecomposition(normalizedYPoints, normalizedTrendPoints, ({ x }) => x.getDay());
+      detrendedPoints: normalizedDetrendedPoints,
+    } = additiveDecomposite(normalizedYPoints, normalizedTrendPoints, ({ x }) => x.getDay());
 
     const uWeekend = (p: TimeSeriesPoint) => p.x.getDay() === 5 ? 0.2 : +(p.x.getDay() === 0 || p.x.getDay() === 6);
     const uWeekday = (p: TimeSeriesPoint) => 1 - uWeekend(p);
@@ -48,8 +47,8 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       const week = weekPoints[0].x;
       const weekdayPoints = weekPoints.filter(isWeekday);
       const weekendPoints = weekPoints.filter(isWeekend);
-      const weekdayPointsYSum = sum(weekdayPoints.map(({ y }) => y));
-      const weekendPointsYSum = sum(weekdayPoints.map(({ y }) => y));
+      const weekdayPointsYSum = math.sum(weekdayPoints.map(({ y }) => y));
+      const weekendPointsYSum = math.sum(weekdayPoints.map(({ y }) => y));
 
       if (weekdayPoints.length === 0 || weekendPoints.length === 0) {
         return { x: week, y: -1 };
@@ -72,9 +71,9 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     // TODO: Create rate comparison summaries with fuzzy logic for both weekday and overall points
     const regressionResults = weekPointArrays.map(weekPoints => {
       if (weekdayWeekendEqualValidity > 0.7) {
-        return linearRegression(weekPoints.map(timeSeriesPointToNumPoint));
+        return createLinearModel(weekPoints.map(timeSeriesPointToNumPoint));
       } else {
-        return linearRegression(weekPoints.filter(isWeekday).map(timeSeriesPointToNumPoint));
+        return createLinearModel(weekPoints.filter(isWeekday).map(timeSeriesPointToNumPoint));
       }
     });
 
@@ -86,7 +85,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       const currWeekRate = regressionResults[i].gradient + 1e-4;
       const nextWeekRate = regressionResults[i + 1].gradient + 1e-4;
       const rateDiff = nextWeekRate - currWeekRate;
-      const rateDiffAbsolute  = Math.abs(rateDiff);
+      const rateDiffAbsolute = Math.abs(rateDiff);
 
       const weekdayWeekendDescriptor = weekdayWeekendEqualValidity > 0.7 ? '' : 'of weekdays ';
 

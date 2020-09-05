@@ -1,5 +1,5 @@
-
-import { Summary } from './types';
+import * as math from 'mathjs';
+import { Summary, SummaryVariableOptionPair } from './types';
 import { TimeSeriesPoint } from '../metas/types';
 import { cacheSummaries } from './utils/commons';
 import {
@@ -10,7 +10,7 @@ import {
   sigmaCountQA,
 } from './libs/protoform';
 import {
-  linearRegression,
+  createLinearModel,
 } from './libs/trend';
 import {
   timeSeriesPointToNumPoint,
@@ -19,53 +19,71 @@ import {
 import {
   normalizePoints
 } from './utils/commons';
+import { chartDiagonalAngle } from './utils/constants';
 
 export function queryFactory(points: TimeSeriesPoint[]) {
   return cacheSummaries(() => {
-    // The size of the chart is fixed to 800 * 500
-    const ANGMX = Math.atan(500 / 800);
-    const uQuicklyIncreasingLinearTrend = trapmfL(ANGMX / 2, ANGMX * 5 / 8);
-    const uIncreasingLinearTrend = trapmf(ANGMX / 8, ANGMX / 4, ANGMX / 2, ANGMX * 5 / 8);
-    const uConstantLinearTrend = trapmf(-ANGMX / 4, -ANGMX / 8, ANGMX / 8, ANGMX / 4);
-    const uDecreasingLinearTrend = trapmf(-ANGMX * 5 / 8, -ANGMX / 2, -ANGMX / 4, -ANGMX / 8);
-    const uQuicklyDecreasingLinearTrend = trapmfR(-ANGMX * 5 / 8, -ANGMX / 2);
+    const uQuicklyIncreasingLinearDynamic = trapmfL(chartDiagonalAngle / 2, chartDiagonalAngle * 5 / 8);
+    const uIncreasingLinearDynamic = trapmf(
+      chartDiagonalAngle / 8, chartDiagonalAngle / 4, chartDiagonalAngle / 2, chartDiagonalAngle * 5 / 8);
+    const uConstantLinearDynamic = trapmf(-chartDiagonalAngle / 4, -chartDiagonalAngle / 8, chartDiagonalAngle / 8, chartDiagonalAngle / 4);
+    const uDecreasingLinearDynamic = trapmf(
+      -chartDiagonalAngle * 5 / 8, -chartDiagonalAngle / 2, -chartDiagonalAngle / 4, -chartDiagonalAngle / 8);
+    const uQuicklyDecreasingLinearDynamic = trapmfR(-chartDiagonalAngle * 5 / 8, -chartDiagonalAngle / 2);
 
     const uSmallRegressionError = trapmfR(0.75, 1.0);
 
-    const uWeekend = (p: TimeSeriesPoint) => p.x.getDay() === 5 ? 0.2 : +(p.x.getDay() === 0 || p.x.getDay() === 6);
+    const uWeekend = (p: TimeSeriesPoint) => {
+      const dayOfWeek = p.x.getDay();
+      switch (dayOfWeek) {
+        case 5: // Friday
+          return 0.2;
+        case 6: // Saturday
+        case 0: // Sunday
+          return 1;
+        default: // All other days
+          return 0;
+      }
+    };
+
     const uWeekday = (p: TimeSeriesPoint) => 1 - uWeekend(p);
 
     const isWeekend = (p: TimeSeriesPoint) => uWeekend(p) > 0.5;
     const isWeekday = (p: TimeSeriesPoint) => uWeekday(p) > 0.5;
 
+    // Create an array of weekly points, where the y-value is the ratio AverageWeekdayY / AverageWeekendY of each week
+    // The x-value is the time(x-value) of the first point in the week. If a week does not have any weekday points or
+    // weekend points, e.g. first week and last week of a month, the created weekly points will not include that week.
     const weekdayWeekendRatioPoints = groupPointsByXWeek(points).map(weekPoints => {
-      const week = weekPoints[0].x;
-      const wWeekdays = weekPoints.reduce((p, v) => p + uWeekday(v), 0);
-      const wWeekends = weekPoints.reduce((p, v) => p + uWeekend(v), 0);
-      const sWeekdays = weekPoints.reduce((p, v) => p + v.y * uWeekday(v), 0);
-      const sWeekends = weekPoints.reduce((p, v) => p + v.y * uWeekend(v), 0);
+      const startDateOfWeek = weekPoints[0].x;
+      // The weights are the membership degree values of weekday and weekend
+      const weekdayWeightSum = math.sum(weekPoints.map(uWeekday));
+      const weekendWeightSum = math.sum(weekPoints.map(uWeekend));
+      const weightedWeekdayYSum = math.sum(weekPoints.map(p => p.y * uWeekday(p)));
+      const weightedWeekendYSum = math.sum(weekPoints.map(p => p.y * uWeekend(p)));
 
-      if (wWeekdays < 1e-7 || wWeekends < 1e-7) {
-        return { x: week, y: -1 };
+      if (weekdayWeightSum < 1e-7 || weekendWeightSum < 1e-7) {
+        // No weekday points or weekend points in this week
+        return { x: startDateOfWeek, y: null };
       } else {
-        const avgWeekday = sWeekdays / wWeekdays;
-        const avgHoliday = sWeekends / wWeekends;
-        const weekdayHolidayRatio = avgWeekday / avgHoliday;
-        return { x: week, y: weekdayHolidayRatio };
+        const weightedWeekdayYAverage = weightedWeekdayYSum / weekdayWeightSum;
+        const weightedWeekendYAverage = weightedWeekendYSum / weekendWeightSum;
+        const weekdayWeekendRatio = weightedWeekdayYAverage / weightedWeekendYAverage;
+        return { x: startDateOfWeek, y: weekdayWeekendRatio };
       }
-    }).filter(({ y }) => y >= 0);
+    }).filter(({ y }) => y !== null) as TimeSeriesPoint[];
 
     const uMostPercentage = trapmfL(0.6, 0.7);
     const uEqualTraffic = ({ y }) => trapmf(0.8, 0.85, 1.15, 1.2)(y);
     const weekdayWeekendEqualValidity = sigmaCountQA(weekdayWeekendRatioPoints, uMostPercentage, uEqualTraffic);
 
 
-    const uLinearTrends: [string, MembershipFunction][] = [
-      ['quickly increasing', uQuicklyIncreasingLinearTrend],
-      ['increasing', uIncreasingLinearTrend],
-      ['constant', uConstantLinearTrend],
-      ['decreasing', uDecreasingLinearTrend],
-      ['quickly decreasing', uQuicklyDecreasingLinearTrend],
+    const uLinearDynamics: SummaryVariableOptionPair<MembershipFunction>[] = [
+      ['quickly increasing', uQuicklyIncreasingLinearDynamic],
+      ['increasing', uIncreasingLinearDynamic],
+      ['constant', uConstantLinearDynamic],
+      ['decreasing', uDecreasingLinearDynamic],
+      ['quickly decreasing', uQuicklyDecreasingLinearDynamic],
     ];
 
     const summaries: Summary[] = [];
@@ -73,61 +91,64 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const weekdayNormalizedPoints = normalizedPoints.filter((_, i) => isWeekday(points[i]));
     const weekendNormalizedPoints = normalizedPoints.filter((_, i) => isWeekend(points[i]));
 
-    const overallLinearModel = linearRegression(normalizedPoints);
+    const overallLinearModel = createLinearModel(normalizedPoints);
     const overallLinearTrendValidity = uSmallRegressionError(overallLinearModel.absoluteErrorStd);
 
-    const weekdayLinearModel = linearRegression(weekdayNormalizedPoints);
+    const weekdayLinearModel = createLinearModel(weekdayNormalizedPoints);
     const weekdayLinearTrendValidity = uSmallRegressionError(weekdayLinearModel.absoluteErrorStd);
 
-    const weekendLinearModel = linearRegression(weekendNormalizedPoints);
+    const weekendLinearModel = createLinearModel(weekendNormalizedPoints);
     const weekendLinearTrendValidity = uSmallRegressionError(weekendLinearModel.absoluteErrorStd);
 
     const overallLinearTrendSummariesValidity = Math.max(
       weekdayWeekendEqualValidity,
-      ...uLinearTrends.map(([_, uLinearTrend]) =>
+      ...uLinearDynamics.map(([_, uLinearDynamic]) =>
         Math.min(
           overallLinearTrendValidity,
-          uLinearTrend(overallLinearModel.gradientAngleRad),
+          uLinearDynamic(overallLinearModel.gradientAngleRad),
           weekdayLinearTrendValidity,
-          uLinearTrend(weekdayLinearModel.gradientAngleRad),
+          uLinearDynamic(weekdayLinearModel.gradientAngleRad),
           weekendLinearTrendValidity,
-          uLinearTrend(weekendLinearModel.gradientAngleRad),
+          uLinearDynamic(weekendLinearModel.gradientAngleRad),
         )),
     );
 
-    for (const [linearTrend, uLinearTrend] of uLinearTrends) {
+    // Create summaries describing linear trend of overall points
+    for (const [linearDynamic, uLinearDynamic] of uLinearDynamics) {
       const validity = Math.min(
         overallLinearTrendSummariesValidity,
         overallLinearTrendValidity,
-        uLinearTrend(overallLinearModel.gradientAngleRad),
+        uLinearDynamic(overallLinearModel.gradientAngleRad),
       );
-      const text = `The <b>overall</b> trend is <b>${linearTrend === 'constant' ? '' : 'linearly '}${linearTrend}</b>.`;
+      const text = `The <b>overall</b> trend is <b>${linearDynamic === 'constant' ? '' : 'linearly '}${linearDynamic}</b>.`;
       summaries.push({
         validity,
         text,
       });
     }
 
-    for (const [linearTrend, uLinearTrend] of uLinearTrends) {
+    // Create summaries describing linear trend of weekday points
+    for (const [linearDynamic, uLinearDynamic] of uLinearDynamics) {
       const validity = Math.min(
         1.0 - overallLinearTrendSummariesValidity,
         weekdayLinearTrendValidity,
-        uLinearTrend(weekdayLinearModel.gradientAngleRad),
+        uLinearDynamic(weekdayLinearModel.gradientAngleRad),
       );
-      const text = `The <b>weekday</b> trend is <b>${linearTrend === 'constant' ? '' : 'linearly '}${linearTrend}</b>.`;
+      const text = `The <b>weekday</b> trend is <b>${linearDynamic === 'constant' ? '' : 'linearly '}${linearDynamic}</b>.`;
       summaries.push({
         validity,
         text,
       });
     }
 
-    for (const [linearTrend, uLinearTrend] of uLinearTrends) {
+    // Create summaries describing linear trend of weekend points
+    for (const [linearDynamic, uLinearDynamic] of uLinearDynamics) {
       const validity = Math.min(
         1.0 - overallLinearTrendSummariesValidity,
         weekendLinearTrendValidity,
-        uLinearTrend(weekendLinearModel.gradientAngleRad),
+        uLinearDynamic(weekendLinearModel.gradientAngleRad),
       );
-      const text = `The <b>weekend</b> trend is <b>${linearTrend === 'constant' ? '' : 'linearly '}${linearTrend}</b>.`;
+      const text = `The <b>weekend</b> trend is <b>${linearDynamic === 'constant' ? '' : 'linearly '}${linearDynamic}</b>.`;
       summaries.push({
         validity,
         text,
