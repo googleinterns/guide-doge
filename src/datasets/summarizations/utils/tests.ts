@@ -14,7 +14,7 @@ export function isTextPartsInSummary(...textParts: string[]) {
   };
 }
 
-export function andNotSummaryFilters(...filters: ((summary: Summary) => boolean)[]) {
+export function norSummaryFilters(...filters: ((summary: Summary) => boolean)[]) {
   return (summary: Summary) => {
     return filters.every(filter => !filter(summary));
   };
