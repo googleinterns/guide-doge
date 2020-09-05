@@ -1,5 +1,6 @@
 import * as math from 'mathjs';
 import {
+  additiveDecomposite,
   createLinearModel,
   createPartialTrends,
   createExponentialMovingAveragePoints,
@@ -294,6 +295,112 @@ describe('createCenteredMovingAveragePoints', () => {
     expect(result.length).toBe(points.length);
     for (let i = 0; i < result.length; i++) {
       expect(result[i].x).toBe(points[i].x);
+    }
+  });
+});
+
+fdescribe('additiveDecomposite', () => {
+
+  const testData = [
+    {
+      points: [{ x: 1, y: 1 }, { x: 2, y: 1 }, { x: 3, y: 1 }],
+      trendPoints: [{ x: 1, y: 1 }, { x: 2, y: 1 }, { x: 3, y: 1 }],
+      groupFn: ({ x }: NumPoint): number => x % 3,
+    },
+    {
+      points: [
+        { x: 1, y: 1 },
+        { x: 2, y: 2 },
+        { x: 3, y: 3 },
+        { x: 4, y: 8 },
+        { x: 5, y: 7 },
+        { x: 6, y: 6 },
+      ],
+      trendPoints: [
+        { x: 1, y: 3 },
+        { x: 2, y: 3 },
+        { x: 3, y: 3 },
+        { x: 4, y: 3 },
+        { x: 5, y: 3 },
+        { x: 6, y: 3 },
+      ],
+      groupFn: ({ x }: NumPoint): number => x % 3,
+    },
+    {
+      points: [
+        { x: 1, y: 1 },
+        { x: 2, y: 2 },
+        { x: 3, y: 3 },
+        { x: 4, y: 8 },
+        { x: 5, y: 7 },
+        { x: 6, y: 6 },
+      ],
+      trendPoints: [
+        { x: 1, y: 5 },
+        { x: 2, y: 2 },
+        { x: 3, y: 4 },
+        { x: 4, y: 1 },
+        { x: 5, y: 6 },
+        { x: 6, y: 8 },
+      ],
+      groupFn: ({ x }: NumPoint): number => x % 2,
+    },
+  ];
+
+  it('should return decomposition result satisfying additive model definition.', () => {
+    for (const { points, trendPoints, groupFn } of testData) {
+      const {
+        detrendedPoints,
+        seasonalPoints,
+        residualPoints,
+      } = additiveDecomposite(points, trendPoints, groupFn);
+
+      expect(detrendedPoints.length).toBe(points.length);
+      expect(seasonalPoints.length).toBe(points.length);
+      expect(residualPoints.length).toBe(points.length);
+
+      for (let i = 0; i < points.length; i++) {
+        expect(detrendedPoints[i].y).toBeCloseTo(points[i].y - trendPoints[i].y, 4);
+        expect(seasonalPoints[i].y + residualPoints[i].y).toBeCloseTo(points[i].y - trendPoints[i].y, 4);
+      }
+    }
+  });
+
+  it('should return seasonal points with the same y-value for points in a group.', () => {
+    for (const { points, trendPoints, groupFn } of testData) {
+      const {
+        seasonalPoints,
+      } = additiveDecomposite(points, trendPoints, groupFn);
+
+      const groupYValue: Record<number, number> = {};
+      expect(seasonalPoints.length).toBe(points.length);
+      for (let i = 0; i < points.length; i++) {
+        if (!(groupFn(points[i]) in groupYValue)) {
+          groupYValue[groupFn(points[i])] = seasonalPoints[i].y;
+        } else {
+          expect(seasonalPoints[i].y).toBeCloseTo(groupYValue[groupFn(points[i])], 4);
+        }
+      }
+    }
+  });
+
+  it('should return x-values of input points.', () => {
+    for (const { points, trendPoints, groupFn } of testData) {
+      const {
+        detrendedPoints,
+        seasonalPoints,
+        residualPoints,
+      } = additiveDecomposite(points, trendPoints, groupFn);
+
+      expect(detrendedPoints.length).toBe(points.length);
+      expect(seasonalPoints.length).toBe(points.length);
+      expect(residualPoints.length).toBe(points.length);
+
+      for (let i = 0; i < points.length; i++) {
+        expect(detrendedPoints[i].x).toBe(points[i].x);
+        expect(seasonalPoints[i].x).toBe(points[i].x);
+        expect(residualPoints[i].x).toBe(points[i].x);
+      }
     }
   });
 });

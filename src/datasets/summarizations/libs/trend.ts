@@ -278,7 +278,7 @@ export function additiveDecomposite<T>(
 
   for (const detrendedPoint of detrendedPoints) {
     const groupId = groupFn(detrendedPoint);
-    if (!groups[groupId]) {
+    if (!(groupId in groups)) {
       groups[groupId] = [detrendedPoint];
     } else {
       groups[groupId].push(detrendedPoint);
