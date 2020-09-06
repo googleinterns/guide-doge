@@ -167,16 +167,75 @@ function intersectCone(c1: Cone2D, c2: Cone2D): Cone2D | null {
   }
 }
 
+export type PartialTrendMembershipFunction = (partialTrend: TimeSeriesPartialTrend) => number;
+
 /**
  * A function decorator that maps the cone angle of the input partial trend to the membership function.
  *
  * @param mf: The membership function that takes the cone angle as input.
  */
-export function mapConeAngle(mf: MembershipFunction) {
+export function mapConeAngle(mf: MembershipFunction): PartialTrendMembershipFunction {
   return ({ cone }: TimeSeriesPartialTrend) => {
     const coneAngleRadAverage = (cone.endAngleRad + cone.startAngleRad) / 2;
     return mf(coneAngleRadAverage);
   };
+}
+
+/**
+ * Create an array of time-series partial trends by merging continuous partial trends based on the
+ * membership degree of given membership functions. If two continuous partial trends both have membership
+ * degree from the same membership function above the threshold, they will be merged in the returned partial
+ * trends array. The cone of the merged partial trend has the area being the union of cone areas of the
+ * original partial trends.
+ *
+ * @param points The time-series points that the partial trends extracted from.
+ * @param partialTrends The time-series partial trends to merge.
+ * @param uPartialTrends The membership functions for merging continuous partial trends.
+ * @param membershipDegreeThreshold The threshold for determining whether the membership degree is high or not.
+ */
+export function mergePartialTrends(
+  points: TimeSeriesPoint[],
+  partialTrends: TimeSeriesPartialTrend[],
+  uPartialTrends: PartialTrendMembershipFunction[],
+  membershipDegreeThreshold: number = 0.7,
+  ) {
+
+  const merge = (a: TimeSeriesPartialTrend, b: TimeSeriesPartialTrend): TimeSeriesPartialTrend[] => {
+    for (const uPartialTrend of uPartialTrends) {
+      if (uPartialTrend(a) >= membershipDegreeThreshold && uPartialTrend(b) >= membershipDegreeThreshold) {
+        const indexStart = Math.min(a.indexStart, b.indexStart);
+        const indexEnd = Math.max(a.indexEnd, b.indexEnd);
+        const timeStart = points[indexStart].x;
+        const timeEnd = points[indexEnd].x;
+        const percentageSpan = a.percentageSpan + b.percentageSpan;
+        const startAngleRad = Math.min(a.cone.startAngleRad, b.cone.startAngleRad);
+        const endAngleRad = Math.max(a.cone.endAngleRad, b.cone.endAngleRad);
+        return [{
+          indexStart,
+          indexEnd,
+          timeStart,
+          timeEnd,
+          percentageSpan,
+          cone: {
+            startAngleRad,
+            endAngleRad,
+          }
+        }];
+      }
+    }
+    return [a, b];
+  };
+
+  const mergedPartialTrends: TimeSeriesPartialTrend[] = [];
+  for (const partialTrend of partialTrends) {
+    if (mergedPartialTrends.length === 0) {
+      mergedPartialTrends.push(partialTrend);
+    } else {
+      const previousPartialTrend = mergedPartialTrends.pop() as TimeSeriesPartialTrend;
+      mergedPartialTrends.push(...merge(previousPartialTrend, partialTrend));
+    }
+  }
+  return mergedPartialTrends;
 }
 
 /**

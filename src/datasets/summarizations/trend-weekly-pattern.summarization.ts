@@ -13,6 +13,7 @@ import {
   additiveDecomposite,
   createPartialTrends,
   mapConeAngle,
+  mergePartialTrends,
   TimeSeriesPartialTrend,
 } from './libs/trend';
 import {
@@ -68,43 +69,11 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       ['decreasing', uDecreasingDynamic],
     ];
 
-    const validityThreshold = 0.7;
-
-    const mergePartialTrends = (a: TimeSeriesPartialTrend, b: TimeSeriesPartialTrend): TimeSeriesPartialTrend[] => {
-      for (const uDynamic of [uIncreasingDynamic, uConstantDynamic, uDecreasingDynamic]) {
-        if (uDynamic(a) >= validityThreshold && uDynamic(b) >= validityThreshold) {
-          const indexStart = Math.min(a.indexStart, b.indexStart);
-          const indexEnd = Math.max(a.indexEnd, b.indexEnd);
-          const timeStart = weeklyPatternPoints[indexStart].x;
-          const timeEnd = weeklyPatternPoints[indexEnd].x;
-          const percentageSpan = a.percentageSpan + b.percentageSpan;
-          const startAngleRad = Math.min(a.cone.startAngleRad, b.cone.startAngleRad);
-          const endAngleRad = Math.max(a.cone.endAngleRad, b.cone.endAngleRad);
-          return [{
-            indexStart,
-            indexEnd,
-            timeStart,
-            timeEnd,
-            percentageSpan,
-            cone: {
-              startAngleRad,
-              endAngleRad,
-            }
-          }];
-        }
-      }
-      return [a, b];
-    };
-
-    const mergedWeeklyPatternPartialTrends: TimeSeriesPartialTrend[] = [];
-    for (const partialTrend of weeklyPatternPartialTrends) {
-      if (mergedWeeklyPatternPartialTrends.length === 0) {
-        mergedWeeklyPatternPartialTrends.push(partialTrend);
-      } else {
-        const previousPartialTrend = mergedWeeklyPatternPartialTrends.pop() as TimeSeriesPartialTrend;
-        mergedWeeklyPatternPartialTrends.push(...mergePartialTrends(previousPartialTrend, partialTrend));
-      }
-    }
+    const mergedWeeklyPatternPartialTrends = mergePartialTrends(
+      weeklyPatternPoints,
+      weeklyPatternPartialTrends,
+      [uIncreasingDynamic, uConstantDynamic, uDecreasingDynamic],
+    );
 
     const daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
