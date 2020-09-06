@@ -36,7 +36,6 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     ];
 
     const mergedPartialTrends = mergePartialTrends(
-      points,
       partialTrends,
       [uIncreasingDynamic, uConstantDynamic, uDecreasingDynamic],
     );

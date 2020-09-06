@@ -189,13 +189,11 @@ export function mapConeAngle(mf: MembershipFunction): PartialTrendMembershipFunc
  * trends array. The cone of the merged partial trend has the area being the union of cone areas of the
  * original partial trends.
  *
- * @param points The time-series points that the partial trends extracted from.
  * @param partialTrends The time-series partial trends to merge.
  * @param uPartialTrends The membership functions for merging continuous partial trends.
  * @param membershipDegreeThreshold The threshold for determining whether the membership degree is high or not.
  */
 export function mergePartialTrends(
-  points: TimeSeriesPoint[],
   partialTrends: TimeSeriesPartialTrend[],
   uPartialTrends: PartialTrendMembershipFunction[],
   membershipDegreeThreshold: number = 0.7,
@@ -206,8 +204,8 @@ export function mergePartialTrends(
       if (uPartialTrend(a) >= membershipDegreeThreshold && uPartialTrend(b) >= membershipDegreeThreshold) {
         const indexStart = Math.min(a.indexStart, b.indexStart);
         const indexEnd = Math.max(a.indexEnd, b.indexEnd);
-        const timeStart = points[indexStart].x;
-        const timeEnd = points[indexEnd].x;
+        const timeStart = a.timeStart < b.timeStart ? a.timeStart : b.timeStart;
+        const timeEnd = a.timeEnd > b.timeEnd ? a.timeEnd : b.timeEnd;
         const percentageSpan = a.percentageSpan + b.percentageSpan;
         const startAngleRad = Math.min(a.cone.startAngleRad, b.cone.startAngleRad);
         const endAngleRad = Math.max(a.cone.endAngleRad, b.cone.endAngleRad);

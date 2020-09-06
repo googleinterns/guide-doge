@@ -70,7 +70,6 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     ];
 
     const mergedWeeklyPatternPartialTrends = mergePartialTrends(
-      weeklyPatternPoints,
       weeklyPatternPartialTrends,
       [uIncreasingDynamic, uConstantDynamic, uDecreasingDynamic],
     );
