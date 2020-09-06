@@ -92,8 +92,8 @@ export interface TimeSeriesPartialTrend {
 export function createPartialTrends(points: TimeSeriesPoint[], eps: number): TimeSeriesPartialTrend[] {
   const numPoints = points.map(timeSeriesPointToNumPoint);
   const normalizedPoints = normalizePoints(numPoints, {}, { min: 0 });
-  const normalizedMinX = Math.min(...normalizedPoints.map(({ x }) => x));
-  const normalizedMaxX = Math.max(...normalizedPoints.map(({ x }) => x));
+  const normalizedXMin = Math.min(...normalizedPoints.map(({ x }) => x));
+  const normalizedXMax = Math.max(...normalizedPoints.map(({ x }) => x));
 
   if (normalizedPoints.length <= 1) {
     return [];
@@ -122,7 +122,7 @@ export function createPartialTrends(points: TimeSeriesPoint[], eps: number): Tim
         indexEnd: j,
         timeStart: points[i].x,
         timeEnd: points[j].x,
-        percentageSpan: (normalizedPoints[j].x - normalizedPoints[i].x) / (normalizedMaxX - normalizedMinX),
+        percentageSpan: (normalizedPoints[j].x - normalizedPoints[i].x) / (normalizedXMax - normalizedXMin),
         cone: coneij,
       });
 

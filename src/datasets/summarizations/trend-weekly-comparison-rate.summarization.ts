@@ -41,7 +41,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     // Only consider weeks with more than 3 days when creating summaries
     // Weeks with 3 days or less are considered to belong to last/next 30 days
     const normalizedDetrendedWeekPointArrays = groupPointsByXWeek(normalizedDetrendedPoints).filter(weekPoints => weekPoints.length >= 4);
-    const nWeeks = normalizedDetrendedWeekPointArrays.length;
+    const numOfWeeks = normalizedDetrendedWeekPointArrays.length;
 
     const weekdayWeekendDiffPoints = normalizedDetrendedWeekPointArrays.map(weekPoints => {
       const week = weekPoints[0].x;
@@ -80,24 +80,23 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const ordinalTexts = ['first', 'second', 'third', 'fourth', 'fifth'];
     const summaries: Summary[] = [];
 
-    for (let i = 0; i < nWeeks - 1; i++) {
-      console.log(regressionResults[i].gradient, regressionResults[i + 1].gradient)
-      const currWeekRate = regressionResults[i].gradient + 1e-4;
+    for (let i = 0; i < numOfWeeks - 1; i++) {
+      const currentWeekRate = regressionResults[i].gradient + 1e-4;
       const nextWeekRate = regressionResults[i + 1].gradient + 1e-4;
-      const rateDiff = nextWeekRate - currWeekRate;
+      const rateDiff = nextWeekRate - currentWeekRate;
       const rateDiffAbsolute = Math.abs(rateDiff);
 
       const weekdayWeekendDescriptor = weekdayWeekendEqualValidity > 0.7 ? '' : 'of weekdays ';
 
-      if (rateDiffAbsolute > 2 && currWeekRate * nextWeekRate < 0) {
+      if (rateDiffAbsolute > 2 && currentWeekRate * nextWeekRate < 0) {
         const getDynamicDescriptor = (v) => v >= 0 ? 'increasing' : 'decreasing';
-        const text = `The active users <b>${weekdayWeekendDescriptor}</b>was <b>${getDynamicDescriptor(nextWeekRate)}</b> in the <b>${ordinalTexts[i + 1]} week</b> but <b>${getDynamicDescriptor(currWeekRate)}</b> in the <b>${ordinalTexts[i]} week</b>.`;
+        const text = `The active users <b>${weekdayWeekendDescriptor}</b>was <b>${getDynamicDescriptor(nextWeekRate)}</b> in the <b>${ordinalTexts[i + 1]} week</b> but <b>${getDynamicDescriptor(currentWeekRate)}</b> in the <b>${ordinalTexts[i]} week</b>.`;
         summaries.push({
           text,
           validity: 1.0,
         });
       } else {
-        const percentageIncrease = rateDiff / currWeekRate * 100;
+        const percentageIncrease = rateDiff / currentWeekRate * 100;
         const precentageChangeDescriptor = percentageIncrease >= 0 ? 'more' : 'less';
         const percentageChangeDynamicDescriptor = percentageIncrease >= 0 ? 'faster' : 'slower';
 
