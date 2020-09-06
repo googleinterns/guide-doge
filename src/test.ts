@@ -3,6 +3,7 @@
 import 'zone.js/dist/zone-testing';
 import { getTestBed } from '@angular/core/testing';
 import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
+import { guideComponent } from './aframe_components/custom-components';
 
 declare const require: {
   context(path: string, deep?: boolean, filter?: RegExp): {
@@ -20,3 +21,6 @@ getTestBed().initTestEnvironment(
 const context = require.context('./', true, /\.spec\.ts$/);
 // And load the modules.
 context.keys().map(context);
+
+// Register custom aframe components
+AFRAME.registerComponent('guide', guideComponent);

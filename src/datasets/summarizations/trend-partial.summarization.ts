@@ -1,4 +1,5 @@
-import { Summary } from './types';
+import * as math from 'mathjs';
+import { Summary, SummaryVariableOptionPair } from './types';
 import { TimeSeriesPoint } from '../metas/types';
 import { cacheSummaries } from './utils/commons';
 import {
@@ -9,52 +10,48 @@ import {
   trapmfR,
 } from './libs/protoform';
 import {
-  exponentialMovingAverage,
-  normalizedUniformPartiallyLinearEpsApprox,
+  mapConeAngle,
+  createExponentialMovingAveragePoints,
+  createPartialTrends,
   TimeSeriesPartialTrend,
 } from './libs/trend';
-import { formatX } from '../../utils/formatters';
+import { formatX, formatY } from '../../utils/formatters';
+import { chartDiagonalAngle } from './utils/constants';
 
 export function queryFactory(points: TimeSeriesPoint[]) {
   return cacheSummaries(() => {
-    const MX = Math.PI / 2;
+    const smoothedPoints = createExponentialMovingAveragePoints(points);
+    const partialTrends = createPartialTrends(smoothedPoints, 0.01);
 
-    const smoothedPoints = exponentialMovingAverage(points);
-    const trends = normalizedUniformPartiallyLinearEpsApprox(smoothedPoints, 0.01);
+    const uIncreasingDynamic = mapConeAngle(trapmfL(chartDiagonalAngle / 8, chartDiagonalAngle / 4));
+    const uConstantDynamic = mapConeAngle(
+      trapmf(-chartDiagonalAngle / 4, -chartDiagonalAngle / 8, chartDiagonalAngle / 8, chartDiagonalAngle / 4));
+    const uDecreasingDynamic = mapConeAngle(trapmfR(-chartDiagonalAngle / 4, -chartDiagonalAngle / 8));
 
-    const applyTrendAngleWithWeight = (f: MembershipFunction) => ({ cone }: TimeSeriesPartialTrend) => {
-      const avgAngleRad = (cone.endAngleRad + cone.startAngleRad) / 2;
-      return f(avgAngleRad);
-    };
-
-    const uIncreasingTrend = applyTrendAngleWithWeight(trapmfL(MX / 8, MX / 4));
-    const uConstantTrend = applyTrendAngleWithWeight(trapmf(-MX / 4, -MX / 8, MX / 8, MX / 4));
-    const uDecreasingTrend = applyTrendAngleWithWeight(trapmfR(-MX / 4, -MX / 8));
-
-    const uTrends: [string, PointMembershipFunction<TimeSeriesPartialTrend>][] = [
-      ['increasing', uIncreasingTrend],
-      ['constant', uConstantTrend],
-      ['decreasing', uDecreasingTrend],
+    const uDynamics: SummaryVariableOptionPair<PointMembershipFunction<TimeSeriesPartialTrend>>[] = [
+      ['increased', uIncreasingDynamic],
+      ['similar', uConstantDynamic],
+      ['decreased', uDecreasingDynamic],
     ];
 
-    const mvThreshold = 0.7;
+    const validityThreshold = 0.7;
 
-    const mergeTrends = (a: TimeSeriesPartialTrend, b: TimeSeriesPartialTrend): TimeSeriesPartialTrend[] => {
-      for (const [_, uTrend] of uTrends) {
-        if (uTrend(a) >= mvThreshold && uTrend(b) >= mvThreshold) {
-          const idxStart = Math.min(a.idxStart, b.idxStart);
-          const idxEnd = Math.max(a.idxEnd, b.idxEnd);
-          const timeStart = points[idxStart].x;
-          const timeEnd = points[idxEnd].x;
-          const pctSpan = a.pctSpan + b.pctSpan;
+    const mergePartialTrends = (a: TimeSeriesPartialTrend, b: TimeSeriesPartialTrend): TimeSeriesPartialTrend[] => {
+      for (const uDynamic of [uIncreasingDynamic, uConstantDynamic, uDecreasingDynamic]) {
+        if (uDynamic(a) >= validityThreshold && uDynamic(b) >= validityThreshold) {
+          const indexStart = Math.min(a.indexStart, b.indexStart);
+          const indexEnd = Math.max(a.indexEnd, b.indexEnd);
+          const timeStart = points[indexStart].x;
+          const timeEnd = points[indexEnd].x;
+          const percentageSpan = a.percentageSpan + b.percentageSpan;
           const startAngleRad = Math.min(a.cone.startAngleRad, b.cone.startAngleRad);
           const endAngleRad = Math.max(a.cone.endAngleRad, b.cone.endAngleRad);
           return [{
-            idxStart,
-            idxEnd,
+            indexStart,
+            indexEnd,
             timeStart,
             timeEnd,
-            pctSpan,
+            percentageSpan,
             cone: {
               startAngleRad,
               endAngleRad,
@@ -65,47 +62,37 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       return [a, b];
     };
 
-    let mergedTrends: TimeSeriesPartialTrend[] = [];
-    for (const trend of trends) {
-      if (mergedTrends.length === 0) {
-        mergedTrends.push(trend);
+    let mergedPartialTrends: TimeSeriesPartialTrend[] = [];
+    for (const partialTrend of partialTrends) {
+      if (mergedPartialTrends.length === 0) {
+        mergedPartialTrends.push(partialTrend);
       } else {
-        const prevTrend = mergedTrends.pop() as TimeSeriesPartialTrend;
-        mergedTrends = mergedTrends.concat(mergeTrends(prevTrend, trend));
+        const prevTrend = mergedPartialTrends.pop() as TimeSeriesPartialTrend;
+        mergedPartialTrends = mergedPartialTrends.concat(mergePartialTrends(prevTrend, partialTrend));
       }
     }
 
-    const summaries: Summary[] = mergedTrends.map(trend => {
-      for (const [text, uTrend] of uTrends) {
-        if (uTrend(trend) >= mvThreshold) {
-          const timeStart = formatX(trend.timeStart);
-          const timeEnd = formatX(trend.timeEnd);
-          if (text === 'increasing') {
-            const diff = Math.abs(points[trend.idxEnd].y - points[trend.idxStart].y);
-            return {
-              text: `The traffic from <b>${timeStart}</b> to <b>${timeEnd}</b> <b>increased by ${diff.toFixed(2)}</b>.`,
-              validity: 1.0,
-            };
-          } else if (text === 'decreasing') {
-            const diff = Math.abs(points[trend.idxEnd].y - points[trend.idxStart].y);
-            return {
-              text: `The traffic from <b>${timeStart}</b> to <b>${timeEnd}</b> <b>decreased by ${diff.toFixed(2)}</b>.`,
-              validity: 1.0,
-            };
-          } else {
-            let avg = 0;
-            for (let i = trend.idxStart; i <= trend.idxEnd; i++) {
-              avg += points[i].y;
-            }
-            avg /= trend.idxEnd - trend.idxStart + 1;
-            return {
-              text: `The traffic from <b>${timeStart}</b> to <b>${timeEnd}</b> is <b>constant around ${avg.toFixed(2)}</b>.`,
-              validity: 1.0,
-            };
-          }
+    const summaries: Summary[] = [];
+    for (const partialTrend of mergedPartialTrends) {
+      for (const [dynamic, uDynamic] of uDynamics) {
+        const timeStart = formatX(partialTrend.timeStart);
+        const timeEnd = formatX(partialTrend.timeEnd);
+        if (dynamic === 'increased' || dynamic === 'decreased') {
+          const yAbsoluteDiff = Math.abs(points[partialTrend.indexEnd].y - points[partialTrend.indexStart].y);
+          const text = `The traffic from <b>${timeStart}</b> to <b>${timeEnd}</b>  <b>${dynamic} by ${formatY(yAbsoluteDiff)}</b>.`;
+          const validity = uDynamic(partialTrend);
+          summaries.push({ text, validity });
+        } else {
+          // y-values are similar
+          const ySum = math.sum(math.range(partialTrend.indexStart, partialTrend.indexEnd + 1).map(i => points[i].y));
+          const yAverage = ySum / (partialTrend.indexEnd - partialTrend.indexStart + 1);
+
+          const text = `The traffic from <b>${timeStart}</b> to <b>${timeEnd}</b> is <b>${dynamic} around ${formatY(yAverage)}</b>.`;
+          const validity = uDynamic(partialTrend);
+          summaries.push({ text, validity });
         }
       }
-    }).filter(summary => summary) as Summary[];
+    }
     return summaries;
   });
 }

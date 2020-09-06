@@ -1,46 +1,57 @@
 import * as d3 from 'd3';
 import * as THREE from 'three';
 import { Entity } from 'aframe';
+import { sanitizeUrl } from '@braintree/sanitize-url';
+
+const POINT_SIZE = 0.02;
+const DEFAULT_COLOR = '#F0A202';
+const HOVER_COLOR = 'red';
+const SKY_COLOR = '#4d4d4d';
+const ASSETS_FOLDER = 'assets/marimbaNotes/';
+const GRAPH_SIZE = 1.4;
 
 export class Hapticplot{
     private data: number[];
     private shape: string;
     private container: HTMLElement | null = null;
-    private hscale: d3.ScaleLinear<number, number>;
+    private graphScale: d3.ScaleLinear<number, number>;
+    private hapticScale: d3.ScaleLinear<number, number>;
+    private audioScale: d3.ScaleLinear<number, number>;
 
   constructor(shape: string) {
     this.shape = shape;
   }
 
   init(container: HTMLElement | null, data: number[]){
-    const POINT_SIZE = 0.05;
-    const DEFAULT_COLOR = 'green';
-    const HOVER_COLOR = 'red';
-
     this.data = data;
     this.container = container;
-    // create a scale so that there is correspondence between data set and screen render,
-    // a linear mapping of data set values to values from 0 to 10
-    this.hscale = d3.scaleLinear();
-    this.hscale.domain([0, d3.max(this.data) as number])  // max of dataset
-      .range([0, 100]);
+    // Creates a linear mapping from this.data to graph positions, haptic intensities, and audio selection
+    this.graphScale = d3.scaleLinear()
+      .domain([0, d3.max(this.data) as number])  // max of dataset
+      .range([0, GRAPH_SIZE / 2]);
+    this.hapticScale = d3.scaleLinear()
+      .domain([0, d3.max(this.data) as number])  // max of dataset
+      .range([0, 1]);
+    this.audioScale = d3.scaleLinear()
+      .domain([0, d3.max(this.data) as number])  // max of dataset
+      .range([0, 27]);
     this.setupPoints(DEFAULT_COLOR, HOVER_COLOR, POINT_SIZE);
     this.createSky();
     this.createGridPlane();
   }
 
   /**
-   * selects all entities of type datapoint
+   * Selects all entities of type datapoint
    */
   private getShapes(){
     return d3.select(this.container).selectAll('datapoint');
   }
 
   /**
-   * Generates points in the scene based on initilization data
+   * Generates data points in the scene based on initilization data
    *   - represented in scene as this.shape type entities
-   * @param defaultColor Points default color
-   * @param hoverColor Points color when hovered
+   * @param defaultColor Data points default color
+   * @param hoverColor Data points color when hovered
    * @param size Size of each point
    */
   private setupPoints(defaultColor, hoverColor, size) {
@@ -49,87 +60,109 @@ export class Hapticplot{
       //  - "enter" identifies any DOM elements to be added when # array
       //    elements & # DOM elements don't match
       .data(this.data).enter().append(this.shape).classed('datapoint', true)
-      // Updates points positions based on ingested data
-      .each((d, i , g) => this.setPosition(d, i, g[i]))
       // Adds given color property to all points
       .attr('color', defaultColor)
       // Sets points radius property
       .attr('radius', size)
       // Enables controller interaction with points using superhands' tags
       .attr('hoverable', '')
+      // Updates points positions based on ingested data
+      .each((d, i , g) => this.setPosition(d, i, g[i]))
+      // Adds audio triggers to points based on ingested data
+      .each((d, i , g) => this.setAudio(d, g[i]))
       // Adds listeners for state change events, which trigger a change in the
       // point's color property when a hover event occurs
-      .on('hover-start',  (d, i, g) => this.onHoverStart(g[i], d, hoverColor))
-      .on('hover-end',  (d, i, g) => this.onHoverEnd(g[i], defaultColor));
+      .on('hover-start',  (d, i, g) => this.onHoverStart(g[i], this.hapticScale(d), hoverColor, size))
+      .on('hover-end',  (d, i, g) => this.onHoverEnd(g[i], defaultColor, size));
 
   }
 
   /**
-   * Generates a world space position for each data entity, based on ingested data
+   * Sets a world space position for each point, based on ingested data
    * @param data Ingested Data
    * @param index Crrent index in data array
+   * @param point the point whos position is being set
    */
-  private setPosition(data, index, entity){
-    const x = index / 10;
-    const y = data;
-    const z = -1;
-    (entity as Entity).object3D.position.set(x, y, z);
+  private setPosition(datum, index, point){
+    const x = ((GRAPH_SIZE / 2) / this.data.length) * index;
+    const y = this.graphScale(datum) + 1;
+    const z = -GRAPH_SIZE / 4;
+    (point as Entity).object3D.position.set(x, y, z);
   }
 
   /**
-   * When a data entity begins being hovered by the controller entity
-   *  - triggers a haptic pulse
-   *  - changes the entities color to indicate a pulse has fired
-   * @param entity The entity being hovered
+   * Attaches audio triggers to each point, mapping associated data to mp3 marimba notes
+   * @param datum Ingested Data
+   * @param point the point who's position is being set
+   */
+  private setAudio(datum, point){
+    const sanitizedUrl = sanitizeUrl(`${ASSETS_FOLDER}${Math.round(this.audioScale(datum))}.mp3`);
+    d3.select(point)
+      .attr('sound', `src: url(${sanitizedUrl}); on: hover-start`);
+  }
+
+  /**
+   * Triggers a haptic pulse and changes a points color and size when a it is hovered by the controller entity
+   * @param point The point being hovered
    * @param hapticIntensity A points haptic intensity, based on is associated data
-   * @param hoverColor The colorthe entity takes on while hoverec
+   * @param hoverColor The color the point takes on while hovered
+   * @param size The radius of the point being hovered
    */
-  private onHoverStart(entity, hapticIntensity, hoverColor){
-    d3.event.detail?.hand?.components.haptics.pulse(hapticIntensity, 1000);
-    d3.select(entity).attr('color', hoverColor);
+  private onHoverStart(point, hapticIntensity, hoverColor, size){
+    d3.select(point)
+      .attr('color', hoverColor);
+    if (point.components?.sound?.isPlaying){
+      point.components.sound.stopSound();
+    }
   }
 
   /**
-   * When an object stops being hovered by the controller entity
-   *  - changes the entities color to indicate hovering has ended
-   * @param entity The data entity which is no longer hovered
+   * Changes a points color and size when it stops being hovered by the controller entity
+   * @param point The point which is no longer hovered
    * @param defaultColor The default color of unhovered entities
+   * @param size The radius of the point no longer being hovered
    */
-  private onHoverEnd(entity, defaultColor){
-    d3.select(entity).attr('color', defaultColor);
+  private onHoverEnd(point, defaultColor, size){
+    d3.select(point)
+      .attr('color', defaultColor);
   }
 
-  // Creates and adds a sky box to the scene
+  /**
+   * Creates and adds a sky box to the scene
+   */
   private createSky(){
     const aSky = document.createElement('a-sky');
     this.container!.appendChild(aSky);
-    d3.select(this.container).selectAll('a-sky').attr('color', () => {
-      return '#f2b9af';
-    });
+    d3.select(this.container).selectAll('a-sky').attr('color', SKY_COLOR);
   }
 
-  // Creates and adds grid 3D grid lines to the scene
+  /**
+   * Creates and adds grid 3D grid lines to the scene
+   */
   private createGridPlane()
   {
     const xGrid = document.createElement('a-entity');
     xGrid.id = 'xGrid';
     this.container!.appendChild(xGrid);
-    xGrid.object3D.add(new THREE.GridHelper(50, 50, 0xffffff, 0xffffff));
-    d3.select(this.container).select('#xGrid').attr('position', '0 0 0');
-    d3.select(this.container).select('#xGrid').attr('rotation', '0 0 0');
+    xGrid.object3D.add(new THREE.GridHelper(GRAPH_SIZE, 50, 0xffffff, 0xffffff));
+    d3.select(this.container).select('#xGrid')
+      .attr('position', `0 1 -${GRAPH_SIZE / 4}`)
+      .attr('rotation', '0 0 0');
 
     const yGrid = document.createElement('a-entity');
     yGrid.id = 'yGrid';
     this.container!.appendChild(yGrid);
-    yGrid.object3D.add(new THREE.GridHelper(50, 50, 0xffffff, 0xffffff));
-    d3.select(this.container).select('#yGrid').attr('position', '0 0 0');
-    d3.select(this.container).select('#yGrid').attr('rotation', '0 0 -90');
+    yGrid.object3D.add(new THREE.GridHelper(GRAPH_SIZE, 50, 0xffffff, 0xffffff));
+    d3.select(this.container).select('#yGrid')
+      .attr('position', `0 1 -${GRAPH_SIZE / 4}`)
+      .attr('rotation', '0 0 -90');
 
     const zGrid = document.createElement('a-entity');
     zGrid.id = 'zGrid';
     this.container!.appendChild(zGrid);
-    zGrid.object3D.add(new THREE.GridHelper(50, 50, 0xffffff, 0xffffff));
-    d3.select(this.container).select('#zGrid').attr('position', '0 0 0');
-    d3.select(this.container).select('#zGrid').attr('rotation', '-90 0 0');
+    zGrid.object3D.add(new THREE.GridHelper(GRAPH_SIZE, 50, 0xffffff, 0xffffff));
+    d3.select(this.container).select('#zGrid')
+      .attr('position', `0 1 -${GRAPH_SIZE / 4}`)
+      .attr('rotation', '-90 0 0');
   }
 }

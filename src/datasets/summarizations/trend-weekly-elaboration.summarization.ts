@@ -1,4 +1,4 @@
-
+import * as math from 'mathjs';
 import { Summary } from './types';
 import { TimeSeriesPoint } from '../metas/types';
 import { cacheSummaries } from './utils/commons';
@@ -8,9 +8,9 @@ import {
   sigmaCountQA,
 } from './libs/protoform';
 import {
-  linearRegression,
-  centeredMovingAverage,
-  additiveDecomposition,
+  createLinearModel,
+  createCenteredMovingAveragePoints,
+  additiveDecomposite,
 } from './libs/trend';
 import {
   timeSeriesPointToNumPoint,
@@ -19,7 +19,6 @@ import {
 import {
   normalizePointsY,
 } from './utils/commons';
-import { sum } from '../../utils/misc';
 import { formatY } from '../../utils/formatters';
 
 export function queryFactory(points: TimeSeriesPoint[]) {
@@ -28,12 +27,23 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const normalizedYPoints = normalizePointsY(points);
 
     const centeredMovingAverageHalfWindowSize = 4;
-    const normalizedTrendPoints = centeredMovingAverage(normalizedYPoints, centeredMovingAverageHalfWindowSize);
+    const normalizedTrendPoints = createCenteredMovingAveragePoints(normalizedYPoints, centeredMovingAverageHalfWindowSize);
     const {
-      detrendPoints: normalizedDetrendPoints,
-    } = additiveDecomposition(normalizedYPoints, normalizedTrendPoints, ({ x }) => x.getDay());
+      detrendedPoints: normalizedDetrendPoints,
+    } = additiveDecomposite(normalizedYPoints, normalizedTrendPoints, ({ x }) => x.getDay());
 
-    const uWeekend = (p: TimeSeriesPoint) => p.x.getDay() === 5 ? 0.2 : +(p.x.getDay() === 0 || p.x.getDay() === 6);
+    const uWeekend = (p: TimeSeriesPoint) => {
+      const dayOfWeek = p.x.getDay();
+      switch (dayOfWeek) {
+        case 5: // Friday
+          return 0.2;
+        case 6: // Saturday
+        case 0: // Sunday
+          return 1;
+        default: // All other days
+          return 0;
+      }
+    };
     const uWeekday = (p: TimeSeriesPoint) => 1 - uWeekend(p);
 
     const isWeekend = (p: TimeSeriesPoint) => uWeekend(p) > 0.5;
@@ -41,25 +51,25 @@ export function queryFactory(points: TimeSeriesPoint[]) {
 
     // Only consider weeks with more than 3 days when creating summaries
     // Weeks with 3 days or less are considered to belong to last/next 30 days
-    const normalizedDetrendeekPointArrays = groupPointsByXWeek(normalizedDetrendPoints).filter(weekPoints => weekPoints.length >= 4);
-    const nWeeks = normalizedDetrendeekPointArrays.length;
+    const normalizedDetrendedWeekPointArrays = groupPointsByXWeek(normalizedDetrendPoints).filter(weekPoints => weekPoints.length >= 4);
+    const numOfWeeks = normalizedDetrendedWeekPointArrays.length;
 
-    const weekdayWeekendDiffPoints = normalizedDetrendeekPointArrays.map(weekPoints => {
-      const week = weekPoints[0].x;
+    const weekdayWeekendDiffPoints = normalizedDetrendedWeekPointArrays.map(weekPoints => {
+      const startDateOfWeek = weekPoints[0].x;
       const weekdayPoints = weekPoints.filter(isWeekday);
       const weekendPoints = weekPoints.filter(isWeekend);
-      const weekdayPointsYSum = sum(weekdayPoints.map(({ y }) => y));
-      const weekendPointsYSum = sum(weekdayPoints.map(({ y }) => y));
+      const weekdayPointsYSum = math.sum(weekdayPoints.map(({ y }) => y));
+      const weekendPointsYSum = math.sum(weekdayPoints.map(({ y }) => y));
 
       if (weekdayPoints.length === 0 || weekendPoints.length === 0) {
-        return { x: week, y: -1 };
+        return { x: startDateOfWeek, y: null };
       } else {
         const weekdayPointsYAverage = weekdayPointsYSum / weekdayPoints.length;
         const weekendPointsYAverage = weekendPointsYSum / weekendPoints.length;
         const weekdayWeekendDiff = Math.abs(weekdayPointsYAverage - weekendPointsYAverage);
-        return { x: week, y: weekdayWeekendDiff };
+        return { x: startDateOfWeek, y: weekdayWeekendDiff };
       }
-    }).filter(({ y }) => y >= 0);
+    }).filter(({ y }) => y !== null) as TimeSeriesPoint[];
 
     const uMostPercentage = trapmfL(0.6, 0.7);
     const uEqualDiff = ({ y }) => trapmfR(0.05, 0.1)(y);
@@ -71,26 +81,26 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const weekPointArrays = groupPointsByXWeek(points).filter(weekPoints => weekPoints.length >= 4);
 
     // TODO: Create rate comparison summaries with fuzzy logic for both weekday and overall points
-    const regressionResults = weekPointArrays.map(weekPoints => {
+    const weekLinearModels = weekPointArrays.map(weekPoints => {
       if (isWeekdayWeekendEqual) {
-        return linearRegression(weekPoints.map(timeSeriesPointToNumPoint));
+        return createLinearModel(weekPoints.map(timeSeriesPointToNumPoint));
       } else {
-        return linearRegression(weekPoints.filter(isWeekday).map(timeSeriesPointToNumPoint));
+        return createLinearModel(weekPoints.filter(isWeekday).map(timeSeriesPointToNumPoint));
       }
     });
 
     const ordinalTexts = ['first', 'second', 'third', 'fourth', 'fifth'];
     const summaries: Summary[] = [];
 
-    for (let i = 0; i < nWeeks; i++) {
-      const weekRate = regressionResults[i].gradient + 1e-4;
+    for (let i = 0; i < numOfWeeks; i++) {
+      const weekRate = weekLinearModels[i].gradient + 1e-4;
       const weekRateAbsolute = Math.abs(weekRate);
       const weekdayWeekendDescriptor = isWeekdayWeekendEqual ? 'from Monday to Sunday' : 'from Monday to Friday';
 
-      const dynamicDescriptor = weekRate >= 0 ? 'increasing' : 'decreasing';
+      const dynamicDescriptor = weekRate >= 0 ? 'increased' : 'decreased';
 
-      const r2Text = `R2 = ${regressionResults[i].r2}`;
-      const text = `The active users <b>${weekdayWeekendDescriptor}</b> in the <b>${ordinalTexts[i]} week</b> was <b>${dynamicDescriptor}</b> by <b>${formatY(weekRateAbsolute)}</b> users per day <b>(${r2Text})</b>.`;
+      const r2Text = `R2 = ${weekLinearModels[i].r2}`;
+      const text = `The active users <b>${weekdayWeekendDescriptor}</b> in the <b>${ordinalTexts[i]} week</b> <b>${dynamicDescriptor}</b> by <b>${formatY(weekRateAbsolute)}</b> users per day <b>(${r2Text})</b>.`;
 
       summaries.push({
         text,
@@ -106,7 +116,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
           const yDiffAbsolute = Math.abs(yDiff);
           const yDiffDynamicDescriptor = yDiff >= 0 ? 'increased' : 'decreased';
 
-          const friSatDiffText = `The active users from Friday to Saturday <b>${yDiffDynamicDescriptor} by ${yDiffAbsolute}</b> users in the <b>${ordinalTexts[i]} week.`
+          const friSatDiffText = `The active users from Friday to Saturday <b>${yDiffDynamicDescriptor} by ${yDiffAbsolute}</b> users in the <b>${ordinalTexts[i]} week.`;
           summaries.push({
             text: friSatDiffText,
             validity: 1.0,
