@@ -87,8 +87,8 @@ export function queryFactory(points: TimeSeriesPoint[]) {
         const timeStartText = daysOfTheWeek[partialTrend.timeStart.getDay()];
         const timeEndText = daysOfTheWeek[partialTrend.timeEnd.getDay()];
         const rateAbsolute = Math.abs(
-          denormalizeY(weeklyPatternPoints[partialTrend.indexStart]).y - denormalizeY(weeklyPatternPoints[partialTrend.indexStart]).y
-        ) / (partialTrend.indexEnd - partialTrend.indexEnd);
+          denormalizeY(weeklyPatternPoints[partialTrend.indexEnd]).y - denormalizeY(weeklyPatternPoints[partialTrend.indexStart]).y
+        ) / (partialTrend.indexEnd - partialTrend.indexStart);
 
         if (dynamic === 'similar') {
           const text = `The active users from <b>${timeStartText}</b> to <b>${timeEndText}</b> <b>remained similar</b> in average.`;
