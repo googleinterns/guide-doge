@@ -7,16 +7,15 @@ import {
   trapmf,
   trapmfL,
   trapmfR,
-  sigmaCountQA,
   MembershipFunction,
   PointMembershipFunction,
 } from './libs/protoform';
 import {
   TimeSeriesPartialTrend,
-  linearRegression,
-  centeredMovingAverage,
-  normalizedUniformPartiallyLinearEpsApprox,
-  additiveDecomposition,
+  createLinearModel,
+  createCenteredMovingAveragePoints,
+  createPartialTrends,
+  additiveDecomposite,
 } from './libs/trend';
 import {
   timeSeriesPointToNumPoint,
@@ -26,7 +25,6 @@ import {
   NormalizedYPoint,
   normalizePointsY,
 } from './utils/commons';
-import { sum } from '../../utils/misc';
 import { formatY } from '../../utils/formatters';
 
 export function queryFactory(points: TimeSeriesPoint[]) {
@@ -48,17 +46,17 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const normalizedPoints = normalizedYWeekPointArrays.flat();
     const zeroPoints = normalizedPoints.map(({ x, y }) => ({ x, y: 0 }));
     const {
-      seasonPoints: normalizedYSeasonPoints,
+      seasonalPoints: normalizedYSeasonalPoints,
       residualPoints: normalizedYResidualPoints,
-    } = additiveDecomposition(normalizedPoints, zeroPoints, ({ x }) => x.getDay());
+    } = additiveDecomposite(normalizedPoints, zeroPoints, ({ x }) => x.getDay());
 
     const uSmallEstimationResidualStd = trapmfR(0.075, 0.1);
     const residualStd = math.std(normalizedYResidualPoints.map(({ y }) => y));
     const weeklyPatternValidity = uSmallEstimationResidualStd(residualStd);
 
     // The x-value(day) of the first point in the array is always Monday
-    const weeklyPatternPoints = normalizedYSeasonPoints.slice(0, 7) as NormalizedYPoint<Date>[];
-    const weeklyPatternTrends = normalizedUniformPartiallyLinearEpsApprox(weeklyPatternPoints, 0.02, false);
+    const weeklyPatternPoints = normalizedYSeasonalPoints.slice(0, 7) as NormalizedYPoint<Date>[];
+    const weeklyPatternTrends = createPartialTrends(weeklyPatternPoints, 0.02, false);
 
     const applyTrendAngleWithWeight = (f: MembershipFunction) => ({ cone }: TimeSeriesPartialTrend) => {
       const avgAngleRad = (cone.endAngleRad + cone.startAngleRad) / 2;
@@ -81,19 +79,19 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const mergeTrends = (a: TimeSeriesPartialTrend, b: TimeSeriesPartialTrend): TimeSeriesPartialTrend[] => {
       for (const [_, uTrend] of uTrends) {
         if (uTrend(a) >= mvThreshold && uTrend(b) >= mvThreshold) {
-          const idxStart = Math.min(a.idxStart, b.idxStart);
-          const idxEnd = Math.max(a.idxEnd, b.idxEnd);
-          const timeStart = weeklyPatternPoints[idxStart].x;
-          const timeEnd = weeklyPatternPoints[idxEnd].x;
-          const pctSpan = a.pctSpan + b.pctSpan;
+          const indexStart = Math.min(a.indexStart, b.indexStart);
+          const indexEnd = Math.max(a.indexEnd, b.indexEnd);
+          const timeStart = weeklyPatternPoints[indexStart].x;
+          const timeEnd = weeklyPatternPoints[indexEnd].x;
+          const percentageSpan = a.percentageSpan + b.percentageSpan;
           const startAngleRad = Math.min(a.cone.startAngleRad, b.cone.startAngleRad);
           const endAngleRad = Math.max(a.cone.endAngleRad, b.cone.endAngleRad);
           return [{
-            idxStart,
-            idxEnd,
+            indexStart,
+            indexEnd,
             timeStart,
             timeEnd,
-            pctSpan,
+            percentageSpan,
             cone: {
               startAngleRad,
               endAngleRad,
@@ -124,8 +122,8 @@ export function queryFactory(points: TimeSeriesPoint[]) {
             const timeStartText = daysOfTheWeek[trend.timeStart.getDay()];
             const timeEndText = daysOfTheWeek[trend.timeEnd.getDay()];
             const rateAbsolute = Math.abs(
-              denormalizeY(weeklyPatternPoints[trend.idxEnd]).y - denormalizeY(weeklyPatternPoints[trend.idxStart]).y
-            ) / (trend.idxEnd - trend.idxStart);
+              denormalizeY(weeklyPatternPoints[trend.indexStart]).y - denormalizeY(weeklyPatternPoints[trend.indexStart]).y
+            ) / (trend.indexEnd - trend.indexEnd);
 
             if (trendDynamicDescriptor === 'increasing') {
               const text = `The active users from <b>${timeStartText}</b> to <b>${timeEndText}</b> was <b> increasing by ${formatY(rateAbsolute)} per day</b>.`;

@@ -89,13 +89,12 @@ export interface TimeSeriesPartialTrend {
  * @param points The time-series points to extract partial trends.
  * @param eps Radius of circle around points when finding the intersection of cones for a partial trend.
  */
-export function createPartialTrends(points: TimeSeriesPoint[], eps: number): TimeSeriesPartialTrend[] {
+export function createPartialTrends(points: TimeSeriesPoint[], eps: number, normalizeY: boolean = true): TimeSeriesPartialTrend[] {
   const numPoints = points.map(timeSeriesPointToNumPoint);
-  const normalizedPoints = normalizePoints(numPoints, {}, { min: 0 });
+  const normalizedXPoints = normalizePointsX(numPoints);
+  const normalizedPoints: NumPoint[] = normalizeY ? normalizePointsY(normalizedXPoints) : normalizedXPoints;
   const normalizedXMin = Math.min(...normalizedPoints.map(({ x }) => x));
   const normalizedXMax = Math.max(...normalizedPoints.map(({ x }) => x));
-  const normalizedXPoints = normalizePointsX(numPoints);
-  const normalizedPoints = normalizeY ? normalizePointsY(normalizedXPoints) : normalizedXPoints;
 
   if (normalizedPoints.length <= 1) {
     return [];
