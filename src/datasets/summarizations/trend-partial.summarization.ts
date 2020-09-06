@@ -67,8 +67,8 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       if (mergedPartialTrends.length === 0) {
         mergedPartialTrends.push(partialTrend);
       } else {
-        const prevTrend = mergedPartialTrends.pop() as TimeSeriesPartialTrend;
-        mergedPartialTrends = mergedPartialTrends.concat(mergePartialTrends(prevTrend, partialTrend));
+        const previousPartialTrend = mergedPartialTrends.pop() as TimeSeriesPartialTrend;
+        mergedPartialTrends = mergedPartialTrends.concat(mergePartialTrends(previousPartialTrend, partialTrend));
       }
     }
 

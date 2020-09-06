@@ -2,29 +2,27 @@
 import * as math from 'mathjs';
 import { Summary } from './types';
 import { TimeSeriesPoint } from '../metas/types';
-import { cacheSummaries, normalizePointsX } from './utils/commons';
+import { cacheSummaries } from './utils/commons';
 import {
   trapmf,
   trapmfL,
   trapmfR,
-  MembershipFunction,
   PointMembershipFunction,
 } from './libs/protoform';
 import {
-  TimeSeriesPartialTrend,
-  createLinearModel,
-  createCenteredMovingAveragePoints,
-  createPartialTrends,
   additiveDecomposite,
+  createPartialTrends,
+  mapConeAngle,
+  TimeSeriesPartialTrend,
 } from './libs/trend';
 import {
-  timeSeriesPointToNumPoint,
   groupPointsByXWeek,
 } from './utils/time-series';
 import {
   NormalizedYPoint,
   normalizePointsY,
 } from './utils/commons';
+import { chartDiagonalAngle } from './utils/constants';
 import { formatY } from '../../utils/formatters';
 
 export function queryFactory(points: TimeSeriesPoint[]) {
@@ -56,29 +54,25 @@ export function queryFactory(points: TimeSeriesPoint[]) {
 
     // The x-value(day) of the first point in the array is always Monday
     const weeklyPatternPoints = normalizedYSeasonalPoints.slice(0, 7) as NormalizedYPoint<Date>[];
-    const weeklyPatternTrends = createPartialTrends(weeklyPatternPoints, 0.02, false);
+    const weeklyPatternPartialTrends = createPartialTrends(weeklyPatternPoints, 0.02, false);
 
-    const applyTrendAngleWithWeight = (f: MembershipFunction) => ({ cone }: TimeSeriesPartialTrend) => {
-      const avgAngleRad = (cone.endAngleRad + cone.startAngleRad) / 2;
-      return f(avgAngleRad);
-    };
+    const uIncreasingDynamic = mapConeAngle(trapmfL(chartDiagonalAngle / 15, chartDiagonalAngle / 15));
+    const uConstantDynamic = mapConeAngle(
+      trapmf(-chartDiagonalAngle / 15, -chartDiagonalAngle / 15, chartDiagonalAngle / 15, chartDiagonalAngle / 15)
+    );
+    const uDecreasingDynamic = mapConeAngle(trapmfR(-chartDiagonalAngle / 15, -chartDiagonalAngle / 15));
 
-    const ANGMX = Math.PI / 2;
-    const uIncreasingTrend = applyTrendAngleWithWeight(trapmfL(ANGMX / 15, ANGMX / 15));
-    const uConstantTrend = applyTrendAngleWithWeight(trapmf(-ANGMX / 15, -ANGMX / 15, ANGMX / 15, ANGMX / 15));
-    const uDecreasingTrend = applyTrendAngleWithWeight(trapmfR(-ANGMX / 15, -ANGMX / 15));
-
-    const uTrends: [string, PointMembershipFunction<TimeSeriesPartialTrend>][] = [
-      ['increasing', uIncreasingTrend],
-      ['constant', uConstantTrend],
-      ['decreasing', uDecreasingTrend],
+    const uDynamics: [string, PointMembershipFunction<TimeSeriesPartialTrend>][] = [
+      ['increasing', uIncreasingDynamic],
+      ['similar', uConstantDynamic],
+      ['decreasing', uDecreasingDynamic],
     ];
 
-    const mvThreshold = 0.7;
+    const validityThreshold = 0.7;
 
-    const mergeTrends = (a: TimeSeriesPartialTrend, b: TimeSeriesPartialTrend): TimeSeriesPartialTrend[] => {
-      for (const [_, uTrend] of uTrends) {
-        if (uTrend(a) >= mvThreshold && uTrend(b) >= mvThreshold) {
+    const mergePartialTrends = (a: TimeSeriesPartialTrend, b: TimeSeriesPartialTrend): TimeSeriesPartialTrend[] => {
+      for (const uDynamic of [uIncreasingDynamic, uConstantDynamic, uDecreasingDynamic]) {
+        if (uDynamic(a) >= validityThreshold && uDynamic(b) >= validityThreshold) {
           const indexStart = Math.min(a.indexStart, b.indexStart);
           const indexEnd = Math.max(a.indexEnd, b.indexEnd);
           const timeStart = weeklyPatternPoints[indexStart].x;
@@ -102,56 +96,45 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       return [a, b];
     };
 
-    const mergedWeeklyPatternTrends: TimeSeriesPartialTrend[] = [];
-    for (const trend of weeklyPatternTrends) {
-      if (mergedWeeklyPatternTrends.length === 0) {
-        mergedWeeklyPatternTrends.push(trend);
+    const mergedWeeklyPatternPartialTrends: TimeSeriesPartialTrend[] = [];
+    for (const partialTrend of weeklyPatternPartialTrends) {
+      if (mergedWeeklyPatternPartialTrends.length === 0) {
+        mergedWeeklyPatternPartialTrends.push(partialTrend);
       } else {
-        const prevTrend = mergedWeeklyPatternTrends.pop() as TimeSeriesPartialTrend;
-        mergedWeeklyPatternTrends.push(...mergeTrends(prevTrend, trend));
+        const previousPartialTrend = mergedWeeklyPatternPartialTrends.pop() as TimeSeriesPartialTrend;
+        mergedWeeklyPatternPartialTrends.push(...mergePartialTrends(previousPartialTrend, partialTrend));
       }
     }
 
     const daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-    const summaries: Summary[] = [];
-    if (weeklyPatternValidity > 0.7) {
-      for (const trend of mergedWeeklyPatternTrends) {
-        for (const [trendDynamicDescriptor, uTrend] of uTrends) {
-          if (uTrend(trend) >= mvThreshold) {
-            const timeStartText = daysOfTheWeek[trend.timeStart.getDay()];
-            const timeEndText = daysOfTheWeek[trend.timeEnd.getDay()];
-            const rateAbsolute = Math.abs(
-              denormalizeY(weeklyPatternPoints[trend.indexStart]).y - denormalizeY(weeklyPatternPoints[trend.indexStart]).y
-            ) / (trend.indexEnd - trend.indexEnd);
+    const summaries: Summary[] = [{
+      text: 'There is no weekly cyclic pattern in the data.',
+      validity: 1.0 - weeklyPatternValidity,
+    }];
 
-            if (trendDynamicDescriptor === 'increasing') {
-              const text = `The active users from <b>${timeStartText}</b> to <b>${timeEndText}</b> was <b> increasing by ${formatY(rateAbsolute)} per day</b>.`;
-              summaries.push({
-                text,
-                validity: 1.0,
-              });
-            } else if (trendDynamicDescriptor === 'decreasing') {
-              const text = `The active users from <b>${timeStartText}</b> to <b>${timeEndText}</b> was <b> decreasing by ${formatY(rateAbsolute)} per day</b>.`;
-              summaries.push({
-                text,
-                validity: 1.0,
-              });
-            } else {
-              const text = `The active users from <b>${timeStartText}</b> to <b>${timeEndText}</b> <b>remained similar</b>.`;
-              summaries.push({
-                text,
-                validity: 1.0,
-              });
-            }
-          }
+    for (const partialTrend of mergedWeeklyPatternPartialTrends) {
+      for (const [dynamic, uDynamic] of uDynamics) {
+        const timeStartText = daysOfTheWeek[partialTrend.timeStart.getDay()];
+        const timeEndText = daysOfTheWeek[partialTrend.timeEnd.getDay()];
+        const rateAbsolute = Math.abs(
+          denormalizeY(weeklyPatternPoints[partialTrend.indexStart]).y - denormalizeY(weeklyPatternPoints[partialTrend.indexStart]).y
+        ) / (partialTrend.indexEnd - partialTrend.indexEnd);
+
+        if (dynamic === 'similar') {
+          const text = `The active users from <b>${timeStartText}</b> to <b>${timeEndText}</b> <b>remained similar</b> in average.`;
+          summaries.push({
+            text,
+            validity: Math.min(uDynamic(partialTrend), weeklyPatternValidity),
+          });
+        } else {
+          const text = `The active users from <b>${timeStartText}</b> to <b>${timeEndText}</b> was <b> ${dynamic} by ${formatY(rateAbsolute)} per day</b> in average.`;
+          summaries.push({
+            text,
+            validity: Math.min(uDynamic(partialTrend), weeklyPatternValidity),
+          });
         }
       }
-    } else {
-      summaries.push({
-        text: 'There is no weekly cyclic pattern in the data.',
-        validity: 1.0,
-      });
     }
 
     return summaries;
