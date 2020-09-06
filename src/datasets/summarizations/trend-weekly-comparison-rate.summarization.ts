@@ -92,33 +92,41 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const summaries: Summary[] = [];
 
     for (let i = 0; i < numOfWeeks - 1; i++) {
-      const eps = 1e-4;
+      const eps = 1e-5;
       const currentWeekRate = weekLinearModels[i].gradient + eps;
       const nextWeekRate = weekLinearModels[i + 1].gradient + eps;
+      const currentWeekRateAbsolute = Math.abs(currentWeekRate);
+      const nextWeekRateAbsolute = Math.abs(nextWeekRate);
+
       const rateDiff = nextWeekRate - currentWeekRate;
       const rateDiffAbsolute = Math.abs(rateDiff);
+      const absoluteRateDiff = nextWeekRateAbsolute - currentWeekRateAbsolute;
+      const absoluteRateDiffAbsolute = Math.abs(absoluteRateDiff);
 
       const weekdayWeekendDescriptor = weekdayWeekendEqualValidity > 0.7 ? '' : 'of weekdays ';
 
       if (rateDiffAbsolute > 2 && currentWeekRate * nextWeekRate < 0) {
-        const getDynamicDescriptor = (v) => v >= 0 ? 'increasing' : 'decreasing';
-        const text = `The active users <b>${weekdayWeekendDescriptor}</b>was <b>${getDynamicDescriptor(nextWeekRate)}</b> in the <b>${ordinalTexts[i + 1]} week</b> but <b>${getDynamicDescriptor(currentWeekRate)}</b> in the <b>${ordinalTexts[i]} week</b>.`;
+        const getDynamicDescriptor = (v: number) => v >= 0 ? 'increasing' : 'decreasing';
+        const currentWeekRateDynamicDescriptor = getDynamicDescriptor(currentWeekRate);
+        const nextWeekRateDynamicDescriptor = getDynamicDescriptor(nextWeekRate);
+        const text = `The active users <b>${weekdayWeekendDescriptor}</b>was <b>${nextWeekRateDynamicDescriptor}</b> in the <b>${ordinalTexts[i + 1]} week</b> but <b>${currentWeekRateDynamicDescriptor}</b> in the <b>${ordinalTexts[i]} week</b>.`;
         summaries.push({
           text,
           validity: 1.0,
         });
       } else {
-        const percentageIncrease = rateDiff / currentWeekRate * 100;
-        const precentageChangeDescriptor = percentageIncrease >= 0 ? 'more' : 'less';
-        const percentageChangeDynamicDescriptor = percentageIncrease >= 0 ? 'faster' : 'slower';
+        const percentageChange = absoluteRateDiff / currentWeekRateAbsolute * 100;
+        const precentageChangeDescriptor = percentageChange >= 0 ? 'more' : 'less';
+        const percentageChangeDynamicDescriptor = percentageChange >= 0 ? 'faster' : 'slower';
+        const dynamicDescriptor = currentWeekRate >= 0 ? 'increased' : 'decreased';
 
-        const percentageChangeAbsolute = Math.abs(percentageIncrease);
+        const percentageChangeAbsolute = Math.abs(percentageChange);
         const percentageChangeText = percentageChangeAbsolute > 5 && rateDiffAbsolute > 2
-          ? `${formatY(percentageChangeAbsolute)}% (${formatY(rateDiffAbsolute)} ${precentageChangeDescriptor} user increase per day) ${percentageChangeDynamicDescriptor} than`
+          ? `${formatY(percentageChangeAbsolute)}% (${formatY(absoluteRateDiffAbsolute)} ${precentageChangeDescriptor} user ${dynamicDescriptor} per day) ${percentageChangeDynamicDescriptor} than`
           : 'in the same rate as';
 
 
-        const text = `The active users <b>${weekdayWeekendDescriptor}</b>in the <b>${ordinalTexts[i + 1]} week</b> grew <b>${percentageChangeText}</b> the <b>${ordinalTexts[i]} week</b>.`;
+        const text = `The active users <b>${weekdayWeekendDescriptor}</b>in the <b>${ordinalTexts[i + 1]} week</b> ${dynamicDescriptor} <b>${percentageChangeText}</b> the <b>${ordinalTexts[i]} week</b>.`;
 
         summaries.push({
           text,
