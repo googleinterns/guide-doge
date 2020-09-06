@@ -55,18 +55,18 @@ export function queryFactory(points: TimeSeriesPoint[]) {
 
     // The x-value(day) of the first point in the array is always Monday
     const weeklyPatternPoints = normalizedYSeasonalPoints.slice(0, 7) as NormalizedYPoint<Date>[];
-    const weeklyPatternPartialTrends = createPartialTrends(weeklyPatternPoints, 0.02, false);
+    const weeklyPatternPartialTrends = createPartialTrends(weeklyPatternPoints, 1e-8, false);
 
-    const uIncreasingDynamic = mapConeAngle(trapmfL(chartDiagonalAngle / 15, chartDiagonalAngle / 15));
+    const uIncreasingDynamic = mapConeAngle(trapmfL(chartDiagonalAngle / 8, chartDiagonalAngle / 8));
     const uConstantDynamic = mapConeAngle(
-      trapmf(-chartDiagonalAngle / 15, -chartDiagonalAngle / 15, chartDiagonalAngle / 15, chartDiagonalAngle / 15)
+      trapmf(-chartDiagonalAngle / 8, -chartDiagonalAngle / 8, chartDiagonalAngle / 8, chartDiagonalAngle / 8)
     );
-    const uDecreasingDynamic = mapConeAngle(trapmfR(-chartDiagonalAngle / 15, -chartDiagonalAngle / 15));
+    const uDecreasingDynamic = mapConeAngle(trapmfR(-chartDiagonalAngle / 8, -chartDiagonalAngle / 8));
 
     const uDynamics: [string, PointMembershipFunction<TimeSeriesPartialTrend>][] = [
-      ['increasing', uIncreasingDynamic],
+      ['increased', uIncreasingDynamic],
       ['similar', uConstantDynamic],
-      ['decreasing', uDecreasingDynamic],
+      ['decreased', uDecreasingDynamic],
     ];
 
     const mergedWeeklyPatternPartialTrends = mergePartialTrends(
@@ -97,7 +97,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
             validity: Math.min(uDynamic(partialTrend), weeklyPatternValidity),
           });
         } else {
-          const text = `The active users from <b>${timeStartText}</b> to <b>${timeEndText}</b> was <b> ${dynamic} by ${formatY(rateAbsolute)} per day</b> in average.`;
+          const text = `The active users from <b>${timeStartText}</b> to <b>${timeEndText}</b> <b>${dynamic} by ${formatY(rateAbsolute)} per day</b> in average.`;
           summaries.push({
             text,
             validity: Math.min(uDynamic(partialTrend), weeklyPatternValidity),
