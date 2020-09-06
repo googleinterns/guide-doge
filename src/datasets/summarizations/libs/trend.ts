@@ -1,31 +1,45 @@
 import * as regression from 'regression';
 import * as math from 'mathjs';
-import { TimeSeriesPoint, NumPoint } from '../../metas/types';
+import { MembershipFunction } from './protoform';
+import { TimeSeriesPoint, NumPoint, XYPoint } from '../../metas/types';
 import { normalizePoints, pointToPair, pairToPoint } from '../utils/commons';
 import { timeSeriesPointToNumPoint } from '../utils/time-series';
-import { sum } from '../../../utils/misc';
 
-export interface LinearRegressionResult {
+export interface LinearModel {
+  /* The gradient of linear model, which is the coefficient m in equation y = mx + c */
   gradient: number;
+  /* The angle between the 2D linear model (slope) and x-axis in radius */
   gradientAngleRad: number;
+  /* The y-intercept of linear model, which is the coefficient c in equation y = mx + c */
   yIntercept: number;
+  /* The coefficient of determination (R squared) value */
   r2: number;
+  /* The points with x-values from input points and predicted y-values */
   prediction: NumPoint[];
+  /* The mean of absolute errors between y-values of input points and predicted y-values */
   absoluteErrorMean: number;
+  /* The standard deviation of absolute errors between y-values of input points and predicted y-values */
   absoluteErrorStd: number;
 }
 
-export function linearRegression(points: NumPoint[]): LinearRegressionResult {
+/**
+ * Create a linear model that the numerical X-Y points fit with coefficients m and c in equation
+ * y = mx + c with linear regression. It minimize the residual sum of squares between the y-values
+ * of input points, and the predicted y-values by the linear approximation.
+ *
+ * @param points The numerical X-Y points to fit a linear model
+ */
+export function createLinearModel(points: NumPoint[]): LinearModel {
   const pairs = points.map(pointToPair);
-  const result = regression.linear(pairs);
-  const gradient = result.equation[0];
-  const yIntercept = result.equation[1];
-  const r2 = result.r2;
+  const model = regression.linear(pairs);
+  const gradient = model.equation[0];
+  const yIntercept = model.equation[1];
+  const r2 = model.r2;
   const gradientAngleRad = Math.atan(gradient);
-  const prediction = result.points.map(pairToPoint);
+  const prediction = model.points.map(pairToPoint);
 
-  const errors = points.map(({ y }, i) => {
-    return math.abs(y - prediction[i].y);
+  const errors = points.map((point, i) => {
+    return Math.abs(point.y - prediction[i].y);
   });
 
   const absoluteErrorMean = math.mean(errors);
@@ -49,18 +63,37 @@ export interface Cone2D {
 }
 
 export interface TimeSeriesPartialTrend {
-  idxStart: number;
-  idxEnd: number;
+  /* The index of the trend's first point in points array */
+  indexStart: number;
+  /* The index of the trend's last point in points array */
+  indexEnd: number;
+  /* The time (x-value) of the trend's first point */
   timeStart: Date;
+  /* The time (x-value) of the trend's last point */
   timeEnd: Date;
-  pctSpan: number;
+  /* The time span percentage of the trend to the total time span of points array */
+  percentageSpan: number;
+  /* The intersection of cones formed by the points belong to the trend */
   cone: Cone2D;
 }
 
-
-export function normalizedUniformPartiallyLinearEpsApprox(points: TimeSeriesPoint[], eps: number): TimeSeriesPartialTrend[] {
+/**
+ * Create an array of partial trend which approximate the normalized time-series points with uniform partially
+ * linear eps-approximation. The x-values and y-values of points are normalized first regarding the size of
+ * chart before extracting trends.
+ *
+ * Reference:
+ *  Kacprzyk, Janusz, Anna Wilbik, and S. Zadrożny. "Linguistic summarization of time series using a fuzzy quantifier driven aggregation.",
+ *    Fuzzy Sets and Systems 159.12 (2008): 1485-1499.
+ *
+ * @param points The time-series points to extract partial trends.
+ * @param eps Radius of circle around points when finding the intersection of cones for a partial trend.
+ */
+export function createPartialTrends(points: TimeSeriesPoint[], eps: number): TimeSeriesPartialTrend[] {
   const numPoints = points.map(timeSeriesPointToNumPoint);
   const normalizedPoints = normalizePoints(numPoints, {}, { min: 0 });
+  const normalizedXMin = Math.min(...normalizedPoints.map(({ x }) => x));
+  const normalizedXMax = Math.max(...normalizedPoints.map(({ x }) => x));
 
   if (normalizedPoints.length <= 1) {
     return [];
@@ -72,7 +105,7 @@ export function normalizedUniformPartiallyLinearEpsApprox(points: TimeSeriesPoin
     let coneij: Cone2D;
     while (j < normalizedPoints.length) {
       let k = j;
-      let coneik = calcCone(normalizedPoints[i], normalizedPoints[k], eps);
+      let coneik = createCone(normalizedPoints[i], normalizedPoints[k], eps);
       coneij = coneik;
       do {
         coneij = intersectCone(coneij, coneik) as Cone2D;
@@ -81,15 +114,15 @@ export function normalizedUniformPartiallyLinearEpsApprox(points: TimeSeriesPoin
         if (k === normalizedPoints.length) {
           break;
         }
-        coneik = calcCone(normalizedPoints[i], normalizedPoints[k], eps);
+        coneik = createCone(normalizedPoints[i], normalizedPoints[k], eps);
       } while (intersectCone(coneij, coneik) !== null);
 
       trends.push({
-        idxStart: i,
-        idxEnd: j,
+        indexStart: i,
+        indexEnd: j,
         timeStart: points[i].x,
         timeEnd: points[j].x,
-        pctSpan: normalizedPoints[j].x - normalizedPoints[i].x,
+        percentageSpan: (normalizedPoints[j].x - normalizedPoints[i].x) / (normalizedXMax - normalizedXMin),
         cone: coneij,
       });
 
@@ -100,7 +133,7 @@ export function normalizedUniformPartiallyLinearEpsApprox(points: TimeSeriesPoin
   }
 }
 
-function calcCone(p1: NumPoint, p2: NumPoint, eps: number): Cone2D {
+function createCone(p1: NumPoint, p2: NumPoint, eps: number): Cone2D {
   const { x: x1, y: y1 } = p1;
   const { x: x2, y: y2 } = p2;
   const dx = x2 - x1;
@@ -133,33 +166,71 @@ function intersectCone(c1: Cone2D, c2: Cone2D): Cone2D | null {
   }
 }
 
-export function exponentialMovingAverage(points: TimeSeriesPoint[], alpha = 0.3): TimeSeriesPoint[] {
-  const N = points.length;
-  const ys = points.map(({ y }) => y);
+/**
+ * A function decorator that maps the cone angle of the input partial trend to the membership function.
+ *
+ * @param mf: The membership function that takes the cone angle as input.
+ */
+export function mapConeAngle(mf: MembershipFunction) {
+  return ({ cone }: TimeSeriesPartialTrend) => {
+    const coneAngleRadAverage = (cone.endAngleRad + cone.startAngleRad) / 2;
+    return mf(coneAngleRadAverage);
+  };
+}
 
-  const Ss = new Array(N).fill(0);
+/**
+ * Create an array of points with smoothed y-values using exponential moving average.
+ * The exponential moving average for a series of y-values(Y) are calculated with the following recursive formula:
+ * ```
+ * if (t == 0) {
+ *   S[t] = Y[0]
+ * } else {
+ *   S[t] = alpha * Y[t] + (1 - alpha) * Y[t - 1]
+ * }
+ * ```
+ *
+ * @param points The points to apply exponential moving average.
+ * @param alpha The degree of weighting decrease, should be a constant smoothing factor between 0 and 1.
+ * A higher alpha discounts older observations faster.
+ */
+export function createExponentialMovingAveragePoints<T>(points: XYPoint<T, number>[], alpha = 0.3): XYPoint<T, number>[] {
+  const N = points.length;
+  const yValues = points.map(({ y }) => y);
+
+  const smoothedYValues: number[] = new Array(N);
   for (let i = 0; i < N; i++) {
-    Ss[i] = alpha * ys[i] + (1.0 - alpha) * (Ss[i - 1] ?? ys[i]);
+    smoothedYValues[i] = alpha * yValues[i] + (1.0 - alpha) * (smoothedYValues[i - 1] ?? yValues[i]);
   }
 
-  const smoothedPoints = Ss.map((S, i) => ({
+  const smoothedPoints = smoothedYValues.map((y, i) => ({
     x: points[i].x,
-    y: S,
+    y,
   }));
   return smoothedPoints;
 }
 
-export function centeredMovingAverage(points: TimeSeriesPoint[], k: number): TimeSeriesPoint[] {
-  const L = points.length;
-  const smoothedPoints: TimeSeriesPoint[] = [];
+/**
+ * Create an array of points with smoothed y-values using centered moving average. The length of the
+ * returned points array is equal to the length of the input array, where smaller window size is used to compute
+ * left and right averages for points close to the edge of the array to get smoothed y-value.
+ *
+ * Reference: https://www.itl.nist.gov/div898/handbook/pmc/section4/pmc422.htm
+ *
+ * @param points The points to apply centered moving average.
+ * @param k The half window (period) size for computing the left and right average for element
+ * in the points array, should be a positive integer. The actual window (period) size is equal to 2*k.
+ */
+export function createCenteredMovingAveragePoints<T>(points: XYPoint<T, number>[], k: number): XYPoint<T, number>[] {
+  const numOfPoints = points.length;
+  const smoothedPoints: XYPoint<T, number>[] = [];
   for (let i = 0; i < points.length; i++) {
-    const lSumPoints = points.slice(Math.max(0, i - k), Math.min(L, i + k));
-    const rSumPoints = points.slice(Math.max(0, i - k + 1), Math.min(L, i + k + 1));
+    const leftPoints = points.slice(Math.max(0, i - k), Math.min(numOfPoints, i + k));
+    const rightPoints = points.slice(Math.max(0, i - k + 1), Math.min(numOfPoints, i + k + 1));
 
-    const lSum = sum(lSumPoints.map(({ y }) => y));
-    const rSum = sum(rSumPoints.map(({ y }) => y));
+    const leftPointsSum = math.sum(leftPoints.map(({ y }) => y));
+    const rightPointsSum = math.sum(rightPoints.map(({ y }) => y));
 
-    const smoothedY = 0.5 * (lSum / lSumPoints.length + rSum / rSumPoints.length);
+    const smoothedY = 0.5 * (leftPointsSum / leftPoints.length + rightPointsSum / rightPoints.length);
     smoothedPoints.push({
       x: points[i].x,
       y: smoothedY,
@@ -169,48 +240,71 @@ export function centeredMovingAverage(points: TimeSeriesPoint[], k: number): Tim
 }
 
 export type GroupIdentifier = string | number;
-export interface DecompositionResult {
-  detrendPoints: TimeSeriesPoint[];
-  seasonPoints: TimeSeriesPoint[];
-  residualPoints: TimeSeriesPoint[];
+
+export interface DecompositionResult<T> {
+  detrendedPoints: XYPoint<T, number>[];
+  seasonalPoints: XYPoint<T, number>[];
+  residualPoints: XYPoint<T, number>[];
 }
 
-export function additiveDecomposition(
-  points: TimeSeriesPoint[],
-  trendPoints: TimeSeriesPoint[],
-  groupFn: (point: TimeSeriesPoint) => GroupIdentifier): DecompositionResult {
+/**
+ * Create the detrended, seasonal, and residual points from the input points and trend points arrays with
+ * additive decomposition. The relationships between the input and output are formualted in the following
+ * equations:
+ * - `DetrendedPoints[i].y = Points[i].y - TrendPoints[i].y`
+ * - `Points[i].y = TrendPoints[i].y + SeasonalPoints[i].y + ResidualPoints[i].y`
+ *
+ * Reference:
+ * - https://medium.com/better-programming/a-visual-guide-to-time-series-decomposition-analysis-a1472bb9c930
+ * - https://machinelearningmastery.com/decompose-time-series-data-trend-seasonality/
+ *
+ * @param points The time-series points to apply centered moving average.
+ * @param trendPoints The trend points of the input points array. It can be created by applying smoothing
+ * algorithm on the points array.
+ * @param groupFn The grouping function for computing the seasonal points. It takes a point an return a
+ * group identifier. Points with the same group identifier will be assigned into the same group when computing
+ * the y-value of seasonal point for this group. The group identifier can be created regarding the x-value of the
+ * input point.
+ */
+export function additiveDecomposite<T>(
+  points: XYPoint<T, number>[],
+  trendPoints: XYPoint<T, number>[],
+  groupFn: (point: XYPoint<T, number>) => GroupIdentifier): DecompositionResult<T> {
 
-  const detrendPoints = points.map(({ x, y }, i) => ({
+  const detrendedPoints = points.map(({ x, y }, i) => ({
     x,
     y: y - trendPoints[i].y,
   }));
 
-  const groups: Record<GroupIdentifier, TimeSeriesPoint[]> = {};
+  const groups: Record<GroupIdentifier, XYPoint<T, number>[]> = {};
 
-  for (const point of detrendPoints) {
-    const gid = groupFn(point);
-    groups[gid] = [point, ...(groups[gid] ?? [])];
+  for (const detrendedPoint of detrendedPoints) {
+    const groupId = groupFn(detrendedPoint);
+    if (!(groupId in groups)) {
+      groups[groupId] = [detrendedPoint];
+    } else {
+      groups[groupId].push(detrendedPoint);
+    }
   }
 
-  const groupAverages: Record<GroupIdentifier, number> = {};
-  for (const [gid, gpoints] of Object.entries(groups)) {
-    const s = sum(gpoints.map(({ y }) => y));
-    const average = s / gpoints.length;
-    groupAverages[gid] = average;
+  const groupYAverages: Record<GroupIdentifier, number> = {};
+  for (const [groupId, groupPoints] of Object.entries(groups)) {
+    const groupYAverage = math.mean(groupPoints.map(({ y }) => y));
+    groupYAverages[groupId] = groupYAverage;
   }
 
-  const seasonPoints = points.map(({ x, y }) => ({
+  const seasonalPoints = points.map(({ x, y }) => ({
     x,
-    y: groupAverages[groupFn({ x, y })],
+    y: groupYAverages[groupFn({ x, y })],
   }));
   const residualPoints = points.map(({ x, y }, i) => ({
     x,
-    y: y - trendPoints[i].y - seasonPoints[i].y,
+    y: y - trendPoints[i].y - seasonalPoints[i].y,
   }));
 
   return {
-    detrendPoints,
-    seasonPoints,
+    detrendedPoints,
+    seasonalPoints,
     residualPoints,
   };
 }

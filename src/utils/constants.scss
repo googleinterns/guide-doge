@@ -14,5 +14,8 @@ $font-size-small: 12px;
 
 @mixin card-section {
   padding: 1.5rem;
-  border-top: 1px solid $color-border;
+
+  &:not(:first-child) {
+    border-top: 1px solid $color-border;
+  }
 }

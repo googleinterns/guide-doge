@@ -32,7 +32,7 @@ export class VRAccessibilityComponent implements OnInit, OnChanges, OnDestroy, A
 
   ngAfterViewInit(){
     const scene = this.theScene.nativeElement;
-    this.vrHapticPlot.init(scene, [0, 0, 0.5, 0.5, 1, 1]);
+    this.vrHapticPlot.init(scene, [...Array(27).keys()]);
   }
 
 }

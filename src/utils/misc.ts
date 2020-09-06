@@ -21,15 +21,6 @@ export function mod(a: number, n: number) {
 }
 
 /**
- * Returns the sum of the numbers in array.
- *
- * @param array The array of number to iterate over
- */
-export function sum(array: number[]): number {
-  return array.reduce((p, v) => p + v, 0);
-}
-
-/**
  * Asynchronously waits for the given duration.
  *
  * @param duration The duration (in ms) to wait for.
@@ -57,8 +48,12 @@ export function linearScale(ratio: number, min: number, max: number) {
   return (max - min) * ratio + min;
 }
 
-export function linearSquaredScale(ratio: number, min: number, max: number) {
+export function squaredLinearScale(ratio: number, min: number, max: number) {
   return Math.sqrt(linearScale(ratio, min * min, max * max));
+}
+
+export function logScale(ratio: number, min: number, max: number) {
+  return linearScale(Math.log(linearScale(ratio, 1, Math.E)), min, max);
 }
 
 export function isNotNullish<T>(value: T): value is NonNullable<T> {
