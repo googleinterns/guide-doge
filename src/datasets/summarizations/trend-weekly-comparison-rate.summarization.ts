@@ -32,7 +32,18 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       detrendedPoints: normalizedDetrendedPoints,
     } = additiveDecomposite(normalizedYPoints, normalizedTrendPoints, ({ x }) => x.getDay());
 
-    const uWeekend = (p: TimeSeriesPoint) => p.x.getDay() === 5 ? 0.2 : +(p.x.getDay() === 0 || p.x.getDay() === 6);
+    const uWeekend = (p: TimeSeriesPoint) => {
+      const dayOfWeek = p.x.getDay();
+      switch (dayOfWeek) {
+        case 5: // Friday
+          return 0.2;
+        case 6: // Saturday
+        case 0: // Sunday
+          return 1;
+        default: // All other days
+          return 0;
+      }
+    };
     const uWeekday = (p: TimeSeriesPoint) => 1 - uWeekend(p);
 
     const isWeekend = (p: TimeSeriesPoint) => uWeekend(p) > 0.5;
@@ -44,21 +55,21 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const numOfWeeks = normalizedDetrendedWeekPointArrays.length;
 
     const weekdayWeekendDiffPoints = normalizedDetrendedWeekPointArrays.map(weekPoints => {
-      const week = weekPoints[0].x;
+      const startDateOfWeek = weekPoints[0].x;
       const weekdayPoints = weekPoints.filter(isWeekday);
       const weekendPoints = weekPoints.filter(isWeekend);
       const weekdayPointsYSum = math.sum(weekdayPoints.map(({ y }) => y));
       const weekendPointsYSum = math.sum(weekdayPoints.map(({ y }) => y));
 
       if (weekdayPoints.length === 0 || weekendPoints.length === 0) {
-        return { x: week, y: -1 };
+        return { x: startDateOfWeek, y: null };
       } else {
         const weekdayPointsYAverage = weekdayPointsYSum / weekdayPoints.length;
         const weekendPointsYAverage = weekendPointsYSum / weekendPoints.length;
         const weekdayWeekendDiff = Math.abs(weekdayPointsYAverage - weekendPointsYAverage);
-        return { x: week, y: weekdayWeekendDiff };
+        return { x: startDateOfWeek, y: weekdayWeekendDiff };
       }
-    }).filter(({ y }) => y >= 0);
+    }).filter(({ y }) => y !== null) as TimeSeriesPoint[];
 
     const uMostPercentage = trapmfL(0.6, 0.7);
     const uEqualDiff = ({ y }) => trapmfR(0.05, 0.1)(y);
@@ -69,7 +80,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const weekPointArrays = groupPointsByXWeek(points).filter(weekPoints => weekPoints.length >= 4);
 
     // TODO: Create rate comparison summaries with fuzzy logic for both weekday and overall points
-    const regressionResults = weekPointArrays.map(weekPoints => {
+    const weekLinearModels = weekPointArrays.map(weekPoints => {
       if (weekdayWeekendEqualValidity > 0.7) {
         return createLinearModel(weekPoints.map(timeSeriesPointToNumPoint));
       } else {
@@ -81,8 +92,9 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const summaries: Summary[] = [];
 
     for (let i = 0; i < numOfWeeks - 1; i++) {
-      const currentWeekRate = regressionResults[i].gradient + 1e-4;
-      const nextWeekRate = regressionResults[i + 1].gradient + 1e-4;
+      const eps = 1e-4;
+      const currentWeekRate = weekLinearModels[i].gradient + eps;
+      const nextWeekRate = weekLinearModels[i + 1].gradient + eps;
       const rateDiff = nextWeekRate - currentWeekRate;
       const rateDiffAbsolute = Math.abs(rateDiff);
 
