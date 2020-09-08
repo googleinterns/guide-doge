@@ -1,0 +1,5 @@
+<span class="chip" (mouseover)="showText()" (mouseout)="hideText()" [style.background-color]="color.background"
+  [style.color]="color.text" [attr.aria-label]="validityDescription">
+  <span class="text" [@displayText]="textState" aria-hidden="true">{{text}}</span>
+  <span class="value" aria-hidden="true">{{value.toFixed(2)}}</span>
+</span>

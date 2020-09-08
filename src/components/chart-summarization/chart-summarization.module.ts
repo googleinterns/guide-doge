@@ -5,11 +5,13 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { ChartSummarizationComponent } from './chart-summarization.component';
+import { SummaryValidityChipComponent } from './summary-validity-chip/summary-validity-chip.component';
 import { LazyA11yModule } from '../../directives/a11y/a11y.directive';
 
 @NgModule({
   declarations: [
     ChartSummarizationComponent,
+    SummaryValidityChipComponent,
   ],
   imports: [
     CommonModule,
@@ -19,6 +21,7 @@ import { LazyA11yModule } from '../../directives/a11y/a11y.directive';
     MatListModule,
   ],
   exports: [
+    SummaryValidityChipComponent,
     ChartSummarizationComponent,
   ],
 })
