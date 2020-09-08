@@ -33,13 +33,13 @@ import { trigger, style, animate, transition, state } from '@angular/animations'
 export class SummaryValidityChipComponent implements OnInit {
   @Input() value: number;
   private colorPalette = [
-    { background: '#FF5722', text: '#FFFFFFFF' },
-    { background: '#FF9800', text: '#FFFFFFFF' },
-    { background: '#FFC107', text: '#FFFFFFFF' },
-    { background: '#FFEB3B', text: '#00000000' },
-    { background: '#CDDC39', text: '#FFFFFFFF' },
-    { background: '#8BC34A', text: '#FFFFFFFF' },
-    { background: '#4CAF50', text: '#FFFFFFFF' },
+    { background: '#FF5722', text: '#FFFFFF' },
+    { background: '#FF9800', text: '#FFFFFF' },
+    { background: '#FFC107', text: '#FFFFFF' },
+    { background: '#FFEB3B', text: '#000000' },
+    { background: '#CDDC39', text: '#FFFFFF' },
+    { background: '#8BC34A', text: '#FFFFFF' },
+    { background: '#4CAF50', text: '#FFFFFF' },
   ];
   text = 'Validity';
   textState = 'hidden';
