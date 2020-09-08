@@ -29,7 +29,7 @@ export const mockPoints = createMockPoints();
 export const [mockPoint] = createMockPoints(1);
 
 function createMockData(length = 5): LineChartDatum[] {
-  return new Array(length).map((_, i) => ({
+  return new Array(length).fill(0).map((_, i) => ({
     label: `Datum ${i}`,
     points: createMockPoints(),
     querySummaries: () => createMockSummaryGroups(),
@@ -37,14 +37,14 @@ function createMockData(length = 5): LineChartDatum[] {
 }
 
 function createMockSummaryGroups(length = 1): SummaryGroup[] {
-  return new Array(length).map((_, i) => ({
+  return new Array(length).fill(0).map((_, i) => ({
     title: `Summary group ${i}`,
     summaries: createMockSummaries(),
   }));
 }
 
 function createMockSummaries(length = 10): Summary[] {
-  return new Array(length).map((_, i) => ({
+  return new Array(length).fill(0).map((_, i) => ({
     text: `This is summary ${i}.`,
     validity: i / length,
   }));
