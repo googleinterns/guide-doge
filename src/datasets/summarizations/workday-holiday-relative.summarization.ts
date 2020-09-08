@@ -64,6 +64,9 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       }
     }
 
-    return summaries;
+    return [{
+      title: 'Workday Holiday Relative',
+      summaries
+    }];
   });
 }
