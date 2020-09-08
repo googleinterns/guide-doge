@@ -13,7 +13,7 @@ describe('ChartSummarizationComponent', () => {
     validity: i / nMockSummaries,
   }));
   const mockSummaryGroups = [{
-    name: 'MockSummaryGroup',
+    title: 'MockSummaryGroup',
     summaries: mockSummaries,
   }];
   const mockData = [{

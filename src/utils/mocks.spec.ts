@@ -2,7 +2,7 @@ import { AudificationPreference, Preference } from '../services/preference/types
 import { TimeSeriesPoint } from '../datasets/metas/types';
 import { activeUserMeasure } from '../models/data-cube/presets';
 import { LineChartDatum } from '../components/line-chart/line-chart.component';
-import { Summary } from '../datasets/summarizations/types';
+import { Summary, SummaryGroup } from '../datasets/summarizations/types';
 import { DAY } from './timeUnits';
 
 export const mockPreference: Preference = {
@@ -29,15 +29,22 @@ export const mockPoints = createMockPoints();
 export const [mockPoint] = createMockPoints(1);
 
 function createMockData(length = 5): LineChartDatum[] {
-  return new Array(length).fill(0).map((_, i) => ({
+  return new Array(length).map((_, i) => ({
     label: `Datum ${i}`,
     points: createMockPoints(),
-    querySummaries: () => createMockSummaries(),
+    querySummaries: () => createMockSummaryGroups(),
+  }));
+}
+
+function createMockSummaryGroups(length = 1): SummaryGroup[] {
+  return new Array(length).map((_, i) => ({
+    title: `Summary group ${i}`,
+    summaries: createMockSummaries(),
   }));
 }
 
 function createMockSummaries(length = 10): Summary[] {
-  return new Array(length).fill(0).map((_, i) => ({
+  return new Array(length).map((_, i) => ({
     text: `This is summary ${i}.`,
     validity: i / length,
   }));

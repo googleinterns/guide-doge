@@ -1,5 +1,6 @@
 import { queryFactory } from './trend-regression.summarization';
 import { TimeSeriesPoint } from '../metas/types';
+import { getSummaries } from './utils/tests';
 import { Summary } from './types';
 
 describe('queryFactory', () => {
@@ -23,21 +24,21 @@ describe('queryFactory', () => {
   it('should return all combinations of subsets and linguistic variables.', () => {
     const nTotalSubsets = 3;
     const nTrendDynamicOptions = 5;
-    const overallQuicklyIncreasingSummaries = queryFactory(overallQuicklyIncreasingPoints)();
+    const overallQuicklyIncreasingSummaries = getSummaries(queryFactory, overallQuicklyIncreasingPoints);
     expect(overallQuicklyIncreasingSummaries.length).toBe(nTotalSubsets * nTrendDynamicOptions);
 
-    const weekdayQuicklyIncreasingWeekendConstantSummaries = queryFactory(weekdayQuicklyIncreasingWeekendConstantPoints)();
+    const weekdayQuicklyIncreasingWeekendConstantSummaries = getSummaries(queryFactory, weekdayQuicklyIncreasingWeekendConstantPoints);
     expect(weekdayQuicklyIncreasingWeekendConstantSummaries.length).toBe(nTotalSubsets * nTrendDynamicOptions);
   });
 
   it('should have validity value between 0 and 1.', () => {
-    const overallQuicklyIncreasingSummaries = queryFactory(overallQuicklyIncreasingPoints)();
+    const overallQuicklyIncreasingSummaries = getSummaries(queryFactory, overallQuicklyIncreasingPoints);
     for (const summary of overallQuicklyIncreasingSummaries) {
       expect(summary.validity).toBeGreaterThanOrEqual(0.0);
       expect(summary.validity).toBeLessThanOrEqual(1.0);
     }
 
-    const weekdayQuicklyIncreasingWeekendConstantSummaries = queryFactory(weekdayQuicklyIncreasingWeekendConstantPoints)();
+    const weekdayQuicklyIncreasingWeekendConstantSummaries = getSummaries(queryFactory, weekdayQuicklyIncreasingWeekendConstantPoints);
     for (const summary of weekdayQuicklyIncreasingWeekendConstantSummaries) {
       expect(summary.validity).toBeGreaterThanOrEqual(0.0);
       expect(summary.validity).toBeLessThanOrEqual(1.0);
@@ -45,7 +46,7 @@ describe('queryFactory', () => {
   });
 
   it('should create summaries describing overall linear trend.', () => {
-    const summaries = queryFactory(overallQuicklyIncreasingPoints)();
+    const summaries = getSummaries(queryFactory, overallQuicklyIncreasingPoints);
     const isOverallQuicklyIncreasingSummary = ({ text }) => text.includes('overall') && text.includes('linearly quickly increasing');
 
     const overallQuicklyIncreasingSummaries = summaries.filter(isOverallQuicklyIncreasingSummary);
@@ -57,7 +58,7 @@ describe('queryFactory', () => {
   });
 
   it('should create summaries describing weekday and weekend linear trends.', () => {
-    const summaries = queryFactory(weekdayQuicklyIncreasingWeekendConstantPoints)();
+    const summaries = getSummaries(queryFactory, weekdayQuicklyIncreasingWeekendConstantPoints);
     const isWeekdayQuicklyIncreasingSummary = ({ text }) => text.includes('weekday') && text.includes('linearly quickly increasing');
     const isWeekendConstantSummary = ({ text }) => text.includes('weekend') && text.includes('constant');
 
