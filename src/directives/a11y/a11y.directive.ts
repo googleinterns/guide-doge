@@ -41,6 +41,7 @@ export class A11yDirective implements OnInit, OnDestroy {
     private elementRef: ElementRef,
     private componentFactoryResolver: ComponentFactoryResolver,
     private compiler: Compiler,
+    private injector: Injector,
   ) {
   }
 
@@ -81,18 +82,19 @@ export class A11yDirective implements OnInit, OnDestroy {
 
     // compile the module to resolve the dependencies of the a11y component
     const moduleFactory = await this.compiler.compileModuleAsync(Module);
-    const moduleRef = moduleFactory.create(null);
+    const moduleRef = moduleFactory.create(this.injector);
     const module = moduleRef.instance;
 
     // create a component, providing the host to be injected
-    const injector = Injector.create({
+    const hostInjector = Injector.create({
       providers: [{
         provide: 'host',
         useValue: this.hostComponent,
       }],
     });
+
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(module.A11yComponent);
-    const componentRef = this.viewContainerRef.createComponent(componentFactory, undefined, injector);
+    const componentRef = this.viewContainerRef.createComponent(componentFactory, undefined, hostInjector);
     const component = componentRef.instance;
 
     // inject preference into the component
