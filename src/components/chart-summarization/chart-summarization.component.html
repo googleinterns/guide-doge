@@ -1,8 +1,24 @@
 <div class="summaries">
-  <ul *ngIf="this.hasSummaries; else elseBlock">
-    <li *ngFor="let summary of summaries">
-      ({{summary.validity | number: '1.2-2'}}) <p class="summary" [innerHTML]="summary.text"></p>
-    </li>
-  </ul>
-  <ng-template #elseBlock>No summaries available.</ng-template>
+  <mat-accordion multi>
+    <mat-expansion-panel *ngFor="let summaryGroup of summaryGroups" [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ summaryGroup.name }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <mat-list>
+        <mat-list-item *ngFor="let summary of summaryGroup.summaries">
+          <mat-icon
+          class="summary-validity"
+          matBadgePosition="above before" matBadgeOverlap="true"
+          [matBadge]="summary.validity.toFixed(1)"
+          aria-hidden="false"
+          [attr.aria-label]="makeValidityDescription(summary.validity)">check_circle_outline</mat-icon>
+          <p class="summary-text" [innerHTML]="summary.text"></p>
+        </mat-list-item>
+      </mat-list>
+    </mat-expansion-panel>
+  </mat-accordion>
+
 </div>

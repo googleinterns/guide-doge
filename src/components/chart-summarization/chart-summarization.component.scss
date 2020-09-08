@@ -4,17 +4,28 @@
   @include card-section;
   display: block;
 
-  .summaries {
+  .summary-container {
     font-size: $font-size-medium;
     line-height: 2em;
   }
 
-  .summary {
+  .summary-text {
     display: inline-block;
     margin: 0;
+
+    ::ng-deep {
+      .summary-variable {
+        color: red;
+        font-weight: bold;
+      }
+    }
   }
 
-  .summary::first-letter {
+  .summary-text::first-letter {
     text-transform: uppercase;
+  }
+
+  .summary-validity {
+    margin-right: 1em;
   }
 }
