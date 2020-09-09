@@ -18,11 +18,11 @@ export function queryFactory(points: CategoricalPoint[], config?: Partial<Config
   return cacheSummaries(() => {
     const { bucketPercentageTolerance, metric } = { ...defaultConfig, ...(config ?? {}) };
 
-    const totalYSum = math.sum(points.map(({ y }) => y));
+    const maxYValue = Math.max(...points.map(({ y }) => y));
     const sortedPoints = [...points].sort(({ y: y1 }, { y: y2 }) => y2 - y1);
-    const sortedPercentagePoints = sortedPoints.map(({ x, y }) => ({ x, y: y / totalYSum * 100 }));
+    const sortedRelativePercentagePoints = sortedPoints.map(({ x, y }) => ({ x, y: y / maxYValue * 100 }));
 
-    const buckets = bucketizePoints(sortedPercentagePoints, bucketPercentageTolerance);
+    const buckets = bucketizePoints(sortedRelativePercentagePoints, bucketPercentageTolerance);
 
     const summaries: Summary[] = [];
     for (let i = 1; i < buckets.length; i++) {
