@@ -1,4 +1,16 @@
 <div class="summaries">
+  <div class="panel-controls">
+    <div class="toggles-controls">
+      <button mat-raised-button (click)="accordion.openAll()">
+        <mat-icon aria-hidden="true">keyboard_arrow_down</mat-icon>
+        Expand All
+      </button>
+      <button mat-raised-button (click)="accordion.closeAll()">
+        <mat-icon aria-hidden="true">keyboard_arrow_up</mat-icon>
+        Collapse All
+      </button>
+    </div>
+  </div>
   <mat-accordion multi>
     <mat-expansion-panel *ngFor="let summaryGroup of summaryGroups; index as i" [expanded]="i === 0">
       <mat-expansion-panel-header>
