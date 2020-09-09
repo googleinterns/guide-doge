@@ -1,6 +1,6 @@
 <div class="summaries">
   <mat-accordion multi>
-    <mat-expansion-panel *ngFor="let summaryGroup of summaryGroups" [expanded]="true">
+    <mat-expansion-panel *ngFor="let summaryGroup of summaryGroups; index as i" [expanded]="i === 0">
       <mat-expansion-panel-header>
         <mat-panel-title>
           {{ summaryGroup.title }}
