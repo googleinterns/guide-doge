@@ -18,6 +18,7 @@ import * as TrendWeeklyPatternSummarization from './summarizations/trend-weekly-
 import * as TrendWeeklyElaborationSummarization from './summarizations/trend-weekly-elaboration.summarization';
 import * as WorkdayHolidayRelativeSummarization from './summarizations/workday-holiday-relative.summarization';
 import { createLineChartMeta } from './metas/line-chart.meta';
+import { QuerySummariesFactory } from './summarizations/types';
 
 export type Config = {};
 
@@ -107,4 +108,9 @@ export function create(config: Config): Dataset {
   return {
     metas,
   };
+}
+
+function bindQueryFactoryConfig<P, C>(
+  queryFactory: (poins: P[], config: C) => QuerySummariesFactory<P>, config: C) {
+  return (points) => queryFactory(points, config);
 }
