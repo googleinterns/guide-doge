@@ -39,7 +39,7 @@ export function queryFactory(points: CategoricalPoint[], config?: Partial<Config
       const yAverageDiffText = formatY(yAverageDiff);
       const yAverageDiffPercentageText = formatY(yAverageDiffPercentage);
 
-      const text = `<b>${bucketGreaterXValuesText}</b> ${haveText} <b>${yAverageDiffText} (${yAverageDiffPercentageText}%)</b> more ${metric} than <b>${bucketSmallerXValuesText}</b>`;
+      const text = `<b>${bucketGreaterXValuesText}</b> ${haveText} <b>${yAverageDiffText} (${yAverageDiffPercentageText}%)</b> more ${metric} than <b>${bucketSmallerXValuesText}</b>.`;
 
       summaries.push({
         text,
