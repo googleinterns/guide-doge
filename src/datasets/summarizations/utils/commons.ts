@@ -76,11 +76,12 @@ export function createOrdinalText(num: number) {
   const ordinalTexts = ['st', 'nd', 'rd'];
   const ordinalPatterns = [1, 2, 3];
   const thPatterns = [11, 12, 13, 14, 15, 16, 17, 18, 19];
-  if (digits[1] in thPatterns) {
+
+  if (thPatterns.includes(digits[1])) {
     return `${num}th`;
-  } else if (digits[0] in ordinalPatterns) {
+  } else if (ordinalPatterns.includes(digits[0])) {
     return `${num}${ordinalTexts[digits[0] - 1]}`;
   } else {
     return `${num}th`;
   }
-};
+}
