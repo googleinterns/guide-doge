@@ -32,7 +32,7 @@ export function queryFactory(points: CategoricalPoint[], config?: Partial<Config
       const bucketGreaterXValuesText = buckets[i - 1].map(({ x }) => x).join(', ');
       const bucketSmallerXValuesText = buckets[i].map(({ x }) => x).join(', ');
 
-      const haveText = buckets[i - 1].length === 1 ? 'have' : 'has';
+      const haveText = buckets[i - 1].length === 1 ? 'has' : 'have';
 
       const yAverageDiff = bucketGreaterYAverage - bucketSmallerYAverage;
       const yAverageDiffPercentage = yAverageDiff / bucketSmallerYAverage * 100;
