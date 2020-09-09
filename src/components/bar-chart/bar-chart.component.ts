@@ -5,7 +5,7 @@ import { RenderOptions } from '../../d3/xy-chart.d3';
 import { GUIDE_DOGE, t } from '../../i18n';
 import { formatX, formatY } from '../../utils/formatters';
 import { A11yPlaceholderDirective } from '../../directives/a11y-placeholder/a11y-placeholder.directive';
-import { DAY } from '../../utils/timeUnits';
+import { BarChartMeta } from '../../datasets/metas/categorical.meta';
 import { CategoricalDatum } from '../../datasets/queries/categorical.query';
 import { CategoricalPoint } from '../../datasets/metas/types';
 import { A11yHostComponent } from '../a11y-host/a11y-host.component';
@@ -21,7 +21,7 @@ export class BarChartComponent extends A11yHostComponent implements
   RenderOptions<CategoricalPoint, BarChartDatum>, OnChanges, OnInit, OnDestroy {
   @ViewChild(A11yPlaceholderDirective, { static: true }) a11yPlaceholder: A11yPlaceholderDirective;
 
-  // @Input() meta: BarChartMeta;
+  @Input() meta: BarChartMeta;
   @Input() height = 500;
   @Input() width = 800;
 
@@ -63,7 +63,7 @@ export class BarChartComponent extends A11yHostComponent implements
 
   ngOnChanges(changes: SimpleChanges): void {
     if (['meta'].some(key => key in changes)) {
-      const data = this.meta.queryData();
+      const data = this.meta.queryData({});
       this.data$.next(data);
     }
   }

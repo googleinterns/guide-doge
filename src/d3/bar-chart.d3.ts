@@ -121,7 +121,7 @@ export class BarChartD3 extends XYChartD3<CategoricalPoint, BarChartDatum> {
     const xs = points.map(point => point.x);
     const ys = points.map(point => point.y);
     this.scaleX.domain([0, d3.max(ys)!]);
-    this.scaleY.domain(xs);
+    this.scaleY.domain(xs.reverse());
 
     this.xAxisG
       .transition(this.transition)

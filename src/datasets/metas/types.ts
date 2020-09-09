@@ -1,3 +1,4 @@
+import { BarChartMeta } from './categorical.meta';
 import { LineChartMeta } from './line-chart.meta';
 import { TabbedChartsMeta } from './tabbed-charts.meta';
 import { VRScatterplotMeta } from './vr-scatter-plot.meta';
@@ -50,11 +51,12 @@ export interface ScatterPoint<S> {
   z: number;
 }
 
-export type Meta = LineChartMeta | TabbedChartsMeta | GeoMapMeta | VRScatterplotMeta;
+export type Meta = BarChartMeta | LineChartMeta | TabbedChartsMeta | GeoMapMeta | VRScatterplotMeta;
 
 export enum MetaType {
-  TABBED_CHARTS,
+  BAR_CHART,
   LINE_CHART,
+  TABBED_CHARTS,
   GEO_MAP,
   SCATTER_PLOT,
 }
