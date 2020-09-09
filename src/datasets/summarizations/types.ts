@@ -18,3 +18,4 @@ export interface SummaryGroup {
 }
 
 export type QuerySummariesFactory<PointT> = (points: PointT[]) => () => SummaryGroup[];
+export type ConfigurableQuerySummariesFactory<PointT, ConfigT> = (points: PointT[], config?: Partial<ConfigT>) => () => SummaryGroup[];

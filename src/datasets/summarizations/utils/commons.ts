@@ -1,4 +1,4 @@
-import { SummaryGroup, Summary, QuerySummariesFactory } from '../types';
+import { SummaryGroup, Summary, QuerySummariesFactory, ConfigurableQuerySummariesFactory } from '../types';
 import { XYPoint, NumPoint } from '../../metas/types';
 
 export function cacheSummaries(f: () => SummaryGroup[]): () => SummaryGroup[] {
@@ -18,8 +18,9 @@ export function cacheSummaries(f: () => SummaryGroup[]): () => SummaryGroup[] {
  * sumaries. The cache and lazy evaluation need to be implemented by each input
  * query-summary-factory individually.
  */
-export function combineQuerySummariesFactories<PointT>(
-  ...queryFactories: QuerySummariesFactory<PointT>[]): QuerySummariesFactory<PointT> {
+export function combineQuerySummariesFactories<PointT, ConfigT = null>(
+  ...queryFactories: (QuerySummariesFactory<PointT> | ConfigurableQuerySummariesFactory<PointT, ConfigT>)[]
+): QuerySummariesFactory<PointT> {
   return (points: PointT[]) => () => {
     const summaries = queryFactories.map(f => f(points)());
     const summariesFlat = ([] as SummaryGroup[]).concat(...summaries);

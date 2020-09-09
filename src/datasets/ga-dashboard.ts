@@ -18,7 +18,8 @@ import * as TrendWeeklyPatternSummarization from './summarizations/trend-weekly-
 import * as TrendWeeklyElaborationSummarization from './summarizations/trend-weekly-elaboration.summarization';
 import * as WorkdayHolidayRelativeSummarization from './summarizations/workday-holiday-relative.summarization';
 import { createLineChartMeta } from './metas/line-chart.meta';
-import { QuerySummariesFactory } from './summarizations/types';
+import { QuerySummariesFactory, ConfigurableQuerySummariesFactory } from './summarizations/types';
+import { trueDependencies } from 'mathjs';
 
 export type Config = {};
 
@@ -56,10 +57,16 @@ export function create(config: Config): Dataset {
     activeUsersPoints.push({ x, y });
   }
 
-  const categoricalChartQuerySummariesFactory = combineQuerySummariesFactories(
+  const barChartQuerySummariesFactory = combineQuerySummariesFactories(
     CategoryTopKSummarization.queryFactory,
     CategoryTopKCoverageSummarization.queryFactory,
     CategoryBucketComparisonSummarization.queryFactory,
+  );
+
+  const pieChartQuerySummariesFactory = combineQuerySummariesFactories(
+    bindQueryFactoryConfig(CategoryTopKSummarization.queryFactory, { topk: 2, showPercentage: true }),
+    bindQueryFactoryConfig(CategoryTopKCoverageSummarization.queryFactory, { topk: 2, xlabel: 'devices' }),
+    bindQueryFactoryConfig(CategoryBucketComparisonSummarization.queryFactory, {}),
   );
 
   const lineChartQuerySummariesFactory = combineQuerySummariesFactories(
@@ -77,7 +84,7 @@ export function create(config: Config): Dataset {
     (options: CategoricalQueryOptions) => [{
       label: 'Country Sessions',
       points: sessionsByCountriesPoints,
-      querySummaries: categoricalChartQuerySummariesFactory(sessionsByCountriesPoints),
+      querySummaries: barChartQuerySummariesFactory(sessionsByCountriesPoints),
     }],
   );
 
@@ -86,7 +93,7 @@ export function create(config: Config): Dataset {
     (options: CategoricalQueryOptions) => [{
       label: 'Country Sessions',
       points: sessionsByDevicesPoints,
-      querySummaries: categoricalChartQuerySummariesFactory(sessionsByDevicesPoints),
+      querySummaries: pieChartQuerySummariesFactory(sessionsByDevicesPoints),
     }],
   );
 
@@ -111,6 +118,6 @@ export function create(config: Config): Dataset {
 }
 
 function bindQueryFactoryConfig<P, C>(
-  queryFactory: (poins: P[], config: C) => QuerySummariesFactory<P>, config: C) {
+  queryFactory: ConfigurableQuerySummariesFactory<P, C>, config: Partial<C>) {
   return (points) => queryFactory(points, config);
 }
