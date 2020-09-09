@@ -39,6 +39,8 @@ export interface XYDatum<Point> {
 
 export type TimeSeriesPoint = XYPoint<Date, number>;
 
+export type CategoricalPoint = XYPoint<string, number>;
+
 export type NumPoint = XYPoint<number, number>;
 
 export interface ScatterPoint<S> {

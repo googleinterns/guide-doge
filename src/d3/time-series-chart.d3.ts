@@ -13,7 +13,12 @@ export interface RenderOptions<Datum> extends BaseRenderOptions {
 
 export abstract class TimeSeriesChartD3<LegendItemStyle,
   Datum extends TimeSeriesDatum<LegendItemStyle> = TimeSeriesDatum<LegendItemStyle>
-  > extends XYChartD3<TimeSeriesPoint, Datum, d3.ScaleTime<number, number>> {
+  > extends XYChartD3<TimeSeriesPoint, Datum> {
+
+  protected scaleX: d3.ScaleTime<number, number>;
+  protected scaleY: d3.ScaleLinear<number, number>;
+  protected xAxis: d3.Axis<Date>;
+  protected yAxis: d3.Axis<number>;
 
   x(value: Date) {
     return this.scaleX(value);

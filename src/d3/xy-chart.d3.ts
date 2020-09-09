@@ -7,11 +7,10 @@ import { TimeSeriesDatum } from '../datasets/queries/time-series.query';
 
 export interface RenderOptions<Point, Datum extends XYDatum<Point>> extends BaseRenderOptions {
   data$: Observable<Datum[]>;
-  activePoint$: Observable<Point | null>;
+  activePoint$?: Observable<Point | null>;
 }
 
-export abstract class XYChartD3<Point, Datum extends XYDatum<Point>, ScaleX = d3.ScaleLinear<number, number> | d3.ScaleBand<string>
-  > extends BaseD3<RenderOptions<Point, Datum>> {
+export abstract class XYChartD3<Point, Datum extends XYDatum<Point>> extends BaseD3<RenderOptions<Point, Datum>> {
   static padding = 16;
   static yAxisWidth = 40;
   static xAxisHeight = 20;
@@ -22,10 +21,6 @@ export abstract class XYChartD3<Point, Datum extends XYDatum<Point>, ScaleX = d3
   static fontSizeSmall = 12;
   static fontSizeMedium = 14;
 
-  protected scaleX: ScaleX;
-  protected scaleY: d3.ScaleLinear<number, number>;
-  protected xAxis: d3.Axis<Date>;
-  protected yAxis: d3.Axis<number>;
   protected xAxisG: d3.Selection<SVGGElement, unknown, null, undefined>;
   protected yAxisG: d3.Selection<SVGGElement, unknown, null, undefined>;
   protected dataG: d3.Selection<SVGGElement, unknown, null, undefined>;
@@ -49,11 +44,13 @@ export abstract class XYChartD3<Point, Datum extends XYDatum<Point>, ScaleX = d3
         this.updateData(data);
       });
 
-    activePoint$
-      .pipe(this.takeUntilCleared())
-      .subscribe(activePoint => {
-        this.updateActivePoint(activePoint);
-      });
+    if (activePoint$) {
+      activePoint$
+        .pipe(this.takeUntilCleared())
+        .subscribe(activePoint => {
+          this.updateActivePoint(activePoint);
+        });
+    }
   }
 
   protected renderLegend() {
