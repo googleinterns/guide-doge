@@ -26,15 +26,16 @@ export const configMeta: PreferenceMeta<Config> = {};
 export function create(config: Config): Dataset {
   const sessionsByCountriesPoints = [
     { x: 'US', y: 4820 },
-    { x: 'India', y: 870 },
-    { x: 'Canada', y: 530 },
+    { x: 'India', y: 2330 },
+    { x: 'Canada', y: 790 },
     { x: 'UK', y: 340 },
     { x: 'Japan', y: 270 },
   ];
   const sessionsByDevicesPoints = [
     { x: 'Desktop', y: 6860 },
     { x: 'Mobile', y: 2990 },
-    { x: 'Tablet', y: 150 },
+    { x: 'Tablet', y: 730 },
+    { x: 'Others', y: 150 },
   ];
 
 
