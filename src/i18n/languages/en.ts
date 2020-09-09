@@ -8,6 +8,7 @@ import {
   I18n,
   PUNCTUATION,
   SUMMARIZATION_PREFERENCE,
+  LAYOUT_PREFERENCE,
 } from '../types';
 
 export const en: I18n = {
@@ -74,4 +75,7 @@ export const en: I18n = {
   [GEO_MAP_NAVIGATION.ACTIVE_DATUM]: '%(territory)s has %(value)f %(measure)s.',
   [GEO_MAP_NAVIGATION.ACTIVE_MEASURE]: '%(measure)s of %(value)f in %(territory)s.',
   [GEO_MAP_NAVIGATION.NOTHING_SELECTED]: 'No territory has been selected.',
+
+  [LAYOUT_PREFERENCE.enabled]: 'Layout',
+  [LAYOUT_PREFERENCE.cardWidth]: 'Card Width',
 };

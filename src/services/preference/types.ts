@@ -13,6 +13,10 @@ export type PreferenceWithMeta<T extends Preference> = T & {
   _meta_name?: string;
 };
 
+export interface LayoutPreference extends Preference {
+  cardWidth: string;
+}
+
 export interface AudificationPreference extends Preference {
   lowestPitch: number;
   highestPitch: number;

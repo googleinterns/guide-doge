@@ -2,6 +2,8 @@
   <h2 class="sidebar-title">Customization</h2>
   <app-preference-group [preference$]="dataset$" [i18n]="DATA_PREFERENCE" alwaysEnabled="true">
   </app-preference-group>
+  <app-preference-group [preference$]="layout$" [i18n]="LAYOUT_PREFERENCE" alwaysEnabled="true">
+  </app-preference-group>
   <app-preference-group [preference$]="audification$" [i18n]="AUDIFICATION_PREFERENCE">
   </app-preference-group>
   <app-preference-group [preference$]="geoMapNavigation$" [i18n]="GEO_MAP_NAVIGATION_PREFERENCE">
@@ -10,5 +12,5 @@
   </app-preference-group>
 </aside>
 <div class="card-container">
-  <app-card *ngFor="let meta of componentMetas" [meta]="meta"></app-card>
+  <app-card class="card" *ngFor="let meta of componentMetas" [meta]="meta" [style.width]="cardWidth"></app-card>
 </div>
