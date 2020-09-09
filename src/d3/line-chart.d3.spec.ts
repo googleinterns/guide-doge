@@ -6,7 +6,7 @@ import { TimeSeriesPoint } from '../datasets/metas/types';
 import { LineChartDatum } from '../components/line-chart/line-chart.component';
 import { RenderOptions } from './xy-chart.d3';
 
-interface SubjectRenderOptions extends RenderOptions<LineChartDatum> {
+interface SubjectRenderOptions extends RenderOptions<TimeSeriesPoint, LineChartDatum> {
   data$: Subject<LineChartDatum[]>;
   activePoint$: Subject<TimeSeriesPoint | null>;
 }

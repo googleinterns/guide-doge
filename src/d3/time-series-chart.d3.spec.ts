@@ -1,4 +1,5 @@
 import { RenderOptions, XYChartD3 } from './xy-chart.d3';
+import { TimeSeriesChartD3 } from './time-series-chart.d3';
 import { Subject } from 'rxjs';
 import { TimeSeriesPoint } from '../datasets/metas/types';
 import { TimeSeriesDatum } from '../datasets/queries/time-series.query';
@@ -10,14 +11,14 @@ type TestLegendItemStyle = {};
 
 type TestDatum = TimeSeriesDatum<TestLegendItemStyle>;
 
-interface SubjectRenderOptions extends RenderOptions<TestDatum> {
+interface SubjectRenderOptions extends RenderOptions<TimeSeriesPoint, TestDatum> {
   data$: Subject<TestDatum[]>;
   activePoint$: Subject<TimeSeriesPoint | null>;
 }
 
-describe('XYChartD3', () => {
+describe('TimeSeriesChartD3', () => {
   // since XYChartD3 is an abstract class, make a concrete child class
-  class TestXYChartD3 extends XYChartD3<TestLegendItemStyle> {
+  class TestXYChartD3 extends TimeSeriesChartD3<TestLegendItemStyle> {
     // the flags below will be used to check if the methods have been called at the right time
     dataFlag = 0;
     activePointFlag = 0;

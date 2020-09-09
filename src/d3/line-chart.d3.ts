@@ -1,4 +1,4 @@
-import { XYChartD3 } from './xy-chart.d3';
+import { TimeSeriesChartD3 } from './time-series-chart.d3';
 import * as d3 from 'd3';
 import { LineChartDatum } from '../components/line-chart/line-chart.component';
 import { TimeSeriesPoint } from '../datasets/metas/types';
@@ -15,7 +15,7 @@ interface LinePath {
   path: d3.Selection<SVGPathElement, unknown, null, undefined>;
 }
 
-export class LineChartD3 extends XYChartD3<LegendItemStyle> {
+export class LineChartD3 extends TimeSeriesChartD3<LegendItemStyle> {
   static defaultLegendItemStyle: LegendItemStyle = {
     color: LineChartD3.primaryColor,
     width: 2,
@@ -90,7 +90,7 @@ export class LineChartD3 extends XYChartD3<LegendItemStyle> {
   }
 
   protected appendLegendItemIcon(container: d3.Selection<SVGGElement, unknown, null, undefined>, datum: LineChartDatum) {
-    const { legendIconWidth, legendHeight } = XYChartD3;
+    const { legendIconWidth, legendHeight } = TimeSeriesChartD3;
     container
       .append('line')
       .attr('x1', 0)
