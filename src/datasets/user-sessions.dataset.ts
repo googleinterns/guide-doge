@@ -6,6 +6,7 @@ import { CategoricalQueryOptions } from './queries/categorical.query';
 import { combineQuerySummariesFactories } from './summarizations/utils/commons';
 import * as CategoryTopKSummarization from './summarizations/category-topk.summarization';
 import * as CategoryTopKCoverageSummarization from './summarizations/category-topk-coverage.summarization';
+import * as CategoryBucketComparisonSummarization from './summarizations/category-bucket-comparison.summarization';
 
 export type Config = {};
 
@@ -23,6 +24,7 @@ export function create(config: Config): Dataset {
   const querySummariesFactory = combineQuerySummariesFactories(
     CategoryTopKSummarization.queryFactory,
     CategoryTopKCoverageSummarization.queryFactory,
+    CategoryBucketComparisonSummarization.queryFactory,
   );
 
   const barChartMeta = createBarChartMeta(
