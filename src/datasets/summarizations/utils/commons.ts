@@ -70,3 +70,17 @@ export function normalizePointsY<T>(points: XYPoint<T, number>[], ylim: ChartAxi
 export function normalizePoints(points: NumPoint[], xlim: ChartAxisLimit = {}, ylim: ChartAxisLimit = {}): NumPoint[] {
   return normalizePointsY(normalizePointsX(points, xlim), ylim);
 }
+
+export function createOrdinalText(num: number) {
+  const digits = [num % 10, num % 100];
+  const ordinalTexts = ['st', 'nd', 'rd'];
+  const ordinalPatterns = [1, 2, 3];
+  const thPatterns = [11, 12, 13, 14, 15, 16, 17, 18, 19];
+  if (digits[1] in thPatterns) {
+    return `${num}th`;
+  } else if (digits[0] in ordinalPatterns) {
+    return `${num}${ordinalTexts[digits[0] - 1]}`;
+  } else {
+    return `${num}th`;
+  }
+};

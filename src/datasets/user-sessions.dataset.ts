@@ -3,6 +3,7 @@ import { Dataset } from './types';
 import { PreferenceMeta } from '../services/preference/types';
 import { createBarChartMeta } from './metas/categorical.meta';
 import { CategoricalQueryOptions } from './queries/categorical.query';
+import * as CategoryTopKSummarization from './summarizations/category-topk.summarization';
 
 export type Config = {};
 
@@ -22,6 +23,7 @@ export function create(config: Config): Dataset {
     (options: CategoricalQueryOptions) => [{
       label: 'Country Sessions',
       points,
+      querySummaries: CategoryTopKSummarization.queryFactory(points),
     }],
   );
 
