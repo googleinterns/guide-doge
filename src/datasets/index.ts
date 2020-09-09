@@ -1,4 +1,5 @@
 import * as UserWhiteNoiseDataset from './user-white-noise.dataset';
+import * as GADashboardDataset from './ga-dashboard';
 import * as GeoDataset from './geo.dataset';
 import * as DummyDataset from './dummy.dataset';
 import * as VRScatterplotDataset from './vr-scatterplot.dataset';
@@ -10,6 +11,7 @@ import * as UserWorkdayHolidayLinearDataset from './user-workday-holiday-linear.
 
 export const datasets = {
   UserWhiteNoise: UserWhiteNoiseDataset,
+  GoogleAnalyticsDashboard: GADashboardDataset,
   Geo: GeoDataset,
   UserSessions: UserSessionsDataset,
   UserWorkdayHoliday: UserWorkdayHolidayDataset,

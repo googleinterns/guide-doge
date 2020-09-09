@@ -105,6 +105,9 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       }
     }
 
-    return summaries;
+    return [{
+      title: 'Trend Weekly Pattern',
+      summaries
+    }];
   });
 }

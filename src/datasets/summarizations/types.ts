@@ -12,4 +12,9 @@ export interface Summary {
   validity: number;
 }
 
+export interface SummaryGroup {
+  title: string;
+  summaries: Summary[];
+}
+
 export type QuerySummariesFactory<PointT> = (points: PointT[]) => () => SummaryGroup[];
