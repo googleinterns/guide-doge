@@ -3,7 +3,9 @@ import { Dataset } from './types';
 import { PreferenceMeta } from '../services/preference/types';
 import { createBarChartMeta } from './metas/categorical.meta';
 import { CategoricalQueryOptions } from './queries/categorical.query';
+import { combineQuerySummariesFactories } from './summarizations/utils/commons';
 import * as CategoryTopKSummarization from './summarizations/category-topk.summarization';
+import * as CategoryTopKCoverageSummarization from './summarizations/category-topk-coverage.summarization';
 
 export type Config = {};
 
@@ -18,12 +20,17 @@ export function create(config: Config): Dataset {
     { x: 'Japan', y: 270 },
   ];
 
+  const querySummariesFactory = combineQuerySummariesFactories(
+    CategoryTopKSummarization.queryFactory,
+    CategoryTopKCoverageSummarization.queryFactory,
+  );
+
   const barChartMeta = createBarChartMeta(
     'Sessions By Country',
     (options: CategoricalQueryOptions) => [{
       label: 'Country Sessions',
       points,
-      querySummaries: CategoryTopKSummarization.queryFactory(points),
+      querySummaries: querySummariesFactory(points),
     }],
   );
 
