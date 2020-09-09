@@ -34,10 +34,6 @@ export class ChartSummarizationComponent implements OnInit {
     return this.summaryGroups && this.summaryGroups.length > 0;
   }
 
-  makeValidityDescription(validity: number) {
-    return `The validity of this summary is ${validity}`;
-  }
-
   ngOnInit(): void {
     if (this.querySumaries) {
       this.summaryGroups = this.querySumaries().map(sumaryGroup => ({
