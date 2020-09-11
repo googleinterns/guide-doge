@@ -8,7 +8,7 @@ import { PreferenceMeta } from '../services/preference/types';
 import { DAY } from '../utils/timeUnits';
 import { combineQuerySummariesFactories } from './summarizations/utils/commons';
 import { groupPointsByXWeek } from './summarizations/utils/time-series';
-import * as TrendSummarization from './summarizations/trend-weekly-pattern.summarization';
+import * as TrendSummarization from './summarizations/trend-regression.summarization';
 
 export interface Config {
   dailyWeightStd: number;
