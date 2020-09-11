@@ -1,4 +1,4 @@
-import * as UserSessionsTimeDataset from './user-sessions-time.dataset';
+import * as ActiveUsersTimeDataset from './active-users-time.dataset';
 import * as UserWhiteNoiseDataset from './user-white-noise.dataset';
 import * as GADashboardDataset from './ga-dashboard';
 import * as GeoDataset from './geo.dataset';
@@ -13,7 +13,7 @@ import * as UserWorkdayHolidayLinearDataset from './user-workday-holiday-linear.
 export const datasets = {
   UserWhiteNoise: UserWhiteNoiseDataset,
   GoogleAnalyticsDashboard: GADashboardDataset,
-  UserSessionsTime: UserSessionsTimeDataset,
+  ActiveUsersTime: ActiveUsersTimeDataset,
   UserSessionsCategory: UserSessionsCategoryDataset,
   Geo: GeoDataset,
   UserWorkdayHoliday: UserWorkdayHolidayDataset,
