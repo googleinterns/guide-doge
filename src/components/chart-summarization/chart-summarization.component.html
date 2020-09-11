@@ -19,12 +19,20 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <mat-list>
-        <mat-list-item *ngFor="let summary of summaryGroup.summaries">
-          <app-summary-validity-chip [value]="summary.validity" class="summary-validity"></app-summary-validity-chip>
-          <p class="summary-text" [innerHTML]="summary.text"></p>
+      <mat-list *ngIf="summarizationPreference$.value.displayParagraph && summaryGroup.paragraph; else elseBlock">
+        <mat-list-item>
+          <app-summary-validity-chip [value]="summaryGroup.paragraph.validity" class="summary-validity"></app-summary-validity-chip>
+          <p class="summary-text" [innerHTML]="summaryGroup.paragraph.text"></p>
         </mat-list-item>
       </mat-list>
+      <ng-template #elseBlock>
+        <mat-list>
+          <mat-list-item *ngFor="let summary of summaryGroup.summaries">
+            <app-summary-validity-chip [value]="summary.validity" class="summary-validity"></app-summary-validity-chip>
+            <p class="summary-text" [innerHTML]="summary.text"></p>
+          </mat-list-item>
+        </mat-list>
+      </ng-template>
     </mat-expansion-panel>
   </mat-accordion>
 

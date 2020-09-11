@@ -2,6 +2,7 @@ import { Component, Inject, Input, NgZone, OnDestroy, OnInit, ViewChild } from '
 import { LineChartComponent } from '../line-chart/line-chart.component';
 import { SummaryGroup } from '../../datasets/summarizations/types';
 import { MatAccordion } from '@angular/material/expansion';
+import { PreferenceService } from '../../services/preference/preference.service';
 
 @Component({
   selector: 'app-summarization',
@@ -14,10 +15,13 @@ export class ChartSummarizationComponent implements OnInit {
   @Input() validityThreshold: number;
   @ViewChild(MatAccordion) accordion: MatAccordion;
 
+  summarizationPreference$ = this.preferenceService.summarization$;
+
   summaryGroups: SummaryGroup[];
 
   constructor(
     @Inject('host') private host: LineChartComponent,
+    private preferenceService: PreferenceService,
     private zone: NgZone,
   ) { }
 

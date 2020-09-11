@@ -31,6 +31,7 @@ export type GeoMapNavigationPreference = Preference;
 
 export interface SummarizationPreference extends Preference {
   validityThreshold: number;
+  displayParagraph: boolean;
 }
 
 export type PreferenceMeta<T> = {
@@ -39,7 +40,7 @@ export type PreferenceMeta<T> = {
 
 export type DatasetPreference =
   UserWGNDatasetPreference | DummyDatasetPreference |
-  VRScatterplotPreference | VRScatterplot2Preference |BaseDatasetPreference<string, Preference>;
+  VRScatterplotPreference | VRScatterplot2Preference | BaseDatasetPreference<string, Preference>;
 
 export type BaseDatasetPreference<T extends string, U> = { name: T } & U;
 

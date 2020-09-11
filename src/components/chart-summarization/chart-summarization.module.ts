@@ -8,6 +8,7 @@ import { MatListModule } from '@angular/material/list';
 import { ChartSummarizationComponent } from './chart-summarization.component';
 import { SummaryValidityChipComponent } from './summary-validity-chip/summary-validity-chip.component';
 import { LazyA11yModule } from '../../directives/a11y/a11y.directive';
+import { PreferenceModule } from '../../services/preference/preference.module';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { LazyA11yModule } from '../../directives/a11y/a11y.directive';
     MatExpansionModule,
     MatIconModule,
     MatListModule,
+    PreferenceModule,
   ],
   exports: [
     SummaryValidityChipComponent,

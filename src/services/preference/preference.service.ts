@@ -83,6 +83,10 @@ export class PreferenceService {
       type: 'number',
       defaultValue: 0.5,
     },
+    displayParagraph: {
+      type: 'boolean',
+      defaultValue: false,
+    },
   }, 'summarization');
 
   geoMapNavigation$ = this.createPreference<GeoMapNavigationPreference>({

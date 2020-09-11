@@ -15,6 +15,7 @@ export interface Summary {
 export interface SummaryGroup {
   title: string;
   summaries: Summary[];
+  paragraph?: Summary;
 }
 
 export type QuerySummariesFactory<PointT> = (points: PointT[]) => () => SummaryGroup[];
