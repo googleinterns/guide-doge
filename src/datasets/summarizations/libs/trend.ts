@@ -18,8 +18,8 @@ export interface LinearModel {
   prediction: NumPoint[];
   /* The mean of absolute errors between y-values of input points and predicted y-values */
   absoluteErrorMean: number;
-  /* The standard deviation of absolute errors between y-values of input points and predicted y-values */
-  absoluteErrorStd: number;
+  /* The standard deviation of errors between y-values of input points and predicted y-values */
+  errorStd: number;
 }
 
 /**
@@ -38,12 +38,15 @@ export function createLinearModel(points: NumPoint[]): LinearModel {
   const gradientAngleRad = Math.atan(gradient);
   const prediction = model.points.map(pairToPoint);
 
-  const errors = points.map((point, i) => {
+  const absoluteErrors = points.map((point, i) => {
     return Math.abs(point.y - prediction[i].y);
   });
+  const errors = points.map((point, i) => {
+    return point.y - prediction[i].y;
+  });
 
-  const absoluteErrorMean = math.mean(errors);
-  const absoluteErrorStd = math.std(errors);
+  const absoluteErrorMean = math.mean(absoluteErrors);
+  const errorStd = math.std(errors);
 
   return {
     gradient,
@@ -52,7 +55,7 @@ export function createLinearModel(points: NumPoint[]): LinearModel {
     r2,
     prediction,
     absoluteErrorMean,
-    absoluteErrorStd,
+    errorStd,
   };
 }
 

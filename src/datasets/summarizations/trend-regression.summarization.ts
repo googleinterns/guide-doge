@@ -92,13 +92,13 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const weekendNormalizedPoints = normalizedPoints.filter((_, i) => isWeekend(points[i]));
 
     const overallLinearModel = createLinearModel(normalizedPoints);
-    const overallLinearTrendValidity = uSmallRegressionError(overallLinearModel.absoluteErrorStd);
+    const overallLinearTrendValidity = uSmallRegressionError(overallLinearModel.errorStd);
 
     const weekdayLinearModel = createLinearModel(weekdayNormalizedPoints);
-    const weekdayLinearTrendValidity = uSmallRegressionError(weekdayLinearModel.absoluteErrorStd);
+    const weekdayLinearTrendValidity = uSmallRegressionError(weekdayLinearModel.errorStd);
 
     const weekendLinearModel = createLinearModel(weekendNormalizedPoints);
-    const weekendLinearTrendValidity = uSmallRegressionError(weekendLinearModel.absoluteErrorStd);
+    const weekendLinearTrendValidity = uSmallRegressionError(weekendLinearModel.errorStd);
 
     const overallLinearTrendSummariesValidity = Math.max(
       weekdayWeekendEqualValidity,
