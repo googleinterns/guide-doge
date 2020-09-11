@@ -44,8 +44,8 @@ export function create(config: Config): Dataset {
   const activeUsersPointsLength = 28;
   const activeUsersPoints: TimeSeriesPoint[] = [];
 
-  const activeUsersWeekPattern = [10, 60, 80, 100, 80, 40, 0];
-  const activeUsersOffset = 200;
+  const activeUsersWeekPattern = [-40, 60, 70, 80, 90, 100, -30];
+  const activeUsersOffset = 100;
   const activeUsersGrowingRate = 10;
 
   const startDate = new Date(Date.now() - activeUsersPointsLength * DAY);
