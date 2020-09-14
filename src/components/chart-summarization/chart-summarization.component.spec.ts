@@ -114,4 +114,11 @@ describe('ChartSummarizationComponent', () => {
       }
     }
   });
+
+  it('should render summary group title.', () => {
+    const summarizationElement: HTMLElement = fixture.nativeElement;
+    for (const summaryGroup of mockSummaryGroups) {
+      expect(summarizationElement.textContent?.includes(summaryGroup.title)).toBeTrue();
+    }
+  });
 });
