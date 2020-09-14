@@ -16,17 +16,17 @@ import {
   TimeSeriesPartialTrend,
 } from './libs/trend';
 import { formatX, formatY } from '../../utils/formatters';
-import { chartDiagonalAngle } from './utils/constants';
+import { CHART_DIAGONAL_ANGLE } from './utils/constants';
 
 export function queryFactory(points: TimeSeriesPoint[]) {
   return cacheSummaries(() => {
     const smoothedPoints = createExponentialMovingAveragePoints(points);
     const partialTrends = createPartialTrends(smoothedPoints, 0.01);
 
-    const uIncreasingDynamic = mapConeAngle(trapmfL(chartDiagonalAngle / 8, chartDiagonalAngle / 4));
+    const uIncreasingDynamic = mapConeAngle(trapmfL(CHART_DIAGONAL_ANGLE / 8, CHART_DIAGONAL_ANGLE / 4));
     const uConstantDynamic = mapConeAngle(
-      trapmf(-chartDiagonalAngle / 4, -chartDiagonalAngle / 8, chartDiagonalAngle / 8, chartDiagonalAngle / 4));
-    const uDecreasingDynamic = mapConeAngle(trapmfR(-chartDiagonalAngle / 4, -chartDiagonalAngle / 8));
+      trapmf(-CHART_DIAGONAL_ANGLE / 4, -CHART_DIAGONAL_ANGLE / 8, CHART_DIAGONAL_ANGLE / 8, CHART_DIAGONAL_ANGLE / 4));
+    const uDecreasingDynamic = mapConeAngle(trapmfR(-CHART_DIAGONAL_ANGLE / 4, -CHART_DIAGONAL_ANGLE / 8));
 
     const uDynamics: SummaryVariableOptionPair<PointMembershipFunction<TimeSeriesPartialTrend>>[] = [
       ['increased', uIncreasingDynamic],
