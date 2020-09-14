@@ -92,13 +92,13 @@ export function queryFactory(points: TimeSeriesPoint[]) {
         ) / (partialTrend.indexEnd - partialTrend.indexStart);
 
         if (dynamic === 'similar') {
-          const text = `The active users from <b>${timeStartText}</b> to <b>${timeEndText}</b> <b>remained similar</b> in average.`;
+          const text = `The active users from <b>${timeStartText}</b> to <b>${timeEndText}</b> <b>remained similar</b> on average.`;
           summaries.push({
             text,
             validity: Math.min(uDynamic(partialTrend), weeklyPatternValidity),
           });
         } else {
-          const text = `The active users from <b>${timeStartText}</b> to <b>${timeEndText}</b> <b>${dynamic} by ${formatY(rateAbsolute)} per day</b> in average.`;
+          const text = `The active users from <b>${timeStartText}</b> to <b>${timeEndText}</b> <b>${dynamic} by ${formatY(rateAbsolute)} per day</b> on average.`;
           summaries.push({
             text,
             validity: Math.min(uDynamic(partialTrend), weeklyPatternValidity),
