@@ -23,7 +23,7 @@ import {
   NormalizedYPoint,
   normalizePointsY,
 } from './utils/commons';
-import { chartDiagonalAngle } from './utils/constants';
+import { CHART_DIAGONAL_ANGLE } from './utils/constants';
 import { formatY } from '../../utils/formatters';
 
 export function queryFactory(points: TimeSeriesPoint[]) {
@@ -57,11 +57,13 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const weeklyPatternPoints = normalizedYSeasonalPoints.slice(0, 7) as NormalizedYPoint<Date>[];
     const weeklyPatternPartialTrends = createPartialTrends(weeklyPatternPoints, 1e-8, false);
 
-    const uIncreasingDynamic = mapConeAngle(trapmfL(chartDiagonalAngle / 8, chartDiagonalAngle / 8));
+    const uIncreasingDynamic = mapConeAngle(
+      trapmfL(CHART_DIAGONAL_ANGLE / 8, CHART_DIAGONAL_ANGLE / 8));
     const uConstantDynamic = mapConeAngle(
-      trapmf(-chartDiagonalAngle / 8, -chartDiagonalAngle / 8, chartDiagonalAngle / 8, chartDiagonalAngle / 8)
+      trapmf(-CHART_DIAGONAL_ANGLE / 8, -CHART_DIAGONAL_ANGLE / 8, CHART_DIAGONAL_ANGLE / 8, CHART_DIAGONAL_ANGLE / 8)
     );
-    const uDecreasingDynamic = mapConeAngle(trapmfR(-chartDiagonalAngle / 8, -chartDiagonalAngle / 8));
+    const uDecreasingDynamic = mapConeAngle(
+      trapmfR(-CHART_DIAGONAL_ANGLE / 8, -CHART_DIAGONAL_ANGLE / 8));
 
     const uDynamics: [string, PointMembershipFunction<TimeSeriesPartialTrend>][] = [
       ['increased', uIncreasingDynamic],
