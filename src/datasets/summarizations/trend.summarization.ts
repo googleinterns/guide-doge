@@ -10,7 +10,7 @@ import {
   sigmaCountQA,
 } from './libs/protoform';
 import { createPartialTrends, TimeSeriesPartialTrend } from './libs/trend';
-import { chartDiagonalAngle } from './utils/constants';
+import { CHART_DIAGONAL_ANGLE } from './utils/constants';
 
 export function queryFactory(points: TimeSeriesPoint[]) {
   return cacheSummaries(() => {
@@ -21,12 +21,12 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       return f(avgAngleRad) * percentageSpan * partialTrends.length;
     };
 
-    const uQuicklyIncreasingDynamic = applyTrendAngleWithWeight(trapmfL(chartDiagonalAngle / 2, chartDiagonalAngle * 3 / 5));
-    const uIncreasingDynamic = applyTrendAngleWithWeight(trapmfL(chartDiagonalAngle / 8, chartDiagonalAngle / 4));
+    const uQuicklyIncreasingDynamic = applyTrendAngleWithWeight(trapmfL(CHART_DIAGONAL_ANGLE / 2, CHART_DIAGONAL_ANGLE * 3 / 5));
+    const uIncreasingDynamic = applyTrendAngleWithWeight(trapmfL(CHART_DIAGONAL_ANGLE / 8, CHART_DIAGONAL_ANGLE / 4));
     const uConstantDynamic = applyTrendAngleWithWeight(
-      trapmf(-chartDiagonalAngle / 4, -chartDiagonalAngle / 8, chartDiagonalAngle / 8, chartDiagonalAngle / 4));
-    const uDecreasingDynamic = applyTrendAngleWithWeight(trapmfR(-chartDiagonalAngle / 4, -chartDiagonalAngle / 8));
-    const uQuicklyDecreasingDynamic = applyTrendAngleWithWeight(trapmfR(-chartDiagonalAngle * 3 / 5, -chartDiagonalAngle / 2));
+      trapmf(-CHART_DIAGONAL_ANGLE / 4, -CHART_DIAGONAL_ANGLE / 8, CHART_DIAGONAL_ANGLE / 8, CHART_DIAGONAL_ANGLE / 4));
+    const uDecreasingDynamic = applyTrendAngleWithWeight(trapmfR(-CHART_DIAGONAL_ANGLE / 4, -CHART_DIAGONAL_ANGLE / 8));
+    const uQuicklyDecreasingDynamic = applyTrendAngleWithWeight(trapmfR(-CHART_DIAGONAL_ANGLE * 3 / 5, -CHART_DIAGONAL_ANGLE / 2));
 
     const uMostPercentage = trapmfL(0.6, 0.7);
     const uHalfPercentage = trapmf(0.3, 0.4, 0.6, 0.7);
