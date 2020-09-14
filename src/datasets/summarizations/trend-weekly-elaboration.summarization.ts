@@ -93,14 +93,15 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const summaries: Summary[] = [];
 
     for (let i = 0; i < numOfWeeks; i++) {
-      const weekRate = weekLinearModels[i].gradient + 1e-4;
+      const weekRate = weekLinearModels[i].gradient;
+      const weekOffset = weekLinearModels[i].yIntercept;
       const weekRateAbsolute = Math.abs(weekRate);
       const weekdayWeekendDescriptor = isWeekdayWeekendEqual ? 'from Monday to Sunday' : 'from Monday to Friday';
 
       const dynamicDescriptor = weekRate >= 0 ? 'increased' : 'decreased';
 
       const r2Text = `R2 = ${weekLinearModels[i].r2}`;
-      const text = `The active users <b>${weekdayWeekendDescriptor}</b> in the <b>${ordinalTexts[i]} week</b> <b>${dynamicDescriptor}</b> by <b>${formatY(weekRateAbsolute)}</b> users per day <b>(${r2Text})</b>.`;
+      const text = `The active users <b>${weekdayWeekendDescriptor}</b> in the <b>${ordinalTexts[i]} week</b> <b>${dynamicDescriptor}</b> by <b>${formatY(weekRateAbsolute)}</b> users per day from ${formatY(weekOffset)} <b>(${r2Text})</b>.`;
 
       summaries.push({
         text,
