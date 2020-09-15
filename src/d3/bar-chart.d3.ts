@@ -36,6 +36,7 @@ export class BarChartD3 extends XYChartD3<CategoricalPoint, BarChartDatum> {
   protected updateData(data: BarChartDatum[]) {
     const { points, style = {} } = data[0];
 
+    this.svg.selectAll('.bar').remove();
     this.svg.selectAll('.bar')
       .data(points)
       .enter()
