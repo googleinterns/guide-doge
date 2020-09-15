@@ -1,5 +1,5 @@
 import * as math from 'mathjs';
-import { createLinearModel, createPartialTrends, LinearModel, TimeSeriesPartialTrend } from './trend';
+import { createLinearModel, createPartialTrends, LinearModel, createExponentialMovingAveragePoints } from './trend';
 import { NumPoint, TimeSeriesPoint } from '../../metas/types';
 
 describe('createLinearModel', () => {
@@ -139,6 +139,67 @@ describe('createPartialTrends', () => {
       const partialTrends = createPartialTrends(points, eps);
       const percentageSpanSum = math.sum(partialTrends.map(trend => trend.percentageSpan));
       expect(percentageSpanSum).toBeCloseTo(1.0, 4);
+    }
+  });
+});
+
+describe('createExponentialMovingAveragePoints', () => {
+
+  const testData = [
+    {
+      points: [{ x: 1, y: 1 }, { x: 2, y: 1 }, { x: 3, y: 1 }],
+      alpha: 0.5,
+      expectedResult: [{ x: 1, y: 1 }, { x: 2, y: 1 }, { x: 3, y: 1 }],
+    },
+    {
+      points: [{ x: 1, y: 1 }, { x: 2, y: 2 }, { x: 3, y: 3 }],
+      alpha: 0.0,
+      expectedResult: [{ x: 1, y: 1 }, { x: 2, y: 1 }, { x: 3, y: 1 }],
+    },
+    {
+      points: [{ x: 1, y: 1 }, { x: 2, y: 2 }, { x: 3, y: 3 }],
+      alpha: 0.5,
+      expectedResult: [{ x: 1, y: 1 }, { x: 2, y: 1.5 }, { x: 3, y: 2.25 }],
+    },
+    {
+      points: [{ x: 1, y: 1 }, { x: 2, y: 2 }, { x: 3, y: 3 }],
+      alpha: 1.0,
+      expectedResult: [{ x: 1, y: 1 }, { x: 2, y: 2 }, { x: 3, y: 3 }],
+    },
+    {
+      points: [{ x: 1, y: 1 }, { x: 2, y: 7 }, { x: 3, y: 2 }, { x: 4, y: 8 }, { x: 5, y: 3 }],
+      alpha: 0.3,
+      expectedResult: [{ x: 1, y: 1 }, { x: 2, y: 2.8 }, { x: 3, y: 2.56 }, { x: 4, y: 4.192 }, { x: 5, y: 3.8344 }],
+    },
+  ];
+
+  it('should return correct result.', () => {
+    for (const { points, alpha, expectedResult } of testData) {
+      const result = createExponentialMovingAveragePoints(points, alpha);
+
+      expect(result.length).toBe(expectedResult.length);
+      for (let i = 0; i < result.length; i++) {
+        expect(result[i].x).toBe(expectedResult[i].x);
+        expect(result[i].y).toBeCloseTo(expectedResult[i].y, 4);
+      }
+    }
+  });
+
+  it('should return x-values of input points.', () => {
+    const points = [
+      { x: new Date(2020, 6, 1), y: 1 },
+      { x: new Date(2020, 6, 2), y: 2 },
+      { x: new Date(2020, 6, 3), y: 3 },
+      { x: new Date(2020, 6, 4), y: 4 },
+      { x: new Date(2020, 6, 5), y: 5 },
+    ];
+    const alpha = 1.0;
+
+    const result = createExponentialMovingAveragePoints(points, alpha);
+
+    expect(result.length).toBe(points.length);
+    for (let i = 0; i < result.length; i++) {
+      expect(result[i].x).toBe(points[i].x);
     }
   });
 });
