@@ -33,7 +33,7 @@ export class Hapticplot{
       .domain([0, d3.max(this.data) as number])  // max of dataset
       .range([0, 1]);
     this.audioScale = d3.scaleLinear()
-      .domain([0, d3.max(this.data) as number])  // max of dataset
+      .domain([d3.min(this.data) as number, d3.max(this.data) as number])  // max of dataset
       .range([0, 27]);
     this.setupPoints(DEFAULT_COLOR, HOVER_COLOR, POINT_SIZE);
     this.createSky();
