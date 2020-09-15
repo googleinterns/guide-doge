@@ -6,8 +6,9 @@ describe('ChartSummarizationComponent', () => {
   let fixture: ComponentFixture<SummaryValidityChipComponent>;
   let component: SummaryValidityChipComponent;
 
-  const backgroundColorRed = 'rgb(255, 87, 34)';
-  const backgroundColorGreen = 'rgb(76, 175, 80)';
+  const RED_RGB = 'rgb(255, 87, 34)';
+  const GREEN_RGB = 'rgb(76, 175, 80)';
+  const YELLOW_RGB = 'rgb(255, 235, 59)';
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -46,7 +47,15 @@ describe('ChartSummarizationComponent', () => {
     fixture.detectChanges();
 
     const chipElement: HTMLElement = fixture.nativeElement.querySelector('.chip');
-    expect(chipElement.style.backgroundColor).toBe(backgroundColorGreen);
+    expect(chipElement.style.backgroundColor).toBe(GREEN_RGB);
+  });
+
+  it('should render green background when validity is medium.', () => {
+    component.value = 0.5;
+    fixture.detectChanges();
+
+    const chipElement: HTMLElement = fixture.nativeElement.querySelector('.chip');
+    expect(chipElement.style.backgroundColor).toBe(YELLOW_RGB);
   });
 
   it('should render red background when validity is low.', () => {
@@ -54,7 +63,7 @@ describe('ChartSummarizationComponent', () => {
     fixture.detectChanges();
 
     const chipElement: HTMLElement = fixture.nativeElement.querySelector('.chip');
-    expect(chipElement.style.backgroundColor).toBe(backgroundColorRed);
+    expect(chipElement.style.backgroundColor).toBe(RED_RGB);
   });
 
   it('should describe validity value in validity description.', () => {
@@ -65,5 +74,27 @@ describe('ChartSummarizationComponent', () => {
     component.value = 0.0;
     fixture.detectChanges();
     expect(component.validityDescription.includes('0.0')).toBeTrue();
+  });
+
+  it('should show validity text when mouse enter.', async () => {
+    spyOn(component, 'showText');
+    const chipElement: HTMLElement = fixture.nativeElement.querySelector('.chip');
+    chipElement.dispatchEvent(new Event('mouseenter'));
+    fixture.detectChanges();
+
+    // TODO: Add tests for Angular animation and visibility of element
+    expect(component.showText).toHaveBeenCalled();
+  });
+
+  it('should hide validity text when mouse leave.', async () => {
+    spyOn(component, 'hideText');
+    const chipElement: HTMLElement = fixture.nativeElement.querySelector('.chip');
+    chipElement.dispatchEvent(new Event('mouseenter'));
+    fixture.detectChanges();
+    chipElement.dispatchEvent(new Event('mouseleave'));
+    fixture.detectChanges();
+
+    // TODO: Add tests for Angular animation and visibility of element
+    expect(component.hideText).toHaveBeenCalled();
   });
 });

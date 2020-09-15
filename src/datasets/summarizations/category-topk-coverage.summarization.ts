@@ -22,6 +22,7 @@ export function queryFactory(points: CategoricalPoint[], config?: Partial<Config
 
     const isTopkFilter = (_: any, i: number) => i < topk;
     const sortedPoints = [...points].sort(({ y: y1 }, { y: y2 }) => y2 - y1);
+    const actualTopk = Math.min(topk, points.length);
 
     const xValues = sortedPoints.map(({ x }) => x);
     const yValues = sortedPoints.map(({ y }) => y);
@@ -30,7 +31,7 @@ export function queryFactory(points: CategoricalPoint[], config?: Partial<Config
 
     const topkXValuesText = xValues.filter(isTopkFilter).join(', ');
     const topkCoverageText = formatY(topkYSum / totalYSum * 100);
-    const text = `The <b>top ${topk}</b> ${xlabel} with the highest value <b>(${topkXValuesText})</b> contain <b>${topkCoverageText}%</b> of total ${metric}.`;
+    const text = `The <b>top ${actualTopk}</b> ${xlabel} with the highest value <b>(${topkXValuesText})</b> contain <b>${topkCoverageText}%</b> of total ${metric}.`;
 
     return [{
       title: `Category Top-${topk} Coverage`,
