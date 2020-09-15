@@ -97,20 +97,22 @@ describe('ChartSummarizationComponent', () => {
 
   it('should render summaries with validity greater than or equal to threshold.', () => {
     const summarizationElement: HTMLElement = fixture.nativeElement;
-    const psummaries = Array.from(summarizationElement.querySelectorAll('p.summary-text'));
+    const summaryElements = Array.from(summarizationElement.querySelectorAll('p.summary-text'));
+    const summaryElementTextContents = summaryElements.map(summaryElement => summaryElement.textContent);
     for (const summary of mockSummaries) {
       if (summary.validity >= validityThreshold) {
-        expect(psummaries.some(psummary => psummary.textContent?.includes(summary.text))).toBeTrue();
+        expect(summaryElementTextContents.includes(summary.text)).toBeTrue();
       }
     }
   });
 
   it('should not render summaries with validity less than threshold.', () => {
     const summarizationElement: HTMLElement = fixture.nativeElement;
-    const psummaries = Array.from(summarizationElement.querySelectorAll('p.summary-text'));
+    const summaryElements = Array.from(summarizationElement.querySelectorAll('p.summary-text'));
+    const summaryElementTextContents = summaryElements.map(summaryElement => summaryElement.textContent);
     for (const summary of mockSummaries) {
       if (summary.validity < validityThreshold) {
-        expect(psummaries.every(psummary => !psummary.textContent?.includes(summary.text))).toBeTrue();
+        expect(summaryElementTextContents.includes(summary.text)).toBeFalse();
       }
     }
   });
