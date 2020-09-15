@@ -9,11 +9,11 @@ export interface LegendItemStyle {
   colorMap: string[];
 }
 
-export interface RenderOptions<Point extends CategoricalPoint, Datum extends PieChartDatum> extends BaseRenderOptions {
+export interface RenderOptions<Datum extends PieChartDatum> extends BaseRenderOptions {
   data$: Observable<Datum[]>;
 }
 
-export class PieChartD3 extends BaseD3<RenderOptions<CategoricalPoint, PieChartDatum>> {
+export class PieChartD3 extends BaseD3<RenderOptions<PieChartDatum>> {
   static fontSizeSmall = 12;
   static fontSizeMedium = 14;
   static defaultLegendItemStyle: LegendItemStyle = {
@@ -52,25 +52,30 @@ export class PieChartD3 extends BaseD3<RenderOptions<CategoricalPoint, PieChartD
   }
 
   protected updateData(data: PieChartDatum[]) {
-    const { points, style = {} } = data[0];
-    const { colorMap } = { ...PieChartD3.defaultLegendItemStyle, ...style };
+    if (data.length > 0) {
+      // TODO: Support rendering multiple datum in the same chart
+      const { points, style = {} } = data[0];
+      const { colorMap } = { ...PieChartD3.defaultLegendItemStyle, ...style };
 
-    const colorScale = d3.scaleOrdinal(colorMap);
+      const colorScale = d3.scaleOrdinal(colorMap);
 
-    const { height, width } = this.renderOptions;
-    const xCenter = width * 2 / 5;
-    const yCenter = height / 2;
+      const { height, width } = this.renderOptions;
+      const xCenter = width * 2 / 5;
+      const yCenter = height / 2;
 
-    this.svg
-      .selectAll('slices')
-      .data(this.pie(points))
-      .enter()
-      .append('path')
-      .attr('fill', ({ data: point }) => colorScale(point.x))
-      .attr('transform', `translate(${xCenter}, ${yCenter})`)
-      .attr('d', this.arc as any)
-      .attr('stroke', 'white')
-      .attr('stroke-width', '6px');
+      this.svg.selectAll('.slice').remove();
+      this.svg
+        .selectAll('.slice')
+        .data(this.pie(points))
+        .enter()
+        .append('path')
+        .attr('class', 'slice')
+        .attr('fill', ({ data: point }) => colorScale(point.x))
+        .attr('transform', `translate(${xCenter}, ${yCenter})`)
+        .attr('d', this.arc as any)
+        .attr('stroke', 'white')
+        .attr('stroke-width', '6px');
+    }
   }
 
   protected updateLegend(data: PieChartDatum[]) {
