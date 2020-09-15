@@ -17,7 +17,7 @@ const mockData = [...Array(10).keys()].map(datumIndex => ({
   })),
 }));
 
-fdescribe('BarChartD3', () => {
+describe('BarChartD3', () => {
   let containerElement: HTMLElement;
   let svgElement: HTMLElement;
   let renderOptions: SubjectRenderOptions;
