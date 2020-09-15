@@ -47,10 +47,6 @@ export class PieChartComponent extends A11yHostComponent implements
     return t(GUIDE_DOGE.VISUALIZATION);
   }
 
-  get legendItems() {
-    return [];
-  }
-
   ngOnInit() {
     this.pieChartD3.render();
   }
@@ -62,7 +58,7 @@ export class PieChartComponent extends A11yHostComponent implements
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (['meta'].some(key => key in changes)) {
+    if ('meta' in changes) {
       const data = this.meta.queryData({});
       this.data$.next(data);
     }

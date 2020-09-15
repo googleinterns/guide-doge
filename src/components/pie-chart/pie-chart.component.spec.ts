@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BarChartComponent } from './bar-chart.component';
+import { PieChartComponent } from './pie-chart.component';
 import { MatCardModule } from '@angular/material/card';
-import { BarChartD3 } from '../../d3/bar-chart.d3';
+import { PieChartD3 } from '../../d3/pie-chart.d3';
 
-describe('BarChartComponent', () => {
-  let fixture: ComponentFixture<BarChartComponent>;
-  let component: BarChartComponent;
-  let barChartD3: BarChartD3;
+describe('PieChartComponent', () => {
+  let fixture: ComponentFixture<PieChartComponent>;
+  let component: PieChartComponent;
+  let pieChartD3: PieChartD3;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -14,17 +14,17 @@ describe('BarChartComponent', () => {
         MatCardModule,
       ],
       declarations: [
-        BarChartComponent,
+        PieChartComponent,
       ],
     });
-    fixture = TestBed.createComponent(BarChartComponent);
+    fixture = TestBed.createComponent(PieChartComponent);
     component = fixture.componentInstance;
     // tslint:disable-next-line:no-string-literal
-    barChartD3 = component['barChartD3'];
+    pieChartD3 = component['pieChartD3'];
   });
 
   it('should instantiate.', () => {
-    expect(component).toBeInstanceOf(BarChartComponent);
+    expect(component).toBeInstanceOf(PieChartComponent);
   });
 
   it('should have truthy i18n values.', () => {
@@ -32,14 +32,14 @@ describe('BarChartComponent', () => {
   });
 
   it('should render d3 on init.', () => {
-    spyOn(barChartD3, 'render');
+    spyOn(pieChartD3, 'render');
     component.ngOnInit();
-    expect(barChartD3.render).toHaveBeenCalled();
+    expect(pieChartD3.render).toHaveBeenCalled();
   });
 
   it('should clear d3 on destroy.', () => {
-    spyOn(barChartD3, 'clear');
+    spyOn(pieChartD3, 'clear');
     component.ngOnDestroy();
-    expect(barChartD3.clear).toHaveBeenCalled();
+    expect(pieChartD3.clear).toHaveBeenCalled();
   });
 });
