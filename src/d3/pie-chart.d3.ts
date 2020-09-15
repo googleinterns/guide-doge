@@ -52,6 +52,8 @@ export class PieChartD3 extends BaseD3<RenderOptions<PieChartDatum>> {
   }
 
   protected updateData(data: PieChartDatum[]) {
+    this.svg.selectAll('.slice').remove();
+
     if (data.length > 0) {
       // TODO: Support rendering multiple datum in the same chart
       const { points, style = {} } = data[0];
@@ -63,7 +65,6 @@ export class PieChartD3 extends BaseD3<RenderOptions<PieChartDatum>> {
       const xCenter = width * 2 / 5;
       const yCenter = height / 2;
 
-      this.svg.selectAll('.slice').remove();
       this.svg
         .selectAll('.slice')
         .data(this.pie(points))
