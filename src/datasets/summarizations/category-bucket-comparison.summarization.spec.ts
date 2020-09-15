@@ -2,7 +2,7 @@ import { queryFactory } from './category-bucket-comparison.summarization';
 import { getSummaries, hasHighValidity, isTextPartsInSummary } from './utils/tests';
 import { CategoricalPoint } from '../metas/types';
 
-fdescribe('queryFactory', () => {
+describe('queryFactory', () => {
 
   const points: CategoricalPoint[] = [
     { x: 'A', y: 100, },
