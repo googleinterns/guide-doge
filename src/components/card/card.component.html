@@ -1,21 +1,19 @@
 <h2 class="card-title">{{meta.title}}</h2>
 <mat-card class="card-content">
   <div class="tabs" *ngIf="isTabbedChartsMetaCard()">
-    <div *ngFor="let title of titles"
-         class="tab" [class.active]="title === currentTabTitle"
-         (click)="setCurrentTabTitle(title)" role="button">
+    <div *ngFor="let title of titles" class="tab" [class.active]="title === currentTabTitle"
+      (click)="setCurrentTabTitle(title)" role="button">
       {{humanizeMeasureName(title)}}
     </div>
   </div>
   <ng-container [ngSwitch]="currentChart.type">
-    <app-bar-chart *ngSwitchCase="MetaType.BAR_CHART"
-                    [meta]="currentChart"
-                    [appA11y]="currentChart.a11yModuleImporters"></app-bar-chart>
-    <app-line-chart *ngSwitchCase="MetaType.LINE_CHART"
-                    [meta]="currentChart"
-                    [appA11y]="currentChart.a11yModuleImporters"></app-line-chart>
-    <app-geo-map *ngSwitchCase="MetaType.GEO_MAP"
-                 [meta]="currentChart"
-                 [appA11y]="currentChart.a11yModuleImporters"></app-geo-map>
+    <app-bar-chart *ngSwitchCase="MetaType.BAR_CHART" [meta]="currentChart"
+      [appA11y]="currentChart.a11yModuleImporters"></app-bar-chart>
+    <app-line-chart *ngSwitchCase="MetaType.LINE_CHART" [meta]="currentChart"
+      [appA11y]="currentChart.a11yModuleImporters"></app-line-chart>
+    <app-pie-chart *ngSwitchCase="MetaType.PIE_CHART" [meta]="currentChart"
+      [appA11y]="currentChart.a11yModuleImporters"></app-pie-chart>
+    <app-geo-map *ngSwitchCase="MetaType.GEO_MAP" [meta]="currentChart" [appA11y]="currentChart.a11yModuleImporters">
+    </app-geo-map>
   </ng-container>
 </mat-card>

@@ -84,4 +84,12 @@ describe('LineChartD3', () => {
     await new Promise(resolve => setTimeout(resolve, transitionDelay));
     expect(circleElement.getAttribute('display')).toBe('none');
   });
+
+  it('should render the x and y axis.', () => {
+    lineChartD3.render();
+    const xAxisElement = svgElement.querySelector('.xy_chart-x_axis');
+    const yAxisElement = svgElement.querySelector('.xy_chart-y_axis');
+    expect(xAxisElement).not.toBe(null);
+    expect(yAxisElement).not.toBe(null);
+  });
 });
