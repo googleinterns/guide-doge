@@ -1,8 +1,8 @@
 import * as regression from 'regression';
 import * as math from 'mathjs';
+import { normalizePointsX, normalizePointsY, pointToPair, pairToPoint } from '../utils/commons';
 import { MembershipFunction } from './protoform';
 import { TimeSeriesPoint, NumPoint, XYPoint } from '../../metas/types';
-import { normalizePoints, pointToPair, pairToPoint } from '../utils/commons';
 import { timeSeriesPointToNumPoint } from '../utils/time-series';
 
 export interface LinearModel {
@@ -88,10 +88,12 @@ export interface TimeSeriesPartialTrend {
  *
  * @param points The time-series points to extract partial trends.
  * @param eps Radius of circle around points when finding the intersection of cones for a partial trend.
+ * @param normalizeY Whether to normalize the y-values of input points or not before extracting partial trends.
  */
-export function createPartialTrends(points: TimeSeriesPoint[], eps: number): TimeSeriesPartialTrend[] {
+export function createPartialTrends(points: TimeSeriesPoint[], eps: number, normalizeY: boolean = true): TimeSeriesPartialTrend[] {
   const numPoints = points.map(timeSeriesPointToNumPoint);
-  const normalizedPoints = normalizePoints(numPoints, {}, { min: 0 });
+  const normalizedXPoints = normalizePointsX(numPoints);
+  const normalizedPoints: NumPoint[] = normalizeY ? normalizePointsY(normalizedXPoints) : normalizedXPoints;
   const normalizedXMin = Math.min(...normalizedPoints.map(({ x }) => x));
   const normalizedXMax = Math.max(...normalizedPoints.map(({ x }) => x));
 
@@ -166,16 +168,73 @@ function intersectCone(c1: Cone2D, c2: Cone2D): Cone2D | null {
   }
 }
 
+export type PartialTrendMembershipFunction = (partialTrend: TimeSeriesPartialTrend) => number;
+
 /**
  * A function decorator that maps the cone angle of the input partial trend to the membership function.
  *
  * @param mf: The membership function that takes the cone angle as input.
  */
-export function mapConeAngle(mf: MembershipFunction) {
+export function mapConeAngle(mf: MembershipFunction): PartialTrendMembershipFunction {
   return ({ cone }: TimeSeriesPartialTrend) => {
     const coneAngleRadAverage = (cone.endAngleRad + cone.startAngleRad) / 2;
     return mf(coneAngleRadAverage);
   };
+}
+
+/**
+ * Create an array of time-series partial trends by merging continuous partial trends based on the
+ * membership degree of given membership functions. If two continuous partial trends both have membership
+ * degree from the same membership function above the threshold, they will be merged in the returned partial
+ * trends array. The cone of the merged partial trend has the area being the union of cone areas of the
+ * original partial trends.
+ *
+ * @param partialTrends The time-series partial trends to merge.
+ * @param uPartialTrends The membership functions for merging continuous partial trends.
+ * @param membershipDegreeThreshold The threshold for determining whether the membership degree is high or not.
+ */
+export function mergePartialTrends(
+  partialTrends: TimeSeriesPartialTrend[],
+  uPartialTrends: PartialTrendMembershipFunction[],
+  membershipDegreeThreshold: number = 0.7,
+  ) {
+
+  const merge = (a: TimeSeriesPartialTrend, b: TimeSeriesPartialTrend): TimeSeriesPartialTrend[] => {
+    for (const uPartialTrend of uPartialTrends) {
+      if (uPartialTrend(a) >= membershipDegreeThreshold && uPartialTrend(b) >= membershipDegreeThreshold) {
+        const indexStart = Math.min(a.indexStart, b.indexStart);
+        const indexEnd = Math.max(a.indexEnd, b.indexEnd);
+        const timeStart = a.timeStart < b.timeStart ? a.timeStart : b.timeStart;
+        const timeEnd = a.timeEnd > b.timeEnd ? a.timeEnd : b.timeEnd;
+        const percentageSpan = a.percentageSpan + b.percentageSpan;
+        const startAngleRad = Math.min(a.cone.startAngleRad, b.cone.startAngleRad);
+        const endAngleRad = Math.max(a.cone.endAngleRad, b.cone.endAngleRad);
+        return [{
+          indexStart,
+          indexEnd,
+          timeStart,
+          timeEnd,
+          percentageSpan,
+          cone: {
+            startAngleRad,
+            endAngleRad,
+          }
+        }];
+      }
+    }
+    return [a, b];
+  };
+
+  const mergedPartialTrends: TimeSeriesPartialTrend[] = [];
+  for (const partialTrend of partialTrends) {
+    if (mergedPartialTrends.length === 0) {
+      mergedPartialTrends.push(partialTrend);
+    } else {
+      const previousPartialTrend = mergedPartialTrends.pop() as TimeSeriesPartialTrend;
+      mergedPartialTrends.push(...merge(previousPartialTrend, partialTrend));
+    }
+  }
+  return mergedPartialTrends;
 }
 
 /**

@@ -5,7 +5,9 @@ import {
   createPartialTrends,
   createExponentialMovingAveragePoints,
   createCenteredMovingAveragePoints,
+  mergePartialTrends,
   LinearModel,
+  TimeSeriesPartialTrend,
 } from './trend';
 import { NumPoint, TimeSeriesPoint } from '../../metas/types';
 
@@ -401,6 +403,98 @@ describe('additiveDecomposite', () => {
         expect(seasonalPoints[i].x).toBe(points[i].x);
         expect(residualPoints[i].x).toBe(points[i].x);
       }
+    }
+  });
+});
+
+describe('mergePartialTrends', () => {
+
+  it('should merge partial trends.', () => {
+    const partialTrends: TimeSeriesPartialTrend[] = [
+      {
+        indexStart: 0,
+        indexEnd: 1,
+        timeStart: new Date(2020, 6, 1),
+        timeEnd: new Date(2020, 6, 2),
+        percentageSpan: 0.25,
+        cone: { startAngleRad: 0, endAngleRad: 1 },
+      },
+      {
+        indexStart: 1,
+        indexEnd: 2,
+        timeStart: new Date(2020, 6, 2),
+        timeEnd: new Date(2020, 6, 3),
+        percentageSpan: 0.25,
+        cone: { startAngleRad: -1, endAngleRad: 0 },
+      },
+      {
+        indexStart: 2,
+        indexEnd: 4,
+        timeStart: new Date(2020, 6, 3),
+        timeEnd: new Date(2020, 6, 5),
+        percentageSpan: 0.5,
+        cone: { startAngleRad: 0, endAngleRad: 0 },
+      }
+    ];
+    const uPartialTrends = [() => 1.0];
+
+    const expectedMergedPartialTrends = [{
+      indexStart: 0,
+      indexEnd: 4,
+      timeStart: new Date(2020, 6, 1),
+      timeEnd: new Date(2020, 6, 5),
+      percentageSpan: 1.0,
+      cone: { startAngleRad: -1, endAngleRad: 1 },
+    }];
+
+    const mergedPartialTrends = mergePartialTrends(partialTrends, uPartialTrends);
+
+    expect(mergedPartialTrends.length).toBe(expectedMergedPartialTrends.length);
+    for (let i = 0; i < mergedPartialTrends.length; i++) {
+      expect(mergedPartialTrends[i].indexStart).toBe(expectedMergedPartialTrends[i].indexStart);
+      expect(mergedPartialTrends[i].indexEnd).toBe(expectedMergedPartialTrends[i].indexEnd);
+      expect(mergedPartialTrends[i].timeStart).toEqual(expectedMergedPartialTrends[i].timeStart);
+      expect(mergedPartialTrends[i].timeEnd).toEqual(expectedMergedPartialTrends[i].timeEnd);
+      expect(mergedPartialTrends[i].percentageSpan).toBeCloseTo(expectedMergedPartialTrends[i].percentageSpan, 4);
+      expect(mergedPartialTrends[i].cone.startAngleRad).toBeCloseTo(expectedMergedPartialTrends[i].cone.startAngleRad, 4);
+      expect(mergedPartialTrends[i].cone.endAngleRad).toBeCloseTo(expectedMergedPartialTrends[i].cone.endAngleRad, 4);
+    }
+  });
+
+  it('should not merge partial trends when membership degree is below threshold.', () => {
+    const partialTrends: TimeSeriesPartialTrend[] = [
+      {
+        indexStart: 0,
+        indexEnd: 1,
+        timeStart: new Date(2020, 6, 1),
+        timeEnd: new Date(2020, 6, 2),
+        percentageSpan: 0.5,
+        cone: { startAngleRad: 0, endAngleRad: 1 },
+      },
+      {
+        indexStart: 1,
+        indexEnd: 2,
+        timeStart: new Date(2020, 6, 2),
+        timeEnd: new Date(2020, 6, 3),
+        percentageSpan: 0.5,
+        cone: { startAngleRad: -1, endAngleRad: 0 },
+      }
+    ];
+    const uPartialTrends = [() => 0.5];
+
+    const expectedMergedPartialTrends = partialTrends;
+
+    const mergedPartialTrends = mergePartialTrends(partialTrends, uPartialTrends, 0.7);
+
+    expect(mergedPartialTrends.length).toBe(expectedMergedPartialTrends.length);
+    for (let i = 0; i < mergedPartialTrends.length; i++) {
+      expect(mergedPartialTrends[i].indexStart).toBe(expectedMergedPartialTrends[i].indexStart);
+      expect(mergedPartialTrends[i].indexEnd).toBe(expectedMergedPartialTrends[i].indexEnd);
+      expect(mergedPartialTrends[i].timeStart).toEqual(expectedMergedPartialTrends[i].timeStart);
+      expect(mergedPartialTrends[i].timeEnd).toEqual(expectedMergedPartialTrends[i].timeEnd);
+      expect(mergedPartialTrends[i].percentageSpan).toBeCloseTo(expectedMergedPartialTrends[i].percentageSpan, 4);
+      expect(mergedPartialTrends[i].cone.startAngleRad).toBeCloseTo(expectedMergedPartialTrends[i].cone.startAngleRad, 4);
+      expect(mergedPartialTrends[i].cone.endAngleRad).toBeCloseTo(expectedMergedPartialTrends[i].cone.endAngleRad, 4);
     }
   });
 });

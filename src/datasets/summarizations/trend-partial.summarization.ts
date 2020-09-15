@@ -13,6 +13,7 @@ import {
   mapConeAngle,
   createExponentialMovingAveragePoints,
   createPartialTrends,
+  mergePartialTrends,
   TimeSeriesPartialTrend,
 } from './libs/trend';
 import { formatX, formatY } from '../../utils/formatters';
@@ -34,43 +35,10 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       ['decreased', uDecreasingDynamic],
     ];
 
-    const validityThreshold = 0.7;
-
-    const mergePartialTrends = (a: TimeSeriesPartialTrend, b: TimeSeriesPartialTrend): TimeSeriesPartialTrend[] => {
-      for (const uDynamic of [uIncreasingDynamic, uConstantDynamic, uDecreasingDynamic]) {
-        if (uDynamic(a) >= validityThreshold && uDynamic(b) >= validityThreshold) {
-          const indexStart = Math.min(a.indexStart, b.indexStart);
-          const indexEnd = Math.max(a.indexEnd, b.indexEnd);
-          const timeStart = points[indexStart].x;
-          const timeEnd = points[indexEnd].x;
-          const percentageSpan = a.percentageSpan + b.percentageSpan;
-          const startAngleRad = Math.min(a.cone.startAngleRad, b.cone.startAngleRad);
-          const endAngleRad = Math.max(a.cone.endAngleRad, b.cone.endAngleRad);
-          return [{
-            indexStart,
-            indexEnd,
-            timeStart,
-            timeEnd,
-            percentageSpan,
-            cone: {
-              startAngleRad,
-              endAngleRad,
-            }
-          }];
-        }
-      }
-      return [a, b];
-    };
-
-    let mergedPartialTrends: TimeSeriesPartialTrend[] = [];
-    for (const partialTrend of partialTrends) {
-      if (mergedPartialTrends.length === 0) {
-        mergedPartialTrends.push(partialTrend);
-      } else {
-        const prevTrend = mergedPartialTrends.pop() as TimeSeriesPartialTrend;
-        mergedPartialTrends = mergedPartialTrends.concat(mergePartialTrends(prevTrend, partialTrend));
-      }
-    }
+    const mergedPartialTrends = mergePartialTrends(
+      partialTrends,
+      [uIncreasingDynamic, uConstantDynamic, uDecreasingDynamic],
+    );
 
     const summaries: Summary[] = [];
     for (const partialTrend of mergedPartialTrends) {
