@@ -1,4 +1,4 @@
-import { RenderOptions, XYChartD3 } from './xy-chart.d3';
+import { RenderOptions } from './xy-chart.d3';
 import { TimeSeriesChartD3 } from './time-series-chart.d3';
 import { Subject } from 'rxjs';
 import { TimeSeriesPoint } from '../datasets/metas/types';
@@ -68,23 +68,7 @@ describe('TimeSeriesChartD3', () => {
   });
 
   it('should instantiate.', () => {
-    expect(timeSeriesChartD3).toBeInstanceOf(XYChartD3);
-  });
-
-  it('should render the data and update upon changes.', () => {
-    expect(timeSeriesChartD3.dataFlag).toBe(0);
-    timeSeriesChartD3.render();
-    expect(timeSeriesChartD3.dataFlag).toBe(1);
-    renderOptions.data$.next(mockData);
-    expect(timeSeriesChartD3.dataFlag).toBe(2);
-  });
-
-  it('should render the active datum and update upon changes.', () => {
-    expect(timeSeriesChartD3.activePointFlag).toBe(0);
-    timeSeriesChartD3.render();
-    expect(timeSeriesChartD3.activePointFlag).toBe(1);
-    renderOptions.activePoint$.next(null);
-    expect(timeSeriesChartD3.activePointFlag).toBe(2);
+    expect(timeSeriesChartD3).toBeInstanceOf(TimeSeriesChartD3);
   });
 
   it('should render the x and y axis.', () => {
@@ -93,12 +77,5 @@ describe('TimeSeriesChartD3', () => {
     const yAxisElement = svgElement.querySelector('.xy_chart-y_axis');
     expect(xAxisElement).not.toBe(null);
     expect(yAxisElement).not.toBe(null);
-  });
-
-  it('should render the legend.', () => {
-    timeSeriesChartD3.render();
-    renderOptions.data$.next(mockData);
-    const textElements = svgElement.querySelectorAll('.xy_chart-legend text');
-    expect(textElements.length).toBe(mockData.length);
   });
 });
