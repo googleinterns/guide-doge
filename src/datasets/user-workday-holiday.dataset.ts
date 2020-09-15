@@ -7,11 +7,7 @@ import { createLineChartMeta } from './metas/line-chart.meta';
 import { PreferenceMeta } from '../services/preference/types';
 import { DAY } from '../utils/timeUnits';
 import { combineQuerySummariesFactories } from './summarizations/utils/commons';
-import { normalizePointsY } from './summarizations/utils/commons';
-import { createExponentialMovingAveragePoints } from './summarizations/libs/trend';
-import * as WorkdayHolidayAbsoluteSummarization from './summarizations/workday-holiday-absolute.summarization';
-import * as WorkdayHolidayRelativeSummarization from './summarizations/workday-holiday-relative.summarization';
-import * as TrendPartialSummarization from './summarizations/trend-partial.summarization';
+import * as TrendSummarization from './summarizations/trend-weekly-comparison-average.summarization';
 
 export interface Config {
   dailyWeightStd: number;
@@ -49,15 +45,15 @@ export function create(config: Config): Dataset {
 
   const dateCategory = generateDateCategory(startDate, endDate, dailyWeightStd, workdayHolidayActiveRatio);
 
-  const visitCountMeasure: Measure = {
-    name: 'visitCount',
+  const activeUserMeasure: Measure = {
+    name: 'activeUsers',
     scope: Scope.USER,
     type: MeasureType.COUNT,
   };
 
 
   const categories = [dateCategory, userIDCategory];
-  const measures = [visitCountMeasure];
+  const measures = [activeUserMeasure];
 
   const generateCubeConfig = {
     avgHits: 10000,
@@ -71,41 +67,21 @@ export function create(config: Config): Dataset {
 
   const dataCube = generateCube(categories, measures, generateCubeConfig);
 
-  const visitCountQuerySummariesFactory = combineQuerySummariesFactories(
-    TrendPartialSummarization.queryFactory,
+  const activeUserQuerySummariesFactory = combineQuerySummariesFactories(
+    TrendSummarization.queryFactory,
   );
 
   const lineChartMeta = createLineChartMeta(
-    'Visit Count',
+    'Active Users',
     createTimeSeriesQuery(dataCube, [{
-      label: 'Visit Count',
-      measureName: 'visitCount',
-      querySummariesFactory: visitCountQuerySummariesFactory,
+      label: 'Active Users',
+      measureName: 'activeUsers',
+      querySummariesFactory: activeUserQuerySummariesFactory,
     }]),
   );
 
   const metas = [
     lineChartMeta,
-    createLineChartMeta(
-      'Visit Count',
-      (opt) => {
-        const points = lineChartMeta.queryData(opt)[0].points;
-        return [{
-          label: 'Visit Count - Smoothed',
-          points: createExponentialMovingAveragePoints(normalizePointsY(points)),
-          querySummaries: TrendPartialSummarization.queryFactory(points),
-          style: {
-            color: 'green',
-          },
-        }, {
-          label: 'Visit Count',
-          points: normalizePointsY(points),
-          style: {
-            opacity: 0.5,
-          },
-        }];
-      },
-    ),
   ];
 
   return {
