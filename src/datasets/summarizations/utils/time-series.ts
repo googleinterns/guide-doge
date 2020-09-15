@@ -34,21 +34,29 @@ export function groupPointsByXWeek(points: TimeSeriesPoint[]): TimeSeriesPoint[]
   const weekPoints: Record<string, TimeSeriesPoint[]> = {};
   points.sort(({ x: a }, { x: b }) => a.getTime() - b.getTime());
   for (const point of points) {
-    // `weekNo` is the week number, which is computed by taking the number of
-    // weeks since `new Date(0)`. Because `new Date(0)` is Wednesday and we
-    // consider the first day of the week to be Monday, the time must be subtracted
-    // by four days when computing the week number.
-    const weekStartOffset = 4 * DAY;
-    const weekNo = Math.floor((point.x.getTime() - weekStartOffset) / WEEK);
+    const weekNo = getWeekNumber(point.x);
     weekPoints[weekNo] = [...(weekPoints[weekNo] ?? []), point];
   }
   const sortedWeekPointPairs = Object.entries(weekPoints).sort(([wa], [wb]) => Number(wa) - Number(wb));
   return sortedWeekPointPairs.map(([_, currentWeekPoints]) => currentWeekPoints);
 }
 
+function getWeekNumber(date: Date): number {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  // Set to nearest Thursday: current date + 4 - current day number
+  // Make Sunday's day number 7
+  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+  // Get first day of year
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  // Calculate full weeks to nearest Thursday
+  const weekNo = Math.ceil((((d.getTime() - yearStart.getTime()) / DAY) + 1) / 7);
+
+  return weekNo;
+}
+
 export function timeSeriesPointToNumPoint(point: TimeSeriesPoint) {
   return {
-    x: point.x.getTime(),
+    x: point.x.getTime() / DAY,
     y: point.y,
   };
 }

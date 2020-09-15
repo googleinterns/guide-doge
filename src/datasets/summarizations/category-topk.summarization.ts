@@ -30,7 +30,7 @@ export function queryFactory(points: CategoricalPoint[], config?: Partial<Config
     }));
 
     return [{
-      title: 'Category Top-K',
+      title: `Category Top-${topk}`,
       summaries
     }];
   });
