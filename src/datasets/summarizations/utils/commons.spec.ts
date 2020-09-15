@@ -94,6 +94,7 @@ describe('pointToPair', () => {
 });
 
 describe('normalizePointsX', () => {
+  const chartXYSizeRatio = 800 / 500;
   const points = [
     { x: 10, y: 10 },
     { x: 12, y: 12 },
@@ -102,45 +103,72 @@ describe('normalizePointsX', () => {
   ];
 
   it('should take min and max x-values of input for normalization by default.', () => {
-    expect(normalizePointsX(points)).toEqual([
-      { x: 0, y: 10 },
-      { x: 0.2, y: 12 },
-      { x: 0.5, y: 15 },
-      { x: 1.0, y: 20 },
-    ]);
+    const expectedResult = [
+      { x: 0 * chartXYSizeRatio, y: 10 },
+      { x: 0.2 * chartXYSizeRatio, y: 12 },
+      { x: 0.5 * chartXYSizeRatio, y: 15 },
+      { x: 1.0 * chartXYSizeRatio, y: 20 },
+    ];
+    const normalizedXPoints = normalizePointsX(points);
+
+    expect(normalizedXPoints.length).toBe(points.length);
+    normalizedXPoints.map((point, i) => {
+      expect(point.x).toBeCloseTo(expectedResult[i].x, 4);
+      expect(point.y).toBeCloseTo(expectedResult[i].y, 4);
+    });
   });
 
   it('should use chart x-axis min limit for normalization if provided.', () => {
-    expect(normalizePointsX(points, { min: 0 })).toEqual([
-      { x: 0.5, y: 10 },
-      { x: 0.6, y: 12 },
-      { x: 0.75, y: 15 },
-      { x: 1.0, y: 20 },
-    ]);
+    const expectedResult = [
+      { x: 0.5 * chartXYSizeRatio, y: 10 },
+      { x: 0.6 * chartXYSizeRatio, y: 12 },
+      { x: 0.75 * chartXYSizeRatio, y: 15 },
+      { x: 1.0 * chartXYSizeRatio, y: 20 },
+    ];
+    const normalizedXPoints = normalizePointsX(points, { min: 0 });
+
+    expect(normalizedXPoints.length).toBe(points.length);
+    normalizedXPoints.map((point, i) => {
+      expect(point.x).toBeCloseTo(expectedResult[i].x, 4);
+      expect(point.y).toBeCloseTo(expectedResult[i].y, 4);
+    });
   });
 
   it('should use chart x-axis max limit for normalization if provided.', () => {
-    expect(normalizePointsX(points, { max: 30 })).toEqual([
-      { x: 0, y: 10 },
-      { x: 0.1, y: 12 },
-      { x: 0.25, y: 15 },
-      { x: 0.5, y: 20 },
-    ]);
+    const expectedResult = [
+      { x: 0 * chartXYSizeRatio, y: 10 },
+      { x: 0.1 * chartXYSizeRatio, y: 12 },
+      { x: 0.25 * chartXYSizeRatio, y: 15 },
+      { x: 0.5 * chartXYSizeRatio, y: 20 },
+    ];
+    const normalizedXPoints = normalizePointsX(points, { max: 30 });
+
+    expect(normalizedXPoints.length).toBe(points.length);
+    normalizedXPoints.map((point, i) => {
+      expect(point.x).toBeCloseTo(expectedResult[i].x, 4);
+      expect(point.y).toBeCloseTo(expectedResult[i].y, 4);
+    });
   });
 
   it('should use chart x-axis limits for normalization if provided.', () => {
-    expect(normalizePointsX(points, { min: 0, max: 100 })).toEqual([
-      { x: 0.1, y: 10 },
-      { x: 0.12, y: 12 },
-      { x: 0.15, y: 15 },
-      { x: 0.2, y: 20 },
-    ]);
+    const expectedResult = [
+      { x: 0.1 * chartXYSizeRatio, y: 10 },
+      { x: 0.12 * chartXYSizeRatio, y: 12 },
+      { x: 0.15 * chartXYSizeRatio, y: 15 },
+      { x: 0.2 * chartXYSizeRatio, y: 20 },
+    ];
+    const normalizedXPoints = normalizePointsX(points, { min: 0, max: 100 });
+
+    expect(normalizedXPoints.length).toBe(points.length);
+    normalizedXPoints.map((point, i) => {
+      expect(point.x).toBeCloseTo(expectedResult[i].x, 4);
+      expect(point.y).toBeCloseTo(expectedResult[i].y, 4);
+    });
   });
 });
 
 
 describe('normalizePointsY', () => {
-  const chartYXSizeRatio = 500 / 800;
   const points = [
     { x: 10, y: 10 },
     { x: 12, y: 12 },
@@ -150,37 +178,37 @@ describe('normalizePointsY', () => {
 
   it('should take 0 as min and max y-values of input for normalization by default.', () => {
     expect(normalizePointsY(points)).toEqual([
-      { x: 10, y: 0.5 * chartYXSizeRatio },
-      { x: 12, y: 0.6 * chartYXSizeRatio },
-      { x: 15, y: 0.75 * chartYXSizeRatio },
-      { x: 20, y: 1.0 * chartYXSizeRatio },
+      { x: 10, y: 0.5 },
+      { x: 12, y: 0.6 },
+      { x: 15, y: 0.75 },
+      { x: 20, y: 1.0 },
     ]);
   });
 
   it('should use chart y-axis min limit for normalization if provided.', () => {
     expect(normalizePointsY(points, { min: 10 })).toEqual([
-      { x: 10, y: 0 * chartYXSizeRatio },
-      { x: 12, y: 0.2 * chartYXSizeRatio },
-      { x: 15, y: 0.5 * chartYXSizeRatio },
-      { x: 20, y: 1.0 * chartYXSizeRatio },
+      { x: 10, y: 0 },
+      { x: 12, y: 0.2 },
+      { x: 15, y: 0.5 },
+      { x: 20, y: 1.0 },
     ]);
   });
 
   it('should use chart y-axis max limit for normalization if provided.', () => {
     expect(normalizePointsY(points, { max: 40 })).toEqual([
-      { x: 10, y: 0.25 * chartYXSizeRatio },
-      { x: 12, y: 0.3 * chartYXSizeRatio },
-      { x: 15, y: 0.375 * chartYXSizeRatio },
-      { x: 20, y: 0.5 * chartYXSizeRatio },
+      { x: 10, y: 0.25 },
+      { x: 12, y: 0.3 },
+      { x: 15, y: 0.375 },
+      { x: 20, y: 0.5 },
     ]);
   });
 
   it('should use chart y-axis limits for normalization if provided.', () => {
     expect(normalizePointsY(points, { min: 0, max: 100 })).toEqual([
-      { x: 10, y: 0.1 * chartYXSizeRatio },
-      { x: 12, y: 0.12 * chartYXSizeRatio },
-      { x: 15, y: 0.15 * chartYXSizeRatio },
-      { x: 20, y: 0.2 * chartYXSizeRatio },
+      { x: 10, y: 0.1 },
+      { x: 12, y: 0.12 },
+      { x: 15, y: 0.15 },
+      { x: 20, y: 0.2 },
     ]);
   });
 });

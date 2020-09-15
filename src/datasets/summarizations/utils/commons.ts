@@ -49,7 +49,7 @@ export function normalizePointsX<T>(points: XYPoint<number, T>[], xlim: ChartAxi
   } = xlim;
 
   return points.map(({ x, y }) => ({
-    x: (x - xmin) / (xmax - xmin),
+    x: (x - xmin) / (xmax - xmin) * 8 / 5,
     y,
   }));
 }
@@ -63,7 +63,7 @@ export function normalizePointsY<T>(points: XYPoint<T, number>[], ylim: ChartAxi
 
   return points.map(({ x, y }) => ({
     x,
-    y: (y - ymin) / (ymax - ymin) * 5 / 8,
+    y: (y - ymin) / (ymax - ymin),
   }));
 }
 
