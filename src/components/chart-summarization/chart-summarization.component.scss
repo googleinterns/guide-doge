@@ -4,28 +4,42 @@
   @include card-section;
   display: block;
 
-  .summary-container {
-    font-size: $font-size-medium;
-    line-height: 2em;
-  }
+  .summaries {
+    .panel-controls {
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: flex-end;
 
-  .summary-text {
-    display: inline-block;
-    margin: 0;
-
-    ::ng-deep {
-      .summary-variable {
-        color: red;
-        font-weight: bold;
+      .toggles-controls {
+        button {
+          margin-right: 8px;
+        }
       }
     }
-  }
 
-  .summary-text::first-letter {
-    text-transform: uppercase;
-  }
+    .summary-container {
+      font-size: $font-size-medium;
+      line-height: 2em;
+    }
 
-  .summary-validity {
-    margin-right: 10px;
+    .summary-text {
+      display: inline-block;
+      margin: 0;
+
+      ::ng-deep {
+        .summary-variable {
+          color: red;
+          font-weight: bold;
+        }
+      }
+    }
+
+    .summary-text::first-letter {
+      text-transform: uppercase;
+    }
+
+    .summary-validity {
+      margin-right: 10px;
+    }
   }
 }

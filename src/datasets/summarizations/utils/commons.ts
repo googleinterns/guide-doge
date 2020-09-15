@@ -41,7 +41,12 @@ interface ChartAxisLimit {
   max?: number;
 }
 
-export function normalizePointsX<T>(points: XYPoint<number, T>[], xlim: ChartAxisLimit = {}): XYPoint<number, T>[] {
+export interface NormalizedXPoint<T> extends XYPoint<number, T> {
+  x_: number;
+}
+
+export function normalizePointsX<T>(points: XYPoint<number, T>[], xlim: ChartAxisLimit = {}): NormalizedXPoint<T>[] {
+  const eps = 1e-5;
   const xValues = points.map(({ x }) => x);
   const {
     min: xmin = Math.min(...xValues),
@@ -49,12 +54,18 @@ export function normalizePointsX<T>(points: XYPoint<number, T>[], xlim: ChartAxi
   } = xlim;
 
   return points.map(({ x, y }) => ({
-    x: (x - xmin) / (xmax - xmin),
+    x: (x - xmin) / (xmax - xmin + eps) * 8 / 5,
+    x_: x,
     y,
   }));
 }
 
-export function normalizePointsY<T>(points: XYPoint<T, number>[], ylim: ChartAxisLimit = {}): XYPoint<T, number>[] {
+export interface NormalizedYPoint<T> extends XYPoint<T, number> {
+  y_: number;
+}
+
+export function normalizePointsY<T>(points: XYPoint<T, number>[], ylim: ChartAxisLimit = {}): NormalizedYPoint<T>[] {
+  const eps = 1e-5;
   const yValues = points.map(({ y }) => y);
   const {
     min: ymin = 0,
@@ -63,11 +74,14 @@ export function normalizePointsY<T>(points: XYPoint<T, number>[], ylim: ChartAxi
 
   return points.map(({ x, y }) => ({
     x,
-    y: (y - ymin) / (ymax - ymin) * 5 / 8,
+    y: (y - ymin) / (ymax - ymin + eps),
+    y_: y,
   }));
 }
 
-export function normalizePoints(points: NumPoint[], xlim: ChartAxisLimit = {}, ylim: ChartAxisLimit = {}): NumPoint[] {
+export type NormalizedPoint = NormalizedYPoint<number> & NormalizedYPoint<number>;
+
+export function normalizePoints(points: NumPoint[], xlim: ChartAxisLimit = {}, ylim: ChartAxisLimit = {}): NormalizedPoint[] {
   return normalizePointsY(normalizePointsX(points, xlim), ylim);
 }
 

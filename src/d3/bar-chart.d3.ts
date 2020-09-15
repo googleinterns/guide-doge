@@ -34,20 +34,24 @@ export class BarChartD3 extends XYChartD3<CategoricalPoint, BarChartDatum> {
   }
 
   protected updateData(data: BarChartDatum[]) {
-    const { points, style = {} } = data[0];
-
     this.svg.selectAll('.bar').remove();
-    this.svg.selectAll('.bar')
-      .data(points)
-      .enter()
-      .append('rect')
-      .attr('class', 'bar')
-      .attr('x', () => this.x(0))
-      .attr('y', point => this.y(point.x) as number)
-      .attr('height', this.scaleY.bandwidth())
-      .attr('width', point => this.x(point.y))
-      .attr('fill', style.color ?? BarChartD3.defaultLegendItemStyle.color)
-      .attr('opacity', style.opacity ?? BarChartD3.defaultLegendItemStyle.opacity);
+
+    if (data.length > 0) {
+      // TODO: Support multiple legend items in the same chart
+      const { points, style = {} } = data[0];
+
+      this.svg.selectAll('.bar')
+        .data(points)
+        .enter()
+        .append('rect')
+        .attr('class', 'bar')
+        .attr('x', () => this.x(0))
+        .attr('y', point => this.y(point.x) as number)
+        .attr('height', this.scaleY.bandwidth())
+        .attr('width', point => this.x(point.y))
+        .attr('fill', style.color ?? BarChartD3.defaultLegendItemStyle.color)
+        .attr('opacity', style.opacity ?? BarChartD3.defaultLegendItemStyle.opacity);
+    }
   }
 
   protected renderActivePoint() {
