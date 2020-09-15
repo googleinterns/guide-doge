@@ -50,7 +50,7 @@ describe('ChartSummarizationComponent', () => {
     expect(chipElement.style.backgroundColor).toBe(GREEN_RGB);
   });
 
-  it('should render green background when validity is medium.', () => {
+  it('should render yellow background when validity is medium.', () => {
     component.value = 0.5;
     fixture.detectChanges();
 
