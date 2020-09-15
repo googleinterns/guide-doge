@@ -23,17 +23,18 @@ import {
   normalizePoints,
   normalizePointsY,
 } from './utils/commons';
-import { chartDiagonalAngle } from './utils/constants';
+import { CHART_DIAGONAL_ANGLE } from './utils/constants';
 
 export function queryFactory(points: TimeSeriesPoint[]) {
   return cacheSummaries(() => {
-    const uQuicklyIncreasingLinearDynamic = trapmfL(chartDiagonalAngle / 2, chartDiagonalAngle * 5 / 8);
+    const uQuicklyIncreasingLinearDynamic = trapmfL(CHART_DIAGONAL_ANGLE / 2, CHART_DIAGONAL_ANGLE * 5 / 8);
     const uIncreasingLinearDynamic = trapmf(
-      chartDiagonalAngle / 8, chartDiagonalAngle / 4, chartDiagonalAngle / 2, chartDiagonalAngle * 5 / 8);
-    const uConstantLinearDynamic = trapmf(-chartDiagonalAngle / 4, -chartDiagonalAngle / 8, chartDiagonalAngle / 8, chartDiagonalAngle / 4);
+      CHART_DIAGONAL_ANGLE / 8, CHART_DIAGONAL_ANGLE / 4, CHART_DIAGONAL_ANGLE / 2, CHART_DIAGONAL_ANGLE * 5 / 8);
+    const uConstantLinearDynamic = trapmf(
+      -CHART_DIAGONAL_ANGLE / 4, -CHART_DIAGONAL_ANGLE / 8, CHART_DIAGONAL_ANGLE / 8, CHART_DIAGONAL_ANGLE / 4);
     const uDecreasingLinearDynamic = trapmf(
-      -chartDiagonalAngle * 5 / 8, -chartDiagonalAngle / 2, -chartDiagonalAngle / 4, -chartDiagonalAngle / 8);
-    const uQuicklyDecreasingLinearDynamic = trapmfR(-chartDiagonalAngle * 5 / 8, -chartDiagonalAngle / 2);
+      -CHART_DIAGONAL_ANGLE * 5 / 8, -CHART_DIAGONAL_ANGLE / 2, -CHART_DIAGONAL_ANGLE / 4, -CHART_DIAGONAL_ANGLE / 8);
+    const uQuicklyDecreasingLinearDynamic = trapmfR(-CHART_DIAGONAL_ANGLE * 5 / 8, -CHART_DIAGONAL_ANGLE / 2);
 
     const uSmallRegressionStd = trapmfR(0.09, 0.14);
 
@@ -187,6 +188,9 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       });
     }
 
-    return summaries;
+    return [{
+      title: 'Trend Regression',
+      summaries
+    }];
   });
 }

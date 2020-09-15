@@ -1,8 +1,31 @@
 <div class="summaries">
-  <ul *ngIf="this.hasSummaries; else elseBlock">
-    <li *ngFor="let summary of summaries">
-      ({{summary.validity | number: '1.2-2'}}) <p class="summary" [innerHTML]="summary.text"></p>
-    </li>
-  </ul>
-  <ng-template #elseBlock>No summaries available.</ng-template>
+  <div class="panel-controls">
+    <div class="toggles-controls">
+      <button mat-raised-button (click)="accordion.openAll()">
+        <mat-icon>keyboard_arrow_down</mat-icon>
+        Expand All
+      </button>
+      <button mat-raised-button (click)="accordion.closeAll()">
+        <mat-icon>keyboard_arrow_up</mat-icon>
+        Collapse All
+      </button>
+    </div>
+  </div>
+  <mat-accordion multi>
+    <mat-expansion-panel *ngFor="let summaryGroup of summaryGroups; index as i" [expanded]="i === 0">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ summaryGroup.title }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <mat-list>
+        <mat-list-item *ngFor="let summary of summaryGroup.summaries">
+          <app-summary-validity-chip [value]="summary.validity" class="summary-validity"></app-summary-validity-chip>
+          <p class="summary-text" [innerHTML]="summary.text"></p>
+        </mat-list-item>
+      </mat-list>
+    </mat-expansion-panel>
+  </mat-accordion>
+
 </div>

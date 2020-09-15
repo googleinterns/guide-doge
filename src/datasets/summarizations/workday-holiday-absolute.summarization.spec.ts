@@ -1,4 +1,5 @@
 import { queryFactory } from './workday-holiday-absolute.summarization';
+import { getSummaries } from './utils/tests';
 import { TimeSeriesPoint } from '../metas/types';
 
 describe('queryFactory', () => {
@@ -9,11 +10,10 @@ describe('queryFactory', () => {
       y: i,
     });
   }
-  const querySummaries = queryFactory(points);
   let summaries;
 
   beforeEach(() => {
-    summaries = querySummaries();
+    summaries = getSummaries(queryFactory, points);
   });
 
   it('should return all combinations of linguistic variables.', () => {

@@ -23,7 +23,7 @@ import {
   NormalizedYPoint,
   normalizePointsY,
 } from './utils/commons';
-import { chartDiagonalAngle } from './utils/constants';
+import { CHART_DIAGONAL_ANGLE } from './utils/constants';
 import { formatY } from '../../utils/formatters';
 
 export function queryFactory(points: TimeSeriesPoint[]) {
@@ -43,7 +43,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       });
 
     const normalizedPoints = normalizedYWeekPointArrays.flat();
-    const zeroPoints = normalizedPoints.map(({ x, y }) => ({ x, y: 0 }));
+    const zeroPoints = normalizedPoints.map(({ x }) => ({ x, y: 0 }));
     const {
       seasonalPoints: normalizedYSeasonalPoints,
       residualPoints: normalizedYResidualPoints,
@@ -57,11 +57,13 @@ export function queryFactory(points: TimeSeriesPoint[]) {
     const weeklyPatternPoints = normalizedYSeasonalPoints.slice(0, 7) as NormalizedYPoint<Date>[];
     const weeklyPatternPartialTrends = createPartialTrends(weeklyPatternPoints, 1e-8, false);
 
-    const uIncreasingDynamic = mapConeAngle(trapmfL(chartDiagonalAngle / 8, chartDiagonalAngle / 8));
+    const uIncreasingDynamic = mapConeAngle(
+      trapmfL(CHART_DIAGONAL_ANGLE / 8, CHART_DIAGONAL_ANGLE / 8));
     const uConstantDynamic = mapConeAngle(
-      trapmf(-chartDiagonalAngle / 8, -chartDiagonalAngle / 8, chartDiagonalAngle / 8, chartDiagonalAngle / 8)
+      trapmf(-CHART_DIAGONAL_ANGLE / 8, -CHART_DIAGONAL_ANGLE / 8, CHART_DIAGONAL_ANGLE / 8, CHART_DIAGONAL_ANGLE / 8)
     );
-    const uDecreasingDynamic = mapConeAngle(trapmfR(-chartDiagonalAngle / 8, -chartDiagonalAngle / 8));
+    const uDecreasingDynamic = mapConeAngle(
+      trapmfR(-CHART_DIAGONAL_ANGLE / 8, -CHART_DIAGONAL_ANGLE / 8));
 
     const uDynamics: [string, PointMembershipFunction<TimeSeriesPartialTrend>][] = [
       ['increased', uIncreasingDynamic],
@@ -90,13 +92,13 @@ export function queryFactory(points: TimeSeriesPoint[]) {
         ) / (partialTrend.indexEnd - partialTrend.indexStart);
 
         if (dynamic === 'similar') {
-          const text = `The active users from <b>${timeStartText}</b> to <b>${timeEndText}</b> <b>remained similar</b> in average.`;
+          const text = `The active users from <b>${timeStartText}</b> to <b>${timeEndText}</b> <b>remained similar</b> on average.`;
           summaries.push({
             text,
             validity: Math.min(uDynamic(partialTrend), weeklyPatternValidity),
           });
         } else {
-          const text = `The active users from <b>${timeStartText}</b> to <b>${timeEndText}</b> <b>${dynamic} by ${formatY(rateAbsolute)} per day</b> in average.`;
+          const text = `The active users from <b>${timeStartText}</b> to <b>${timeEndText}</b> <b>${dynamic} by ${formatY(rateAbsolute)} per day</b> on average.`;
           summaries.push({
             text,
             validity: Math.min(uDynamic(partialTrend), weeklyPatternValidity),
@@ -105,6 +107,9 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       }
     }
 
-    return summaries;
+    return [{
+      title: 'Trend Weekly Pattern',
+      summaries,
+    }];
   });
 }

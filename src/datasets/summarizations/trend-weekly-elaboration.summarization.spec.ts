@@ -1,6 +1,6 @@
 import { queryFactory } from './trend-weekly-elaboration.summarization';
 import { TimeSeriesPoint } from '../metas/types';
-import { hasHighValidity, hasLowValidity, isTextPartsInSummary, norSummaryFilters } from './utils/tests';
+import { getSummaries, hasHighValidity, hasLowValidity, isTextPartsInSummary, norSummaryFilters } from './utils/tests';
 
 describe('queryFactory', () => {
 
@@ -12,7 +12,7 @@ describe('queryFactory', () => {
       points.push({ x, y });
     }
 
-    const summaries = queryFactory(points)();
+    const summaries = getSummaries(queryFactory, points);
     for (const summary of summaries) {
       expect(summary.validity).toBeGreaterThanOrEqual(0.0);
       expect(summary.validity).toBeLessThanOrEqual(1.0);
@@ -34,7 +34,7 @@ describe('queryFactory', () => {
     ];
     const isOtherSummary = norSummaryFilters(...validSummaryFilters);
 
-    const summaries = queryFactory(points)();
+    const summaries = getSummaries(queryFactory, points);
     const validSummaries = validSummaryFilters.map(summaryFilter =>
       summaries.filter(summaryFilter)
     );
@@ -62,7 +62,7 @@ describe('queryFactory', () => {
     ];
     const isOtherSummary = norSummaryFilters(...validSummaryFilters);
 
-    const summaries = queryFactory(points)();
+    const summaries = getSummaries(queryFactory, points);
     const validSummaries = validSummaryFilters.map(summaryFilter =>
       summaries.filter(summaryFilter)
     );
@@ -92,7 +92,7 @@ describe('queryFactory', () => {
     ];
     const isOtherSummary = norSummaryFilters(...validSummaryFilters);
 
-    const summaries = queryFactory(points)();
+    const summaries = getSummaries(queryFactory, points);
     const validSummaries = validSummaryFilters.map(summaryFilter =>
       summaries.filter(summaryFilter)
     );
@@ -122,7 +122,7 @@ describe('queryFactory', () => {
     ];
     const isOtherSummary = norSummaryFilters(...validSummaryFilters);
 
-    const summaries = queryFactory(points)();
+    const summaries = getSummaries(queryFactory, points);
     const validSummaries = validSummaryFilters.map(summaryFilter =>
       summaries.filter(summaryFilter)
     );

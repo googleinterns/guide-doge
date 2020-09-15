@@ -1,6 +1,6 @@
 import { queryFactory } from './trend-weekly-comparison-rate.summarization';
 import { TimeSeriesPoint } from '../metas/types';
-import { hasHighValidity, hasLowValidity, isTextPartsInSummary, norSummaryFilters } from './utils/tests';
+import { getSummaries, hasHighValidity, hasLowValidity, isTextPartsInSummary, norSummaryFilters } from './utils/tests';
 
 describe('queryFactory', () => {
 
@@ -12,7 +12,7 @@ describe('queryFactory', () => {
       points.push({ x, y });
     }
 
-    const summaries = queryFactory(points)();
+    const summaries = getSummaries(queryFactory, points);
     for (const summary of summaries) {
       expect(summary.validity).toBeGreaterThanOrEqual(0.0);
       expect(summary.validity).toBeLessThanOrEqual(1.0);
@@ -34,7 +34,7 @@ describe('queryFactory', () => {
       isSecondWeekThirdWeekSummary,
     );
 
-    const summaries = queryFactory(points)();
+    const summaries = getSummaries(queryFactory, points);
     const firstWeekSecondWeekSummary = summaries.filter(isFirstWeekSecondWeekSummary);
     const secondWeekThirdWeekSummary = summaries.filter(isSecondWeekThirdWeekSummary);
     const otherSummaries = summaries.filter(isOtherSummary);
@@ -61,7 +61,7 @@ describe('queryFactory', () => {
       isSecondWeekThirdWeekSummary,
     );
 
-    const summaries = queryFactory(points)();
+    const summaries = getSummaries(queryFactory, points);
     const firstWeekSecondWeekSummary = summaries.filter(isFirstWeekSecondWeekSummary);
     const secondWeekThirdWeekSummary = summaries.filter(isSecondWeekThirdWeekSummary);
     const otherSummaries = summaries.filter(isOtherSummary);
@@ -89,7 +89,7 @@ describe('queryFactory', () => {
       isSecondWeekThirdWeekSummary,
     );
 
-    const summaries = queryFactory(points)();
+    const summaries = getSummaries(queryFactory, points);
     const firstWeekSecondWeekSummary = summaries.filter(isFirstWeekSecondWeekSummary);
     const secondWeekThirdWeekSummary = summaries.filter(isSecondWeekThirdWeekSummary);
     const otherSummaries = summaries.filter(isOtherSummary);
@@ -116,7 +116,7 @@ describe('queryFactory', () => {
       isSecondWeekThirdWeekSummary,
     );
 
-    const summaries = queryFactory(points)();
+    const summaries = getSummaries(queryFactory, points);
     const firstWeekSecondWeekSummary = summaries.filter(isFirstWeekSecondWeekSummary);
     const secondWeekThirdWeekSummary = summaries.filter(isSecondWeekThirdWeekSummary);
     const otherSummaries = summaries.filter(isOtherSummary);
@@ -143,7 +143,7 @@ describe('queryFactory', () => {
       isSecondWeekThirdWeekSummary,
     );
 
-    const summaries = queryFactory(points)();
+    const summaries = getSummaries(queryFactory, points);
     const firstWeekSecondWeekSummary = summaries.filter(isFirstWeekSecondWeekSummary);
     const secondWeekThirdWeekSummary = summaries.filter(isSecondWeekThirdWeekSummary);
     const otherSummaries = summaries.filter(isOtherSummary);
@@ -175,7 +175,7 @@ describe('queryFactory', () => {
       isSecondWeekThirdWeekSummary,
     );
 
-    const summaries = queryFactory(points)();
+    const summaries = getSummaries(queryFactory, points);
     const firstWeekSecondWeekSummary = summaries.filter(isFirstWeekSecondWeekSummary);
     const secondWeekThirdWeekSummary = summaries.filter(isSecondWeekThirdWeekSummary);
     const otherSummaries = summaries.filter(isOtherSummary);

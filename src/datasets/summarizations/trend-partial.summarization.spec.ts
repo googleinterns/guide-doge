@@ -1,6 +1,6 @@
 import { queryFactory } from './trend-partial.summarization';
 import { TimeSeriesPoint } from '../metas/types';
-import { hasHighValidity, hasLowValidity, isTextPartsInSummary, norSummaryFilters } from './utils/tests';
+import { getSummaries, hasHighValidity, hasLowValidity, isTextPartsInSummary, norSummaryFilters } from './utils/tests';
 
 describe('queryFactory', () => {
 
@@ -12,7 +12,7 @@ describe('queryFactory', () => {
       points.push({ x, y });
     }
 
-    const summaries = queryFactory(points)();
+    const summaries = getSummaries(queryFactory, points);
     for (const summary of summaries) {
       expect(summary.validity).toBeGreaterThanOrEqual(0.0);
       expect(summary.validity).toBeLessThanOrEqual(1.0);
@@ -30,7 +30,7 @@ describe('queryFactory', () => {
     const isFirstPartSummary = isTextPartsInSummary('July 01', 'July 31', 'increased');
     const isOtherSummary = norSummaryFilters(isFirstPartSummary);
 
-    const summaries = queryFactory(points)();
+    const summaries = getSummaries(queryFactory, points);
     const firstPartSummaries = summaries.filter(isFirstPartSummary);
     const otherSummaries = summaries.filter(isOtherSummary);
 
@@ -50,7 +50,7 @@ describe('queryFactory', () => {
     const isFirstPartSummary = isTextPartsInSummary('July 01', 'July 31', 'similar');
     const isOtherSummary = norSummaryFilters(isFirstPartSummary);
 
-    const summaries = queryFactory(points)();
+    const summaries = getSummaries(queryFactory, points);
     const firstPartSummaries = summaries.filter(isFirstPartSummary);
     const otherSummaries = summaries.filter(isOtherSummary);
 
@@ -71,7 +71,7 @@ describe('queryFactory', () => {
     const isSecondPartSummary = isTextPartsInSummary('July 15', 'July 31', 'increased');
     const isOtherSummary = norSummaryFilters(isFirstPartSummary, isSecondPartSummary);
 
-    const summaries = queryFactory(points)();
+    const summaries = getSummaries(queryFactory, points);
     const firstPartSummaries = summaries.filter(isFirstPartSummary);
     const secondPartSummaries = summaries.filter(isSecondPartSummary);
     const otherSummaries = summaries.filter(isOtherSummary);
