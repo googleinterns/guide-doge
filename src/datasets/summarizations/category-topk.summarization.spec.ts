@@ -39,7 +39,7 @@ describe('queryFactory', () => {
     expect(top3rdSummary.every(hasHighValidity)).toBeTrue();
   });
 
-  it('should describe top 4 categories by providing config topk.', () => {
+  it('should describe top 4 categories with custom topk.', () => {
     const summaries = getSummaries(pts => queryFactory(pts, { topk: 4 }), points);
     const isTop1stSummary = isTextPartsInSummary('D', '1st', 'sessions');
     const isTop2ndSummary = isTextPartsInSummary('C', '2nd', 'sessions');
@@ -63,8 +63,8 @@ describe('queryFactory', () => {
     expect(top4thSummary.every(hasHighValidity)).toBeTrue();
   });
 
-  it('should describe top 3 categories with metric as countries by providing config metric.', () => {
-    const metric = 'countries';
+  it('should describe top 3 categories with custom metric.', () => {
+    const metric = 'users';
     const summaries = getSummaries(pts => queryFactory(pts, { metric }), points);
     const isTop1stSummary = isTextPartsInSummary('D', '1st', metric);
     const isTop2ndSummary = isTextPartsInSummary('C', '2nd', metric);
@@ -84,7 +84,7 @@ describe('queryFactory', () => {
     expect(top3rdSummary.every(hasHighValidity)).toBeTrue();
   });
 
-  it('should describe top 3 categories with percentage by providing config showPercentage.', () => {
+  it('should describe top 3 categories with percentage.', () => {
     const summaries = getSummaries(pts => queryFactory(pts, { showPercentage: true }), points);
     const isTop1stSummary = isTextPartsInSummary('D', '1st', '%)');
     const isTop2ndSummary = isTextPartsInSummary('C', '2nd', '%)');
