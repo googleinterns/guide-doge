@@ -3,7 +3,7 @@ import { BarChartComponent } from './bar-chart.component';
 import { MatCardModule } from '@angular/material/card';
 import { BarChartD3 } from '../../d3/bar-chart.d3';
 
-fdescribe('BarChartComponent', () => {
+describe('BarChartComponent', () => {
   let fixture: ComponentFixture<BarChartComponent>;
   let component: BarChartComponent;
   let barChartD3: BarChartD3;
