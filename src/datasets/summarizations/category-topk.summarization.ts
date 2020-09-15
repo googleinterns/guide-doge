@@ -25,7 +25,7 @@ export function queryFactory(points: CategoricalPoint[], config?: Partial<Config
     const getPercentageText = (yValue: number) => showPercentage ? ` (${formatY(yValue / totalYSum * 100)}%)` : '';
 
     const summaries = sortedPoints.filter((_, i) => i < topk).map((point, i) => ({
-      text: `<b>${point.x}</b> has the <b>${createOrdinalText(i + 1)}</b> highest value with <b>${point.y}${getPercentageText(point.y)} ${metric}</b>.`,
+      text: `<b>${point.x}</b> has the <b>${createOrdinalText(i + 1)}</b> highest value with <b>${formatY(point.y)}${getPercentageText(point.y)} ${metric}</b>.`,
       validity: 1.0,
     }));
 
