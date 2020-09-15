@@ -31,7 +31,7 @@ describe('queryFactory', () => {
     expect(coverageSummary.every(hasHighValidity)).toBeTrue();
   });
 
-  it('should describe top 4 categories coverage by providing config topk.', () => {
+  it('should describe top 4 categories coverage with custom topk.', () => {
     const summaries = getSummaries(pts => queryFactory(pts, { topk: 4 }), points);
     const isCoverageSummary = isTextPartsInSummary('top 4', 'countries', 'D, C, B, A', 'sessions');
 
@@ -55,7 +55,7 @@ describe('queryFactory', () => {
     expect(coverageSummary.every(hasHighValidity)).toBeTrue();
   });
 
-  it('should describe top 3 categories coverage with custom xlabel by providing config xlabel.', () => {
+  it('should describe top 3 categories coverage with custom xlabel.', () => {
     const summaries = getSummaries(pts => queryFactory(pts, { xlabel: 'devices' }), points);
     const isCoverageSummary = isTextPartsInSummary('top 3', 'devices', 'D, C, B', 'sessions');
 
@@ -67,7 +67,7 @@ describe('queryFactory', () => {
     expect(coverageSummary.every(hasHighValidity)).toBeTrue();
   });
 
-  it('should describe top 3 categories coverage with custom metric by providing config metric.', () => {
+  it('should describe top 3 categories coverage with custom metric.', () => {
     const summaries = getSummaries(pts => queryFactory(pts, { metric: 'users' }), points);
     const isCoverageSummary = isTextPartsInSummary('top 3', 'countries', 'D, C, B', 'users');
 
