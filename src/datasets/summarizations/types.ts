@@ -1,5 +1,10 @@
 import { XYPoint } from '../metas/types';
 
+export interface SummaryGroup {
+  title: string;
+  summaries: Summary[];
+}
+
 /**
  * Pair type for representing an option of a summary variable.
  * The first element is the text in string of the summary variable option, and the second element
@@ -12,4 +17,4 @@ export interface Summary {
   validity: number;
 }
 
-export type QuerySummariesFactory<PointT> = (points: PointT[]) => () => Summary[];
+export type QuerySummariesFactory<PointT> = (points: PointT[]) => () => SummaryGroup[];

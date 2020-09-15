@@ -1,6 +1,6 @@
 import { queryFactory } from './trend-weekly-pattern.summarization';
 import { TimeSeriesPoint } from '../metas/types';
-import { hasHighValidity, hasLowValidity, isTextPartsInSummary, norSummaryFilters } from './utils/tests';
+import { getSummaries, hasHighValidity, hasLowValidity, isTextPartsInSummary, norSummaryFilters } from './utils/tests';
 
 describe('queryFactory', () => {
 
@@ -12,7 +12,7 @@ describe('queryFactory', () => {
       points.push({ x, y });
     }
 
-    const summaries = queryFactory(points)();
+    const summaries = getSummaries(queryFactory, points);
     for (const summary of summaries) {
       expect(summary.validity).toBeGreaterThanOrEqual(0.0);
       expect(summary.validity).toBeLessThanOrEqual(1.0);
@@ -32,7 +32,7 @@ describe('queryFactory', () => {
       isMondayToSundaySummary,
     );
 
-    const summaries = queryFactory(points)();
+    const summaries = getSummaries(queryFactory, points);
     const mondayToSundaySummary = summaries.filter(isMondayToSundaySummary);
     const otherSummaries = summaries.filter(isOtherSummary);
 
@@ -54,7 +54,7 @@ describe('queryFactory', () => {
       isMondayToSundaySummary,
     );
 
-    const summaries = queryFactory(points)();
+    const summaries = getSummaries(queryFactory, points);
     const mondayToSundaySummary = summaries.filter(isMondayToSundaySummary);
     const otherSummaries = summaries.filter(isOtherSummary);
 
@@ -76,7 +76,7 @@ describe('queryFactory', () => {
       isMondayToSundaySummary,
     );
 
-    const summaries = queryFactory(points)();
+    const summaries = getSummaries(queryFactory, points);
     const mondayToSundaySummary = summaries.filter(isMondayToSundaySummary);
     const otherSummaries = summaries.filter(isOtherSummary);
 
@@ -101,7 +101,7 @@ describe('queryFactory', () => {
       isWednesdayToSundaySummary,
     );
 
-    const summaries = queryFactory(points)();
+    const summaries = getSummaries(queryFactory, points);
     const mondayToWednesdaySummary = summaries.filter(isMondayToWednesdaySummary);
     const wednesdayToSundaySummary = summaries.filter(isWednesdayToSundaySummary);
     const otherSummaries = summaries.filter(isOtherSummary);
@@ -129,7 +129,7 @@ describe('queryFactory', () => {
       isWednesdayToSundaySummary,
     );
 
-    const summaries = queryFactory(points)();
+    const summaries = getSummaries(queryFactory, points);
     const mondayToWednesdaySummary = summaries.filter(isMondayToWednesdaySummary);
     const wednesdayToSundaySummary = summaries.filter(isWednesdayToSundaySummary);
     const otherSummaries = summaries.filter(isOtherSummary);
@@ -157,7 +157,7 @@ describe('queryFactory', () => {
       isWednesdayToSundaySummary,
     );
 
-    const summaries = queryFactory(points)();
+    const summaries = getSummaries(queryFactory, points);
     const mondayToWednesdaySummary = summaries.filter(isMondayToWednesdaySummary);
     const wednesdayToSundaySummary = summaries.filter(isWednesdayToSundaySummary);
     const otherSummaries = summaries.filter(isOtherSummary);
@@ -187,7 +187,7 @@ describe('queryFactory', () => {
       isFridayToSundaySummary,
     );
 
-    const summaries = queryFactory(points)();
+    const summaries = getSummaries(queryFactory, points);
     const mondayToWednesdaySummary = summaries.filter(isMondayToWednesdaySummary);
     const wednesdayToFridaySummary = summaries.filter(isWednesdayToFridaySummary);
     const fridayToSundaySummary = summaries.filter(isFridayToSundaySummary);
@@ -220,7 +220,7 @@ describe('queryFactory', () => {
       isFridayToSundaySummary,
     );
 
-    const summaries = queryFactory(points)();
+    const summaries = getSummaries(queryFactory, points);
     const mondayToWednesdaySummary = summaries.filter(isMondayToWednesdaySummary);
     const wednesdayToFridaySummary = summaries.filter(isWednesdayToFridaySummary);
     const fridayToSundaySummary = summaries.filter(isFridayToSundaySummary);
@@ -253,7 +253,7 @@ describe('queryFactory', () => {
       isFridayToSundaySummary,
     );
 
-    const summaries = queryFactory(points)();
+    const summaries = getSummaries(queryFactory, points);
     const mondayToWednesdaySummary = summaries.filter(isMondayToWednesdaySummary);
     const wednesdayToFridaySummary = summaries.filter(isWednesdayToFridaySummary);
     const fridayToSundaySummary = summaries.filter(isFridayToSundaySummary);

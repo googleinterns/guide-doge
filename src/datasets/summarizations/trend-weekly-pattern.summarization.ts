@@ -43,7 +43,7 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       });
 
     const normalizedPoints = normalizedYWeekPointArrays.flat();
-    const zeroPoints = normalizedPoints.map(({ x, y }) => ({ x, y: 0 }));
+    const zeroPoints = normalizedPoints.map(({ x }) => ({ x, y: 0 }));
     const {
       seasonalPoints: normalizedYSeasonalPoints,
       residualPoints: normalizedYResidualPoints,
@@ -107,6 +107,9 @@ export function queryFactory(points: TimeSeriesPoint[]) {
       }
     }
 
-    return summaries;
+    return [{
+      title: 'Trend Weekly Pattern',
+      summaries,
+    }];
   });
 }

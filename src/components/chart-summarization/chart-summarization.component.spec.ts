@@ -12,12 +12,16 @@ describe('ChartSummarizationComponent', () => {
     text: `This is summary ${i}.`,
     validity: i / nMockSummaries,
   }));
-  const mockData = [{
-    label: `MockDatum`,
-    points: [],
-    querySummaries: () => mockSummaries,
+  const mockSummaryGroups = [{
+    title: 'MockSummaryGroup',
+    summaries: mockSummaries,
   }];
-  const validityThreshold = 0.5;
+  const mockData = [{
+    label: 'MockDatum',
+    points: [],
+    querySummaries: () => mockSummaryGroups,
+  }];
+  const validityThreshold = 0.5 - 1e-6;
   let fixture: ComponentFixture<ChartSummarizationComponent>;
   let component: ChartSummarizationComponent;
 
@@ -73,37 +77,50 @@ describe('ChartSummarizationComponent', () => {
   });
 
   it('should have summaries with validity greater than or equal to threshold.', () => {
-    for (const summary of component.summaries) {
-      expect(summary.validity).toBeGreaterThanOrEqual(component.validityThreshold);
+    for (const summaryGroup of component.summaryGroups) {
+      for (const summary of summaryGroup.summaries) {
+        expect(summary.validity).toBeGreaterThanOrEqual(component.validityThreshold);
+      }
     }
   });
 
   it('should sort summaries by validity in descending order.', () => {
-    const summaries = component.summaries;
-    for (let i = 1; i < summaries.length; i++) {
-      const currentValidity = summaries[i].validity;
-      const previousValidity = summaries[i - 1].validity;
-      expect(currentValidity).toBeLessThanOrEqual(previousValidity);
+    for (const summaryGroup of component.summaryGroups) {
+      const summaries = summaryGroup.summaries;
+      for (let i = 1; i < summaries.length; i++) {
+        const currentValidity = summaries[i].validity;
+        const previousValidity = summaries[i - 1].validity;
+        expect(currentValidity).toBeLessThanOrEqual(previousValidity);
+      }
     }
   });
 
   it('should render summaries with validity greater than or equal to threshold.', () => {
     const summarizationElement: HTMLElement = fixture.nativeElement;
-    const psummaries = Array.from(summarizationElement.querySelectorAll('p.summary'));
-    for (const summary of mockSummaries){
+    const summaryElements = Array.from(summarizationElement.querySelectorAll('p.summary-text'));
+    const summaryElementTextContents = summaryElements.map(summaryElement => summaryElement.textContent);
+    for (const summary of mockSummaries) {
       if (summary.validity >= validityThreshold) {
-        expect(psummaries.some(psummary => psummary.textContent?.includes(summary.text))).toBeTrue();
+        expect(summaryElementTextContents.includes(summary.text)).toBeTrue();
       }
     }
   });
 
   it('should not render summaries with validity less than threshold.', () => {
     const summarizationElement: HTMLElement = fixture.nativeElement;
-    const psummaries = Array.from(summarizationElement.querySelectorAll('p.summary'));
-    for (const summary of mockSummaries){
+    const summaryElements = Array.from(summarizationElement.querySelectorAll('p.summary-text'));
+    const summaryElementTextContents = summaryElements.map(summaryElement => summaryElement.textContent);
+    for (const summary of mockSummaries) {
       if (summary.validity < validityThreshold) {
-        expect(psummaries.every(psummary => !psummary.textContent?.includes(summary.text))).toBeTrue();
+        expect(summaryElementTextContents.includes(summary.text)).toBeFalse();
       }
+    }
+  });
+
+  it('should render summary group title.', () => {
+    const summarizationElement: HTMLElement = fixture.nativeElement;
+    for (const summaryGroup of mockSummaryGroups) {
+      expect(summarizationElement.textContent?.includes(summaryGroup.title)).toBeTrue();
     }
   });
 });

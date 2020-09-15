@@ -5,16 +5,41 @@
   display: block;
 
   .summaries {
-    font-size: $font-size-medium;
-    line-height: 2em;
-  }
+    .panel-controls {
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: flex-end;
 
-  .summary {
-    display: inline-block;
-    margin: 0;
-  }
+      .toggles-controls {
+        button {
+          margin-right: 8px;
+        }
+      }
+    }
 
-  .summary::first-letter {
-    text-transform: uppercase;
+    .summary-container {
+      font-size: $font-size-medium;
+      line-height: 2em;
+    }
+
+    .summary-text {
+      display: inline-block;
+      margin: 0;
+
+      ::ng-deep {
+        .summary-variable {
+          color: red;
+          font-weight: bold;
+        }
+      }
+    }
+
+    .summary-text::first-letter {
+      text-transform: uppercase;
+    }
+
+    .summary-validity {
+      margin-right: 10px;
+    }
   }
 }
