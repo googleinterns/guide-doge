@@ -1,8 +1,22 @@
 import { QuerySummariesFactory, Summary } from '../types';
+import { TimeSeriesPoint } from '../../../datasets/metas/types';
+import { SummarizationService, BaseConfig } from '../summarization.service';
+import { SummarizationDataSourceService } from '../summarization-data-source.service';
 
-export function getSummaries<T>(querySummariesFactory: QuerySummariesFactory<T>, points: T[]): Summary[] {
-  const summaryGroups = querySummariesFactory(points)();
-  return summaryGroups.flatMap(({ summaries }) => summaries);
+export function testSummaries<T extends TimeSeriesPoint, P, C extends BaseConfig>(
+  summarizationService: SummarizationService<T, P, C>,
+  summarizationDataSourceService: SummarizationDataSourceService,
+  points: T[],
+  config: Partial<C>,
+  handler: (summaries: Summary[]) => void) {
+  const TEST_LABEL = 'TEST_LABEL';
+
+  const data = [{ label: TEST_LABEL, points }];
+  summarizationDataSourceService.data$.next(data);
+  summarizationService.summaries$({ datumLabels: [TEST_LABEL], ...config })
+    .subscribe(summaryGroups => {
+      handler(summaryGroups.map(({ summaries }) => summaries).flat());
+    });
 }
 
 export function hasHighValidity({ validity }) {

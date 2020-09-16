@@ -63,7 +63,6 @@ export class TrendWeeklyPatternSummarizationService extends
 
   constructor(
     protected summarizationDataSourceService: SummarizationDataSourceService,
-    protected weekdayWeekendRelativeSummarizationService: WeekdayWeekendRelativeSummarizationService,
   ) {
     super();
   }

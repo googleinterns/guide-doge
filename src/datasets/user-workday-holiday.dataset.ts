@@ -6,8 +6,6 @@ import { createTimeSeriesQuery } from './queries/time-series.query';
 import { createLineChartMeta } from './metas/line-chart.meta';
 import { PreferenceMeta } from '../services/preference/types';
 import { DAY } from '../utils/timeUnits';
-import { combineQuerySummariesFactories } from './summarizations/utils/commons';
-import * as TrendSummarization from './summarizations/trend-regression.summarization';
 
 export interface Config {
   dailyWeightStd: number;
@@ -66,10 +64,6 @@ export function create(config: Config): Dataset {
   };
 
   const dataCube = generateCube(categories, measures, generateCubeConfig);
-
-  const activeUserQuerySummariesFactory = combineQuerySummariesFactories(
-    TrendSummarization.queryFactory,
-  );
 
   const lineChartMeta = createLineChartMeta(
     'Active Users',

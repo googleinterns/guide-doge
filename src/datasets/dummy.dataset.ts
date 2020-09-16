@@ -5,10 +5,6 @@ import { DAY } from '../utils/timeUnits';
 import { XYPoint } from './metas/types';
 import { createLineChartMeta } from './metas/line-chart.meta';
 import { TimeSeriesQueryOptions } from './queries/time-series.query';
-import { normalizePointsY } from './summarizations/utils/commons';
-import { createExponentialMovingAveragePoints } from './summarizations/libs/trend';
-import * as TrendSummarization from './summarizations/trend.summarization';
-import * as TrendPartialSummarization from './summarizations/trend-partial.summarization';
 
 export interface Config {
   offset: number;
