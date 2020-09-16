@@ -65,8 +65,8 @@ describe('ChartSummarizationComponent', () => {
       ],
       providers: [
         { provide: 'host', useValue: host },
-        { provide: 'summarizationControlService', useValue: summarizationControlService },
-        { provide: 'summarizationDataSourceService', useValue: summarizationDataSourceService },
+        { provide: SummarizationControlService, useValue: summarizationControlService },
+        { provide: SummarizationDataSourceService, useValue: summarizationDataSourceService },
       ],
       declarations: [
         ChartSummarizationComponent,

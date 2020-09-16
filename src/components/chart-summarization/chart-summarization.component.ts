@@ -22,8 +22,8 @@ export class ChartSummarizationComponent implements OnInit, OnDestroy {
 
   constructor(
     @Inject('host') private host: LineChartComponent,
-    @Inject('summarizationControlService') private summarizationControlService: SummarizationControlService,
-    @Inject('summarizationDataSourceService') private summarizationDataSourceService: SummarizationDataSourceService,
+    private summarizationControlService: SummarizationControlService,
+    private summarizationDataSourceService: SummarizationDataSourceService,
   ) { }
 
   get datum() {

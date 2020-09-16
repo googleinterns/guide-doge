@@ -16,8 +16,6 @@ import {
 import { formatY } from '../../utils/formatters';
 import { WeekdayWeekendRelativeConfig, WeekdayWeekendRelativeSummarizationService } from './weekday-weekend-relative.summarization.service';
 
-const summarizationName = 'TrendWeeklyElaborationService';
-
 export type TrendWeeklyElaborationConfig = BaseConfig & WeekdayWeekendRelativeConfig;
 
 export type TrendWeeklyElaborationProperties = {
