@@ -1,38 +1,28 @@
 import * as math from 'mathjs';
-import { OnDestroy, Injectable } from '@angular/core';
-import { takeUntil, throttleTime, distinctUntilChanged, pluck, filter, map, shareReplay } from 'rxjs/operators';
-import { asyncScheduler, BehaviorSubject, Subject, Observable, Observer, zip } from 'rxjs';
-import { datasets } from '../../datasets';
-import { Dataset } from '../../datasets/types';
-import { PreferenceItemMeta } from '../preference/types';
+import { Injectable } from '@angular/core';
+import { map } from 'rxjs/operators';
+import { Observable, zip } from 'rxjs';
 import { SummarizationDataSourceService } from './summarization-data-source.service';
 import { SummarizationService, BaseConfig } from './summarization.service';
-import { SummaryGroup, SummaryVariableOptionPair, Summary } from './types';
+import { SummaryGroup, Summary } from './types';
 import { TimeSeriesPoint } from '../../datasets/metas/types';
 import {
   PointMembershipFunction,
-  MembershipFunction,
   trapmf,
   trapmfL,
   trapmfR,
-  sigmaCountQA,
 } from './libs/protoform';
 import {
-  createLinearModel,
-  LinearModel,
   createPartialTrends,
-  createCenteredMovingAveragePoints,
   mapConeAngle,
   mergePartialTrends,
   additiveDecomposite,
   TimeSeriesPartialTrend,
 } from './libs/trend';
 import {
-  timeSeriesPointToNumPoint,
   groupPointsByXWeek,
 } from './utils/time-series';
 import {
-  normalizePoints,
   normalizePointsY,
   NormalizedYPoint,
 } from './utils/commons';
@@ -40,9 +30,7 @@ import {
   CHART_DIAGONAL_ANGLE
 } from './utils/constants';
 import { formatY } from '../../utils/formatters';
-import { WeekdayWeekendRelativeConfig, WeekdayWeekendRelativeSummarizationService } from './weekday-weekend-relative.summarization.service';
-
-const summarizationName = 'TrendWeeklyPatternService';
+import { WeekdayWeekendRelativeConfig } from './weekday-weekend-relative.summarization.service';
 
 export type TrendWeeklyPatternConfig = BaseConfig & WeekdayWeekendRelativeConfig;
 

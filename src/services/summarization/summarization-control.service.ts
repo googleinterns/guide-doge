@@ -1,10 +1,7 @@
 import { OnDestroy, Injectable } from '@angular/core';
-import { takeUntil, throttleTime, distinctUntilChanged, pluck, filter, map } from 'rxjs/operators';
-import { asyncScheduler, ReplaySubject, Subject, Observable, Observer, of, zip } from 'rxjs';
-import { datasets } from '../../datasets';
-import { Dataset } from '../../datasets/types';
+import { takeUntil, map } from 'rxjs/operators';
+import { Subject, Observable, of, zip } from 'rxjs';
 import { SummaryGroup, SummarizationMeta, SUMMARIZATION } from './types';
-import { SummarizationDataSourceService } from './summarization-data-source.service';
 import { WeekdayWeekendRelativeSummarizationService } from './weekday-weekend-relative.summarization.service';
 import { TrendRegressionSummarizationService } from './trend-regression.summarization.service';
 import { TrendPartialSummarizationService } from './trend-partial.summarization.service';

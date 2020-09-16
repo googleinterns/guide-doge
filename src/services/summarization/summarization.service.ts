@@ -1,10 +1,7 @@
 import { OnDestroy, Injectable } from '@angular/core';
-import { takeUntil, throttleTime, distinctUntilChanged, pluck, filter, map, shareReplay } from 'rxjs/operators';
-import { asyncScheduler, BehaviorSubject, Subject, Observable, Observer, zip } from 'rxjs';
-import { datasets } from '../../datasets';
-import { Dataset } from '../../datasets/types';
-import { PreferenceItemMeta } from '../preference/types';
-import { SummarizationDataSourceService, Point } from './summarization-data-source.service';
+import { takeUntil, shareReplay } from 'rxjs/operators';
+import { Subject, Observable } from 'rxjs';
+import { Point } from './summarization-data-source.service';
 import { SummaryGroup } from './types';
 
 export interface BaseConfig {
