@@ -5,6 +5,21 @@ import { SimpleChange } from '@angular/core';
 import { ScreenReaderModule } from '../screen-reader/screen-reader.module';
 import { MatCardModule } from '@angular/material/card';
 import { createLineChartMeta } from '../../datasets/metas/line-chart.meta';
+import { of, Subject } from 'rxjs';
+import { TimeSeriesPoint } from '../../datasets/metas/types';
+import { SummaryGroup } from '../../services/summarization/types';
+import { SummarizationControlService } from '../../services/summarization/summarization-control.service';
+import { SummarizationDataSourceService } from '../../services/summarization/summarization-data-source.service';
+
+class TestSummarizationControlService {
+  constructor(private summaryGroups: SummaryGroup[]) { }
+
+  summaries$() { return of(this.summaryGroups); }
+}
+
+class TestSummarizationDataSourceService {
+  point$ = new Subject<TimeSeriesPoint[]>();
+}
 
 describe('ChartSummarizationComponent', () => {
   const nMockSummaries = 10;
@@ -19,7 +34,6 @@ describe('ChartSummarizationComponent', () => {
   const mockData = [{
     label: 'MockDatum',
     points: [],
-    querySummaries: () => mockSummaryGroups,
   }];
   const validityThreshold = 0.5 - 1e-6;
   let fixture: ComponentFixture<ChartSummarizationComponent>;
@@ -42,12 +56,17 @@ describe('ChartSummarizationComponent', () => {
     );
     TestBed.resetTestingModule();
 
+    const summarizationControlService = new TestSummarizationControlService(mockSummaryGroups);
+    const summarizationDataSourceService = new TestSummarizationDataSourceService();
+
     TestBed.configureTestingModule({
       imports: [
         ScreenReaderModule,
       ],
       providers: [
         { provide: 'host', useValue: host },
+        { provide: 'summarizationControlService', useValue: summarizationControlService },
+        { provide: 'summarizationDataSourceService', useValue: summarizationDataSourceService },
       ],
       declarations: [
         ChartSummarizationComponent,

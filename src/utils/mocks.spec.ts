@@ -2,7 +2,7 @@ import { AudificationPreference, Preference } from '../services/preference/types
 import { TimeSeriesPoint } from '../datasets/metas/types';
 import { activeUserMeasure } from '../models/data-cube/presets';
 import { LineChartDatum } from '../components/line-chart/line-chart.component';
-import { Summary, SummaryGroup } from '../datasets/summarizations/types';
+import { Summary, SummaryGroup } from '../services/summarization/types';
 import { DAY } from './timeUnits';
 
 export const mockPreference: Preference = {

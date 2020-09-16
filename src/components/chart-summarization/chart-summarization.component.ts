@@ -3,7 +3,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { takeUntil, map, mergeMap } from 'rxjs/operators';
 import { MatAccordion } from '@angular/material/expansion';
 import { LineChartComponent } from '../line-chart/line-chart.component';
-import { SummaryGroup } from '../../datasets/summarizations/types';
+import { SummaryGroup } from '../../services/summarization/types';
 import { SummarizationControlService } from '../../services/summarization/summarization-control.service';
 import { SummarizationDataSourceService } from '../../services/summarization/summarization-data-source.service';
 @Component({
@@ -22,9 +22,8 @@ export class ChartSummarizationComponent implements OnInit, OnDestroy {
 
   constructor(
     @Inject('host') private host: LineChartComponent,
-    private summarizationControlService: SummarizationControlService,
-    private summarizationDataSourceService: SummarizationDataSourceService,
-    private zone: NgZone,
+    @Inject('summarizationControlService') private summarizationControlService: SummarizationControlService,
+    @Inject('summarizationDataSourceService') private summarizationDataSourceService: SummarizationDataSourceService,
   ) { }
 
   get datum() {
