@@ -78,7 +78,6 @@ export class TrendRegressionSummarizationService extends
       this.summarizationDataSourceService.pointsByLabels$(datumLabels),
       this.weekdayWeekendRelativeSummarizationService.properties$(config),
     ).pipe(map(([pointsArray, { weekdayWeekendEqualValidity }]) => {
-      console.log('----------- Creating TR Properties')
       const points = pointsArray[0];
 
       const uWeekend = (p: TimeSeriesPoint) => {
@@ -147,7 +146,6 @@ export class TrendRegressionSummarizationService extends
       weekendLinearTrendValidity,
       overallLinearTrendSummariesValidity
     }]) => {
-      console.log('----------- Creating TR summaries')
       const points = pointsArray[0];
 
       const uQuicklyIncreasingLinearDynamic = trapmfL(CHART_DIAGONAL_ANGLE / 2, CHART_DIAGONAL_ANGLE * 5 / 8);

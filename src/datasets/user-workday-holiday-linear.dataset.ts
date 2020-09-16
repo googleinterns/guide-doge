@@ -103,7 +103,37 @@ export function create(config: Config): Dataset {
         config: {
           datumLabels: ['Active Users'],
         }
-      }
+      },
+      {
+        summarization: SUMMARIZATION.TREND_WEEKLY_PATTERN,
+        config: {
+          datumLabels: ['Active Users'],
+        }
+      },
+      {
+        summarization: SUMMARIZATION.TREND_WEEKLY_COMPARISON_AVERAGE,
+        config: {
+          datumLabels: ['Active Users'],
+        }
+      },
+      {
+        summarization: SUMMARIZATION.TREND_WEEKLY_COMPARISON_RATE,
+        config: {
+          datumLabels: ['Active Users'],
+        }
+      },
+      {
+        summarization: SUMMARIZATION.TREND_WEEKLY_ELABORATION,
+        config: {
+          datumLabels: ['Active Users'],
+        }
+      },
+      {
+        summarization: SUMMARIZATION.TREND_PARTIAL,
+        config: {
+          datumLabels: ['Active Users'],
+        }
+      },
     ]
   );
 

@@ -65,7 +65,6 @@ export class WeekdayWeekendRelativeSummarizationService extends
 
     return this.summarizationDataSourceService.pointsByLabels$(datumLabels)
       .pipe(map(pointsArray => {
-        console.log('----------- Creating WWR properties')
         const points = pointsArray[0];
         const uWeekend = (p: TimeSeriesPoint) => {
           const dayOfWeek = p.x.getDay();
@@ -129,7 +128,6 @@ export class WeekdayWeekendRelativeSummarizationService extends
   createSummaries$(config: WeekdayWeekendRelativeConfig): Observable<SummaryGroup[]> {
     return this.properties$(config)
       .pipe(map(({ weekdayWeekendDiffPoints: points }) => {
-        console.log('----------- Creating WWR Summaries')
         const uHigherDiff = ({ y }) => trapmfL(1.2, 1.4)(y);
         const uSimilarDiff = ({ y }) => trapmf(0.6, 0.8, 1.2, 1.4)(y);
         const uLowerDiff = ({ y }) => trapmfR(0.6, 0.8)(y);

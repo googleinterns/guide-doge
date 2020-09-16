@@ -9,7 +9,7 @@ import {
   LinearModel,
   TimeSeriesPartialTrend,
 } from './trend';
-import { NumPoint, TimeSeriesPoint } from '../../metas/types';
+import { NumPoint, TimeSeriesPoint } from '../../../datasets/metas/types';
 
 describe('createLinearModel', () => {
   const testData: [NumPoint[], LinearModel][] = [
