@@ -26,11 +26,6 @@ export class ChartSummarizationComponent implements OnInit, OnDestroy {
     private summarizationDataSourceService: SummarizationDataSourceService,
   ) { }
 
-  get datum() {
-    // TODO: Support multiple legend items summarization
-    return this.host.data[0];
-  }
-
   ngOnInit(): void {
     this.host.data$
       .pipe(takeUntil(this.destroy$))
