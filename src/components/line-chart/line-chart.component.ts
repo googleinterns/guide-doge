@@ -10,6 +10,7 @@ import { LineChartMeta } from '../../datasets/metas/line-chart.meta';
 import { TimeSeriesDatum } from '../../datasets/queries/time-series.query';
 import { TimeSeriesPoint } from '../../datasets/metas/types';
 import { A11yHostComponent } from '../a11y-host/a11y-host.component';
+import { SummarizationMeta } from '../../services/summarization/types';
 
 export type LineChartDatum = TimeSeriesDatum<LegendItemStyle>;
 
@@ -31,6 +32,7 @@ export class LineChartComponent extends A11yHostComponent implements RenderOptio
   formatY = formatY;
 
   data$ = new BehaviorSubject<LineChartDatum[]>([]);
+  summarizationMetas$ = new BehaviorSubject<SummarizationMeta[]>([]);
   activePoint$ = new BehaviorSubject<TimeSeriesPoint | null>(null);
   lineChartD3: LineChartD3;
   private destroy$ = new Subject();
@@ -87,6 +89,7 @@ export class LineChartComponent extends A11yHostComponent implements RenderOptio
         range: [this.startDate, this.endDate],
       });
       this.data$.next(data);
+      this.summarizationMetas$.next(this.meta.summarizationMetas ?? []);
       this.activePoint$.next(null);
     }
   }

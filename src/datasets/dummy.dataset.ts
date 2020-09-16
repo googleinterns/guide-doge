@@ -45,30 +45,11 @@ export function create(config: Config): Dataset {
     (options: TimeSeriesQueryOptions) => [{
       label: 'Dummy Data',
       points,
-      querySummaries: TrendSummarization.queryFactory(points),
     }],
   );
 
   const metas = [
     lineChartMeta,
-    createLineChartMeta(
-      'Line Chart',
-      (options: TimeSeriesQueryOptions) => [
-        {
-          label: 'Dummy Data',
-          points: createExponentialMovingAveragePoints(points),
-          querySummaries: TrendPartialSummarization.queryFactory(points),
-          style: {
-            color: 'green',
-          },
-        }, {
-          label: 'Dummy Data',
-          points,
-          style: {
-            opacity: 0.5,
-          },
-        }],
-    )
   ];
 
   return {

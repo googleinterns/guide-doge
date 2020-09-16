@@ -72,9 +72,6 @@ describe('ChartSummarizationComponent', () => {
     expect(component).toBeInstanceOf(ChartSummarizationComponent);
   });
 
-  it('should have summaries.', () => {
-    expect(component.hasSummaries).toBeTrue();
-  });
 
   it('should have summaries with validity greater than or equal to threshold.', () => {
     for (const summaryGroup of component.summaryGroups) {

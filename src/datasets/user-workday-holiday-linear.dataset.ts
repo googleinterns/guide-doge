@@ -8,6 +8,7 @@ import { PreferenceMeta } from '../services/preference/types';
 import { DAY } from '../utils/timeUnits';
 import { combineQuerySummariesFactories } from './summarizations/utils/commons';
 import { groupPointsByXWeek } from './summarizations/utils/time-series';
+import { SummarizationMeta, SUMMARIZATION } from '../services/summarization/types';
 import * as TrendSummarization from './summarizations/trend-regression.summarization';
 
 export interface Config {
@@ -89,8 +90,21 @@ export function create(config: Config): Dataset {
     createTimeSeriesQuery(dataCube, [{
       label: 'Active Users',
       measureName: 'activeUsers',
-      querySummariesFactory: activeUserQuerySummariesFactory,
     }]),
+    [
+      {
+        summarization: SUMMARIZATION.WEEKDAY_WEEKEND_RELATIVE,
+        config: {
+          datumLabels: ['Active Users'],
+        }
+      },
+      {
+        summarization: SUMMARIZATION.TREND_REGRESSION,
+        config: {
+          datumLabels: ['Active Users'],
+        }
+      }
+    ]
   );
 
   const metas = [
