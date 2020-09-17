@@ -19,8 +19,7 @@ describe('BarChartComponent', () => {
     });
     fixture = TestBed.createComponent(BarChartComponent);
     component = fixture.componentInstance;
-    // tslint:disable-next-line:no-string-literal
-    barChartD3 = component['barChartD3'];
+    barChartD3 = component.barChartD3;
   });
 
   it('should instantiate.', () => {
