@@ -1,15 +1,15 @@
-import * as UserSessionsDataset from './user-sessions.dataset';
+import * as CategoryUserSessionsDataset from './category-user-sessions.dataset';
 import { Dataset } from './types';
 import { createDefault } from '../utils/preferences';
 import { Meta, MetaType } from './metas/types';
 
-describe('UserSessionsDataset', () => {
+describe('CategoryUserSessionsDataset', () => {
   let dataset: Dataset;
   let currentTime: number;
 
   beforeEach(() => {
-    const config = createDefault(UserSessionsDataset.configMeta);
-    dataset = UserSessionsDataset.create(config);
+    const config = createDefault(CategoryUserSessionsDataset.configMeta);
+    dataset = CategoryUserSessionsDataset.create(config);
     currentTime = Date.now();
   });
 
