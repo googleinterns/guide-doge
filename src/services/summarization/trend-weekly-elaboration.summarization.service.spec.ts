@@ -4,7 +4,7 @@ import { TrendWeeklyElaborationSummarizationService } from './trend-weekly-elabo
 import { TimeSeriesPoint } from '../../datasets/metas/types';
 import { testSummaries, hasHighValidity, hasLowValidity, isTextPartsInSummary, norSummaryFilters } from './utils/tests';
 
-describe('queryFactory', () => {
+describe('TrendWeeklyElaborationSummarizationService', () => {
   let summarizationDataSourceService: SummarizationDataSourceService;
   let weekdayWeekendRelativeSummarizationService: WeekdayWeekendRelativeSummarizationService;
   let trendWeeklyElaborationSummarizationService: TrendWeeklyElaborationSummarizationService;

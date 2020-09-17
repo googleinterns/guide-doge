@@ -4,7 +4,7 @@ import { TrendRegressionSummarizationService } from './trend-regression.summariz
 import { TimeSeriesPoint } from '../../datasets/metas/types';
 import { testSummaries, hasHighValidity, hasLowValidity, isTextPartsInSummary, norSummaryFilters } from './utils/tests';
 
-describe('queryFactory', () => {
+describe('TrendRegressionSummarizationService', () => {
 
   const overallQuicklyIncreasingPoints: TimeSeriesPoint[] = [];
   for (let i = 1; i <= 31; i++) {

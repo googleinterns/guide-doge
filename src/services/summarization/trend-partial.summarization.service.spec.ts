@@ -4,7 +4,7 @@ import { TrendPartialSummarizationService } from './trend-partial.summarization.
 import { TimeSeriesPoint } from '../../datasets/metas/types';
 import { testSummaries, hasHighValidity, hasLowValidity, isTextPartsInSummary, norSummaryFilters } from './utils/tests';
 
-describe('queryFactory', () => {
+describe('TrendPartialSummarizationService', () => {
   let summarizationDataSourceService: SummarizationDataSourceService;
   let weekdayWeekendRelativeSummarizationService: WeekdayWeekendRelativeSummarizationService;
   let trendPartialSummarizationService: TrendPartialSummarizationService;

@@ -4,7 +4,7 @@ import { TimeSeriesPoint } from '../../datasets/metas/types';
 import { testSummaries, hasHighValidity, hasLowValidity, isTextPartsInSummary, norSummaryFilters } from './utils/tests';
 
 
-describe('queryFactory', () => {
+describe('WeekdayWeekendRelativeSummarizationService', () => {
   const points: TimeSeriesPoint[] = [];
   for (let i = 1; i <= 31; i++) {
     points.push({

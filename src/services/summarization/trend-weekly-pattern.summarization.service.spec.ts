@@ -3,7 +3,7 @@ import { TrendWeeklyPatternSummarizationService } from './trend-weekly-pattern.s
 import { TimeSeriesPoint } from '../../datasets/metas/types';
 import { testSummaries, hasHighValidity, hasLowValidity, isTextPartsInSummary, norSummaryFilters } from './utils/tests';
 
-describe('queryFactory', () => {
+describe('TrendWeeklyPatternSummarizationService', () => {
 
   let summarizationDataSourceService: SummarizationDataSourceService;
   let trendWeeklyPatternSummarizationService: TrendWeeklyPatternSummarizationService;

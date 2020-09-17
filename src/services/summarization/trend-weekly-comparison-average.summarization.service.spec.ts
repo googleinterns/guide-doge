@@ -5,7 +5,7 @@ import { TrendWeeklyComparisonAverageSummarizationService } from './trend-weekly
 import { TimeSeriesPoint } from '../../datasets/metas/types';
 import { testSummaries, hasHighValidity, hasLowValidity, isTextPartsInSummary, norSummaryFilters } from './utils/tests';
 
-describe('queryFactory', () => {
+describe('TrendWeeklyComparisonAverageSummarizationService', () => {
 
   let summarizationDataSourceService: SummarizationDataSourceService;
   let weekdayWeekendRelativeSummarizationService: WeekdayWeekendRelativeSummarizationService;

@@ -17,7 +17,7 @@ class TestSummarizationService {
   summaries$(): Observable<SummaryGroup[]> { return of([]); }
 }
 
-describe('queryFactory', () => {
+describe('SummarizationControlService', () => {
   let summarizationControlService: SummarizationControlService;
 
   let weekdayWeekendRelativeSummarizationService: WeekdayWeekendRelativeSummarizationService;
