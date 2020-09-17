@@ -99,20 +99,20 @@ export class WeekdayWeekendRelativeSummarizationService extends
           const weekdayPoints = weekPoints.filter(isWeekday);
           const weekendPoints = weekPoints.filter(isWeekend);
           const weekdayPointsYSum = math.sum(weekdayPoints.map(({ y }) => y));
-          const weekendPointsYSum = math.sum(weekdayPoints.map(({ y }) => y));
+          const weekendPointsYSum = math.sum(weekendPoints.map(({ y }) => y));
 
           if (weekdayPoints.length === 0 || weekendPoints.length === 0) {
             return { x: startDateOfWeek, y: null };
           } else {
             const weekdayPointsYAverage = weekdayPointsYSum / weekdayPoints.length;
             const weekendPointsYAverage = weekendPointsYSum / weekendPoints.length;
-            const weekdayWeekendDiff = Math.abs(weekdayPointsYAverage - weekendPointsYAverage);
+            const weekdayWeekendDiff = weekdayPointsYAverage - weekendPointsYAverage;
             return { x: startDateOfWeek, y: weekdayWeekendDiff };
           }
         }).filter(({ y }) => y !== null) as TimeSeriesPoint[];
 
         const uMostPercentage = trapmfL(0.6, 0.7);
-        const uEqualDiff = ({ y }) => trapmfR(0.05, 0.1)(y);
+        const uEqualDiff = ({ y }) => trapmf(-0.1, -0.07, 0.07, 0.1)(y);
         const weekdayWeekendEqualValidity = sigmaCountQA(weekdayWeekendDiffPoints, uMostPercentage, uEqualDiff);
 
         return {
@@ -127,24 +127,22 @@ export class WeekdayWeekendRelativeSummarizationService extends
 
     return this.dataProperties$(config)
       .pipe(map(({ weekdayWeekendDiffPoints: points }) => {
-        const uHigherDiff = ({ y }) => trapmfL(1.2, 1.4)(y);
-        const uSimilarDiff = ({ y }) => trapmf(0.6, 0.8, 1.2, 1.4)(y);
-        const uLowerDiff = ({ y }) => trapmfR(0.6, 0.8)(y);
+        const uHigherDiff = ({ y }) => trapmfL(0.07, 0.1)(y);
+        const uSimilarDiff = ({ y }) => trapmf(-0.1, -0.07, 0.07, 0.1)(y);
+        const uLowerDiff = ({ y }) => trapmfR(-0.1, -0.07)(y);
 
         const uMostPercentage = trapmfL(0.6, 0.7);
         const uHalfPercentage = trapmf(0.3, 0.4, 0.6, 0.7);
-        const uFewPercentage = trapmf(0.05, 0.1, 0.3, 0.4);
 
         const uPercentages: SummaryVariableOptionPair<MembershipFunction>[] = [
           ['most', uMostPercentage],
           ['half', uHalfPercentage],
-          ['few', uFewPercentage],
         ];
 
         const uDiffs: SummaryVariableOptionPair<PointMembershipFunction<TimeSeriesPoint>>[] = [
-          ['higher than', uHigherDiff],
+          ['more than', uHigherDiff],
           ['similar to', uSimilarDiff],
-          ['lower than', uLowerDiff],
+          ['fewer than', uLowerDiff],
         ];
 
         const summaries: Summary[] = [];
@@ -159,7 +157,7 @@ export class WeekdayWeekendRelativeSummarizationService extends
         }
 
         return [{
-          title: 'Workday Holiday Relative',
+          title: 'Weekday Weekend Relative',
           summaries
         }];
       }));
