@@ -30,9 +30,10 @@ import {
   CHART_DIAGONAL_ANGLE
 } from './utils/constants';
 import { formatY } from '../../utils/formatters';
-import { WeekdayWeekendRelativeConfig } from './weekday-weekend-relative.summarization.service';
 
-export type TrendWeeklyPatternConfig = BaseConfig & WeekdayWeekendRelativeConfig;
+export interface TrendWeeklyPatternConfig extends BaseConfig {
+  metric: string;
+}
 
 export type TrendWeeklyPatternProperties = {
   weeklyPatternValidity: number;
@@ -40,7 +41,8 @@ export type TrendWeeklyPatternProperties = {
   mergedWeeklyPatternPartialTrends: TimeSeriesPartialTrend[],
 };
 
-const defaultConfig = {
+const defaultConfig: Partial<TrendWeeklyPatternConfig> = {
+  metric: 'active users',
 };
 
 @Injectable({
@@ -55,8 +57,8 @@ export class TrendWeeklyPatternSummarizationService extends
     super();
   }
 
-  prepareConfig(config: Partial<TrendWeeklyPatternConfig>): TrendWeeklyPatternConfig {
-    return config as TrendWeeklyPatternConfig;
+  prepareConfig(config: BaseConfig & Partial<TrendWeeklyPatternConfig>): TrendWeeklyPatternConfig {
+    return { ...defaultConfig, ...config } as TrendWeeklyPatternConfig;
   }
 
   createDataProperties$(config: TrendWeeklyPatternConfig): Observable<TrendWeeklyPatternProperties> {
@@ -115,7 +117,7 @@ export class TrendWeeklyPatternSummarizationService extends
 
   createSummaries$(config: TrendWeeklyPatternConfig): Observable<SummaryGroup[]> {
     // The length of datumLabels should be 1 for this summarization
-    const { datumLabels } = config;
+    const { datumLabels, metric } = config;
 
     return zip(
       this.summarizationDataSourceService.pointsByLabels$(datumLabels),
@@ -163,13 +165,13 @@ export class TrendWeeklyPatternSummarizationService extends
           ) / (partialTrend.indexEnd - partialTrend.indexStart);
 
           if (dynamic === 'similar') {
-            const text = `The active users from <b>${timeStartText}</b> to <b>${timeEndText}</b> <b>remained similar</b> on average.`;
+            const text = `The ${metric} from <b>${timeStartText}</b> to <b>${timeEndText}</b> <b>remained similar</b> on average.`;
             summaries.push({
               text,
               validity: Math.min(uDynamic(partialTrend), weeklyPatternValidity),
             });
           } else {
-            const text = `The active users from <b>${timeStartText}</b> to <b>${timeEndText}</b> <b>${dynamic} by ${formatY(rateAbsolute)} per day</b> on average.`;
+            const text = `The ${metric} from <b>${timeStartText}</b> to <b>${timeEndText}</b> <b>${dynamic} by ${formatY(rateAbsolute)} per day</b> on average.`;
             summaries.push({
               text,
               validity: Math.min(uDynamic(partialTrend), weeklyPatternValidity),

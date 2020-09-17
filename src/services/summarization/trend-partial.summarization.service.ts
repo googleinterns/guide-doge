@@ -23,11 +23,14 @@ import { formatX, formatY } from '../../utils/formatters';
 import { CHART_DIAGONAL_ANGLE } from './utils/constants';
 import { WeekdayWeekendRelativeConfig, WeekdayWeekendRelativeSummarizationService } from './weekday-weekend-relative.summarization.service';
 
-export type TrendPartialConfig = BaseConfig & WeekdayWeekendRelativeConfig;
+export interface TrendPartialConfig extends WeekdayWeekendRelativeConfig {
+  metric: string;
+}
 
 export type TrendPartialProperties = {};
 
-const defaultConfig = {
+const defaultConfig: Partial<TrendPartialConfig> = {
+  metric: 'active users',
 };
 
 @Injectable({
@@ -43,8 +46,8 @@ export class TrendPartialSummarizationService extends
     super();
   }
 
-  prepareConfig(config: Partial<TrendPartialConfig>): TrendPartialConfig {
-    return config as TrendPartialConfig;
+  prepareConfig(config: BaseConfig & Partial<TrendPartialConfig>): TrendPartialConfig {
+    return { ...defaultConfig, ...config } as TrendPartialConfig;
   }
 
   createDataProperties$(config: TrendPartialConfig): Observable<TrendPartialProperties> {
@@ -53,7 +56,7 @@ export class TrendPartialSummarizationService extends
 
   createSummaries$(config: TrendPartialConfig): Observable<SummaryGroup[]> {
     // The length of datumLabels should be 1 for this summarization
-    const { datumLabels } = config;
+    const { datumLabels, metric } = config;
 
     return this.summarizationDataSourceService.pointsByLabels$(datumLabels)
       .pipe(map(pointsArray => {
@@ -86,7 +89,7 @@ export class TrendPartialSummarizationService extends
             const timeEnd = formatX(partialTrend.timeEnd);
             if (dynamic === 'increased' || dynamic === 'decreased') {
               const yAbsoluteDiff = Math.abs(points[partialTrend.indexEnd].y - points[partialTrend.indexStart].y);
-              const text = `The traffic from <b>${timeStart}</b> to <b>${timeEnd}</b>  <b>${dynamic} by ${formatY(yAbsoluteDiff)}</b>.`;
+              const text = `The ${metric} from <b>${timeStart}</b> to <b>${timeEnd}</b>  <b>${dynamic} by ${formatY(yAbsoluteDiff)}</b>.`;
               const validity = uDynamic(partialTrend);
               summaries.push({ text, validity });
             } else {
@@ -94,7 +97,7 @@ export class TrendPartialSummarizationService extends
               const ySum = math.sum(math.range(partialTrend.indexStart, partialTrend.indexEnd + 1).map(i => points[i].y));
               const yAverage = ySum / (partialTrend.indexEnd - partialTrend.indexStart + 1);
 
-              const text = `The traffic from <b>${timeStart}</b> to <b>${timeEnd}</b> is <b>${dynamic} around ${formatY(yAverage)}</b>.`;
+              const text = `The ${metric} from <b>${timeStart}</b> to <b>${timeEnd}</b> is <b>${dynamic} around ${formatY(yAverage)}</b>.`;
               const validity = uDynamic(partialTrend);
               summaries.push({ text, validity });
             }

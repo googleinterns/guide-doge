@@ -27,7 +27,10 @@ import {
 import { formatY } from '../../utils/formatters';
 import { WeekdayWeekendRelativeConfig, WeekdayWeekendRelativeSummarizationService } from './weekday-weekend-relative.summarization.service';
 
-export type TrendRegressionConfig = BaseConfig & WeekdayWeekendRelativeConfig;
+export interface TrendRegressionConfig extends WeekdayWeekendRelativeConfig {
+  metric: string;
+  metricUnit: string;
+}
 
 export type TrendRegressionProperties = {
   overallLinearModel: LinearModel;
@@ -39,7 +42,9 @@ export type TrendRegressionProperties = {
   overallLinearTrendSummariesValidity: number;
 };
 
-const defaultConfig = {
+const defaultConfig: Partial<TrendRegressionConfig> = {
+  metric: 'active users',
+  metricUnit: 'users',
 };
 
 @Injectable({
@@ -55,8 +60,8 @@ export class TrendRegressionSummarizationService extends
     super();
   }
 
-  prepareConfig(config: Partial<TrendRegressionConfig>): TrendRegressionConfig {
-    return config as TrendRegressionConfig;
+  prepareConfig(config: BaseConfig & Partial<TrendRegressionConfig>): TrendRegressionConfig {
+    return { ...defaultConfig, ...config } as TrendRegressionConfig;
   }
 
   createDataProperties$(config: TrendRegressionConfig): Observable<TrendRegressionProperties> {
@@ -123,7 +128,7 @@ export class TrendRegressionSummarizationService extends
 
   createSummaries$(config: TrendRegressionConfig): Observable<SummaryGroup[]> {
     // The length of datumLabels should be 1 for this summarization
-    const { datumLabels } = config;
+    const { datumLabels, metric, metricUnit } = config;
 
     return zip(
       this.summarizationDataSourceService.pointsByLabels$(datumLabels),
@@ -176,9 +181,9 @@ export class TrendRegressionSummarizationService extends
 
         let text: string;
         if (linearDynamic === 'constant') {
-          text = `The <b>overall</b> active users <b>remained similar</b>.`;
+          text = `The <b>overall</b> ${metric} <b>remained similar</b>.`;
         } else {
-          text = `The <b>overall</b> active users was <b>linearly ${linearDynamic}</b> by <b>${formatY(rateAbsolute)}</b> users per day.`;
+          text = `The <b>overall</b> ${metric} was <b>linearly ${linearDynamic}</b> by <b>${formatY(rateAbsolute)}</b> ${metricUnit} per day.`;
         }
         summaries.push({
           validity,
@@ -198,9 +203,9 @@ export class TrendRegressionSummarizationService extends
 
         let text: string;
         if (linearDynamic === 'constant') {
-          text = `The active users <b>of weekdays</b> <b>remained similar</b>.`;
+          text = `The ${metric} <b>of weekdays</b> <b>remained similar</b>.`;
         } else {
-          text = `The active users <b>of weekdays</b> was <b>linearly ${linearDynamic}</b> by <b>${formatY(rateAbsolute)}</b> users per day.`;
+          text = `The ${metric} <b>of weekdays</b> was <b>linearly ${linearDynamic}</b> by <b>${formatY(rateAbsolute)}</b> ${metricUnit} per day.`;
         }
         summaries.push({
           validity,
@@ -220,9 +225,9 @@ export class TrendRegressionSummarizationService extends
 
         let text: string;
         if (linearDynamic === 'constant') {
-          text = `The active users <b>of weekends</b> <b>remained similar</b>.`;
+          text = `The ${metric} <b>of weekends</b> <b>remained similar</b>.`;
         } else {
-          text = `The active users <b>of weekends</b> was <b>linearly ${linearDynamic}</b> by <b>${formatY(rateAbsolute)}</b> users per day.`;
+          text = `The ${metric} <b>of weekends</b> was <b>linearly ${linearDynamic}</b> by <b>${formatY(rateAbsolute)}</b> ${metricUnit} per day.`;
         }
         summaries.push({
           validity,

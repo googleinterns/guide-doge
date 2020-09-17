@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Observable, zip } from 'rxjs';
 import { SummarizationDataSourceService } from './summarization-data-source.service';
-import { SummarizationService, BaseConfig } from './summarization.service';
 import { SummaryGroup, Summary } from './types';
 import { TimeSeriesPoint } from '../../datasets/metas/types';
 import {
@@ -14,16 +13,22 @@ import {
   groupPointsByXWeek,
 } from './utils/time-series';
 import { formatY } from '../../utils/formatters';
+import { SummarizationService, BaseConfig } from './summarization.service';
 import { WeekdayWeekendRelativeConfig, WeekdayWeekendRelativeSummarizationService } from './weekday-weekend-relative.summarization.service';
 
-export type TrendWeeklyElaborationConfig = BaseConfig & WeekdayWeekendRelativeConfig;
+export interface TrendWeeklyElaborationConfig extends WeekdayWeekendRelativeConfig {
+  metric: string;
+  metricUnit: string;
+}
 
 export type TrendWeeklyElaborationProperties = {
   weekPointArrays: TimeSeriesPoint[][];
   weekLinearModels: LinearModel[];
 };
 
-const defaultConfig = {
+const defaultConfig: Partial<TrendWeeklyElaborationConfig> = {
+  metric: 'active users',
+  metricUnit: 'users',
 };
 
 @Injectable({
@@ -39,8 +44,8 @@ export class TrendWeeklyElaborationSummarizationService extends
     super();
   }
 
-  prepareConfig(config: Partial<TrendWeeklyElaborationConfig>): TrendWeeklyElaborationConfig {
-    return config as TrendWeeklyElaborationConfig;
+  prepareConfig(config: BaseConfig & Partial<TrendWeeklyElaborationConfig>): TrendWeeklyElaborationConfig {
+    return { ...defaultConfig, ...config } as TrendWeeklyElaborationConfig;
   }
 
   createDataProperties$(config: TrendWeeklyElaborationConfig): Observable<TrendWeeklyElaborationProperties> {
@@ -93,6 +98,8 @@ export class TrendWeeklyElaborationSummarizationService extends
   }
 
   createSummaries$(config: TrendWeeklyElaborationConfig): Observable<SummaryGroup[]> {
+    const { metric, metricUnit } = config;
+
     return zip(
       this.weekdayWeekendRelativeSummarizationService.dataProperties$(config),
       this.dataProperties$(config),
@@ -116,7 +123,7 @@ export class TrendWeeklyElaborationSummarizationService extends
         const dynamicDescriptor = weekRate >= 0 ? 'increased' : 'decreased';
 
         const r2Text = `R2 = ${weekLinearModels[i].r2}`;
-        const text = `The active users <b>${weekdayWeekendDescriptor}</b> in the <b>${ordinalTexts[i]} week</b> <b>${dynamicDescriptor}</b> by <b>${formatY(weekRateAbsolute)}</b> users per day from ${formatY(weekStartPrediction)} <b>(${r2Text})</b>.`;
+        const text = `The ${metric} <b>${weekdayWeekendDescriptor}</b> in the <b>${ordinalTexts[i]} week</b> <b>${dynamicDescriptor}</b> by <b>${formatY(weekRateAbsolute)}</b> ${metricUnit} per day from ${formatY(weekStartPrediction)} <b>(${r2Text})</b>.`;
 
         summaries.push({
           text,
@@ -132,7 +139,7 @@ export class TrendWeeklyElaborationSummarizationService extends
             const yDiffAbsolute = Math.abs(yDiff);
             const yDiffDynamicDescriptor = yDiff >= 0 ? 'increased' : 'decreased';
 
-            const friSatDiffText = `The active users from Friday to Saturday <b>${yDiffDynamicDescriptor} by ${formatY(yDiffAbsolute)}</b> users in the <b>${ordinalTexts[i]} week.`;
+            const friSatDiffText = `The ${metric} from Friday to Saturday <b>${yDiffDynamicDescriptor} by ${formatY(yDiffAbsolute)}</b> ${metricUnit} in the <b>${ordinalTexts[i]} week.`;
             summaries.push({
               text: friSatDiffText,
               validity: 1.0,

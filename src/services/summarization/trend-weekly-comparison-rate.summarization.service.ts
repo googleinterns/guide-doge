@@ -1,21 +1,23 @@
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Observable, of, zip } from 'rxjs';
-import { SummarizationDataSourceService } from './summarization-data-source.service';
-import { TrendWeeklyElaborationSummarizationService } from './trend-weekly-elaboration.summarization.service';
 import { SummarizationService, BaseConfig } from './summarization.service';
 import { SummaryGroup, Summary } from './types';
 import { TimeSeriesPoint } from '../../datasets/metas/types';
-
 import { formatY } from '../../utils/formatters';
+import { SummarizationDataSourceService } from './summarization-data-source.service';
+import { TrendWeeklyElaborationConfig, TrendWeeklyElaborationSummarizationService } from './trend-weekly-elaboration.summarization.service';
 import { WeekdayWeekendRelativeConfig, WeekdayWeekendRelativeSummarizationService } from './weekday-weekend-relative.summarization.service';
 
-export type TrendWeeklyComparisonRateConfig = BaseConfig & WeekdayWeekendRelativeConfig;
+export interface TrendWeeklyComparisonRateConfig extends WeekdayWeekendRelativeConfig, TrendWeeklyElaborationConfig {
+  metric: string;
+}
 
 export type TrendWeeklyComparisonRateProperties = {
 };
 
-const defaultConfig = {
+const defaultConfig: Partial<TrendWeeklyComparisonRateConfig> = {
+  metric: 'active users',
 };
 
 @Injectable({
@@ -32,8 +34,8 @@ export class TrendWeeklyComparisonRateSummarizationService extends
     super();
   }
 
-  prepareConfig(config: Partial<TrendWeeklyComparisonRateConfig>): TrendWeeklyComparisonRateConfig {
-    return config as TrendWeeklyComparisonRateConfig;
+  prepareConfig(config: BaseConfig & Partial<TrendWeeklyComparisonRateConfig>): TrendWeeklyComparisonRateConfig {
+    return { ...defaultConfig, ...config } as TrendWeeklyComparisonRateConfig;
   }
 
   createDataProperties$(config: TrendWeeklyComparisonRateConfig): Observable<TrendWeeklyComparisonRateProperties> {
@@ -41,6 +43,8 @@ export class TrendWeeklyComparisonRateSummarizationService extends
   }
 
   createSummaries$(config: TrendWeeklyComparisonRateConfig): Observable<SummaryGroup[]> {
+    const { metric } = config;
+
     return zip(
       this.weekdayWeekendRelativeSummarizationService.dataProperties$(config),
       this.trendWeeklyElaborationSummarizationService.dataProperties$(config),
@@ -70,7 +74,7 @@ export class TrendWeeklyComparisonRateSummarizationService extends
           const getDynamicDescriptor = (v: number) => v >= 0 ? 'increasing' : 'decreasing';
           const currentWeekRateDynamicDescriptor = getDynamicDescriptor(currentWeekRate);
           const nextWeekRateDynamicDescriptor = getDynamicDescriptor(nextWeekRate);
-          const text = `The active users <b>${weekdayWeekendDescriptor}</b>was <b>${nextWeekRateDynamicDescriptor}</b> in the <b>${ordinalTexts[i + 1]} week</b> but <b>${currentWeekRateDynamicDescriptor}</b> in the <b>${ordinalTexts[i]} week</b>.`;
+          const text = `The ${metric} <b>${weekdayWeekendDescriptor}</b>was <b>${nextWeekRateDynamicDescriptor}</b> in the <b>${ordinalTexts[i + 1]} week</b> but <b>${currentWeekRateDynamicDescriptor}</b> in the <b>${ordinalTexts[i]} week</b>.`;
           summaries.push({
             text,
             validity: 1.0,
@@ -87,7 +91,7 @@ export class TrendWeeklyComparisonRateSummarizationService extends
             : 'in the same rate as';
 
 
-          const text = `The active users <b>${weekdayWeekendDescriptor}</b>in the <b>${ordinalTexts[i + 1]} week</b> ${dynamicDescriptor} <b>${percentageChangeText}</b> the <b>${ordinalTexts[i]} week</b>.`;
+          const text = `The ${metric} <b>${weekdayWeekendDescriptor}</b>in the <b>${ordinalTexts[i + 1]} week</b> ${dynamicDescriptor} <b>${percentageChangeText}</b> the <b>${ordinalTexts[i]} week</b>.`;
 
           summaries.push({
             text,

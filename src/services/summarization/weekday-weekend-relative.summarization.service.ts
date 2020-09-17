@@ -25,14 +25,17 @@ import {
   normalizePointsY,
 } from './utils/commons';
 
-export type WeekdayWeekendRelativeConfig = BaseConfig;
+export interface WeekdayWeekendRelativeConfig extends BaseConfig {
+  metric: string;
+}
 
 export type WeekdayWeekendRelativeProperties = {
   weekdayWeekendEqualValidity: number;
   weekdayWeekendDiffPoints: TimeSeriesPoint[],
 };
 
-const defaultConfig = {
+const defaultConfig: Partial<WeekdayWeekendRelativeConfig> = {
+  metric: 'active users'
 };
 
 @Injectable({
@@ -47,8 +50,8 @@ export class WeekdayWeekendRelativeSummarizationService extends
     super();
   }
 
-  prepareConfig(config: Partial<WeekdayWeekendRelativeConfig>): WeekdayWeekendRelativeConfig {
-    return config as WeekdayWeekendRelativeConfig;
+  prepareConfig(config: BaseConfig & Partial<WeekdayWeekendRelativeConfig>): WeekdayWeekendRelativeConfig {
+    return { ...defaultConfig, ...config } as WeekdayWeekendRelativeConfig;
   }
 
   createDataProperties$(config: WeekdayWeekendRelativeConfig): Observable<WeekdayWeekendRelativeProperties> {
@@ -120,6 +123,8 @@ export class WeekdayWeekendRelativeSummarizationService extends
   }
 
   createSummaries$(config: WeekdayWeekendRelativeConfig): Observable<SummaryGroup[]> {
+    const { metric } = config;
+
     return this.dataProperties$(config)
       .pipe(map(({ weekdayWeekendDiffPoints: points }) => {
         const uHigherDiff = ({ y }) => trapmfL(1.2, 1.4)(y);
@@ -147,7 +152,7 @@ export class WeekdayWeekendRelativeSummarizationService extends
           for (const [diffDescriptor, uDiff] of uDiffs) {
             const validity = sigmaCountQA(points, uPercentage, uDiff);
             summaries.push({
-              text: `In <b>${quantifier}</b> of the weeks, weekdays have traffic <b>${diffDescriptor}</b> weekends.`,
+              text: `In <b>${quantifier}</b> of the weeks, weekdays have ${metric} <b>${diffDescriptor}</b> weekends.`,
               validity,
             });
           }

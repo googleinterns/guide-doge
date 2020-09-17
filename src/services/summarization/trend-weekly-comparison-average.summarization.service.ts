@@ -3,19 +3,22 @@ import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { SummarizationDataSourceService } from './summarization-data-source.service';
-import { TrendWeeklyElaborationSummarizationService } from './trend-weekly-elaboration.summarization.service';
 import { SummarizationService, BaseConfig } from './summarization.service';
 import { SummaryGroup, Summary } from './types';
 import { TimeSeriesPoint } from '../../datasets/metas/types';
 import { formatY } from '../../utils/formatters';
+import { TrendWeeklyElaborationConfig, TrendWeeklyElaborationSummarizationService } from './trend-weekly-elaboration.summarization.service';
 import { WeekdayWeekendRelativeConfig, WeekdayWeekendRelativeSummarizationService } from './weekday-weekend-relative.summarization.service';
 
-export type TrendWeeklyComparisonAverageConfig = BaseConfig & WeekdayWeekendRelativeConfig;
+export interface TrendWeeklyComparisonAverageConfig extends TrendWeeklyElaborationConfig, WeekdayWeekendRelativeConfig {
+  metric: string;
+}
 
 export type TrendWeeklyComparisonAverageProperties = {
 };
 
-const defaultConfig = {
+const defaultConfig: Partial<TrendWeeklyComparisonAverageConfig> = {
+  metric: 'acrtive users',
 };
 
 @Injectable({
@@ -32,8 +35,8 @@ export class TrendWeeklyComparisonAverageSummarizationService extends
     super();
   }
 
-  prepareConfig(config: Partial<TrendWeeklyComparisonAverageConfig>): TrendWeeklyComparisonAverageConfig {
-    return config as TrendWeeklyComparisonAverageConfig;
+  prepareConfig(config: BaseConfig & Partial<TrendWeeklyComparisonAverageConfig>): TrendWeeklyComparisonAverageConfig {
+    return { ...defaultConfig, ...config } as TrendWeeklyComparisonAverageConfig;
   }
 
   createDataProperties$(config: TrendWeeklyComparisonAverageConfig): Observable<TrendWeeklyComparisonAverageProperties> {
@@ -41,6 +44,8 @@ export class TrendWeeklyComparisonAverageSummarizationService extends
   }
 
   createSummaries$(config: TrendWeeklyComparisonAverageConfig): Observable<SummaryGroup[]> {
+    const { metric } = config;
+
     return this.trendWeeklyElaborationSummarizationService.dataProperties$(config)
       .pipe(map(({ weekPointArrays }) => {
         const numOfWeeks = weekPointArrays.length;
@@ -61,7 +66,7 @@ export class TrendWeeklyComparisonAverageSummarizationService extends
             ? `${formatY(percentageIncreaseAbsolute)}% ${percentageChangeDescriptor} than`
             : 'similar to';
 
-          const text = `The average active users of the <b>${ordinalTexts[i + 1]} week</b> was <b>${percentageChangeText}</b> the <b>${ordinalTexts[i]} week</b>.`;
+          const text = `The average ${metric} in the <b>${ordinalTexts[i + 1]} week</b> was <b>${percentageChangeText}</b> the <b>${ordinalTexts[i]} week</b>.`;
 
           summaries.push({
             text,
