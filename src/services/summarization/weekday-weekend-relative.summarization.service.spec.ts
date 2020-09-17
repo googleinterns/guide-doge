@@ -30,7 +30,7 @@ describe('WeekdayWeekendRelativeSummarizationService', () => {
       points,
       {},
       summaries => {
-        const nQuantifierOptions = 3;
+        const nQuantifierOptions = 2;
         const nTrafficOptions = 3;
         expect(summaries.length).toBe(nQuantifierOptions * nTrafficOptions);
         done();
