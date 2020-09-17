@@ -13,11 +13,11 @@ describe('TrendRegressionSummarizationService', () => {
     overallQuicklyIncreasingPoints.push({ x, y });
   }
 
-  const weekdayQuicklyIncreasingWeekendConstantPoints: TimeSeriesPoint[] = [];
+  const weekdaysQuicklyIncreasingWeekendsConstantPoints: TimeSeriesPoint[] = [];
   for (let i = 1; i <= 31; i++) {
     const x = new Date(2020, 6, i);
     const y = x.getDay() === 0 || x.getDay() === 6 ? 0 : i;
-    weekdayQuicklyIncreasingWeekendConstantPoints.push({ x, y });
+    weekdaysQuicklyIncreasingWeekendsConstantPoints.push({ x, y });
   }
 
   let summarizationDataSourceService: SummarizationDataSourceService;
@@ -88,26 +88,26 @@ describe('TrendRegressionSummarizationService', () => {
     );
   });
 
-  it('should create summaries describing weekday and weekend linear trends.', done => {
+  it('should create summaries describing weekdays and weekends linear trends.', done => {
 
     testSummaries(
       trendRegressionSummarizationService,
       summarizationDataSourceService,
-      weekdayQuicklyIncreasingWeekendConstantPoints,
+      weekdaysQuicklyIncreasingWeekendsConstantPoints,
       {},
       summaries => {
-        const isWeekdayQuicklyIncreasingSummary = isTextPartsInSummary('weekday', 'linearly quickly increasing');
-        const isWeekendConstantSummary = isTextPartsInSummary('weekends', 'similar');
-        const isOtherSummary = norSummaryFilters(isWeekdayQuicklyIncreasingSummary, isWeekendConstantSummary);
+        const isWeekdaysQuicklyIncreasingSummary = isTextPartsInSummary('weekdays', 'linearly quickly increasing');
+        const isWeekendsConstantSummary = isTextPartsInSummary('weekends', 'similar');
+        const isOtherSummary = norSummaryFilters(isWeekdaysQuicklyIncreasingSummary, isWeekendsConstantSummary);
 
-        const weekdayQuicklyIncreasingSummaries = summaries.filter(isWeekdayQuicklyIncreasingSummary);
-        const weekendConstantSummarues = summaries.filter(isWeekendConstantSummary);
+        const weekdaysQuicklyIncreasingSummaries = summaries.filter(isWeekdaysQuicklyIncreasingSummary);
+        const weekendsConstantSummarues = summaries.filter(isWeekendsConstantSummary);
         const otherSummaries = summaries.filter(isOtherSummary);
 
-        expect(weekdayQuicklyIncreasingSummaries.length).toBe(1);
-        expect(weekdayQuicklyIncreasingSummaries.every(hasHighValidity)).toBeTrue();
-        expect(weekendConstantSummarues.length).toBe(1);
-        expect(weekendConstantSummarues.every(hasHighValidity)).toBeTrue();
+        expect(weekdaysQuicklyIncreasingSummaries.length).toBe(1);
+        expect(weekdaysQuicklyIncreasingSummaries.every(hasHighValidity)).toBeTrue();
+        expect(weekendsConstantSummarues.length).toBe(1);
+        expect(weekendsConstantSummarues.every(hasHighValidity)).toBeTrue();
         expect(otherSummaries.every(hasLowValidity)).toBeTrue();
         done();
       },
