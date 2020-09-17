@@ -13,7 +13,7 @@ export interface BaseConfig {
 })
 export abstract class SummarizationService<PointT extends Point, PropertiesT, ConfigT extends BaseConfig> implements OnDestroy {
   destroy$ = new Subject();
-  cachedProperties$ = new Map<string, Observable<PropertiesT>>();
+  cachedDataProperties$ = new Map<string, Observable<PropertiesT>>();
   cachedSummaries$ = new Map<string, Observable<SummaryGroup[]>>();
 
   hashObject(obj: Record<string, any>): string {
@@ -38,17 +38,15 @@ export abstract class SummarizationService<PointT extends Point, PropertiesT, Co
     const config = this.prepareConfig(rawConfig);
     const hashKey = this.hashObject(config);
 
-    if (!this.cachedProperties$.has(hashKey)) {
+    if (!this.cachedDataProperties$.has(hashKey)) {
       const observable = this.createDataProperties$(config)
         .pipe(shareReplay(1))
         .pipe(takeUntil(this.destroy$));
-      this.cachedProperties$.set(hashKey, observable);
+      this.cachedDataProperties$.set(hashKey, observable);
     }
-    return this.cachedProperties$.get(hashKey) as Observable<PropertiesT>;
+    return this.cachedDataProperties$.get(hashKey) as Observable<PropertiesT>;
   }
 
-  // abstract prepareConfig(config: Partial<Config>): Config;
-  // abstract prepareTemplate(template: Partial<Template>): Template;
   prepareConfig(config: Partial<ConfigT>): ConfigT { return config as ConfigT; }
   abstract createSummaries$(config: ConfigT): Observable<SummaryGroup[]>;
   abstract createDataProperties$(config: ConfigT): Observable<PropertiesT>;
