@@ -1,29 +1,57 @@
-import * as random from 'random';
 import { Dataset } from './types';
 import { PreferenceMeta } from '../services/preference/types';
 import { createBarChartMeta, createPieChartMeta } from './metas/categorical.meta';
 import { CategoricalQueryOptions } from './queries/categorical.query';
 import { SUMMARIZATION } from '../services/summarization/types';
 
-export type Config = {};
+export type Config = {
+  NumberOfDisplayItems: string;
+  US: number;
+  India: number;
+  Canada: number;
+  UK: number;
+  Japan: number;
+};
 
-export const configMeta: PreferenceMeta<Config> = {};
+export const configMeta: PreferenceMeta<Config> = {
+  NumberOfDisplayItems: {
+    type: 'select',
+    defaultValue: '5',
+    options: ['5', '4', '3', '2'],
+  },
+  US: {
+    type: 'number',
+    defaultValue: 4820,
+  },
+  India: {
+    type: 'number',
+    defaultValue: 870,
+  },
+  Canada: {
+    type: 'number',
+    defaultValue: 530,
+  },
+  UK: {
+    type: 'number',
+    defaultValue: 340,
+  },
+  Japan: {
+    type: 'number',
+    defaultValue: 270,
+  },
+};
 
 export function create(config: Config): Dataset {
-  const sessionsByCountryPoints = [
-    { x: 'US', y: 4820 },
-    { x: 'India', y: 870 },
-    { x: 'Canada', y: 530 },
-    { x: 'UK', y: 340 },
-    { x: 'Japan', y: 270 },
-  ];
-  const sessionsByDevicePoints = [
-    { x: 'Desktop', y: 6860 },
-    { x: 'Mobile', y: 2990 },
-    { x: 'Tablet', y: 150 },
-  ];
+  const { NumberOfDisplayItems, US, India, Canada, UK, Japan } = config;
+  const sessionsByCountryPoints = ([
+    { x: 'US', y: US },
+    { x: 'India', y: India },
+    { x: 'Canada', y: Canada },
+    { x: 'UK', y: UK },
+    { x: 'Japan', y: Japan },
+  ]).filter((_, i) => i < parseInt(NumberOfDisplayItems, 10));
 
-  const sessionsByCountrySummarizationMetas = [
+  const sessionsByCountryBarChartSummarizationMetas = [
     SUMMARIZATION.CATEGORY_TOPK,
     SUMMARIZATION.CATEGORY_TOPK_COVERAGE,
     SUMMARIZATION.CATEGORY_BUCKET_COMPARISON,
@@ -38,17 +66,17 @@ export function create(config: Config): Dataset {
     },
   }));
 
-  const sessionsByDeviceSummarizationMetas = [
+  const sessionsByCountryPieChartSummarizationMetas = [
     SUMMARIZATION.CATEGORY_TOPK,
     SUMMARIZATION.CATEGORY_TOPK_COVERAGE,
     SUMMARIZATION.CATEGORY_BUCKET_COMPARISON,
   ].map(summarization => ({
     summarization,
     config: {
-      datumLabels: ['Device Sessions'],
+      datumLabels: ['Country Sessions'],
       topk: 2,
       metric: 'sessions',
-      xlabel: 'devices',
+      xlabel: 'countries',
       showPercentage: true,
     },
   }));
@@ -59,16 +87,16 @@ export function create(config: Config): Dataset {
       label: 'Country Sessions',
       points: sessionsByCountryPoints,
     }],
-    sessionsByCountrySummarizationMetas,
+    sessionsByCountryBarChartSummarizationMetas,
   );
 
   const pieChartMeta = createPieChartMeta(
     'Sessions By Device',
     (options: CategoricalQueryOptions) => [{
-      label: 'Device Sessions',
-      points: sessionsByDevicePoints,
+      label: 'Country Sessions',
+      points: sessionsByCountryPoints,
     }],
-    sessionsByDeviceSummarizationMetas,
+    sessionsByCountryPieChartSummarizationMetas,
   );
 
   const metas = [
