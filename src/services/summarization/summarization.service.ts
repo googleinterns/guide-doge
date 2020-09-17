@@ -22,7 +22,7 @@ export abstract class SummarizationService<PointT extends Point, PropertiesT, Co
 
   summaries$(rawConfig: BaseConfig & Partial<ConfigT>): Observable<SummaryGroup[]> {
     const config = this.prepareConfig(rawConfig);
-    const hashKey = this.hashObject(rawConfig);
+    const hashKey = this.hashObject(config);
 
     if (!this.cachedSummaries$.has(hashKey)) {
       const observable = this.createSummaries$(config)
@@ -36,8 +36,8 @@ export abstract class SummarizationService<PointT extends Point, PropertiesT, Co
 
   dataProperties$(rawConfig: BaseConfig & Partial<ConfigT>): Observable<PropertiesT> {
     const config = this.prepareConfig(rawConfig);
+    const hashKey = this.hashObject(config);
 
-    const hashKey = this.hashObject(rawConfig);
     if (!this.cachedProperties$.has(hashKey)) {
       const observable = this.createDataProperties$(config)
         .pipe(shareReplay(1))
