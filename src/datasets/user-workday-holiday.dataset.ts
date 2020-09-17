@@ -6,6 +6,7 @@ import { createTimeSeriesQuery } from './queries/time-series.query';
 import { createLineChartMeta } from './metas/line-chart.meta';
 import { PreferenceMeta } from '../services/preference/types';
 import { DAY } from '../utils/timeUnits';
+import { SUMMARIZATION } from '../services/summarization/types';
 
 export interface Config {
   dailyWeightStd: number;
@@ -71,6 +72,22 @@ export function create(config: Config): Dataset {
       label: 'Active Users',
       measureName: 'activeUsers',
     }]),
+    [
+      SUMMARIZATION.WEEKDAY_WEEKEND_RELATIVE,
+      SUMMARIZATION.TREND_REGRESSION,
+      SUMMARIZATION.TREND_WEEKLY_PATTERN,
+      SUMMARIZATION.TREND_WEEKLY_COMPARISON_AVERAGE,
+      SUMMARIZATION.TREND_WEEKLY_COMPARISON_RATE,
+      SUMMARIZATION.TREND_WEEKLY_ELABORATION,
+      SUMMARIZATION.TREND_PARTIAL,
+    ].map(summarization => ({
+      summarization,
+      config: {
+        datumLabels: ['Active Users'],
+        metric: 'active users',
+        metricUnit: 'users'
+      },
+    })),
   );
 
   const metas = [

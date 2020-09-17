@@ -85,49 +85,21 @@ export function create(config: Config): Dataset {
       measureName: 'activeUsers',
     }]),
     [
-      {
-        summarization: SUMMARIZATION.WEEKDAY_WEEKEND_RELATIVE,
-        config: {
-          datumLabels: ['Active Users'],
-        }
+      SUMMARIZATION.WEEKDAY_WEEKEND_RELATIVE,
+      SUMMARIZATION.TREND_REGRESSION,
+      SUMMARIZATION.TREND_WEEKLY_PATTERN,
+      SUMMARIZATION.TREND_WEEKLY_COMPARISON_AVERAGE,
+      SUMMARIZATION.TREND_WEEKLY_COMPARISON_RATE,
+      SUMMARIZATION.TREND_WEEKLY_ELABORATION,
+      SUMMARIZATION.TREND_PARTIAL,
+    ].map(summarization => ({
+      summarization,
+      config: {
+        datumLabels: ['Active Users'],
+        metric: 'active users',
+        metricUnit: 'users'
       },
-      {
-        summarization: SUMMARIZATION.TREND_REGRESSION,
-        config: {
-          datumLabels: ['Active Users'],
-        }
-      },
-      {
-        summarization: SUMMARIZATION.TREND_WEEKLY_PATTERN,
-        config: {
-          datumLabels: ['Active Users'],
-        }
-      },
-      {
-        summarization: SUMMARIZATION.TREND_WEEKLY_COMPARISON_AVERAGE,
-        config: {
-          datumLabels: ['Active Users'],
-        }
-      },
-      {
-        summarization: SUMMARIZATION.TREND_WEEKLY_COMPARISON_RATE,
-        config: {
-          datumLabels: ['Active Users'],
-        }
-      },
-      {
-        summarization: SUMMARIZATION.TREND_WEEKLY_ELABORATION,
-        config: {
-          datumLabels: ['Active Users'],
-        }
-      },
-      {
-        summarization: SUMMARIZATION.TREND_PARTIAL,
-        config: {
-          datumLabels: ['Active Users'],
-        }
-      },
-    ]
+    })),
   );
 
   const metas = [
