@@ -5,6 +5,7 @@ import {
   DatasetPreference,
   DataTablePreference,
   GeoMapNavigationPreference,
+  LayoutPreference,
   Preference,
   PreferenceMeta,
   PreferenceWithMeta,
@@ -26,6 +27,18 @@ export class PreferenceService {
       options: Object.keys(datasets),
     },
   }, 'dataset');
+
+  layout$ = this.createPreference<LayoutPreference>({
+    enabled: {
+      type: 'boolean',
+      defaultValue: true,
+    },
+    cardWidth: {
+      type: 'select',
+      defaultValue: '800px',
+      options: ['800px', '700px', '600px', '500px'],
+    },
+  }, 'layout');
 
   audification$ = this.createPreference<AudificationPreference>({
     enabled: {
