@@ -21,6 +21,7 @@ describe('VR Haptic Plot', () => {
     // Scene and Controller Mock Setup
     scene = document.createElement('a-scene');
     controller = document.createElement('a-entity');
+    controller.setAttribute('class', 'controller');
     controller.setAttribute('sphere-collider', '');
     controller.setAttribute('super-hands', '');
     controller.setAttribute('oculus-touch-controls', 'hand: left');
@@ -203,5 +204,20 @@ describe('VR Haptic Plot', () => {
     );
   });
 
-});
+  it('Data point positions are recentered correctly after a thumbstickup at position (100, 100, 100)', () => {
+    const dataArray = [-50, 20, 100];
+    hapticplot.init(scene, dataArray);
+    expect(helpers.getPositionsAfterRecenter(controller, scene, shape)).toEqual([
+      [
+        new Vector3(0, 0.65, -0.35),
+        new Vector3(0.2333333333333333,  1.14, -0.35),
+        new Vector3(0.4666666666666666,  1.7, -0.35)
+      ],
+      [
+        new Vector3(100, 99.65, 100),
+        new Vector3(100.23333333333333, 100.14, 100),
+        new Vector3(100.46666666666667, 100.7, 100)
+      ]]);
+  });
 
+});

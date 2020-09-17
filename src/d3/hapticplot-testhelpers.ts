@@ -184,3 +184,14 @@ export function getAudioSrcSequence(controller: HTMLElement, scene: HTMLElement,
   }
   return res;
 }
+
+// Returns the postions of the data points in the scene before and after a recenter event is triggered at position (100,100,100)
+export function getPositionsAfterRecenter(controller: HTMLElement, scene: HTMLElement, shape: string): Vector3[][]{
+  const controllerEntity = controller as Entity;
+  controllerEntity.object3D.position.set(100, 100, 100);
+  const dataPointPositionsBefore = getPositions(scene, shape);
+  controllerEntity.dispatchEvent(new Event('thumbstickup'));
+  const dataPointPositionsAfter = getPositions(scene, shape);
+
+  return [dataPointPositionsBefore, dataPointPositionsAfter];
+}

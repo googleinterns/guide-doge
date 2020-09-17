@@ -225,6 +225,7 @@ export class Hapticplot{
     this.container!.appendChild(xGrid);
     xGrid.object3D.add(new THREE.GridHelper(GRAPH_SIZE, 50, 0xffffff, 0xffffff));
     d3.select(this.container).select('#xGrid')
+      .attr('class', 'grid')
       .attr('position', `${this.graphOffset.x} ${this.graphOffset.y} ${this.graphOffset.z}`)
       .attr('rotation', '0 0 0');
 
@@ -233,6 +234,7 @@ export class Hapticplot{
     this.container!.appendChild(yGrid);
     yGrid.object3D.add(new THREE.GridHelper(GRAPH_SIZE, 50, 0xffffff, 0xffffff));
     d3.select(this.container).select('#yGrid')
+      .attr('class', 'grid')
       .attr('position', `${this.graphOffset.x} ${this.graphOffset.y} ${this.graphOffset.z}`)
       .attr('rotation', '0 0 -90');
 
@@ -241,6 +243,7 @@ export class Hapticplot{
     this.container!.appendChild(zGrid);
     zGrid.object3D.add(new THREE.GridHelper(GRAPH_SIZE, 50, 0xffffff, 0xffffff));
     d3.select(this.container).select('#zGrid')
+      .attr('class', 'grid')
       .attr('position', `${this.graphOffset.x} ${this.graphOffset.y} ${this.graphOffset.z}`)
       .attr('rotation', '-90 0 0');
   }
