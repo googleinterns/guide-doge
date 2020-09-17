@@ -1,3 +1,4 @@
+import * as math from 'mathjs';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Observable, zip } from 'rxjs';
@@ -93,12 +94,6 @@ export class TrendRegressionSummarizationService extends
 
       const uSmallRegressionStd = trapmfR(0.09, 0.14);
 
-      // TODO: Move denormalization information to normalization utils
-      const ymin = 0;
-      const ymax = Math.max(...points.map(({ y }) => y));
-      const xdiff = 800 / 500 / points.length;
-      const denormalizeGradient = gradient => (gradient * xdiff) * (ymax - ymin) - ymin;
-
       const normalizedPoints = normalizePoints(points.map(timeSeriesPointToNumPoint));
       const weekdayNormalizedPoints = normalizedPoints.filter((_, i) => isWeekday(points[i]));
       const weekendNormalizedPoints = normalizedPoints.filter((_, i) => isWeekend(points[i]));
@@ -166,7 +161,8 @@ export class TrendRegressionSummarizationService extends
       const ymin = 0;
       const ymax = Math.max(...points.map(({ y }) => y));
       const xdiff = 800 / 500 / points.length;
-      const denormalizeGradient = gradient => (gradient * xdiff) * (ymax - ymin) - ymin;
+      const denormalizeY = (y: number) => y * (ymax - ymin) + ymin;
+      const denormalizeGradient = (gradient: number) => (gradient * xdiff) * (ymax - ymin) - ymin;
 
       const summaries: Summary[] = [];
       // Create summaries describing linear trend of overall points
@@ -178,12 +174,14 @@ export class TrendRegressionSummarizationService extends
         );
         const rate = denormalizeGradient(overallLinearModel.gradient);
         const rateAbsolute = Math.abs(rate);
+        const predictionAverage = denormalizeY(math.mean(overallLinearModel.prediction.map(({ y }) => y)));
+        const startPrediction = denormalizeY(overallLinearModel.prediction[0].y);
 
         let text: string;
         if (linearDynamic === 'constant') {
-          text = `The <b>overall</b> ${metric} <b>remained similar</b>.`;
+          text = `The <b>overall</b> ${metric} <b>remained similar</b> around ${formatY(predictionAverage)}.`;
         } else {
-          text = `The <b>overall</b> ${metric} was <b>linearly ${linearDynamic}</b> by <b>${formatY(rateAbsolute)}</b> ${metricUnit} per day.`;
+          text = `The <b>overall</b> ${metric} was <b>linearly ${linearDynamic}</b> by <b>${formatY(rateAbsolute)}</b> ${metricUnit} per day from ${formatY(startPrediction)}.`;
         }
         summaries.push({
           validity,
@@ -200,12 +198,14 @@ export class TrendRegressionSummarizationService extends
         );
         const rate = denormalizeGradient(weekdayLinearModel.gradient);
         const rateAbsolute = Math.abs(rate);
+        const predictionAverage = denormalizeY(math.mean(weekdayLinearModel.prediction.map(({ y }) => y)));
+        const startPrediction = denormalizeY(weekdayLinearModel.prediction[0].y);
 
         let text: string;
         if (linearDynamic === 'constant') {
-          text = `The ${metric} <b>of weekdays</b> <b>remained similar</b>.`;
+          text = `The ${metric} <b>of weekdays</b> <b>remained similar</b> around ${formatY(predictionAverage)}.`;
         } else {
-          text = `The ${metric} <b>of weekdays</b> was <b>linearly ${linearDynamic}</b> by <b>${formatY(rateAbsolute)}</b> ${metricUnit} per day.`;
+          text = `The ${metric} <b>of weekdays</b> was <b>linearly ${linearDynamic}</b> by <b>${formatY(rateAbsolute)}</b> ${metricUnit} per day from ${formatY(startPrediction)}.`;
         }
         summaries.push({
           validity,
@@ -222,12 +222,14 @@ export class TrendRegressionSummarizationService extends
         );
         const rate = denormalizeGradient(weekendLinearModel.gradient);
         const rateAbsolute = Math.abs(rate);
+        const predictionAverage = denormalizeY(math.mean(weekendLinearModel.prediction.map(({ y }) => y)));
+        const startPrediction = denormalizeY(weekendLinearModel.prediction[0].y);
 
         let text: string;
         if (linearDynamic === 'constant') {
-          text = `The ${metric} <b>of weekends</b> <b>remained similar</b>.`;
+          text = `The ${metric} <b>of weekends</b> <b>remained similar</b> around ${formatY(predictionAverage)}.`;
         } else {
-          text = `The ${metric} <b>of weekends</b> was <b>linearly ${linearDynamic}</b> by <b>${formatY(rateAbsolute)}</b> ${metricUnit} per day.`;
+          text = `The ${metric} <b>of weekends</b> was <b>linearly ${linearDynamic}</b> by <b>${formatY(rateAbsolute)}</b> ${metricUnit} per day from ${formatY(startPrediction)}.`;
         }
         summaries.push({
           validity,
