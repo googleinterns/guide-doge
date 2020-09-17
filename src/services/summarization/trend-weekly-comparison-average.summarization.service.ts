@@ -36,12 +36,12 @@ export class TrendWeeklyComparisonAverageSummarizationService extends
     return config as TrendWeeklyComparisonAverageConfig;
   }
 
-  createProperties$(config: TrendWeeklyComparisonAverageConfig): Observable<TrendWeeklyComparisonAverageProperties> {
+  createDataProperties$(config: TrendWeeklyComparisonAverageConfig): Observable<TrendWeeklyComparisonAverageProperties> {
     return of({});
   }
 
   createSummaries$(config: TrendWeeklyComparisonAverageConfig): Observable<SummaryGroup[]> {
-    return this.trendWeeklyElaborationSummarizationService.properties$(config)
+    return this.trendWeeklyElaborationSummarizationService.dataProperties$(config)
       .pipe(map(({ weekPointArrays }) => {
         const numOfWeeks = weekPointArrays.length;
 

@@ -59,12 +59,13 @@ export class TrendWeeklyPatternSummarizationService extends
     return config as TrendWeeklyPatternConfig;
   }
 
-  createProperties$(config: TrendWeeklyPatternConfig): Observable<TrendWeeklyPatternProperties> {
+  createDataProperties$(config: TrendWeeklyPatternConfig): Observable<TrendWeeklyPatternProperties> {
     const { datumLabels } = config;
 
     return this.summarizationDataSourceService.pointsByLabels$(datumLabels)
       .pipe(map((pointsArray) => {
-        const points = pointsArray[0];
+        // datum label should be unique in data, so length of pointsArray is either 0 or 1
+        const points = pointsArray.length === 0 ? [] : pointsArray[0];
 
         // Only consider weeks with Monday as the first day when creating summaries
         const normalizedYWeekPointArrays = groupPointsByXWeek(normalizePointsY(points))
@@ -116,13 +117,14 @@ export class TrendWeeklyPatternSummarizationService extends
 
     return zip(
       this.summarizationDataSourceService.pointsByLabels$(datumLabels),
-      this.properties$(config),
+      this.dataProperties$(config),
     ).pipe(map(([pointsArray, {
       weeklyPatternValidity,
       weeklyPatternPoints,
       mergedWeeklyPatternPartialTrends,
     }]) => {
-      const points = pointsArray[0];
+      // datum label should be unique in data, so length of pointsArray is either 0 or 1
+      const points = pointsArray.length === 0 ? [] : pointsArray[0];
 
       // TODO: Move denormalization information to normalization utils
       const ymin = 0;

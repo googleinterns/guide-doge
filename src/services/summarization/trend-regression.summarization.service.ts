@@ -59,14 +59,15 @@ export class TrendRegressionSummarizationService extends
     return config as TrendRegressionConfig;
   }
 
-  createProperties$(config: TrendRegressionConfig): Observable<TrendRegressionProperties> {
+  createDataProperties$(config: TrendRegressionConfig): Observable<TrendRegressionProperties> {
     const { datumLabels } = config;
 
     return zip(
       this.summarizationDataSourceService.pointsByLabels$(datumLabels),
-      this.weekdayWeekendRelativeSummarizationService.properties$(config),
+      this.weekdayWeekendRelativeSummarizationService.dataProperties$(config),
     ).pipe(map(([pointsArray, { weekdayWeekendEqualValidity }]) => {
-      const points = pointsArray[0];
+      // datum label should be unique in data, so length of pointsArray is either 0 or 1
+      const points = pointsArray.length === 0 ? [] : pointsArray[0];
 
       const uWeekend = (p: TimeSeriesPoint) => {
         const dayOfWeek = p.x.getDay();
@@ -124,7 +125,7 @@ export class TrendRegressionSummarizationService extends
 
     return zip(
       this.summarizationDataSourceService.pointsByLabels$(datumLabels),
-      this.properties$(config),
+      this.dataProperties$(config),
     ).pipe(map(([pointsArray, {
       overallLinearModel,
       overallLinearTrendValidity,
@@ -134,7 +135,8 @@ export class TrendRegressionSummarizationService extends
       weekendLinearTrendValidity,
       overallLinearTrendSummariesValidity
     }]) => {
-      const points = pointsArray[0];
+      // datum label should be unique in data, so length of pointsArray is either 0 or 1
+      const points = pointsArray.length === 0 ? [] : pointsArray[0];
 
       const uQuicklyIncreasingLinearDynamic = trapmfL(CHART_DIAGONAL_ANGLE / 2, CHART_DIAGONAL_ANGLE * 5 / 8);
       const uIncreasingLinearDynamic = trapmf(

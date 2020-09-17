@@ -51,12 +51,14 @@ export class WeekdayWeekendRelativeSummarizationService extends
     return config as WeekdayWeekendRelativeConfig;
   }
 
-  createProperties$(config: WeekdayWeekendRelativeConfig): Observable<WeekdayWeekendRelativeProperties> {
+  createDataProperties$(config: WeekdayWeekendRelativeConfig): Observable<WeekdayWeekendRelativeProperties> {
     const { datumLabels } = config;
 
     return this.summarizationDataSourceService.pointsByLabels$(datumLabels)
       .pipe(map(pointsArray => {
-        const points = pointsArray[0];
+        // datum label should be unique in data, so length of pointsArray is either 0 or 1
+        const points = pointsArray.length === 0 ? [] : pointsArray[0];
+
         const uWeekend = (p: TimeSeriesPoint) => {
           const dayOfWeek = p.x.getDay();
           switch (dayOfWeek) {
@@ -117,7 +119,7 @@ export class WeekdayWeekendRelativeSummarizationService extends
   }
 
   createSummaries$(config: WeekdayWeekendRelativeConfig): Observable<SummaryGroup[]> {
-    return this.properties$(config)
+    return this.dataProperties$(config)
       .pipe(map(({ weekdayWeekendDiffPoints: points }) => {
         const uHigherDiff = ({ y }) => trapmfL(1.2, 1.4)(y);
         const uSimilarDiff = ({ y }) => trapmf(0.6, 0.8, 1.2, 1.4)(y);

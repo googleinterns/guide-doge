@@ -36,14 +36,14 @@ export class TrendWeeklyComparisonRateSummarizationService extends
     return config as TrendWeeklyComparisonRateConfig;
   }
 
-  createProperties$(config: TrendWeeklyComparisonRateConfig): Observable<TrendWeeklyComparisonRateProperties> {
+  createDataProperties$(config: TrendWeeklyComparisonRateConfig): Observable<TrendWeeklyComparisonRateProperties> {
     return of({});
   }
 
   createSummaries$(config: TrendWeeklyComparisonRateConfig): Observable<SummaryGroup[]> {
     return zip(
-      this.weekdayWeekendRelativeSummarizationService.properties$(config),
-      this.trendWeeklyElaborationSummarizationService.properties$(config),
+      this.weekdayWeekendRelativeSummarizationService.dataProperties$(config),
+      this.trendWeeklyElaborationSummarizationService.dataProperties$(config),
     ).pipe(map(([
       { weekdayWeekendEqualValidity },
       { weekPointArrays, weekLinearModels }

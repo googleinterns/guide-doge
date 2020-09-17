@@ -43,14 +43,16 @@ export class TrendWeeklyElaborationSummarizationService extends
     return config as TrendWeeklyElaborationConfig;
   }
 
-  createProperties$(config: TrendWeeklyElaborationConfig): Observable<TrendWeeklyElaborationProperties> {
+  createDataProperties$(config: TrendWeeklyElaborationConfig): Observable<TrendWeeklyElaborationProperties> {
     const { datumLabels } = config;
 
     return zip(
       this.summarizationDataSourceService.pointsByLabels$(datumLabels),
-      this.weekdayWeekendRelativeSummarizationService.properties$(config),
+      this.weekdayWeekendRelativeSummarizationService.dataProperties$(config),
     ).pipe(map(([pointsArray, { weekdayWeekendEqualValidity }]) => {
-      const points = pointsArray[0];
+      // datum label should be unique in data, so length of pointsArray is either 0 or 1
+      const points = pointsArray.length === 0 ? [] : pointsArray[0];
+
       const isWeekdayWeekendEqual = weekdayWeekendEqualValidity > 0.7;
 
       const uWeekend = (p: TimeSeriesPoint) => {
@@ -91,8 +93,8 @@ export class TrendWeeklyElaborationSummarizationService extends
 
   createSummaries$(config: TrendWeeklyElaborationConfig): Observable<SummaryGroup[]> {
     return zip(
-      this.weekdayWeekendRelativeSummarizationService.properties$(config),
-      this.properties$(config),
+      this.weekdayWeekendRelativeSummarizationService.dataProperties$(config),
+      this.dataProperties$(config),
     ).pipe(map(([
       { weekdayWeekendEqualValidity },
       { weekPointArrays, weekLinearModels }

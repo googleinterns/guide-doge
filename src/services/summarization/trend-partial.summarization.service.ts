@@ -47,7 +47,7 @@ export class TrendPartialSummarizationService extends
     return config as TrendPartialConfig;
   }
 
-  createProperties$(config: TrendPartialConfig): Observable<TrendPartialProperties> {
+  createDataProperties$(config: TrendPartialConfig): Observable<TrendPartialProperties> {
     return of({});
   }
 
@@ -56,7 +56,9 @@ export class TrendPartialSummarizationService extends
 
     return this.summarizationDataSourceService.pointsByLabels$(datumLabels)
       .pipe(map(pointsArray => {
-        const points = pointsArray[0];
+        // datum label should be unique in data, so length of pointsArray is either 0 or 1
+        const points = pointsArray.length === 0 ? [] : pointsArray[0];
+
         const smoothedPoints = createExponentialMovingAveragePoints(points);
         const partialTrends = createPartialTrends(smoothedPoints, 0.01);
 

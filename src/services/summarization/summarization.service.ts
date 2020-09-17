@@ -34,12 +34,12 @@ export abstract class SummarizationService<PointT extends Point, PropertiesT, Co
     return this.cachedSummaries$.get(hashKey) as Observable<SummaryGroup[]>;
   }
 
-  properties$(rawConfig: BaseConfig & Partial<ConfigT>): Observable<PropertiesT> {
+  dataProperties$(rawConfig: BaseConfig & Partial<ConfigT>): Observable<PropertiesT> {
     const config = this.prepareConfig(rawConfig);
 
     const hashKey = this.hashObject(rawConfig);
     if (!this.cachedProperties$.has(hashKey)) {
-      const observable = this.createProperties$(config)
+      const observable = this.createDataProperties$(config)
         .pipe(shareReplay(1))
         .pipe(takeUntil(this.destroy$));
       this.cachedProperties$.set(hashKey, observable);
@@ -51,7 +51,7 @@ export abstract class SummarizationService<PointT extends Point, PropertiesT, Co
   // abstract prepareTemplate(template: Partial<Template>): Template;
   prepareConfig(config: Partial<ConfigT>): ConfigT { return config as ConfigT; }
   abstract createSummaries$(config: ConfigT): Observable<SummaryGroup[]>;
-  abstract createProperties$(config: ConfigT): Observable<PropertiesT>;
+  abstract createDataProperties$(config: ConfigT): Observable<PropertiesT>;
 
 
   ngOnDestroy() {
