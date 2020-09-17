@@ -9,8 +9,7 @@ export interface TimeSeriesQueryOptions {
   range: [Date, Date];
 }
 
-export interface TimeSeriesDatum<S> {
-  label: string;
+export interface TimeSeriesDatum<S> extends XYDatum<TimeSeriesPoint> {
   style?: Partial<S>;
   points: TimeSeriesPoint[];
 }

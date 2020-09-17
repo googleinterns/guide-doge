@@ -1,9 +1,11 @@
+import { BarChartMeta, PieChartMeta } from './categorical.meta';
 import { LineChartMeta } from './line-chart.meta';
 import { TabbedChartsMeta } from './tabbed-charts.meta';
 import { VRScatterplotMeta } from './vr-scatter-plot.meta';
 import { GeoMapMeta } from './geo-map.meta';
 import { SummarizationMeta } from '../../services/summarization/types';
 import { A11yModuleImporter } from '../../directives/a11y/a11y.directive';
+import { SummaryGroup } from '../summarizations/types';
 
 export interface BaseMeta<T extends MetaType> {
   type: T;
@@ -31,7 +33,16 @@ export interface ScatterPlotMeta<T extends MetaType, QueryT> extends DataMeta<T,
   yLabel?: string;
   zLabel?: string;
 }
+
+export interface XYDatum<Point> {
+  label: string;
+  points: Point[];
+  querySummaries?: () => SummaryGroup[];
+}
+
 export type TimeSeriesPoint = XYPoint<Date, number>;
+
+export type CategoricalPoint = XYPoint<string, number>;
 
 export type NumPoint = XYPoint<number, number>;
 
@@ -42,11 +53,13 @@ export interface ScatterPoint<S> {
   z: number;
 }
 
-export type Meta = LineChartMeta | TabbedChartsMeta | GeoMapMeta | VRScatterplotMeta;
+export type Meta = BarChartMeta | LineChartMeta | PieChartMeta | TabbedChartsMeta | GeoMapMeta | VRScatterplotMeta;
 
 export enum MetaType {
-  TABBED_CHARTS,
+  BAR_CHART,
   LINE_CHART,
+  PIE_CHART,
+  TABBED_CHARTS,
   GEO_MAP,
   SCATTER_PLOT,
 }

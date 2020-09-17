@@ -1,4 +1,4 @@
-import { RenderOptions, XYChartD3 } from './xy-chart.d3';
+import { XYChartD3, RenderOptions } from './xy-chart.d3';
 import { Subject } from 'rxjs';
 import { TimeSeriesPoint } from '../datasets/metas/types';
 import { TimeSeriesDatum } from '../datasets/queries/time-series.query';
@@ -10,17 +10,27 @@ type TestLegendItemStyle = {};
 
 type TestDatum = TimeSeriesDatum<TestLegendItemStyle>;
 
-interface SubjectRenderOptions extends RenderOptions<TestDatum> {
+interface SubjectRenderOptions extends RenderOptions<TimeSeriesPoint, TestDatum> {
   data$: Subject<TestDatum[]>;
   activePoint$: Subject<TimeSeriesPoint | null>;
 }
 
 describe('XYChartD3', () => {
   // since XYChartD3 is an abstract class, make a concrete child class
-  class TestXYChartD3 extends XYChartD3<TestLegendItemStyle> {
+  class TestXYChartD3 extends XYChartD3<TimeSeriesPoint, TestDatum> {
     // the flags below will be used to check if the methods have been called at the right time
+    axisFlag = 0;
     dataFlag = 0;
     activePointFlag = 0;
+
+
+    protected renderAxis() {
+      this.axisFlag = 1;
+    }
+
+    protected updateAxis() {
+      this.axisFlag = 2;
+    }
 
     protected renderData() {
       super.renderData();
@@ -86,12 +96,12 @@ describe('XYChartD3', () => {
     expect(xyChartD3.activePointFlag).toBe(2);
   });
 
-  it('should render the x and y axis.', () => {
+  it('should render the axis.', () => {
+    expect(xyChartD3.axisFlag).toBe(0);
     xyChartD3.render();
-    const xAxisElement = svgElement.querySelector('.xy_chart-x_axis');
-    const yAxisElement = svgElement.querySelector('.xy_chart-y_axis');
-    expect(xAxisElement).not.toBe(null);
-    expect(yAxisElement).not.toBe(null);
+    expect(xyChartD3.axisFlag).toBe(1);
+    renderOptions.data$.next(mockData);
+    expect(xyChartD3.axisFlag).toBe(2);
   });
 
   it('should render the legend.', () => {
