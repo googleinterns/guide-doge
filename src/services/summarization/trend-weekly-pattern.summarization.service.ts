@@ -60,6 +60,7 @@ export class TrendWeeklyPatternSummarizationService extends
   }
 
   createDataProperties$(config: TrendWeeklyPatternConfig): Observable<TrendWeeklyPatternProperties> {
+    // The length of datumLabels should be 1 for this summarization
     const { datumLabels } = config;
 
     return this.summarizationDataSourceService.pointsByLabels$(datumLabels)
@@ -113,6 +114,7 @@ export class TrendWeeklyPatternSummarizationService extends
   }
 
   createSummaries$(config: TrendWeeklyPatternConfig): Observable<SummaryGroup[]> {
+    // The length of datumLabels should be 1 for this summarization
     const { datumLabels } = config;
 
     return zip(

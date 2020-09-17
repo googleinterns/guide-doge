@@ -52,6 +52,7 @@ export class TrendPartialSummarizationService extends
   }
 
   createSummaries$(config: TrendPartialConfig): Observable<SummaryGroup[]> {
+    // The length of datumLabels should be 1 for this summarization
     const { datumLabels } = config;
 
     return this.summarizationDataSourceService.pointsByLabels$(datumLabels)

@@ -60,6 +60,7 @@ export class TrendRegressionSummarizationService extends
   }
 
   createDataProperties$(config: TrendRegressionConfig): Observable<TrendRegressionProperties> {
+    // The length of datumLabels should be 1 for this summarization
     const { datumLabels } = config;
 
     return zip(
@@ -121,6 +122,7 @@ export class TrendRegressionSummarizationService extends
   }
 
   createSummaries$(config: TrendRegressionConfig): Observable<SummaryGroup[]> {
+    // The length of datumLabels should be 1 for this summarization
     const { datumLabels } = config;
 
     return zip(

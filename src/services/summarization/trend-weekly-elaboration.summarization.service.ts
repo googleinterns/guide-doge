@@ -44,6 +44,7 @@ export class TrendWeeklyElaborationSummarizationService extends
   }
 
   createDataProperties$(config: TrendWeeklyElaborationConfig): Observable<TrendWeeklyElaborationProperties> {
+    // The length of datumLabels should be 1 for this summarization
     const { datumLabels } = config;
 
     return zip(

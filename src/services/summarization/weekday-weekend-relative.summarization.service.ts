@@ -52,6 +52,7 @@ export class WeekdayWeekendRelativeSummarizationService extends
   }
 
   createDataProperties$(config: WeekdayWeekendRelativeConfig): Observable<WeekdayWeekendRelativeProperties> {
+    // The length of datumLabels should be 1 for this summarization
     const { datumLabels } = config;
 
     return this.summarizationDataSourceService.pointsByLabels$(datumLabels)
