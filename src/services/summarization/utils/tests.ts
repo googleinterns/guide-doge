@@ -1,9 +1,9 @@
 import { QuerySummariesFactory, Summary } from '../types';
-import { TimeSeriesPoint } from '../../../datasets/metas/types';
+import { TimeSeriesPoint, CategoricalPoint } from '../../../datasets/metas/types';
 import { SummarizationService, BaseConfig } from '../summarization.service';
 import { SummarizationDataSourceService } from '../summarization-data-source.service';
 
-export function testSummaries<T extends TimeSeriesPoint, P, C extends BaseConfig>(
+export function testSummaries<T extends TimeSeriesPoint | CategoricalPoint, P, C extends BaseConfig>(
   summarizationService: SummarizationService<T, P, C>,
   summarizationDataSourceService: SummarizationDataSourceService,
   points: T[],

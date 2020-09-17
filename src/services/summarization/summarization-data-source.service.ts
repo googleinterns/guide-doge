@@ -2,9 +2,9 @@
 import { OnDestroy, Injectable } from '@angular/core';
 import { takeUntil, map } from 'rxjs/operators';
 import { ReplaySubject, Subject, Observable } from 'rxjs';
-import { TimeSeriesPoint } from 'src/datasets/metas/types';
+import { TimeSeriesPoint, CategoricalPoint } from 'src/datasets/metas/types';
 
-export type Point = TimeSeriesPoint;
+export type Point = TimeSeriesPoint | CategoricalPoint;
 
 export interface Data {
   label: string;

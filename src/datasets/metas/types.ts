@@ -5,7 +5,6 @@ import { VRScatterplotMeta } from './vr-scatter-plot.meta';
 import { GeoMapMeta } from './geo-map.meta';
 import { SummarizationMeta } from '../../services/summarization/types';
 import { A11yModuleImporter } from '../../directives/a11y/a11y.directive';
-import { SummaryGroup } from '../summarizations/types';
 
 export interface BaseMeta<T extends MetaType> {
   type: T;
@@ -37,7 +36,6 @@ export interface ScatterPlotMeta<T extends MetaType, QueryT> extends DataMeta<T,
 export interface XYDatum<Point> {
   label: string;
   points: Point[];
-  querySummaries?: () => SummaryGroup[];
 }
 
 export type TimeSeriesPoint = XYPoint<Date, number>;

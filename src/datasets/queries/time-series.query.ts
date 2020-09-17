@@ -4,6 +4,7 @@ import { DAY } from '../../utils/timeUnits';
 import { DataCube } from '../../models/data-cube/data-cube.model';
 import { ResultRow } from '../../models/data-cube/types';
 import { unique } from '../../utils/misc';
+import { XYDatum } from '../metas/types';
 
 export interface TimeSeriesQueryOptions {
   range: [Date, Date];
@@ -11,7 +12,6 @@ export interface TimeSeriesQueryOptions {
 
 export interface TimeSeriesDatum<S> extends XYDatum<TimeSeriesPoint> {
   style?: Partial<S>;
-  points: TimeSeriesPoint[];
 }
 
 export type TimeSeriesQuery<S> = (options: TimeSeriesQueryOptions) => TimeSeriesDatum<S>[];
