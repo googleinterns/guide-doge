@@ -11,7 +11,8 @@
     "Michael Fitzpatrick <mfitz@google.com>",
     "Jinseo Park <jinseo@google.com>",
     "Harrison Pearl <hspearl@google.com>",
-    "Carlos Villapudua <cvillapudua@google.com>"
+    "Carlos Villapudua <cvillapudua@google.com>",
+    "Chunnien Chan <cnchan@google.com>"
   ],
   "scripts": {
     "ng": "ng",
