@@ -19,7 +19,8 @@ export type LineChartDatum = TimeSeriesDatum<LegendItemStyle>;
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.scss'],
 })
-export class LineChartComponent extends A11yHostComponent implements RenderOptions<LineChartDatum>, OnChanges, OnInit, OnDestroy {
+export class LineChartComponent extends A11yHostComponent implements
+  RenderOptions<TimeSeriesPoint, LineChartDatum>, OnChanges, OnInit, OnDestroy {
   @ViewChild(A11yPlaceholderDirective, { static: true }) a11yPlaceholder: A11yPlaceholderDirective;
 
   @Input() endDate = new Date();

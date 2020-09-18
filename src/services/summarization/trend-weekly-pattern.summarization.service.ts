@@ -68,7 +68,7 @@ export class TrendWeeklyPatternSummarizationService extends
     return this.summarizationDataSourceService.pointsByLabels$(datumLabels)
       .pipe(map((pointsArray) => {
         // datum label should be unique in data, so length of pointsArray is either 0 or 1
-        const points = pointsArray.length === 0 ? [] : pointsArray[0];
+        const points = (pointsArray.length === 0 ? [] : pointsArray[0]) as TimeSeriesPoint[];
 
         // Only consider weeks with Monday as the first day when creating summaries
         const normalizedYWeekPointArrays = groupPointsByXWeek(normalizePointsY(points))
@@ -137,7 +137,7 @@ export class TrendWeeklyPatternSummarizationService extends
       mergedWeeklyPatternPartialTrends,
     }]) => {
       // datum label should be unique in data, so length of pointsArray is either 0 or 1
-      const points = pointsArray.length === 0 ? [] : pointsArray[0];
+      const points = (pointsArray.length === 0 ? [] : pointsArray[0]) as TimeSeriesPoint[];
 
       // TODO: Move denormalization information to normalization utils
       const ymin = 0;
