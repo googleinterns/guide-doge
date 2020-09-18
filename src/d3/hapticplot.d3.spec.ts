@@ -204,10 +204,28 @@ describe('VR Haptic Plot', () => {
     );
   });
 
-  it('Data point positions are recentered correctly after a thumbstickup at position (100, 100, 100)', () => {
+  it('Data point positions list remains empty after a recentered at position (100, 100, 100) in a scene with no data', () => {
+    const dataArray = [];
+    hapticplot.init(scene, dataArray);
+    expect(helpers.getRecenteredPointPositions(controller, scene, shape)).toEqual([
+      [],
+      []
+    ]);
+  });
+
+  it('A single points position is recentered correctly after a thumbstickup event at position (100, 100, 100)', () => {
+    const dataArray = [14];
+    hapticplot.init(scene, dataArray);
+    expect(helpers.getRecenteredPointPositions(controller, scene, shape)).toEqual([
+      [new Vector3(0, 1.7, -0.35)],
+      [new Vector3(100, 100.7, 100)]
+    ]);
+  });
+
+  it('Multiple data points positions are recentered correctly after a thumbstickup event at position (100, 100, 100)', () => {
     const dataArray = [-50, 20, 100];
     hapticplot.init(scene, dataArray);
-    expect(helpers.getPositionsAfterRecenter(controller, scene, shape)).toEqual([
+    expect(helpers.getRecenteredPointPositions(controller, scene, shape)).toEqual([
       [
         new Vector3(0, 0.65, -0.35),
         new Vector3(0.2333333333333333,  1.14, -0.35),
@@ -217,7 +235,42 @@ describe('VR Haptic Plot', () => {
         new Vector3(100, 99.65, 100),
         new Vector3(100.23333333333333, 100.14, 100),
         new Vector3(100.46666666666667, 100.7, 100)
-      ]]);
+      ]
+    ]);
+  });
+
+  it('Grid positions update properly after a recentered at position (100, 100, 100) in a scene with no data', () => {
+    const dataArray = [];
+    hapticplot.init(scene, dataArray);
+    expect(helpers.getRecenteredGridPositions(controller, scene, shape)).toEqual([
+      [
+        new Vector3(0, 0, 0),
+        new Vector3(0, 0, 0),
+        new Vector3(0,  0, 0)
+      ],
+      [
+        new Vector3(100, 100, 100),
+        new Vector3(100, 100, 100),
+        new Vector3(100, 100, 100)
+      ]
+    ]);
+  });
+
+  it('Grid positions are recentered correctly after a thumbstickup event at position (100, 100, 100)', () => {
+    const dataArray = [-50, 20, 100];
+    hapticplot.init(scene, dataArray);
+    expect(helpers.getRecenteredGridPositions(controller, scene, shape)).toEqual([
+      [
+        new Vector3(0, 0, 0),
+        new Vector3(0, 0, 0),
+        new Vector3(0,  0, 0)
+      ],
+      [
+        new Vector3(100, 100, 100),
+        new Vector3(100, 100, 100),
+        new Vector3(100, 100, 100)
+      ]
+    ]);
   });
 
 });

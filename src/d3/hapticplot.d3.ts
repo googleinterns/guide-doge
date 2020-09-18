@@ -196,13 +196,9 @@ export class Hapticplot{
    */
   private recenterGrids(controller) {
     this.graphOffset = (controller as Entity).object3D.position;
-    d3.select(this.container).select('#xGrid')
-      .attr('position', `${this.graphOffset.x} ${this.graphOffset.y} ${this.graphOffset.z}`);
-    d3.select(this.container).select('#yGrid')
-      .attr('position', `${this.graphOffset.x} ${this.graphOffset.y} ${this.graphOffset.z}`);
-    d3.select(this.container).select('#zGrid')
-      .attr('position', `${this.graphOffset.x} ${this.graphOffset.y} ${this.graphOffset.z}`);
-
+    d3.select(this.container).selectAll('.grid').each((d, i, g) =>
+      (g[i] as Entity).object3D.position.set(this.graphOffset.x, this.graphOffset.y, this.graphOffset.z)
+    );
     this.getShapes().each((d, i , g) => this.setPosition(d, i, g[i]));
   }
 
