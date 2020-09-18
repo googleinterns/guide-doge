@@ -5,16 +5,14 @@ import { DataCube } from '../../models/data-cube/data-cube.model';
 import { ResultRow } from '../../models/data-cube/types';
 import { unique } from '../../utils/misc';
 import { SummaryGroup } from '../summarizations/types';
+import { XYDatum } from '../metas/types';
 
 export interface TimeSeriesQueryOptions {
   range: [Date, Date];
 }
 
-export interface TimeSeriesDatum<S> {
-  label: string;
+export interface TimeSeriesDatum<S> extends XYDatum<TimeSeriesPoint> {
   style?: Partial<S>;
-  points: TimeSeriesPoint[];
-  querySummaries?: () => SummaryGroup[];
 }
 
 export type TimeSeriesQuery<S> = (options: TimeSeriesQueryOptions) => TimeSeriesDatum<S>[];

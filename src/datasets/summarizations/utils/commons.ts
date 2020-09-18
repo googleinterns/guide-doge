@@ -84,3 +84,18 @@ export type NormalizedPoint = NormalizedYPoint<number> & NormalizedYPoint<number
 export function normalizePoints(points: NumPoint[], xlim: ChartAxisLimit = {}, ylim: ChartAxisLimit = {}): NormalizedPoint[] {
   return normalizePointsY(normalizePointsX(points, xlim), ylim);
 }
+
+export function createOrdinalText(num: number) {
+  const digits = [num % 10, num % 100];
+  const ordinalTexts = ['st', 'nd', 'rd'];
+  const ordinalPatterns = [1, 2, 3];
+  const thPatterns = [11, 12, 13, 14, 15, 16, 17, 18, 19];
+
+  if (thPatterns.includes(digits[1])) {
+    return `${num}th`;
+  } else if (ordinalPatterns.includes(digits[0])) {
+    return `${num}${ordinalTexts[digits[0] - 1]}`;
+  } else {
+    return `${num}th`;
+  }
+}
