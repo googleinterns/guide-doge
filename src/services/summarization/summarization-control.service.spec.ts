@@ -161,5 +161,36 @@ describe('SummarizationControlService', () => {
     summarizationControlService.summaries$(summarizationMetas);
     expect(categoryBucketComparisonSummarizationService.summaries$).toHaveBeenCalled();
   });
+
+  it('should return summary groups from multiple summarization srevices.', () => {
+    const summarizations = [
+      SUMMARIZATION.TREND_WEEKLY_PATTERN,
+      SUMMARIZATION.TREND_WEEKLY_COMPARISON_AVERAGE,
+      SUMMARIZATION.TREND_WEEKLY_COMPARISON_RATE,
+    ];
+    const summarizationMetas = summarizations.map(summarization => ({
+      summarization,
+      config: { datumLabels: [] },
+    }));
+
+    spyOn(trendWeeklyPatternSummarizationService, 'summaries$');
+    spyOn(trendWeeklyComparisonAverageSummarizationService, 'summaries$');
+    spyOn(trendWeeklyComparisonRateSummarizationService, 'summaries$');
+
+    summarizationControlService.summaries$(summarizationMetas);
+    expect(trendWeeklyPatternSummarizationService.summaries$).toHaveBeenCalled();
+    expect(trendWeeklyComparisonAverageSummarizationService.summaries$).toHaveBeenCalled();
+    expect(trendWeeklyComparisonRateSummarizationService.summaries$).toHaveBeenCalled();
+  });
+
+  it('should return empty array when providing invalid summarization.', done => {
+    const summarization = 0xFFFF as SUMMARIZATION;
+    const summarizationMetas = [{ summarization, config: { datumLabels: [] } }];
+
+    summarizationControlService.summaries$(summarizationMetas).subscribe(summaryGroups => {
+      expect(summaryGroups.length).toBe(0);
+      done();
+    });
+  });
 });
 

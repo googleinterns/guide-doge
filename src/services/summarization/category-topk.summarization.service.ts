@@ -44,6 +44,14 @@ export class CategoryTopKSummarizationService extends
     return of({});
   }
 
+  /**
+   * Create summaries that describe the items with k highest y-values in the data (y-values
+   * and proportion).
+   *
+   * Sample Summaries:
+   * - Desktop has the 1st highest value with 6860 (68.6%) sessions.
+   * - Mobile has the 2nd highest value with 2990 (29.9%) sessions.
+   */
   createSummaries$(config: CategoryTopKConfig): Observable<SummaryGroup[]> {
     // The length of datumLabels should be 1 for this summarization
     const { datumLabels, metric, topk, showPercentage } = config;

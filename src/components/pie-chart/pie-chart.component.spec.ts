@@ -19,8 +19,7 @@ describe('PieChartComponent', () => {
     });
     fixture = TestBed.createComponent(PieChartComponent);
     component = fixture.componentInstance;
-    // tslint:disable-next-line:no-string-literal
-    pieChartD3 = component['pieChartD3'];
+    pieChartD3 = component.pieChartD3;
   });
 
   it('should instantiate.', () => {

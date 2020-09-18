@@ -43,6 +43,12 @@ export class CategoryTopKCoverageSummarizationService extends
     return of({});
   }
 
+  /**
+   * Create summaries that describe the proportion of sum of items with k highest y-values.
+   *
+   * Sample Summaries:
+   * - The top 2 devices with the highest value (Desktop, Mobile) contain 98.5% of total sessions.
+   */
   createSummaries$(config: CategoryTopKCoverageConfig): Observable<SummaryGroup[]> {
     // The length of datumLabels should be 1 for this summarization
     const { datumLabels, metric, topk, xlabel } = config;

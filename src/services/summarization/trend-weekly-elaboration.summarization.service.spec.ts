@@ -45,6 +45,7 @@ describe('TrendWeeklyElaborationSummarizationService', () => {
 
   it('should create summaries describing monotonic linearly increasing data.', done => {
     const points: TimeSeriesPoint[] = [];
+    // Test on points from July 6 to July 26. It is a 3-week data with the first day being Monday.
     for (let i = 6; i <= 26; i++) {
       const x = new Date(2020, 6, i);
       const y = i * 10;
@@ -82,6 +83,7 @@ describe('TrendWeeklyElaborationSummarizationService', () => {
 
   it('should create summaries describing monotonic linearly decreasing data.', done => {
     const points: TimeSeriesPoint[] = [];
+    // Test on points from July 6 to July 26. It is a 3-week data with the first day being Monday.
     for (let i = 6; i <= 26; i++) {
       const x = new Date(2020, 6, i);
       const y = 1000 - i * 10;
@@ -117,8 +119,9 @@ describe('TrendWeeklyElaborationSummarizationService', () => {
     );
   });
 
-  it('should create summaries describing weekdays high increasing weekends low data.', done => {
+  it('should create summaries describing data where weekdays are high and weekends are low.', done => {
     const points: TimeSeriesPoint[] = [];
+    // Test on points from July 6 to July 26. It is a 3-week data with the first day being Monday.
     for (let i = 6; i <= 26; i++) {
       const x = new Date(2020, 6, i);
       const y = x.getDay() === 6 || x.getDay() === 0 ? 0 : i * 10;
@@ -157,8 +160,9 @@ describe('TrendWeeklyElaborationSummarizationService', () => {
     );
   });
 
-  it('should create summaries describing weekdays low increasing weekends high data.', done => {
+  it('should create summaries describing data where weekdays are low and weekends are high.', done => {
     const points: TimeSeriesPoint[] = [];
+    // Test on points from July 6 to July 26. It is a 3-week data with the first day being Monday.
     for (let i = 6; i <= 26; i++) {
       const x = new Date(2020, 6, i);
       const y = x.getDay() === 6 || x.getDay() === 0 ? 1000 : i * 10;

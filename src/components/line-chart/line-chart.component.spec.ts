@@ -20,8 +20,7 @@ describe('LineChartComponent', () => {
     });
     fixture = TestBed.createComponent(LineChartComponent);
     component = fixture.componentInstance;
-    // tslint:disable-next-line:no-string-literal
-    lineChartD3 = component['lineChartD3'];
+    lineChartD3 = component.lineChartD3;
   });
 
   it('should instantiate.', () => {

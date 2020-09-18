@@ -97,6 +97,15 @@ export class TrendWeeklyElaborationSummarizationService extends
     }));
   }
 
+  /**
+   * Create summaries that describe the linear dynamic in each of the week individually. It depends
+   * on the data properties from WeekdayWeekendRelativeSummarizationService to determine whether to
+   * estimate linear model on weekdays only or all 7 days in the week.
+   *
+   * Sample summaries:
+   * - The active users from Monday to Sunday in the first week decreased by 8 users per day from 108 (R2 = 0.12).
+   * - The active users from Monday to Sunday in the first week increased by 9 users per day from 170 (R2 = 0.23).
+   */
   createSummaries$(config: TrendWeeklyElaborationConfig): Observable<SummaryGroup[]> {
     const { metric, metricUnit } = config;
 

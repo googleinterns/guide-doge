@@ -53,6 +53,7 @@ describe('TrendWeeklyComparisonAverageSummarizationService', () => {
 
   it('should create summaries describing monotonic increasing data.', done => {
     const points: TimeSeriesPoint[] = [];
+    // Test on points from July 6 to July 26. It is a 3-week data with the first day being Monday.
     for (let i = 6; i <= 26; i++) {
       const x = new Date(2020, 6, i);
       const y = i;
@@ -88,6 +89,7 @@ describe('TrendWeeklyComparisonAverageSummarizationService', () => {
 
   it('should create summaries describing constant data.', done => {
     const points: TimeSeriesPoint[] = [];
+    // Test on points from July 6 to July 26. It is a 3-week data with the first day being Monday.
     for (let i = 6; i <= 26; i++) {
       const x = new Date(2020, 6, i);
       const y = 100;
@@ -123,6 +125,7 @@ describe('TrendWeeklyComparisonAverageSummarizationService', () => {
 
   it('should create summaries describing monitonic decreasing data.', done => {
     const points: TimeSeriesPoint[] = [];
+    // Test on points from July 6 to July 26. It is a 3-week data with the first day being Monday.
     for (let i = 6; i <= 26; i++) {
       const x = new Date(2020, 6, i);
       const y = 100 - i;
@@ -158,6 +161,7 @@ describe('TrendWeeklyComparisonAverageSummarizationService', () => {
 
   it('should create summaries describing high-low-high data.', done => {
     const points: TimeSeriesPoint[] = [];
+    // Test on points from July 6 to July 26. It is a 3-week data with the first day being Monday.
     for (let i = 6; i <= 26; i++) {
       const x = new Date(2020, 6, i);
       if (i >= 13 && i <= 19) {

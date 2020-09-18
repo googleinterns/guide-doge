@@ -121,6 +121,17 @@ export class TrendRegressionSummarizationService extends
     }));
   }
 
+  /**
+   * Create summaries that describe the overall / weekdays / weekends linear dynamic.
+   * It depends on the data properties from WeekdayWeekendRelativeSummarizationService
+   * to determine whether to create a summary for overall data or summaries for weekdays and weekends
+   * individually.
+   *
+   * Sample summaries:
+   * - The overall active users remained similar around 110.0.
+   * - The active users of weekdays was linearly quickly increasing by 22.0 users per day from 58.8.
+   * - The active users of weekends remained similar around 38.9.
+   */
   createSummaries$(config: TrendRegressionConfig): Observable<SummaryGroup[]> {
     // The length of datumLabels should be 1 for this summarization
     const { datumLabels, metric, metricUnit } = config;

@@ -9,13 +9,26 @@ interface SubjectRenderOptions extends RenderOptions<CategoricalPoint, BarChartD
   data$: Subject<BarChartDatum[]>;
 }
 
-const mockData = [...Array(10).keys()].map(datumIndex => ({
-  label: `Datum ${datumIndex}`,
-  points: [...Array(10).keys()].map(pointIndex => ({
-    x: `Category ${pointIndex}`,
-    y: Math.random() * 10,
-  })),
-}));
+const mockData = [
+  {
+    label: 'Datum 0',
+    points: [
+      { x: 'A', y: 10 },
+      { x: 'B', y: 20 },
+      { x: 'C', y: 30 },
+      { x: 'D', y: 40 },
+    ],
+  },
+  {
+    label: 'Datum 1',
+    points: [
+      { x: 'A', y: 100 },
+      { x: 'B', y: 30 },
+      { x: 'C', y: 70 },
+      { x: 'D', y: 120 },
+    ],
+  },
+];
 
 describe('BarChartD3', () => {
   let containerElement: HTMLElement;
