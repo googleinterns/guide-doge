@@ -84,17 +84,18 @@ export class WeekdayWeekendRelativeSummarizationService extends
         const centeredMovingAverageHalfWindowSize = 4;
         const normalizedTrendPoints = createCenteredMovingAveragePoints(normalizedYPoints, centeredMovingAverageHalfWindowSize);
         const {
-          seasonalPoints: normalizedSeasonalPoints,
+          detrendedPoints: normalizedDetrendedPoints,
         } = additiveDecomposite(normalizedYPoints, normalizedTrendPoints, ({ x }) => x.getDay());
 
         // Only consider weeks with more than 3 days when creating summaries
         // Weeks with 3 days or less are considered to belong to last/next 30 days
-        const normalizedSeasonWeekPointArrays = groupPointsByXWeek(normalizedSeasonalPoints).filter(weekPoints => weekPoints.length >= 4);
+        const normalizedDetrendedWeekPointArrays = groupPointsByXWeek(
+          normalizedDetrendedPoints).filter(weekPoints => weekPoints.length >= 4);
 
         // Create an array of weekly points, where the y-value is the diff | AverageWeekdayY - AverageWeekendY | of each week
         // The x-value is the time(x-value) of the first point in the week. If a week does not have any weekday points or
         // weekend points, e.g. first week and last week of a month, the created weekly points will not include that week.
-        const weekdayWeekendDiffPoints = normalizedSeasonWeekPointArrays.map(weekPoints => {
+        const weekdayWeekendDiffPoints = normalizedDetrendedWeekPointArrays.map(weekPoints => {
           const startDateOfWeek = weekPoints[0].x;
           const weekdayPoints = weekPoints.filter(isWeekday);
           const weekendPoints = weekPoints.filter(isWeekend);
