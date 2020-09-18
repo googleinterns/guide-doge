@@ -5,6 +5,11 @@
   display: block;
 
   .summaries {
+    .mat-list-item {
+      height: auto;
+      min-height: 2.5em;
+    }
+
     .panel-controls {
       margin-bottom: 1rem;
       display: flex;

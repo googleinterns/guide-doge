@@ -6,6 +6,7 @@ import {
   GEO_MAP_NAVIGATION_PREFERENCE,
   GUIDE_DOGE,
   I18n,
+  LAYOUT_PREFERENCE,
   PUNCTUATION,
   SUMMARIZATION_PREFERENCE,
 } from '../types';
@@ -45,6 +46,9 @@ export const en: I18n = {
   [DATA_PREFERENCE.sessionsPerUserStdDev]: 'Sessions Per User Std',
   [DATA_PREFERENCE.offset]: 'Offset',
 
+  [LAYOUT_PREFERENCE.enabled]: 'Layout',
+  [LAYOUT_PREFERENCE.cardWidth]: 'Card Width',
+
   [AUDIFICATION_PREFERENCE.enabled]: 'Audification',
   [AUDIFICATION_PREFERENCE.lowestPitch]: 'Lowest note (Hz)',
   [AUDIFICATION_PREFERENCE.highestPitch]: 'Highest note (Hz)',
@@ -55,6 +59,7 @@ export const en: I18n = {
   [GEO_MAP_NAVIGATION_PREFERENCE.enabled]: 'Geo Map Navigation',
 
   [SUMMARIZATION_PREFERENCE.enabled]: 'Text Summarization',
+  [SUMMARIZATION_PREFERENCE.validityThreshold]: 'Validity Threshold',
 
   [PUNCTUATION.QUESTION_MARK]: 'QUESTION MARK',
   [PUNCTUATION.SLASH]: 'SLASH',

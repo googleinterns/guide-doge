@@ -93,35 +93,36 @@ export class WeekdayWeekendRelativeSummarizationService extends
         const centeredMovingAverageHalfWindowSize = 4;
         const normalizedTrendPoints = createCenteredMovingAveragePoints(normalizedYPoints, centeredMovingAverageHalfWindowSize);
         const {
-          seasonalPoints: normalizedSeasonalPoints,
+          detrendedPoints: normalizedDetrendedPoints,
         } = additiveDecomposite(normalizedYPoints, normalizedTrendPoints, ({ x }) => x.getDay());
 
         // Only consider weeks with more than 3 days when creating summaries
         // Weeks with 3 days or less are considered to belong to last/next 30 days
-        const normalizedSeasonWeekPointArrays = groupPointsByXWeek(normalizedSeasonalPoints).filter(weekPoints => weekPoints.length >= 4);
+        const normalizedDetrendedWeekPointArrays = groupPointsByXWeek(
+          normalizedDetrendedPoints).filter(weekPoints => weekPoints.length >= 4);
 
         // Create an array of weekly points, where the y-value is the diff | AverageWeekdayY - AverageWeekendY | of each week
         // The x-value is the time(x-value) of the first point in the week. If a week does not have any weekday points or
         // weekend points, e.g. first week and last week of a month, the created weekly points will not include that week.
-        const weekdayWeekendDiffPoints = normalizedSeasonWeekPointArrays.map(weekPoints => {
+        const weekdayWeekendDiffPoints = normalizedDetrendedWeekPointArrays.map(weekPoints => {
           const startDateOfWeek = weekPoints[0].x;
           const weekdayPoints = weekPoints.filter(isWeekday);
           const weekendPoints = weekPoints.filter(isWeekend);
           const weekdayPointsYSum = math.sum(weekdayPoints.map(({ y }) => y));
-          const weekendPointsYSum = math.sum(weekdayPoints.map(({ y }) => y));
+          const weekendPointsYSum = math.sum(weekendPoints.map(({ y }) => y));
 
           if (weekdayPoints.length === 0 || weekendPoints.length === 0) {
             return { x: startDateOfWeek, y: null };
           } else {
             const weekdayPointsYAverage = weekdayPointsYSum / weekdayPoints.length;
             const weekendPointsYAverage = weekendPointsYSum / weekendPoints.length;
-            const weekdayWeekendDiff = Math.abs(weekdayPointsYAverage - weekendPointsYAverage);
+            const weekdayWeekendDiff = weekdayPointsYAverage - weekendPointsYAverage;
             return { x: startDateOfWeek, y: weekdayWeekendDiff };
           }
         }).filter(({ y }) => y !== null) as TimeSeriesPoint[];
 
         const uMostPercentage = trapmfL(0.6, 0.7);
-        const uEqualDiff = ({ y }) => trapmfR(0.05, 0.1)(y);
+        const uEqualDiff = ({ y }) => trapmf(-0.1, -0.07, 0.07, 0.1)(y);
         const weekdayWeekendEqualValidity = sigmaCountQA(weekdayWeekendDiffPoints, uMostPercentage, uEqualDiff);
 
         return {
@@ -136,24 +137,22 @@ export class WeekdayWeekendRelativeSummarizationService extends
 
     return this.dataProperties$(config)
       .pipe(map(({ weekdayWeekendDiffPoints: points }) => {
-        const uHigherDiff = ({ y }) => trapmfL(1.2, 1.4)(y);
-        const uSimilarDiff = ({ y }) => trapmf(0.6, 0.8, 1.2, 1.4)(y);
-        const uLowerDiff = ({ y }) => trapmfR(0.6, 0.8)(y);
+        const uHigherDiff = ({ y }) => trapmfL(0.07, 0.1)(y);
+        const uSimilarDiff = ({ y }) => trapmf(-0.1, -0.07, 0.07, 0.1)(y);
+        const uLowerDiff = ({ y }) => trapmfR(-0.1, -0.07)(y);
 
         const uMostPercentage = trapmfL(0.6, 0.7);
         const uHalfPercentage = trapmf(0.3, 0.4, 0.6, 0.7);
-        const uFewPercentage = trapmf(0.05, 0.1, 0.3, 0.4);
 
         const uPercentages: SummaryVariableOptionPair<MembershipFunction>[] = [
           ['most', uMostPercentage],
           ['half', uHalfPercentage],
-          ['few', uFewPercentage],
         ];
 
         const uDiffs: SummaryVariableOptionPair<PointMembershipFunction<TimeSeriesPoint>>[] = [
-          ['higher than', uHigherDiff],
+          ['more than', uHigherDiff],
           ['similar to', uSimilarDiff],
-          ['lower than', uLowerDiff],
+          ['fewer than', uLowerDiff],
         ];
 
         const summaries: Summary[] = [];
@@ -168,7 +167,7 @@ export class WeekdayWeekendRelativeSummarizationService extends
         }
 
         return [{
-          title: 'Workday Holiday Relative',
+          title: 'Weekday Weekend Relative',
           summaries
         }];
       }));

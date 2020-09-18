@@ -44,6 +44,7 @@ export enum GEO_MAP_NAVIGATION_PREFERENCE {
 
 export enum SUMMARIZATION_PREFERENCE {
   enabled = 0x600,
+  validityThreshold,
 }
 
 export enum PUNCTUATION {
@@ -62,10 +63,15 @@ export enum GEO_MAP_NAVIGATION {
   NOTHING_SELECTED,
 }
 
+export enum LAYOUT_PREFERENCE {
+  enabled = 0x900,
+  cardWidth,
+}
+
 export type I18nKey =
   GUIDE_DOGE | VISUALIZATION | AUDIFICATION | GEO_MAP_NAVIGATION |
   DATA_PREFERENCE | AUDIFICATION_PREFERENCE | GEO_MAP_NAVIGATION_PREFERENCE | SUMMARIZATION_PREFERENCE |
-  PUNCTUATION;
+  PUNCTUATION | LAYOUT_PREFERENCE;
 
 export type I18n = {
   [key in I18nKey]: string;
