@@ -25,10 +25,10 @@ export abstract class SummarizationService<PointT extends Point, PropertiesT, Co
     const hashKey = this.hashObject(config);
 
     if (!this.cachedSummaries$.has(hashKey)) {
-      const observable = this.createSummaries$(config)
+      const summariesObservable = this.createSummaries$(config)
         .pipe(shareReplay(1))
         .pipe(takeUntil(this.destroy$));
-      this.cachedSummaries$.set(hashKey, observable);
+      this.cachedSummaries$.set(hashKey, summariesObservable);
     }
 
     return this.cachedSummaries$.get(hashKey) as Observable<SummaryGroup[]>;
@@ -39,10 +39,10 @@ export abstract class SummarizationService<PointT extends Point, PropertiesT, Co
     const hashKey = this.hashObject(config);
 
     if (!this.cachedDataProperties$.has(hashKey)) {
-      const observable = this.createDataProperties$(config)
+      const dataPropertiesObservable = this.createDataProperties$(config)
         .pipe(shareReplay(1))
         .pipe(takeUntil(this.destroy$));
-      this.cachedDataProperties$.set(hashKey, observable);
+      this.cachedDataProperties$.set(hashKey, dataPropertiesObservable);
     }
     return this.cachedDataProperties$.get(hashKey) as Observable<PropertiesT>;
   }
