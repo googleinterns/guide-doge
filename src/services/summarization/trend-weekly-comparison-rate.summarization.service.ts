@@ -42,6 +42,17 @@ export class TrendWeeklyComparisonRateSummarizationService extends
     return of({});
   }
 
+  /**
+   * Create summaries that describe comparison between every two consecutive weeks in
+   * increasing/decreasing rate. It depends on the data properties from
+   * WeekdayWeekendRelativeSummarizationService to determine whether to estimate
+   * linear model on weekdays only or all 7 days in the week.
+   *
+   * Sample summaries:
+   * - The active users was increasing in the second week but decreasing in the first week.
+   * - The active users in the third week increased in the same rate as the second week.
+   * - The active users in the fourth week increased 83.8% (3.4 more user increased per day) faster than the third week.
+   */
   createSummaries$(config: TrendWeeklyComparisonRateConfig): Observable<SummaryGroup[]> {
     const { metric } = config;
 

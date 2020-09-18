@@ -43,6 +43,14 @@ export class TrendWeeklyComparisonAverageSummarizationService extends
     return of({});
   }
 
+  /**
+   * Create summaries that describe comparison between every two consecutive weeks in average.
+   *
+   * Sample summaries:
+   * - The average active users in the second week was 10.4% more than the first week.
+   * - The average active users in the third week was 9.3% less than the second week.
+   * - The average active users in the fourth week was 8.1% more than the third week.
+   */
   createSummaries$(config: TrendWeeklyComparisonAverageConfig): Observable<SummaryGroup[]> {
     const { metric } = config;
 
