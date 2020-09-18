@@ -41,6 +41,13 @@ export class CategoryBucketComparisonSummarizationService extends
     return of({});
   }
 
+  /**
+   * Create summaries that describe the difference of y-values average between buckets.
+   * The bucket is a subset of data with similar y-values.
+   *
+   * Sample Summaries:
+   * -  Desktop has 56.4 (129.4%) more sessions than Mobile and Tablet.
+   */
   createSummaries$(config: CategoryBucketComparisonConfig): Observable<SummaryGroup[]> {
     // The length of datumLabels should be 1 for this summarization
     const { datumLabels, metric, bucketPercentageTolerance } = config;
