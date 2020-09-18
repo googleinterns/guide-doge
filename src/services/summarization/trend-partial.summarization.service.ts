@@ -54,6 +54,14 @@ export class TrendPartialSummarizationService extends
     return of({});
   }
 
+  /**
+   * Create summaries that describe the increasing or decreasing trends in the overall data.
+   *
+   * Sample Summaries:
+   * - The active users from August 20 to August 21 increased by 24.
+   * - The active users from August 21 to August 23 decreased by 135.
+   * - The active users from August 23 to August 28 increased by 192.
+   */
   createSummaries$(config: TrendPartialConfig): Observable<SummaryGroup[]> {
     // The length of datumLabels should be 1 for this summarization
     const { datumLabels, metric } = config;

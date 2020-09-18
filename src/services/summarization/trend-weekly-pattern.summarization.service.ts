@@ -115,6 +115,15 @@ export class TrendWeeklyPatternSummarizationService extends
       }));
   }
 
+  /**
+   * Create summaries that describe the increasing and decreasing trends in the
+   * common and cyclic pattern of weeks.
+   *
+   * Sample summaries:
+   * - The active users from Monday to Wednesday remained similar on average.
+   * - The active users from Wednesday to Friday increased by 7 per day on average.
+   * - The active users from Friday to Sunday decreased by 10 per day on average.
+   */
   createSummaries$(config: TrendWeeklyPatternConfig): Observable<SummaryGroup[]> {
     // The length of datumLabels should be 1 for this summarization
     const { datumLabels, metric } = config;

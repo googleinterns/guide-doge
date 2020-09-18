@@ -54,6 +54,15 @@ export class WeekdayWeekendRelativeSummarizationService extends
     return { ...defaultConfig, ...config } as WeekdayWeekendRelativeConfig;
   }
 
+  /**
+   * Create summaries that describe whether y-values in weekdays are higher / similar / lower
+   * than y-values in weekends.
+   *
+   * Sample summaries:
+   * - In most of the weeks, weekdays have active users more than weekends.
+   * - In half of the weeks, weekdays have active users less than weekends.
+   * - In half of the weeks, weekdays have active users similar to weekends.
+   */
   createDataProperties$(config: WeekdayWeekendRelativeConfig): Observable<WeekdayWeekendRelativeProperties> {
     // The length of datumLabels should be 1 for this summarization
     const { datumLabels } = config;

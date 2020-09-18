@@ -5,6 +5,7 @@ import { Point } from './summarization-data-source.service';
 import { SummaryGroup } from './types';
 
 export interface BaseConfig {
+  /* The target labels of datums to create summaries */
   datumLabels: string[];
 }
 
@@ -16,10 +17,18 @@ export abstract class SummarizationService<PointT extends Point, PropertiesT, Co
   cachedDataProperties$ = new Map<string, Observable<PropertiesT>>();
   cachedSummaries$ = new Map<string, Observable<SummaryGroup[]>>();
 
-  hashObject(obj: Record<string, any>): string {
+  protected hashObject(obj: Record<string, any>): string {
     return JSON.stringify(obj, Object.keys(obj).sort());
   }
 
+  /**
+   * Create the summaries in rxjs.Observable. The summaries are wrapped in summary group.
+   * The creation of summaries depends on the data properties in the same summarization service.
+   * It can also depend on the data and data properties from other summarization services.
+   *
+   * @param rawConfig The config for summarizations. `datumLabels` must be provided
+   * in the config. The config will be propagated to all dependent summarization services.
+   */
   summaries$(rawConfig: BaseConfig & Partial<ConfigT>): Observable<SummaryGroup[]> {
     const config = this.prepareConfig(rawConfig);
     const hashKey = this.hashObject(config);
@@ -34,6 +43,15 @@ export abstract class SummarizationService<PointT extends Point, PropertiesT, Co
     return this.cachedSummaries$.get(hashKey) as Observable<SummaryGroup[]>;
   }
 
+  /**
+   * Create the summarization related data properties in rxjs.Observable. Data properties are
+   * the intermediate computational results that are going to be used when creating the summaries.
+   * It can also be reused and shared with other summarization services. The compuration of
+   * data properties may depend on the data and data properties from other smumarization services.
+   *
+   * @param rawConfig The config for summarizations. `datumLabels` must be provided
+   * in the config. The config will be propagated to all dependent summarization services.
+   */
   dataProperties$(rawConfig: BaseConfig & Partial<ConfigT>): Observable<PropertiesT> {
     const config = this.prepareConfig(rawConfig);
     const hashKey = this.hashObject(config);
