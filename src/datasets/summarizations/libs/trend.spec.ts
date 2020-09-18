@@ -20,7 +20,7 @@ describe('createLinearModel', () => {
         gradientAngleRad: 0.7854,
         prediction: [{ x: 1, y: 3 }, { x: 2, y: 4 }, { x: 3, y: 5 }],
         absoluteErrorMean: 0.0,
-        absoluteErrorStd: 0.0,
+        errorStd: 0.0,
         yIntercept: 2.0,
         r2: 1.0,
       }
@@ -32,7 +32,7 @@ describe('createLinearModel', () => {
         gradientAngleRad: 0.7854,
         prediction: [{ x: 1, y: 1.5 }, { x: 1, y: 1.5 }, { x: 2, y: 2.5 }, { x: 2, y: 2.5 }],
         absoluteErrorMean: 0.5,
-        absoluteErrorStd: 0.0,
+        errorStd: 0.57735,
         yIntercept: 0.5,
         r2: 0.5,
       }
@@ -44,7 +44,7 @@ describe('createLinearModel', () => {
         gradientAngleRad: 1.1071,
         prediction: [{ x: 1, y: 4 }, { x: 2, y: 6 }, { x: 3, y: 8 }],
         absoluteErrorMean: 8 / 3,
-        absoluteErrorStd: 1.1547,
+        errorStd: 3.46410,
         yIntercept: 2.0,
         r2: 0.25,
       }
@@ -86,7 +86,7 @@ describe('createLinearModel', () => {
   it('should return correct absolute error standard deviation.', () => {
     for (const [points, expectedResult] of testData) {
       const model = createLinearModel(points);
-      expect(model.absoluteErrorStd).toBeCloseTo(expectedResult.absoluteErrorStd, 4);
+      expect(model.errorStd).toBeCloseTo(expectedResult.errorStd, 4);
     }
   });
 

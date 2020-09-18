@@ -57,7 +57,7 @@ describe('queryFactory', () => {
   it('should create summaries describing weekday and weekend linear trends.', () => {
     const summaries = getSummaries(queryFactory, weekdayQuicklyIncreasingWeekendConstantPoints);
     const isWeekdayQuicklyIncreasingSummary = isTextPartsInSummary('weekday', 'linearly quickly increasing');
-    const isWeekendConstantSummary = isTextPartsInSummary('weekend', 'constant');
+    const isWeekendConstantSummary = isTextPartsInSummary('weekends', 'similar');
     const isOtherSummary = norSummaryFilters(isWeekdayQuicklyIncreasingSummary, isWeekendConstantSummary);
 
     const weekdayQuicklyIncreasingSummaries = summaries.filter(isWeekdayQuicklyIncreasingSummary);
