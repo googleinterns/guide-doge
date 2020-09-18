@@ -98,6 +98,7 @@ export class CategoryBucketComparisonSummarizationService extends
     let currentBucket: CategoricalPoint[] = [];
 
     for (const { x, y } of points) {
+      // Assumes that points are sorted by greatest y -> least y
       const currentBucketYMax = currentBucket[0]?.y ?? null;
 
       if (currentBucketYMax === null || currentBucketYMax - y < bucketPercentageTolerance) {
