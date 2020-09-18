@@ -6,7 +6,7 @@ import { TimeSeriesPoint } from '../datasets/metas/types';
 import { LineChartDatum } from '../components/line-chart/line-chart.component';
 import { RenderOptions } from './xy-chart.d3';
 
-interface SubjectRenderOptions extends RenderOptions<LineChartDatum> {
+interface SubjectRenderOptions extends RenderOptions<TimeSeriesPoint, LineChartDatum> {
   data$: Subject<LineChartDatum[]>;
   activePoint$: Subject<TimeSeriesPoint | null>;
 }
@@ -83,5 +83,13 @@ describe('LineChartD3', () => {
     renderOptions.activePoint$.next(null);
     await new Promise(resolve => setTimeout(resolve, transitionDelay));
     expect(circleElement.getAttribute('display')).toBe('none');
+  });
+
+  it('should render the x and y axis.', () => {
+    lineChartD3.render();
+    const xAxisElement = svgElement.querySelector('.xy_chart-x_axis');
+    const yAxisElement = svgElement.querySelector('.xy_chart-y_axis');
+    expect(xAxisElement).not.toBe(null);
+    expect(yAxisElement).not.toBe(null);
   });
 });
