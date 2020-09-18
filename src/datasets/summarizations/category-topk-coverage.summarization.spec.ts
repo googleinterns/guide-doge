@@ -21,7 +21,7 @@ describe('queryFactory', () => {
 
   it('should describe top 3 categories coverage by default.', () => {
     const summaries = getSummaries(queryFactory, points);
-    const isCoverageSummary = isTextPartsInSummary('top 3', 'countries', 'D, C, B', 'sessions');
+    const isCoverageSummary = isTextPartsInSummary('top 3', 'countries', 'D, C, B', '90%', 'sessions');
 
     const coverageSummary = summaries.filter(isCoverageSummary);
 
@@ -33,7 +33,7 @@ describe('queryFactory', () => {
 
   it('should describe top 4 categories coverage with custom topk.', () => {
     const summaries = getSummaries(pts => queryFactory(pts, { topk: 4 }), points);
-    const isCoverageSummary = isTextPartsInSummary('top 4', 'countries', 'D, C, B, A', 'sessions');
+    const isCoverageSummary = isTextPartsInSummary('top 4', 'countries', 'D, C, B, A', '100%', 'sessions');
 
     const coverageSummary = summaries.filter(isCoverageSummary);
 
@@ -45,7 +45,7 @@ describe('queryFactory', () => {
 
   it('should describe top categories coverage when number of categories less than config topk.', () => {
     const summaries = getSummaries(pts => queryFactory(pts, { topk: 10 }), points);
-    const isCoverageSummary = isTextPartsInSummary('top 4', 'countries', 'D, C, B, A', 'sessions');
+    const isCoverageSummary = isTextPartsInSummary('top 4', 'countries', 'D, C, B, A', '100%', 'sessions');
 
     const coverageSummary = summaries.filter(isCoverageSummary);
 
@@ -57,7 +57,7 @@ describe('queryFactory', () => {
 
   it('should describe top 3 categories coverage with custom xlabel.', () => {
     const summaries = getSummaries(pts => queryFactory(pts, { xlabel: 'devices' }), points);
-    const isCoverageSummary = isTextPartsInSummary('top 3', 'devices', 'D, C, B', 'sessions');
+    const isCoverageSummary = isTextPartsInSummary('top 3', 'devices', 'D, C, B', '90%', 'sessions');
 
     const coverageSummary = summaries.filter(isCoverageSummary);
 
@@ -69,7 +69,7 @@ describe('queryFactory', () => {
 
   it('should describe top 3 categories coverage with custom metric.', () => {
     const summaries = getSummaries(pts => queryFactory(pts, { metric: 'users' }), points);
-    const isCoverageSummary = isTextPartsInSummary('top 3', 'countries', 'D, C, B', 'users');
+    const isCoverageSummary = isTextPartsInSummary('top 3', 'countries', 'D, C, B', '90%', 'users');
 
     const coverageSummary = summaries.filter(isCoverageSummary);
 
