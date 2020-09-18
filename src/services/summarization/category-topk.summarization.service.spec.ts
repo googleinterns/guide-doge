@@ -138,9 +138,9 @@ describe('CategoryTopKSummarizationService', () => {
       points,
       { showPercentage: true },
       summaries => {
-        const isTop1stSummary = isTextPartsInSummary('D', '1st', '%)');
-        const isTop2ndSummary = isTextPartsInSummary('C', '2nd', '%)');
-        const isTop3rdSummary = isTextPartsInSummary('B', '3rd', '%)');
+        const isTop1stSummary = isTextPartsInSummary('D', '1st', '40%)');
+        const isTop2ndSummary = isTextPartsInSummary('C', '2nd', '30%)');
+        const isTop3rdSummary = isTextPartsInSummary('B', '3rd', '20%)');
 
         const top1stSummary = summaries.filter(isTop1stSummary);
         const top2ndSummary = summaries.filter(isTop2ndSummary);
