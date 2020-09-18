@@ -117,7 +117,7 @@ describe('TrendWeeklyElaborationSummarizationService', () => {
     );
   });
 
-  it('should create summaries describing weekdays high increasing weekends low data.', done => {
+  it('should create summaries describing data where weekdays are high and weekends are low.', done => {
     const points: TimeSeriesPoint[] = [];
     for (let i = 6; i <= 26; i++) {
       const x = new Date(2020, 6, i);
@@ -157,7 +157,7 @@ describe('TrendWeeklyElaborationSummarizationService', () => {
     );
   });
 
-  it('should create summaries describing weekdays low increasing weekends high data.', done => {
+  it('should create summaries describing data where weekdays are low and weekends are high.', done => {
     const points: TimeSeriesPoint[] = [];
     for (let i = 6; i <= 26; i++) {
       const x = new Date(2020, 6, i);
