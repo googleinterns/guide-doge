@@ -70,7 +70,7 @@ export class WeekdayWeekendRelativeSummarizationService extends
     return this.summarizationDataSourceService.pointsByLabels$(datumLabels)
       .pipe(map(pointsArray => {
         // datum label should be unique in data, so length of pointsArray is either 0 or 1
-        const points = pointsArray.length === 0 ? [] : pointsArray[0];
+        const points = (pointsArray.length === 0 ? [] : pointsArray[0]) as TimeSeriesPoint[];
 
         const uWeekend = (p: TimeSeriesPoint) => {
           const dayOfWeek = p.x.getDay();

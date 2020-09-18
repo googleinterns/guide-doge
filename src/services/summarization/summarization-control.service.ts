@@ -9,8 +9,9 @@ import { TrendWeeklyComparisonAverageSummarizationService } from './trend-weekly
 import { TrendWeeklyComparisonRateSummarizationService } from './trend-weekly-comparison-rate.summarization.service';
 import { TrendWeeklyElaborationSummarizationService } from './trend-weekly-elaboration.summarization.service';
 import { TrendWeeklyPatternSummarizationService } from './trend-weekly-pattern.summarization.service';
-
-
+import { CategoryTopKSummarizationService } from './category-topk.summarization.service';
+import { CategoryTopKCoverageSummarizationService } from './category-topk-coverage.summarization.service';
+import { CategoryBucketComparisonSummarizationService } from './category-bucket-comparison.summarization.service';
 
 @Injectable({
   providedIn: 'any',
@@ -26,7 +27,10 @@ export class SummarizationControlService implements OnDestroy {
     private trendWeeklyComparisonRateSummarizationService: TrendWeeklyComparisonRateSummarizationService,
     private trendWeeklyElaborationSummarizationService: TrendWeeklyElaborationSummarizationService,
     private trendWeeklyPatternSummarizationService: TrendWeeklyPatternSummarizationService,
-  ) {}
+    private categoryTopKSummarizationService: CategoryTopKSummarizationService,
+    private categoryTopKCoverageSummarizationService: CategoryTopKCoverageSummarizationService,
+    private categoryBucketComparisonSummarizationService: CategoryBucketComparisonSummarizationService,
+  ) { }
 
   summaries$(summarizationMetas: SummarizationMeta[]): Observable<SummaryGroup[]> {
     const summariesObservables: Observable<SummaryGroup[]>[] = summarizationMetas.map((meta) => {
@@ -47,6 +51,12 @@ export class SummarizationControlService implements OnDestroy {
           return this.trendWeeklyElaborationSummarizationService.summaries$(config);
         case SUMMARIZATION.TREND_WEEKLY_PATTERN:
           return this.trendWeeklyPatternSummarizationService.summaries$(config);
+        case SUMMARIZATION.CATEGORY_TOPK:
+          return this.categoryTopKSummarizationService.summaries$(config);
+        case SUMMARIZATION.CATEGORY_TOPK_COVERAGE:
+          return this.categoryTopKCoverageSummarizationService.summaries$(config);
+        case SUMMARIZATION.CATEGORY_BUCKET_COMPARISON:
+          return this.categoryBucketComparisonSummarizationService.summaries$(config);
         default:
           return of([]);
       }

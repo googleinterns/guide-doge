@@ -9,8 +9,9 @@ import { TrendWeeklyComparisonAverageSummarizationService } from './trend-weekly
 import { TrendWeeklyComparisonRateSummarizationService } from './trend-weekly-comparison-rate.summarization.service';
 import { TrendWeeklyElaborationSummarizationService } from './trend-weekly-elaboration.summarization.service';
 import { TrendWeeklyPatternSummarizationService } from './trend-weekly-pattern.summarization.service';
-import { TimeSeriesPoint } from '../../datasets/metas/types';
-
+import { CategoryTopKSummarizationService } from './category-topk.summarization.service';
+import { CategoryTopKCoverageSummarizationService } from './category-topk-coverage.summarization.service';
+import { CategoryBucketComparisonSummarizationService } from './category-bucket-comparison.summarization.service';
 
 // Just need to implement `summaries$` for testing `SummarizationControlService`.
 class TestSummarizationService {
@@ -27,6 +28,9 @@ describe('SummarizationControlService', () => {
   let trendWeeklyComparisonRateSummarizationService: TrendWeeklyComparisonRateSummarizationService;
   let trendWeeklyElaborationSummarizationService: TrendWeeklyElaborationSummarizationService;
   let trendWeeklyPatternSummarizationService: TrendWeeklyPatternSummarizationService;
+  let categoryTopKSummarizationService: CategoryTopKSummarizationService;
+  let categoryTopKCoverageSummarizationService: CategoryTopKCoverageSummarizationService;
+  let categoryBucketComparisonSummarizationService: CategoryBucketComparisonSummarizationService;
 
   beforeEach(() => {
     weekdayWeekendRelativeSummarizationService = new TestSummarizationService() as any;
@@ -36,6 +40,9 @@ describe('SummarizationControlService', () => {
     trendWeeklyComparisonRateSummarizationService = new TestSummarizationService() as any;
     trendWeeklyElaborationSummarizationService = new TestSummarizationService() as any;
     trendWeeklyPatternSummarizationService = new TestSummarizationService() as any;
+    categoryTopKSummarizationService = new TestSummarizationService() as any;
+    categoryTopKCoverageSummarizationService = new TestSummarizationService() as any;
+    categoryBucketComparisonSummarizationService = new TestSummarizationService() as any;
 
     summarizationControlService = new SummarizationControlService(
       weekdayWeekendRelativeSummarizationService,
@@ -45,6 +52,9 @@ describe('SummarizationControlService', () => {
       trendWeeklyComparisonRateSummarizationService,
       trendWeeklyElaborationSummarizationService,
       trendWeeklyPatternSummarizationService,
+      categoryTopKSummarizationService,
+      categoryTopKCoverageSummarizationService,
+      categoryBucketComparisonSummarizationService,
     );
   });
 
@@ -120,6 +130,36 @@ describe('SummarizationControlService', () => {
 
     summarizationControlService.summaries$(summarizationMetas);
     expect(trendWeeklyPatternSummarizationService.summaries$).toHaveBeenCalled();
+  });
+
+  it('should return summary groups from CategoryTopKSummarizationService.', () => {
+    const summarization = SUMMARIZATION.CATEGORY_TOPK;
+    const summarizationMetas = [{ summarization, config: { datumLabels: [] } }];
+
+    spyOn(categoryTopKSummarizationService, 'summaries$');
+
+    summarizationControlService.summaries$(summarizationMetas);
+    expect(categoryTopKSummarizationService.summaries$).toHaveBeenCalled();
+  });
+
+  it('should return summary groups from CategoryTopKCoverageSummarizationService.', () => {
+    const summarization = SUMMARIZATION.CATEGORY_TOPK_COVERAGE;
+    const summarizationMetas = [{ summarization, config: { datumLabels: [] } }];
+
+    spyOn(categoryTopKCoverageSummarizationService, 'summaries$');
+
+    summarizationControlService.summaries$(summarizationMetas);
+    expect(categoryTopKCoverageSummarizationService.summaries$).toHaveBeenCalled();
+  });
+
+  it('should return summary groups from CategoryBucketComparisonSummarizationService.', () => {
+    const summarization = SUMMARIZATION.CATEGORY_BUCKET_COMPARISON;
+    const summarizationMetas = [{ summarization, config: { datumLabels: [] } }];
+
+    spyOn(categoryBucketComparisonSummarizationService, 'summaries$');
+
+    summarizationControlService.summaries$(summarizationMetas);
+    expect(categoryBucketComparisonSummarizationService.summaries$).toHaveBeenCalled();
   });
 
   it('should return summary groups from multiple summarization srevices.', () => {

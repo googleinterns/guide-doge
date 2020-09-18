@@ -73,7 +73,7 @@ export class TrendRegressionSummarizationService extends
       this.weekdayWeekendRelativeSummarizationService.dataProperties$(config),
     ).pipe(map(([pointsArray, { weekdayWeekendEqualValidity }]) => {
       // datum label should be unique in data, so length of pointsArray is either 0 or 1
-      const points = pointsArray.length === 0 ? [] : pointsArray[0];
+      const points = (pointsArray.length === 0 ? [] : pointsArray[0]) as TimeSeriesPoint[];
 
       const uWeekend = (p: TimeSeriesPoint) => {
         const dayOfWeek = p.x.getDay();
@@ -154,7 +154,7 @@ export class TrendRegressionSummarizationService extends
       overallLinearTrendSummariesValidity
     }]) => {
       // datum label should be unique in data, so length of pointsArray is either 0 or 1
-      const points = pointsArray.length === 0 ? [] : pointsArray[0];
+      const points = (pointsArray.length === 0 ? [] : pointsArray[0]) as TimeSeriesPoint[];
 
       const uQuicklyIncreasingLinearDynamic = trapmfL(CHART_DIAGONAL_ANGLE / 2, CHART_DIAGONAL_ANGLE * 5 / 8);
       const uIncreasingLinearDynamic = trapmf(
