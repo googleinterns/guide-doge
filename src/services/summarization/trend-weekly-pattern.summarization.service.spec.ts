@@ -41,6 +41,7 @@ describe('TrendWeeklyPatternSummarizationService', () => {
 
   it('should create summaries describing monotonic increasing data.', done => {
     const points: TimeSeriesPoint[] = [];
+    // Test on points from July 6 to July 26. It is a 3-week data with the first day being Monday.
     for (let i = 6; i <= 26; i++) {
       const x = new Date(2020, 6, i);
       const y = 200 + 5 * i;
@@ -72,6 +73,7 @@ describe('TrendWeeklyPatternSummarizationService', () => {
 
   it('should create summaries describing monotonic decreasing data.', done => {
     const points: TimeSeriesPoint[] = [];
+    // Test on points from July 6 to July 26. It is a 3-week data with the first day being Monday.
     for (let i = 6; i <= 26; i++) {
       const x = new Date(2020, 6, i);
       const y = 300 - 5 * i;
@@ -103,6 +105,7 @@ describe('TrendWeeklyPatternSummarizationService', () => {
 
   it('should create summaries describing constant data.', done => {
     const points: TimeSeriesPoint[] = [];
+    // Test on points from July 6 to July 26. It is a 3-week data with the first day being Monday.
     for (let i = 6; i <= 26; i++) {
       const x = new Date(2020, 6, i);
       const y = 100;
@@ -134,6 +137,7 @@ describe('TrendWeeklyPatternSummarizationService', () => {
   it('should create summaries describing V shape weekly pattern in constant data.', done => {
     const weekPattern = [120, 60, 30, 10, 30, 60, 90];  // [Sun, Mon, Tue, Wed, Thu, Fri, Sat]
     const points: TimeSeriesPoint[] = [];
+    // Test on points from July 6 to July 26. It is a 3-week data with the first day being Monday.
     for (let i = 6; i <= 26; i++) {
       const x = new Date(2020, 6, i);
       const y = 250 + weekPattern[x.getDay()];
@@ -171,6 +175,7 @@ describe('TrendWeeklyPatternSummarizationService', () => {
   it('should create summaries describing V shape weekly pattern in linearly increasing data.', done => {
     const weekPattern = [120, 60, 30, 10, 30, 60, 90];  // [Sun, Mon, Tue, Wed, Thu, Fri, Sat]
     const points: TimeSeriesPoint[] = [];
+    // Test on points from July 6 to July 26. It is a 3-week data with the first day being Monday.
     for (let i = 6; i <= 26; i++) {
       const x = new Date(2020, 6, i);
       const y = 200 + i * 5 + weekPattern[x.getDay()];
@@ -208,6 +213,7 @@ describe('TrendWeeklyPatternSummarizationService', () => {
   it('should create summaries describing V shape weekly pattern in linearly decreasing data.', done => {
     const weekPattern = [120, 60, 30, 10, 30, 60, 90];  // [Sun, Mon, Tue, Wed, Thu, Fri, Sat]
     const points: TimeSeriesPoint[] = [];
+    // Test on points from July 6 to July 26. It is a 3-week data with the first day being Monday.
     for (let i = 6; i <= 26; i++) {
       const x = new Date(2020, 6, i);
       const y = 300 - i * 5 + weekPattern[x.getDay()];
@@ -245,6 +251,7 @@ describe('TrendWeeklyPatternSummarizationService', () => {
   it('should create summaries describing U shape weekly pattern in constant data.', done => {
     const weekPattern = [100, 100, 50, 0, 0, 0, 50];  // [Sun, Mon, Tue, Wed, Thu, Fri, Sat]
     const points: TimeSeriesPoint[] = [];
+    // Test on points from July 6 to July 26. It is a 3-week data with the first day being Monday.
     for (let i = 6; i <= 26; i++) {
       const x = new Date(2020, 6, i);
       const y = 250 + weekPattern[x.getDay()];
@@ -287,6 +294,7 @@ describe('TrendWeeklyPatternSummarizationService', () => {
   it('should create summaries describing U shape weekly pattern in linearly increasing data.', done => {
     const weekPattern = [100, 100, 50, 0, 0, 0, 50];  // [Sun, Mon, Tue, Wed, Thu, Fri, Sat]
     const points: TimeSeriesPoint[] = [];
+    // Test on points from July 6 to July 26. It is a 3-week data with the first day being Monday.
     for (let i = 6; i <= 26; i++) {
       const x = new Date(2020, 6, i);
       const y = 200 + i * 5 + weekPattern[x.getDay()];
@@ -329,6 +337,7 @@ describe('TrendWeeklyPatternSummarizationService', () => {
   it('should create summaries describing U shape weekly pattern in linearly decreasing data.', done => {
     const weekPattern = [100, 100, 50, 0, 0, 0, 50];  // [Sun, Mon, Tue, Wed, Thu, Fri, Sat]
     const points: TimeSeriesPoint[] = [];
+    // Test on points from July 6 to July 26. It is a 3-week data with the first day being Monday.
     for (let i = 6; i <= 26; i++) {
       const x = new Date(2020, 6, i);
       const y = 300 - i * 5 + weekPattern[x.getDay()];

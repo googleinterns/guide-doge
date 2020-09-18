@@ -53,6 +53,7 @@ describe('TrendWeeklyComparisonRateSummarizationService', () => {
 
   it('should create summaries describing monotonic linearly increasing data.', done => {
     const points: TimeSeriesPoint[] = [];
+    // Test on points from July 6 to July 26. It is a 3-week data with the first day being Monday.
     for (let i = 6; i <= 26; i++) {
       const x = new Date(2020, 6, i);
       const y = i * 10;
@@ -88,6 +89,7 @@ describe('TrendWeeklyComparisonRateSummarizationService', () => {
 
   it('should create summaries describing weekday linearly increasing weekend constant data.', done => {
     const points: TimeSeriesPoint[] = [];
+    // Test on points from July 6 to July 26. It is a 3-week data with the first day being Monday.
     for (let i = 6; i <= 26; i++) {
       const x = new Date(2020, 6, i);
       const y = x.getDay() !== 6 && x.getDay() !== 0 ? i * 10 : 0;
@@ -124,6 +126,7 @@ describe('TrendWeeklyComparisonRateSummarizationService', () => {
 
   it('should create summaries describing monotonic exponentially increasing data.', done => {
     const points: TimeSeriesPoint[] = [];
+    // Test on points from July 6 to July 26. It is a 3-week data with the first day being Monday.
     for (let i = 6; i <= 26; i++) {
       const x = new Date(2020, 6, i);
       const y = i * i;
@@ -159,6 +162,7 @@ describe('TrendWeeklyComparisonRateSummarizationService', () => {
 
   it('should create summaries describing monitonic linearly decreasing data.', done => {
     const points: TimeSeriesPoint[] = [];
+    // Test on points from July 6 to July 26. It is a 3-week data with the first day being Monday.
     for (let i = 6; i <= 26; i++) {
       const x = new Date(2020, 6, i);
       const y = 1000 - i * 10;
@@ -194,6 +198,7 @@ describe('TrendWeeklyComparisonRateSummarizationService', () => {
 
   it('should create summaries describing monitonic exponentially decreasing data.', done => {
     const points: TimeSeriesPoint[] = [];
+    // Test on points from July 6 to July 26. It is a 3-week data with the first day being Monday.
     for (let i = 6; i <= 26; i++) {
       const x = new Date(2020, 6, i);
       const y = 1000 - i * i;
@@ -228,6 +233,7 @@ describe('TrendWeeklyComparisonRateSummarizationService', () => {
 
   it('should create summaries describing N shape data.', done => {
     const points: TimeSeriesPoint[] = [];
+    // Test on points from July 6 to July 26. It is a 3-week data with the first day being Monday.
     for (let i = 6; i <= 26; i++) {
       const x = new Date(2020, 6, i);
       if (i >= 13 && i <= 19) {
