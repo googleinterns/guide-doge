@@ -44,6 +44,7 @@ export enum GEO_MAP_NAVIGATION_PREFERENCE {
 
 export enum SUMMARIZATION_PREFERENCE {
   enabled = 0x600,
+  validityThreshold,
 }
 
 export enum PUNCTUATION {

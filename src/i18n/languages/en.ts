@@ -59,6 +59,7 @@ export const en: I18n = {
   [GEO_MAP_NAVIGATION_PREFERENCE.enabled]: 'Geo Map Navigation',
 
   [SUMMARIZATION_PREFERENCE.enabled]: 'Text Summarization',
+  [SUMMARIZATION_PREFERENCE.validityThreshold]: 'Validity Threshold',
 
   [PUNCTUATION.QUESTION_MARK]: 'QUESTION MARK',
   [PUNCTUATION.SLASH]: 'SLASH',
