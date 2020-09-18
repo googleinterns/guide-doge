@@ -47,7 +47,7 @@ describe('CategoryTopKCoverageSummarizationService', () => {
       points,
       {},
       summaries => {
-        const isCoverageSummary = isTextPartsInSummary('top 3', 'countries', 'D, C, B', 'sessions');
+        const isCoverageSummary = isTextPartsInSummary('top 3', 'countries', 'D, C, B', '90%', 'sessions');
 
         const coverageSummary = summaries.filter(isCoverageSummary);
 
@@ -68,7 +68,7 @@ describe('CategoryTopKCoverageSummarizationService', () => {
       points,
       { topk: 4 },
       summaries => {
-        const isCoverageSummary = isTextPartsInSummary('top 4', 'countries', 'D, C, B, A', 'sessions');
+        const isCoverageSummary = isTextPartsInSummary('top 4', 'countries', 'D, C, B, A', '100%', 'sessions');
 
         const coverageSummary = summaries.filter(isCoverageSummary);
 
@@ -89,7 +89,7 @@ describe('CategoryTopKCoverageSummarizationService', () => {
       points,
       { topk: 10 },
       summaries => {
-        const isCoverageSummary = isTextPartsInSummary('top 4', 'countries', 'D, C, B, A', 'sessions');
+        const isCoverageSummary = isTextPartsInSummary('top 4', 'countries', 'D, C, B, A', '100%', 'sessions');
 
         const coverageSummary = summaries.filter(isCoverageSummary);
 
@@ -110,7 +110,7 @@ describe('CategoryTopKCoverageSummarizationService', () => {
       points,
       { xlabel: 'devices' },
       summaries => {
-        const isCoverageSummary = isTextPartsInSummary('top 3', 'devices', 'D, C, B', 'sessions');
+        const isCoverageSummary = isTextPartsInSummary('top 3', 'devices', 'D, C, B', '90%', 'sessions');
 
         const coverageSummary = summaries.filter(isCoverageSummary);
 
@@ -131,7 +131,7 @@ describe('CategoryTopKCoverageSummarizationService', () => {
       points,
       { metric: 'users' },
       summaries => {
-        const isCoverageSummary = isTextPartsInSummary('top 3', 'countries', 'D, C, B', 'users');
+        const isCoverageSummary = isTextPartsInSummary('top 3', 'countries', 'D, C, B', '90%', 'users');
 
         const coverageSummary = summaries.filter(isCoverageSummary);
 
