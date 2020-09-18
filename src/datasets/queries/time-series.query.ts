@@ -4,7 +4,6 @@ import { DAY } from '../../utils/timeUnits';
 import { DataCube } from '../../models/data-cube/data-cube.model';
 import { ResultRow } from '../../models/data-cube/types';
 import { unique } from '../../utils/misc';
-import { SummaryGroup } from '../summarizations/types';
 import { XYDatum } from '../metas/types';
 
 export interface TimeSeriesQueryOptions {
@@ -28,7 +27,6 @@ export type LegendItem<S> = {
   periodOffset?: number;
   /* The size of time window for taking the sum of all dates within the window */
   windowSize?: number;
-  querySummariesFactory?: (points: TimeSeriesPoint[]) => () => SummaryGroup[];
 };
 
 /**
@@ -44,7 +42,9 @@ export type LegendItem<S> = {
  * the returned datum.
  *
  */
-export function createTimeSeriesQuery<S>(dataCube: DataCube, legendItems: LegendItem<S>[]): TimeSeriesQuery<S> {
+export function createTimeSeriesQuery<S>(
+  dataCube: DataCube,
+  legendItems: LegendItem<S>[]): TimeSeriesQuery<S> {
   return queryOptions => {
     const [startDate, endDate] = queryOptions.range;
     const measureNames = unique(legendItems.map(item => item.measureName));
@@ -84,7 +84,6 @@ function createTimeSeriesDatum<S>(rows: ResultRow[], startDate: Date, endDate: D
     measureName,
     periodOffset = 0,
     windowSize = DAY,
-    querySummariesFactory,
     style,
   } = item;
 
@@ -133,10 +132,6 @@ function createTimeSeriesDatum<S>(rows: ResultRow[], startDate: Date, endDate: D
     style,
     points,
   };
-
-  if (querySummariesFactory) {
-    datum.querySummaries = querySummariesFactory(points);
-  }
 
   return datum;
 }

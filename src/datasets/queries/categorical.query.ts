@@ -3,7 +3,6 @@ import { DAY } from '../../utils/timeUnits';
 import { DataCube } from '../../models/data-cube/data-cube.model';
 import { ResultRow } from '../../models/data-cube/types';
 import { unique } from '../../utils/misc';
-import { SummaryGroup } from '../summarizations/types';
 import { XYDatum } from '../metas/types';
 
 export type CategoricalQueryOptions = {};
@@ -17,5 +16,4 @@ export type CategoricalQuery<S> = (options: CategoricalQueryOptions) => Categori
 export type LegendItem<S> = {
   label: string;
   style?: Partial<S>;
-  querySummariesFactory?: (points: CategoricalPoint[]) => () => SummaryGroup[];
 };

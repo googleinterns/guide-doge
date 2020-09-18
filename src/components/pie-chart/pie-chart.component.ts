@@ -9,6 +9,7 @@ import { PieChartMeta } from '../../datasets/metas/categorical.meta';
 import { CategoricalDatum } from '../../datasets/queries/categorical.query';
 import { CategoricalPoint } from '../../datasets/metas/types';
 import { A11yHostComponent } from '../a11y-host/a11y-host.component';
+import { SummarizationMeta } from '../../services/summarization/types';
 
 export type PieChartDatum = CategoricalDatum<LegendItemStyle>;
 
@@ -28,6 +29,7 @@ export class PieChartComponent extends A11yHostComponent implements
   formatX = formatX;
   formatY = formatY;
 
+  summarizationMetas$ = new BehaviorSubject<SummarizationMeta[]>([]);
   data$ = new BehaviorSubject<CategoricalDatum<LegendItemStyle>[]>([]);
   pieChartD3: PieChartD3;
   private destroy$ = new Subject();
@@ -37,10 +39,6 @@ export class PieChartComponent extends A11yHostComponent implements
   ) {
     super(elementRef);
     this.pieChartD3 = new PieChartD3(this);
-  }
-
-  get data() {
-    return this.data$.value;
   }
 
   get VISUALIZATION() {
@@ -61,6 +59,7 @@ export class PieChartComponent extends A11yHostComponent implements
     if ('meta' in changes) {
       const data = this.meta.queryData({});
       this.data$.next(data);
+      this.summarizationMetas$.next(this.meta.summarizationMetas ?? []);
     }
   }
 }
