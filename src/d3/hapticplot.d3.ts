@@ -4,6 +4,7 @@ import { Entity, Component } from 'aframe';
 import { sanitizeUrl } from '@braintree/sanitize-url';
 import { Vector3 } from 'three';
 import { BaseType } from 'd3';
+import { VRScatterPoint } from 'src/datasets/queries/vr.query';
 
 const POINT_SIZE = 0.02;
 const DEFAULT_COLOR = '#F0A202';
@@ -19,10 +20,12 @@ interface Sound extends Component {
 }
 
 export class Hapticplot{
-    private data: number[];
+    private data: VRScatterPoint[];
     private shape: string;
     private container: HTMLElement | null = null;
-    private graphScale: d3.ScaleLinear<number, number>;
+    private xScale: d3.ScaleLinear<number, number>;
+    private yScale: d3.ScaleLinear<number, number>;
+    private zScale: d3.ScaleLinear<number, number>;
     private audioScale: d3.ScaleLinear<number, number>;
     private graphOffset: Vector3;
 
@@ -30,21 +33,44 @@ export class Hapticplot{
     this.shape = shape;
   }
 
-  init(container: HTMLElement | null, data: number[]){
+  init(container: HTMLElement | null, data: VRScatterPoint[]){
     this.data = data;
     this.container = container;
     this.graphOffset = new Vector3(0, 1, -0.35);
-    // Creates a linear mapping from this.data to graph positions, haptic intensities, and audio selection
-    this.graphScale = d3.scaleLinear()
-      .domain([0, d3.max(this.data) as number])  // max of dataset
-      .range([0, GRAPH_SIZE / 2]);
-    this.audioScale = d3.scaleLinear()
-      .domain([d3.min(this.data) as number, d3.max(this.data) as number])  // max of dataset
-      .range([0, 27]);
+    this.setupScales();
     this.setupPoints(DEFAULT_COLOR, HOVER_COLOR, POINT_SIZE);
     this.setupControllers();
     this.createSky();
     this.createGridPlane();
+  }
+
+  /**
+   * Sets up the X Y and Z scales to map the given data to the graphs max and min positions
+   */
+  private setupScales() {
+    this.xScale = d3.scaleLinear()
+      .domain([
+        Math.min.apply(Math, this.data.map(function(datum) { return datum.x; })),
+        Math.max.apply(Math, this.data.map(function(datum) { return datum.x; }))])
+      .range([- GRAPH_SIZE / 2, GRAPH_SIZE / 2]);
+
+    this.yScale = d3.scaleLinear()
+      .domain([
+        Math.min.apply(Math, this.data.map(function(datum) { return datum.y; })),
+        Math.max.apply(Math, this.data.map(function(datum) { return datum.y; }))])
+      .range([- GRAPH_SIZE / 2, GRAPH_SIZE / 2]);
+
+    this.zScale = d3.scaleLinear()
+      .domain([
+        Math.min.apply(Math, this.data.map(function(datum) { return datum.z; })),
+        Math.max.apply(Math, this.data.map(function(datum) { return datum.z; }))])
+      .range([- GRAPH_SIZE / 2, GRAPH_SIZE / 2]);
+
+    this.audioScale = d3.scaleLinear()
+      .domain([
+        Math.min.apply(Math, this.data.map(function(datum) { return datum.y; })),
+        Math.max.apply(Math, this.data.map(function(datum) { return datum.y; }))])
+      .range([0, 27]);
   }
 
   /**
@@ -67,7 +93,7 @@ export class Hapticplot{
       // Enables controller interaction with points using superhands' tags
       .attr('hoverable', '')
       // Updates points positions based on ingested data
-      .each((d, i , g) => this.setPosition(d, i, g[i]))
+      .each((d, i , g) => this.setPosition(d, g[i]))
       // Adds audio triggers to points based on ingested data
       .each((d, i , g) => this.setAudio(d, g[i]))
       // Adds listeners for state change events, which trigger a change in the
@@ -84,15 +110,14 @@ export class Hapticplot{
   }
 
   /**
-   * Sets a world space position for each point, based on ingested data
-   * @param data Ingested Data
-   * @param index Current index in data array
+   * Sets a world space position for each data point, based on ingested data
+   * @param datum the data from which the points positin will be set
    * @param point The point whos position is being set
    */
-  private setPosition(datum, index, point){
-    const x = this.graphOffset.x + ((GRAPH_SIZE / 2) / this.data.length) * index;
-    const y = this.graphOffset.y + this.graphScale(datum);
-    const z = this.graphOffset.z;
+  private setPosition(datum: VRScatterPoint, point: BaseType){
+    const x = this.graphOffset.x + this.xScale(datum.x);
+    const y = this.graphOffset.y + this.yScale(datum.y);
+    const z = this.graphOffset.z + this.zScale(datum.z);
     (point as Entity).object3D.position.set(x, y, z);
   }
 
@@ -101,8 +126,8 @@ export class Hapticplot{
    * @param datum Ingested Data
    * @param point The point who's position is being set
    */
-  private setAudio(datum: number, point: BaseType){
-    const sanitizedUrl = sanitizeUrl(`${ASSETS_FOLDER}marimbaNotes/${Math.round(this.audioScale(datum))}.mp3`);
+  private setAudio(datum: VRScatterPoint, point: BaseType){
+    const sanitizedUrl = sanitizeUrl(`${ASSETS_FOLDER}marimbaNotes/${Math.round(this.audioScale(datum.y))}.mp3`);
     d3.select(point)
       .attr('sound', `src: url(${sanitizedUrl}); on: hover-start`);
   }
@@ -114,7 +139,7 @@ export class Hapticplot{
    * @param hoverColor The color the point takes on while hovered
    * @param size The radius of the point being hovered
    */
-  private onHoverStart(datum: number, point: BaseType, hoverColor: string){
+  private onHoverStart(datum: VRScatterPoint, point: BaseType, hoverColor: string){
     d3.select(point)
       .attr('color', hoverColor);
     if (((point as Entity).components.sound as Sound).isPlaying){
@@ -131,12 +156,11 @@ export class Hapticplot{
    * @param datum The datum from which the given points position and audio is generated
    * @param point A data point entity
    */
-  private speakPosition(datum: number, point: BaseType){
-    const position = ((point as Entity).object3D.position as Vector3);
+  private speakPosition(datum: VRScatterPoint, point: BaseType){
     const posString =
-      `X${Math.round((position.x - this.graphOffset.x) * 100) / 100}` +
-      `Y${Math.round((position.y - this.graphOffset.y) * 100) / 100}` +
-      `Z${Math.round((position.z - this.graphOffset.z) * 100) / 100}`;
+      `X${Math.round(datum.x * 100) / 100}` +
+      `Y${Math.round(datum.y * 100) / 100}` +
+      `Z${Math.round(datum.z * 100) / 100}`;
     this.speakStringRec(datum, posString, 0, point);
   }
 
@@ -150,7 +174,7 @@ export class Hapticplot{
    * @param index The index of the next file to be played within the speechString
    * @param point The point whos position is being spoken
    */
-  private speakStringRec(datum: number, speechString: string, index: number, point: BaseType){
+  private speakStringRec(datum: VRScatterPoint, speechString: string, index: number, point: BaseType){
     const sanitizedUrlTts = sanitizeUrl(`${ASSETS_FOLDER}tts/tts${speechString[index]}.mp3`);
     d3.select(point)
       .attr('sound', `src: url(${sanitizedUrlTts});`);
@@ -199,7 +223,7 @@ export class Hapticplot{
     d3.select(this.container).selectAll('.grid').each((d, i, g) =>
       (g[i] as Entity).object3D.position.set(this.graphOffset.x, this.graphOffset.y, this.graphOffset.z)
     );
-    this.getShapes().each((d, i , g) => this.setPosition(d, i, g[i]));
+    this.getShapes().each((d, i , g) => this.setPosition((d as VRScatterPoint), g[i]));
   }
 
   /**
