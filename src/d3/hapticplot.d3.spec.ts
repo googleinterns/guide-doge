@@ -84,7 +84,7 @@ describe('VR Haptic Plot', () => {
 
   it('sets the correct color property on shape entities after a hover-end event', () => {
     hapticplot.init(scene, [10, 20, 30]);
-    const expectedAttrArray = [DEFAULT_COLOR, DEFAULT_COLOR, DEFAULT_COLOR];
+    const expectedAttrArray = [HOVER_COLOR, HOVER_COLOR, HOVER_COLOR];
     const result = helpers.getHoverEndedColor(scene, shape);
     expect(result).toEqual(expectedAttrArray);
   });
@@ -137,4 +137,71 @@ describe('VR Haptic Plot', () => {
     expect(helpers.getIntervalReset(controller)).toEqual(100);
   });
 
+  it('when the X or A button are pressed before the controller has been in contact with a datapoint, the datapoints sound component is unchanged', () => {
+    const dataArray = [10];
+    hapticplot.init(scene, dataArray);
+    expect(helpers.hasNoButtonTriggersBeforeHover(controller, scene, shape)).toEqual(true);
+  });
+
+  it('when the X or A button are pressed while the controller is no longer in contact with a datapoint, after making contact, the datapoints sound component is unchanged', () => {
+    const dataArray = [10];
+    hapticplot.init(scene, dataArray);
+    expect(helpers.hasNoButtonTriggersAfterHover(controller, scene, shape)).toEqual(true);
+  });
+
+  it('when the X or A button are pressed while the controller is in contact with a datapoint, the datapoints sound component is set to the appropriate sequence of audio sources, then resets to the original source', () => {
+    const dataArray = [10];
+    hapticplot.init(scene, dataArray);
+    expect(helpers.getAudioSrcSequence(controller, scene, shape)).toEqual([
+      'url(assets/marimbaNotes/14.mp3)',
+      'url(assets/tts/ttsX.mp3)',
+      'url(assets/tts/tts0.mp3)',
+      'url(assets/tts/ttsY.mp3)',
+      'url(assets/tts/tts0.mp3)',
+      'url(assets/tts/tts..mp3)',
+      'url(assets/tts/tts7.mp3)',
+      'url(assets/tts/ttsZ.mp3)',
+      'url(assets/tts/tts0.mp3)',
+      'url(assets/marimbaNotes/14.mp3)']
+    );
+  });
+
+  it('audio source sequencing is handled properly for a single point in a scene with multiple points', () => {
+    const dataArray = [10, 20, 30];
+    hapticplot.init(scene, dataArray);
+    expect(helpers.getAudioSrcSequence(controller, scene, shape)).toEqual([
+      'url(assets/marimbaNotes/0.mp3)',
+      'url(assets/tts/ttsX.mp3)',
+      'url(assets/tts/tts0.mp3)',
+      'url(assets/tts/ttsY.mp3)',
+      'url(assets/tts/tts0.mp3)',
+      'url(assets/tts/tts..mp3)',
+      'url(assets/tts/tts2.mp3)',
+      'url(assets/tts/tts3.mp3)',
+      'url(assets/tts/ttsZ.mp3)',
+      'url(assets/tts/tts0.mp3)',
+      'url(assets/marimbaNotes/0.mp3)']
+    );
+  });
+
+  it('audio source sequencing handled properly for a single point in a scene with multiple points and negative position values', () => {
+    const dataArray = [-50, 20, 100];
+    hapticplot.init(scene, dataArray);
+    expect(helpers.getAudioSrcSequence(controller, scene, shape)).toEqual([
+      'url(assets/marimbaNotes/0.mp3)',
+      'url(assets/tts/ttsX.mp3)',
+      'url(assets/tts/tts0.mp3)',
+      'url(assets/tts/ttsY.mp3)',
+      'url(assets/tts/tts-.mp3)',
+      'url(assets/tts/tts0.mp3)',
+      'url(assets/tts/tts..mp3)',
+      'url(assets/tts/tts3.mp3)',
+      'url(assets/tts/tts5.mp3)',
+      'url(assets/tts/ttsZ.mp3)',
+      'url(assets/tts/tts0.mp3)',
+      'url(assets/marimbaNotes/0.mp3)']
+    );
+  });
+
 });
+

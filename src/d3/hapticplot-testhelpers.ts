@@ -125,3 +125,62 @@ export function getIntervalReset(controller: HTMLElement): number{
   controllerEntity.components.guide.tick!(100, 100);
   return (controllerEntity.components.guide as Guidance).state.currInterval;
 }
+
+// Returns true if an A or X button press has no effect before a data point hover event
+export function hasNoButtonTriggersBeforeHover(controller: HTMLElement, scene: HTMLElement, shape: string): boolean{
+  const controllerEntity = controller as Entity;
+  const point = scene.querySelector(shape) as Entity;
+  const originalSrc = point.components.sound.el.getDOMAttribute('sound').src;
+  controllerEntity.dispatchEvent(new Event('abuttonup'));
+  controllerEntity.dispatchEvent(new Event('xbuttonup'));
+  const soundSrc = point.components.sound.el.getDOMAttribute('sound').src;
+  return originalSrc === soundSrc ? true : false;
+}
+
+// Returns true if an A or X button press has no effect after a data point hover event has ended
+export function hasNoButtonTriggersAfterHover(controller: HTMLElement, scene: HTMLElement, shape: string): any{
+  const controllerEntity = controller as Entity;
+  const point = scene.querySelector(shape) as Entity;
+  const hoverStartEvent = new CustomEvent('hover-start', {
+    detail: {
+      hand: controllerEntity
+    }
+  });
+  const hoverEndEvent = new CustomEvent('hover-end', {
+    detail: {
+      hand: controllerEntity
+    }
+  });
+  const originalSrc = point.components.sound.el.getDOMAttribute('sound').src;
+  point.dispatchEvent(hoverStartEvent);
+  point.dispatchEvent(hoverEndEvent);
+  controllerEntity.dispatchEvent(new Event('abuttonup'));
+  controllerEntity.dispatchEvent(new Event('xbuttonup'));
+  const soundSrc = point.components.sound.el.getDOMAttribute('sound').src;
+  return originalSrc === soundSrc ? true : false;
+}
+
+// Returns audio sources attached to a data point after an A or X button press from a controller in contact with it
+export function getAudioSrcSequence(controller: HTMLElement, scene: HTMLElement, shape: string): string[]{
+  const controllerEntity = controller as Entity;
+  const point = scene.querySelector(shape) as Entity;
+  const hoverStartEvent = new CustomEvent('hover-start', {
+    detail: {
+      hand: controllerEntity
+    }
+  });
+  point.dispatchEvent(hoverStartEvent);
+  const res: string[] = [];
+  const originalSrc = point.components.sound.el.getDOMAttribute('sound').src;
+  res.push(originalSrc);
+  controllerEntity.dispatchEvent(new Event('abuttonup'));
+  controllerEntity.dispatchEvent(new Event('xbuttonup'));
+  let soundSrc = point.components.sound.el.getDOMAttribute('sound').src;
+  res.push(soundSrc);
+  while (soundSrc !== originalSrc){
+    point.dispatchEvent(new Event('sound-ended'));
+    soundSrc = point.components.sound.el.getDOMAttribute('sound').src;
+    res.push(soundSrc);
+  }
+  return res;
+}
