@@ -9,7 +9,7 @@ import { DataService } from '../../services/data/data.service';
 import { Meta } from '../../datasets/metas/types';
 import { ScatterPlotStyle as ScatterPlotLegendItemStyle } from '../../d3/scatterplot.d3';
 import { VRScatterplotMeta } from '../../datasets/metas/vr-scatter-plot.meta';
-import { VRData, VRQueryOptions } from '../../datasets/queries/vr.query';
+import { VRData, VRQueryOptions, VRScatterPoint } from '../../datasets/queries/vr.query';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { DAY } from '../../utils/timeUnits';
 import { map, takeUntil } from 'rxjs/operators';
@@ -28,7 +28,7 @@ export class VRAccessibilityComponent implements OnInit, OnChanges, OnDestroy, A
   private TIME_MAX = 31;
   @Input() endDate = new Date();
   @Input() startDate = new Date(this.endDate.getTime() - this.TIME_MAX * DAY);
-  datasetPref: VRScatterplotMeta;
+  datasetPref: VRScatterplotMeta | null;
   private vrHapticPlot: Hapticplot = new Hapticplot('a-sphere');
   dataset$ = this.preferenceService.dataset$;
   DATA_PREFERENCE = DATA_PREFERENCE;
@@ -56,33 +56,39 @@ export class VRAccessibilityComponent implements OnInit, OnChanges, OnDestroy, A
     .subscribe(dataset => {
       // componentMetas is initialized to different dataset metas - will help funnel dataset
       this.componentMetas = dataset.metas;
-      // dataset.metas[0].type = 'tabbed' and dataset.metas[1] = 'line' if chosen UserWhiteNoise
-      // dataset.metas[0] - 'line' if Dummy chosen
       switch (dataset.metas[0].type){
         case MetaType.SCATTER_PLOT: {
           this.datasetPref = dataset.metas[0] as VRScatterplotMeta;
+          console.log(dataset.metas[0]);
           break;
         }
         // TODO: write error handling for cases outside of SCATTER_PLOT
         case MetaType.TABBED_CHARTS: {
-          alert('You chose an invalid dataset. Please choose a VRScatterplot-compatible dataset.');
+          this.datasetPref = null;
+          alert('You chose an invalid dataset. Please choose a VR-compatible dataset.');
           break;
         }
         case MetaType.LINE_CHART: {
-          alert('You chose an invalid dataset. Please choose a VRScatterplot-compatible dataset.');
+          this.datasetPref = null;
+          alert('You chose an invalid dataset. Please choose a VR-compatible dataset.');
           break;
         }
         case MetaType.GEO_MAP: {
-          alert('You chose an invalid dataset. Please choose a VRScatterplot-compatible dataset.');
+          this.datasetPref = null;
+          alert('You chose an invalid dataset. Please choose a VR-compatible dataset.');
           break;
         }
       }
-      this.queryOptions$
+      let dataValues: VRScatterPoint[] = [];
+      if (this.datasetPref){
+        this.queryOptions$
         .pipe(takeUntil(this.destroy$))
         .pipe(map(queryOption => {
-        // this.meta2.query(queryOption)[0]) has label, points, style and is of type BehaviorSubject<LineChartData>
-        return this.datasetPref.queryData(queryOption)[0];
-      })).subscribe(this.datum$);
+          return this.datasetPref!.queryData(queryOption)[0];
+        })).subscribe(this.datum$);
+        dataValues = this.datum$.value.points.slice(0, this.datum$.value.points.length * 3 / 8);
+      }
+      this.initD3HapticPlot(dataValues);
     });
   }
 
@@ -93,8 +99,10 @@ export class VRAccessibilityComponent implements OnInit, OnChanges, OnDestroy, A
   }
 
   ngAfterViewInit(){
-    const scene = this.theScene.nativeElement;
-    this.vrHapticPlot.init(scene, this.datum$.value.points.slice(0, this.datum$.value.points.length * 3 / 8));
+  }
+
+  initD3HapticPlot(dataValues: VRScatterPoint[]){
+    this.vrHapticPlot.init(document.querySelector('a-scene'), dataValues);
   }
 
   get datum() {

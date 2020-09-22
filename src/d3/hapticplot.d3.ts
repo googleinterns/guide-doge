@@ -37,11 +37,38 @@ export class Hapticplot{
     this.data = data;
     this.container = container;
     this.graphOffset = new Vector3(0, 1, -0.35);
+    this.setupScene();
+  }
+
+  // when dataset changes, clears current set of points and grids
+  private async setupScene(){
+    await this.clearPointsAndGrids();
     this.setupScales();
     this.setupPoints(DEFAULT_COLOR, HOVER_COLOR, POINT_SIZE);
     this.setupControllers();
     this.createSky();
     this.createGridPlane();
+  }
+
+  // when dataset changes, clears current set of points and grids
+  private async clearPointsAndGrids(){
+    console.log('clearing');
+    this.getShapes().remove();
+    this.getGrids().remove();
+  }
+
+  /**
+   * Selects all elements with html tag this.shape
+   */
+  private getShapes(){
+    return d3.select(this.container).selectAll(this.shape);
+  }
+
+  /**
+   * Selects all elements of class grid
+   */
+  private getGrids(){
+    return d3.select(this.container).selectAll('.grid');
   }
 
   /**
@@ -102,12 +129,6 @@ export class Hapticplot{
       .on('hover-end',  () => this.onHoverEnd());
   }
 
-  /**
-   * Selects all entities of class datapoint
-   */
-  private getShapes(){
-    return d3.select(this.container).selectAll(this.shape);
-  }
 
   /**
    * Sets a world space position for each data point, based on ingested data
@@ -207,9 +228,9 @@ export class Hapticplot{
       .on('thumbstickup',  (d, i, g) => this.recenterGrids(g[i]));
   }
 
-   /**
-    * Selects all entities of class controller
-    */
+  /**
+   * Selects all elements of class controller
+   */
   private getControllers(){
     return d3.select(this.container).selectAll('.controller');
   }
@@ -220,7 +241,7 @@ export class Hapticplot{
    */
   private recenterGrids(controller) {
     this.graphOffset = (controller as Entity).object3D.position;
-    d3.select(this.container).selectAll('.grid').each((d, i, g) =>
+    this.getGrids().each((d, i, g) =>
       (g[i] as Entity).object3D.position.set(this.graphOffset.x, this.graphOffset.y, this.graphOffset.z)
     );
     this.getShapes().each((d, i , g) => this.setPosition((d as VRScatterPoint), g[i]));
@@ -257,6 +278,7 @@ export class Hapticplot{
       .attr('class', 'grid')
       .attr('position', `${this.graphOffset.x} ${this.graphOffset.y} ${this.graphOffset.z}`)
       .attr('rotation', '0 0 -90');
+    (yGrid as Entity).flushToDOM();
 
     const zGrid = document.createElement('a-entity');
     zGrid.id = 'zGrid';
@@ -266,5 +288,9 @@ export class Hapticplot{
       .attr('class', 'grid')
       .attr('position', `${this.graphOffset.x} ${this.graphOffset.y} ${this.graphOffset.z}`)
       .attr('rotation', '-90 0 0');
+
+      (xGrid as Entity).flushToDOM();
+      (yGrid as Entity).flushToDOM();
+      (zGrid as Entity).flushToDOM();
   }
 }
