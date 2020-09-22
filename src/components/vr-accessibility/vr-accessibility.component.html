@@ -10,5 +10,10 @@
     <a-entity class="controller" guide sphere-collider="radius: 0.001;" super-hands oculus-touch-controls="hand: right;" haptics="force: 0"></a-entity>
   </a-entity>
 </a-scene>
+<aside class="sidebar">
+  <h2 class="sidebar-title">Customization</h2>
+  <app-preference-group [preference$]="dataset$" [i18n]="DATA_PREFERENCE" alwaysEnabled="true">
+  </app-preference-group>
+</aside>
 
 

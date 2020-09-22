@@ -21,7 +21,8 @@ import { MetaType} from '../../datasets/metas/types';
 
 @Component({
   selector: 'app-vr-accessibility',
-  templateUrl: './vr-accessibility.component.html'
+  templateUrl: './vr-accessibility.component.html',
+  styleUrls: ['./vr-accessibility.component.scss'],
 })
 export class VRAccessibilityComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit{
   private TIME_MAX = 31;
@@ -64,7 +65,6 @@ export class VRAccessibilityComponent implements OnInit, OnChanges, OnDestroy, A
         }
         // TODO: write error handling for cases outside of SCATTER_PLOT
         case MetaType.TABBED_CHARTS: {
-          this.datasetPref = (dataset.metas[0] as any).metas[0];
           alert('You chose an invalid dataset. Please choose a VRScatterplot-compatible dataset.');
           break;
         }
@@ -94,10 +94,6 @@ export class VRAccessibilityComponent implements OnInit, OnChanges, OnDestroy, A
 
   ngAfterViewInit(){
     const scene = this.theScene.nativeElement;
-    const dataArray: Vector3[] = [];
-    for (let i = 0; i < 50; i++){
-      dataArray.push(new Vector3(Math.random(), Math.random(), Math.random()));
-    }
     this.vrHapticPlot.init(scene, this.datum$.value.points.slice(0, this.datum$.value.points.length * 3 / 8));
   }
 
