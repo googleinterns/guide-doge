@@ -12,6 +12,7 @@ const HOVER_COLOR = 'red';
 const SKY_COLOR = '#4d4d4d';
 const ASSETS_FOLDER = 'assets/';
 const GRAPH_SIZE = 1.4;
+const DEFAULT_ORIGIN = new Vector3(0, 1, -0.35);
 
 interface Sound extends Component {
   isPlaying: boolean;
@@ -36,7 +37,7 @@ export class Hapticplot{
   init(container: HTMLElement | null, data: VRScatterPoint[]){
     this.data = data;
     this.container = container;
-    this.graphOffset = new Vector3(0, 1, -0.35);
+    this.graphOffset = DEFAULT_ORIGIN;
     this.setupScene();
   }
 
@@ -52,9 +53,8 @@ export class Hapticplot{
 
   // when dataset changes, clears current set of points and grids
   private async clearPointsAndGrids(){
-    console.log('clearing');
     this.getShapes().remove();
-    this.getGrids().remove();
+    this.recenterGrids(DEFAULT_ORIGIN);
   }
 
   /**
@@ -225,7 +225,9 @@ export class Hapticplot{
    */
   private setupControllers() {
     this.getControllers()
-      .on('thumbstickup',  (d, i, g) => this.recenterGrids(g[i]));
+      .on('thumbstickup',  (d, i, g) => this.recenterGrids((g[i] as Entity).object3D.position))
+      .attr('guide', null)
+      .attr('guide', '');
   }
 
   /**
@@ -239,8 +241,8 @@ export class Hapticplot{
    * Updates the position of the graph and datapoints to place the graph's origin at the controllers current position
    * @param controller the controller who's position will determine the new graph origin
    */
-  private recenterGrids(controller) {
-    this.graphOffset = (controller as Entity).object3D.position;
+  private recenterGrids(controllerPosition: Vector3) {
+    this.graphOffset = controllerPosition;
     this.getGrids().each((d, i, g) =>
       (g[i] as Entity).object3D.position.set(this.graphOffset.x, this.graphOffset.y, this.graphOffset.z)
     );
@@ -261,36 +263,34 @@ export class Hapticplot{
    */
   private createGridPlane()
   {
-    const xGrid = document.createElement('a-entity');
-    xGrid.id = 'xGrid';
-    this.container!.appendChild(xGrid);
-    xGrid.object3D.add(new THREE.GridHelper(GRAPH_SIZE, 50, 0xffffff, 0xffffff));
-    d3.select(this.container).select('#xGrid')
-      .attr('class', 'grid')
-      .attr('position', `${this.graphOffset.x} ${this.graphOffset.y} ${this.graphOffset.z}`)
-      .attr('rotation', '0 0 0');
+    if (this.getGrids().empty()){
+      const xGrid = document.createElement('a-entity');
+      xGrid.id = 'xGrid';
+      this.container!.appendChild(xGrid);
+      xGrid.object3D.add(new THREE.GridHelper(GRAPH_SIZE, 50, 0xffffff, 0xffffff));
+      d3.select(this.container).select('#xGrid')
+        .attr('class', 'grid')
+        .attr('position', `${this.graphOffset.x} ${this.graphOffset.y} ${this.graphOffset.z}`)
+        .attr('rotation', '0 0 0');
 
-    const yGrid = document.createElement('a-entity');
-    yGrid.id = 'yGrid';
-    this.container!.appendChild(yGrid);
-    yGrid.object3D.add(new THREE.GridHelper(GRAPH_SIZE, 50, 0xffffff, 0xffffff));
-    d3.select(this.container).select('#yGrid')
-      .attr('class', 'grid')
-      .attr('position', `${this.graphOffset.x} ${this.graphOffset.y} ${this.graphOffset.z}`)
-      .attr('rotation', '0 0 -90');
-    (yGrid as Entity).flushToDOM();
-
-    const zGrid = document.createElement('a-entity');
-    zGrid.id = 'zGrid';
-    this.container!.appendChild(zGrid);
-    zGrid.object3D.add(new THREE.GridHelper(GRAPH_SIZE, 50, 0xffffff, 0xffffff));
-    d3.select(this.container).select('#zGrid')
-      .attr('class', 'grid')
-      .attr('position', `${this.graphOffset.x} ${this.graphOffset.y} ${this.graphOffset.z}`)
-      .attr('rotation', '-90 0 0');
-
-      (xGrid as Entity).flushToDOM();
+      const yGrid = document.createElement('a-entity');
+      yGrid.id = 'yGrid';
+      this.container!.appendChild(yGrid);
+      yGrid.object3D.add(new THREE.GridHelper(GRAPH_SIZE, 50, 0xffffff, 0xffffff));
+      d3.select(this.container).select('#yGrid')
+        .attr('class', 'grid')
+        .attr('position', `${this.graphOffset.x} ${this.graphOffset.y} ${this.graphOffset.z}`)
+        .attr('rotation', '0 0 -90');
       (yGrid as Entity).flushToDOM();
-      (zGrid as Entity).flushToDOM();
+
+      const zGrid = document.createElement('a-entity');
+      zGrid.id = 'zGrid';
+      this.container!.appendChild(zGrid);
+      zGrid.object3D.add(new THREE.GridHelper(GRAPH_SIZE, 50, 0xffffff, 0xffffff));
+      d3.select(this.container).select('#zGrid')
+        .attr('class', 'grid')
+        .attr('position', `${this.graphOffset.x} ${this.graphOffset.y} ${this.graphOffset.z}`)
+        .attr('rotation', '-90 0 0');
+    }    
   }
 }
