@@ -3,7 +3,6 @@ import { Hapticplot } from '../../d3/hapticplot.d3';
 import 'aframe-extras';
 import 'super-hands';
 import 'aframe-haptics-component';
-import { Vector3 } from 'three';
 import { PreferenceService } from '../../services/preference/preference.service';
 import { DataService } from '../../services/data/data.service';
 import { Meta } from '../../datasets/metas/types';
@@ -51,6 +50,15 @@ export class VRAccessibilityComponent implements OnInit, OnChanges, OnDestroy, A
   }
 
   ngOnInit() {
+  }
+
+  ngOnDestroy() {
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+  }
+
+  ngAfterViewInit(){
     this.dataService.dataset$
     .pipe(takeUntil(this.destroy$))
     .subscribe(dataset => {
@@ -59,7 +67,6 @@ export class VRAccessibilityComponent implements OnInit, OnChanges, OnDestroy, A
       switch (dataset.metas[0].type){
         case MetaType.SCATTER_PLOT: {
           this.datasetPref = dataset.metas[0] as VRScatterplotMeta;
-          console.log(dataset.metas[0]);
           break;
         }
         // TODO: write error handling for cases outside of SCATTER_PLOT
@@ -92,17 +99,9 @@ export class VRAccessibilityComponent implements OnInit, OnChanges, OnDestroy, A
     });
   }
 
-  ngOnDestroy() {
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-  }
-
-  ngAfterViewInit(){
-  }
-
   initD3HapticPlot(dataValues: VRScatterPoint[]){
-    this.vrHapticPlot.init(document.querySelector('a-scene'), dataValues);
+    const scene = this.theScene.nativeElement;
+    this.vrHapticPlot.init(scene, dataValues);
   }
 
   get datum() {
