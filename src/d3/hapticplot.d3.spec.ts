@@ -6,6 +6,7 @@ import { Hapticplot } from './hapticplot.d3';
 import { Entity, Scene } from 'aframe';
 import { Vector3 } from 'three';
 import * as helpers from './hapticplot-testhelpers';
+import { VRScatterPoint } from 'src/datasets/queries/vr.query';
 
 const POINT_SIZE = 0.02;
 const DEFAULT_COLOR = '#F0A202';
@@ -16,6 +17,27 @@ describe('VR Haptic Plot', () => {
   let scene: HTMLElement;
   let controller: HTMLElement;
   let hapticplot: Hapticplot;
+  const hapticPlotData0: VRScatterPoint[]  = [];
+  const hapticPlotData1: VRScatterPoint[]  = [
+    {categories: {}, x: 0, y: 10, z: 0}
+  ];
+  const hapticPlotData2: VRScatterPoint[]  = [
+    {categories: {}, x: 0, y: 0, z: 0},
+    {categories: {}, x: 0, y: 10, z: 0},
+    {categories: {}, x: 0, y: 20, z: 0},
+  ];
+  const hapticPlotData3: VRScatterPoint[]  = [
+    {categories: {}, x: 1, y: -4, z: 45},
+    {categories: {}, x: -32.34, y: -5, z: 3},
+    {categories: {}, x: 23, y: -45, z: 3},
+  ];
+  const expPosArray0: Vector3[] = [];
+  const expPosArray1: Vector3[] = [new Vector3(0, 1, -0.35)];
+  const expPosArray2: Vector3[] = [
+    new Vector3(0, 0.30000000000000004, -0.35),
+    new Vector3(0, 1, -0.35),
+    new Vector3(0, 1.7, -0.35)
+  ];
 
   beforeEach( () =>  {
     // Scene and Controller Mock Setup
@@ -33,61 +55,43 @@ describe('VR Haptic Plot', () => {
   });
 
   it('places no points bc 1:1 correspondence with empty data array', () => {
-    hapticplot.init(scene, []);
-    const expectedPosArray = [];
-    const result = helpers.getPositions(scene, shape);
-    expect(result).toEqual(expectedPosArray);
+    const promise = getPositionsAsync(hapticplot, scene, hapticPlotData0, shape);
+    promise.then((positions) => expect(positions).toEqual(expPosArray0));
   });
 
   it('places points for each datum in a one datum array', () => {
-    const dataArray = [10];
-    hapticplot.init(scene, dataArray);
-    const expectedPosArray = [new Vector3(0, 1.7, -0.35)];
-    const result = helpers.getPositions(scene, shape);
-    expect(result).toEqual(expectedPosArray);
+    const promise = getPositionsAsync(hapticplot, scene, hapticPlotData1, shape);
+    promise.then((positions) => expect(positions).toEqual(expPosArray1));
   });
 
   it('places points for each datum in a three datum array', () => {
-    const dataArray = [0, 10, 20];
-    hapticplot.init(scene, [0, 10, 20]);
-    const expectedPosArray = [new Vector3(0, 1, -0.35), new Vector3((0.7 / 3), 1.35, -0.35), new Vector3((0.7 / 3) * 2, 1.7, -0.35)];
-    const result = helpers.getPositions(scene, shape);
-    expect(result).toEqual(expectedPosArray);
+    const promise = getPositionsAsync(hapticplot, scene, hapticPlotData2, shape);
+    promise.then((positions) => expect(positions).toEqual(expPosArray2));
   });
 
   it('places points for each datum and sets the correct color property on the resulting data points', () => {
-    hapticplot.init(scene, [10, 20, 30]);
-    const expectedColorArray = [DEFAULT_COLOR, DEFAULT_COLOR , DEFAULT_COLOR];
-    const result = helpers.getColors(scene, shape);
-    expect(result).toEqual(expectedColorArray);
+    const promise = getColorsAsync(hapticplot, scene, hapticPlotData2, shape);
+    promise.then((colors) => expect(colors).toEqual([DEFAULT_COLOR, DEFAULT_COLOR , DEFAULT_COLOR]));
   });
 
   it('places points for each datum and sets the correct size property on the resulting shape entities', () => {
-    hapticplot.init(scene, [10, 20, 30]);
-    const expectedSizeArray = [POINT_SIZE.toString(), POINT_SIZE.toString(), POINT_SIZE.toString()];
-    const result = helpers.getRadii(scene, shape);
-    expect(result).toEqual(expectedSizeArray);
+    const promise = getRadiiAsync(hapticplot, scene, hapticPlotData2, shape);
+    promise.then((radii) => expect(radii).toEqual([POINT_SIZE.toString(), POINT_SIZE.toString(), POINT_SIZE.toString()]));
   });
 
   it('places points for each datum and sets the correct hoverable property on the resulting shape entities', () => {
-    hapticplot.init(scene, [10, 20, 30]);
-    const expectedAttrArray = ['hoverable', 'hoverable', 'hoverable'];
-    const result = helpers.getHoverable(scene, shape);
-    expect(result).toEqual(expectedAttrArray);
+    const promise = getHoverableAsync(hapticplot, scene, hapticPlotData2, shape);
+    promise.then((component) => expect(component).toEqual(['hoverable', 'hoverable', 'hoverable']));
   });
 
   it('sets the correct color property on shape entities after a hover event', () => {
-    hapticplot.init(scene, [10, 20, 30]);
-    const expectedAttrArray = [HOVER_COLOR, HOVER_COLOR, HOVER_COLOR];
-    const result = helpers.getHoveredColor(scene, shape);
-    expect(result).toEqual(expectedAttrArray);
+    const promise = getHoveredColorAsync(hapticplot, scene, hapticPlotData2, shape);
+    promise.then((color) => expect(color).toEqual([HOVER_COLOR, HOVER_COLOR, HOVER_COLOR]));
   });
 
   it('sets the correct color property on shape entities after a hover-end event', () => {
-    hapticplot.init(scene, [10, 20, 30]);
-    const expectedAttrArray = [HOVER_COLOR, HOVER_COLOR, HOVER_COLOR];
-    const result = helpers.getHoverEndedColor(scene, shape);
-    expect(result).toEqual(expectedAttrArray);
+    const promise = getHoverEndedColorAsync(hapticplot, scene, hapticPlotData2, shape);
+    promise.then((color) => expect(color).toEqual([HOVER_COLOR, HOVER_COLOR, HOVER_COLOR]));
   });
 
   it('initilizes the controller entitys and attaches the haptic component', () => {
@@ -95,13 +99,13 @@ describe('VR Haptic Plot', () => {
   });
 
   it('initilizes data points with sound components', () => {
-    hapticplot.init(scene, [10, 20, 30]);
-    expect(helpers.hasSounds(scene, shape)).toEqual(true);
+    const promise = hasSoundsAsync(hapticplot, scene, hapticPlotData2, shape);
+    promise.then((hasSounds) => expect(hasSounds).toEqual(true));
   });
 
   it('attaches audio triggers to initilized data points', () => {
-    hapticplot.init(scene, [10, 20, 30]);
-    expect(helpers.hasSoundTriggers(scene, shape)).toEqual(true);
+    const promise = hasSoundTriggersAsync(hapticplot, scene, hapticPlotData2, shape);
+    promise.then((hasSoundTriggers) => expect(hasSoundTriggers).toEqual(true));
   });
 
   it('controller has guidance component', () => {
@@ -109,168 +113,243 @@ describe('VR Haptic Plot', () => {
   });
 
   it('guide component initizes currentInterval with value intervalDuration (100ms)', () => {
-    const dataArray = [10];
-    hapticplot.init(scene, dataArray);
-    expect(helpers.getGuidanceInterval(controller)).toEqual(100);
+    const promise = getGuidanceIntervalAsync(hapticplot, scene, hapticPlotData1, controller);
+    promise.then((interval) => expect(interval).toEqual(100));
   });
 
   it('when controller is near a datapoint, guidance component has haptic intensity between 0 and 1', () => {
-    const dataArray = [10];
-    hapticplot.init(scene, dataArray);
-    expect(helpers.getGuidanceHapticIntensity(controller) > 0 && helpers.getGuidanceHapticIntensity(controller) < 1).toEqual(true);
+    const promise = getGuidanceHapticIntensityAsync(hapticplot, scene, hapticPlotData1, controller);
+    promise.then((intensity) => expect(intensity > 0 && intensity < 1).toEqual(true));
   });
 
   it('when controller is in contact with datapoint, guidance component has haptic intensity 1 in front half of interval', () => {
-    const dataArray = [10];
-    hapticplot.init(scene, dataArray);
-    expect(helpers.getIntervalIntensityFront(controller)).toEqual(1);
+    const promise = getIntervalIntensityFrontAsync(hapticplot, scene, hapticPlotData1, controller);
+    promise.then((interval) => expect(interval).toEqual(1));
   });
 
   it('when controller is in contact with datapoint, guidance component has haptic intensity 0 in back half of interval', () => {
-    const dataArray = [10];
-    hapticplot.init(scene, dataArray);
-    expect(helpers.getIntervalIntensityBack(controller)).toEqual(0);
+    const promise = getIntervalIntensityBackAsync(hapticplot, scene, hapticPlotData1, controller);
+    promise.then((interval) => expect(interval).toEqual(0));
   });
 
   it('when haptic guidance interval elapses, the current interval is reset to 100ms', () => {
-    const dataArray = [10];
-    hapticplot.init(scene, dataArray);
-    expect(helpers.getIntervalReset(controller)).toEqual(100);
+    const promise = getIntervalResetAsync(hapticplot, scene, hapticPlotData1, controller);
+    promise.then((interval) => expect(interval).toEqual(100));
   });
 
   it('when the X or A button are pressed before the controller has been in contact with a datapoint, the datapoints sound component is unchanged', () => {
-    const dataArray = [10];
-    hapticplot.init(scene, dataArray);
-    expect(helpers.hasNoButtonTriggersBeforeHover(controller, scene, shape)).toEqual(true);
+    const promise = hasNoButtonTriggersBeforeHoverAsync(hapticplot, scene, hapticPlotData1, controller, shape);
+    promise.then((hasNoButton) => expect(hasNoButton).toEqual(true));
   });
 
   it('when the X or A button are pressed while the controller is no longer in contact with a datapoint, after making contact, the datapoints sound component is unchanged', () => {
-    const dataArray = [10];
-    hapticplot.init(scene, dataArray);
-    expect(helpers.hasNoButtonTriggersAfterHover(controller, scene, shape)).toEqual(true);
+    const promise = hasNoButtonTriggersAfterHoverAsync(hapticplot, scene, hapticPlotData1, controller, shape);
+    promise.then((hasButton) => expect(hasButton).toEqual(true));
   });
 
   it('when the X or A button are pressed while the controller is in contact with a datapoint, the datapoints sound component is set to the appropriate sequence of audio sources, then resets to the original source', () => {
-    const dataArray = [10];
-    hapticplot.init(scene, dataArray);
-    expect(helpers.getAudioSrcSequence(controller, scene, shape)).toEqual([
+    const promise = getAudioSrcSequenceAsync(hapticplot, scene, hapticPlotData1, controller, shape);
+    promise.then((sequence) => expect(sequence).toEqual([
       'url(assets/marimbaNotes/14.mp3)',
       'url(assets/tts/ttsX.mp3)',
       'url(assets/tts/tts0.mp3)',
       'url(assets/tts/ttsY.mp3)',
+      'url(assets/tts/tts1.mp3)',
       'url(assets/tts/tts0.mp3)',
-      'url(assets/tts/tts..mp3)',
-      'url(assets/tts/tts7.mp3)',
       'url(assets/tts/ttsZ.mp3)',
       'url(assets/tts/tts0.mp3)',
-      'url(assets/marimbaNotes/14.mp3)']
-    );
+      'url(assets/marimbaNotes/14.mp3)'
+    ]));
   });
 
   it('audio source sequencing is handled properly for a single point in a scene with multiple points', () => {
-    const dataArray = [10, 20, 30];
-    hapticplot.init(scene, dataArray);
-    expect(helpers.getAudioSrcSequence(controller, scene, shape)).toEqual([
+    const promise = getAudioSrcSequenceAsync(hapticplot, scene, hapticPlotData2, controller, shape);
+    promise.then((sequence) => expect(sequence).toEqual([
       'url(assets/marimbaNotes/0.mp3)',
       'url(assets/tts/ttsX.mp3)',
       'url(assets/tts/tts0.mp3)',
       'url(assets/tts/ttsY.mp3)',
       'url(assets/tts/tts0.mp3)',
-      'url(assets/tts/tts..mp3)',
-      'url(assets/tts/tts2.mp3)',
-      'url(assets/tts/tts3.mp3)',
       'url(assets/tts/ttsZ.mp3)',
       'url(assets/tts/tts0.mp3)',
-      'url(assets/marimbaNotes/0.mp3)']
-    );
+      'url(assets/marimbaNotes/0.mp3)'
+    ]));
   });
 
+
   it('audio source sequencing handled properly for a single point in a scene with multiple points and negative position values', () => {
-    const dataArray = [-50, 20, 100];
-    hapticplot.init(scene, dataArray);
-    expect(helpers.getAudioSrcSequence(controller, scene, shape)).toEqual([
-      'url(assets/marimbaNotes/0.mp3)',
+    const promise = getAudioSrcSequenceAsync(hapticplot, scene, hapticPlotData3, controller, shape);
+    promise.then((sequence) => expect(sequence).toEqual([
+      'url(assets/marimbaNotes/27.mp3)',
       'url(assets/tts/ttsX.mp3)',
-      'url(assets/tts/tts0.mp3)',
+      'url(assets/tts/tts1.mp3)',
       'url(assets/tts/ttsY.mp3)',
       'url(assets/tts/tts-.mp3)',
-      'url(assets/tts/tts0.mp3)',
-      'url(assets/tts/tts..mp3)',
-      'url(assets/tts/tts3.mp3)',
-      'url(assets/tts/tts5.mp3)',
+      'url(assets/tts/tts4.mp3)',
       'url(assets/tts/ttsZ.mp3)',
-      'url(assets/tts/tts0.mp3)',
-      'url(assets/marimbaNotes/0.mp3)']
-    );
+      'url(assets/tts/tts4.mp3)',
+      'url(assets/tts/tts5.mp3)',
+      'url(assets/marimbaNotes/27.mp3)'
+    ]));
   });
 
   it('Data point positions list remains empty after a recentered at position (100, 100, 100) in a scene with no data', () => {
-    const dataArray = [];
-    hapticplot.init(scene, dataArray);
-    expect(helpers.getRecenteredPointPositions(controller, scene, shape)).toEqual([
-      [],
-      []
-    ]);
+    const promise = getRecenteredPointPositionsAsync(hapticplot, scene, hapticPlotData0, controller, shape);
+    promise.then((positions) => expect(positions).toEqual([
+        [],
+        []
+      ]));
   });
 
   it('A single points position is recentered correctly after a thumbstickup event at position (100, 100, 100)', () => {
-    const dataArray = [14];
-    hapticplot.init(scene, dataArray);
-    expect(helpers.getRecenteredPointPositions(controller, scene, shape)).toEqual([
-      [new Vector3(0, 1.7, -0.35)],
-      [new Vector3(100, 100.7, 100)]
-    ]);
+    const promise = getRecenteredPointPositionsAsync(hapticplot, scene, hapticPlotData1, controller, shape);
+    promise.then((positions) => expect(positions).toEqual([
+        [new Vector3(0, 1, -0.35)],
+        [new Vector3(100, 100, 100)]
+      ]));
   });
 
   it('Multiple data points positions are recentered correctly after a thumbstickup event at position (100, 100, 100)', () => {
-    const dataArray = [-50, 20, 100];
-    hapticplot.init(scene, dataArray);
-    expect(helpers.getRecenteredPointPositions(controller, scene, shape)).toEqual([
-      [
-        new Vector3(0, 0.65, -0.35),
-        new Vector3(0.2333333333333333,  1.14, -0.35),
-        new Vector3(0.4666666666666666,  1.7, -0.35)
-      ],
-      [
-        new Vector3(100, 99.65, 100),
-        new Vector3(100.23333333333333, 100.14, 100),
-        new Vector3(100.46666666666667, 100.7, 100)
-      ]
-    ]);
+    const promise = getRecenteredPointPositionsAsync(hapticplot, scene, hapticPlotData2, controller, shape);
+    promise.then((positions) => expect(positions).toEqual([
+        [
+          new Vector3(0, 0.30000000000000004, -0.35),
+          new Vector3(0, 1, -0.35),
+          new Vector3(0, 1.7, -0.35)
+        ],
+        [
+          new Vector3(100, 99.3, 100),
+          new Vector3(100, 100, 100),
+          new Vector3(100, 100.7, 100)
+        ]
+      ]));
   });
+
 
   it('Grid positions update properly after a recentered at position (100, 100, 100) in a scene with no data', () => {
-    const dataArray = [];
-    hapticplot.init(scene, dataArray);
-    expect(helpers.getRecenteredGridPositions(controller, scene, shape)).toEqual([
-      [
-        new Vector3(0, 0, 0),
-        new Vector3(0, 0, 0),
-        new Vector3(0,  0, 0)
-      ],
-      [
-        new Vector3(100, 100, 100),
-        new Vector3(100, 100, 100),
-        new Vector3(100, 100, 100)
-      ]
-    ]);
+    const promise = getRecenteredGridPositionsAsync(hapticplot, scene, hapticPlotData0, controller);
+    promise.then((positions) => expect(positions).toEqual([
+        [
+          new Vector3(0, 0, 0),
+          new Vector3(0, 0, 0),
+          new Vector3(0,  0, 0)
+        ],
+        [
+          new Vector3(100, 100, 100),
+          new Vector3(100, 100, 100),
+          new Vector3(100, 100, 100)
+        ]
+      ]));
   });
 
-  it('Grid positions are recentered correctly after a thumbstickup event at position (100, 100, 100)', () => {
-    const dataArray = [-50, 20, 100];
-    hapticplot.init(scene, dataArray);
-    expect(helpers.getRecenteredGridPositions(controller, scene, shape)).toEqual([
-      [
-        new Vector3(0, 0, 0),
-        new Vector3(0, 0, 0),
-        new Vector3(0,  0, 0)
-      ],
-      [
-        new Vector3(100, 100, 100),
-        new Vector3(100, 100, 100),
-        new Vector3(100, 100, 100)
-      ]
-    ]);
+  it('Grid positions are recentered correctly after a thumbstickup event at position (100, 100, 100) in a scene with data', () => {
+    const promise = getRecenteredGridPositionsAsync(hapticplot, scene, hapticPlotData2, controller);
+    promise.then((positions) => expect(positions).toEqual([
+        [
+          new Vector3(0, 0, 0),
+          new Vector3(0, 0, 0),
+          new Vector3(0,  0, 0)
+        ],
+        [
+          new Vector3(100, 100, 100),
+          new Vector3(100, 100, 100),
+          new Vector3(100, 100, 100)
+        ]
+      ]));
   });
-
 });
+
+async function initAsync(hapticplot, scene, hapticPlotData){
+  hapticplot.init(scene, hapticPlotData);
+}
+
+async function getPositionsAsync(hapticplot, scene, hapticPlotData, shape): Promise<Vector3[]>{
+  await initAsync(hapticplot, scene, hapticPlotData);
+  return helpers.getPositions(scene, shape);
+}
+
+async function getColorsAsync(hapticplot, scene, hapticPlotData, shape): Promise<(string | null)[]>{
+  await initAsync(hapticplot, scene, hapticPlotData);
+  return helpers.getColors(scene, shape);
+}
+
+async function getRadiiAsync(hapticplot, scene, hapticPlotData, shape): Promise<(string | null)[]>{
+  await initAsync(hapticplot, scene, hapticPlotData);
+  return helpers.getRadii(scene, shape);
+}
+
+async function getHoverableAsync(hapticplot, scene, hapticPlotData, shape): Promise<(string | undefined)[]>{
+  await initAsync(hapticplot, scene, hapticPlotData);
+  return helpers.getHoverable(scene, shape);
+}
+
+async function getHoveredColorAsync(hapticplot, scene, hapticPlotData, shape): Promise<(string | null)[]>{
+  await initAsync(hapticplot, scene, hapticPlotData);
+  return helpers.getHoveredColor(scene, shape);
+}
+
+async function getHoverEndedColorAsync(hapticplot, scene, hapticPlotData, shape): Promise<(string | null)[]>{
+  await initAsync(hapticplot, scene, hapticPlotData);
+  return helpers.getHoverEndedColor(scene, shape);
+}
+
+async function hasSoundsAsync(hapticplot, scene, hapticPlotData, shape): Promise<boolean>{
+  await initAsync(hapticplot, scene, hapticPlotData);
+  return helpers.hasSounds(scene, shape);
+}
+
+async function hasSoundTriggersAsync(hapticplot, scene, hapticPlotData, shape): Promise<boolean>{
+  await initAsync(hapticplot, scene, hapticPlotData);
+  return helpers.hasSoundTriggers(scene, shape);
+}
+
+async function getGuidanceIntervalAsync(hapticplot, scene, hapticPlotData, controller): Promise<number>{
+  await initAsync(hapticplot, scene, hapticPlotData);
+  return helpers.getGuidanceInterval(controller);
+}
+
+async function getGuidanceHapticIntensityAsync(hapticplot, scene, hapticPlotData, controller): Promise<number>{
+  await initAsync(hapticplot, scene, hapticPlotData);
+  return helpers.getGuidanceHapticIntensity(controller);
+}
+
+async function getIntervalIntensityFrontAsync(hapticplot, scene, hapticPlotData, controller): Promise<number>{
+  await initAsync(hapticplot, scene, hapticPlotData);
+  return helpers.getIntervalIntensityFront(controller);
+}
+
+async function getIntervalIntensityBackAsync(hapticplot, scene, hapticPlotData, controller): Promise<number>{
+  await initAsync(hapticplot, scene, hapticPlotData);
+  return helpers.getIntervalIntensityBack(controller);
+}
+
+async function getIntervalResetAsync(hapticplot, scene, hapticPlotData, controller): Promise<number>{
+  await initAsync(hapticplot, scene, hapticPlotData);
+  return helpers.getIntervalReset(controller);
+}
+
+async function hasNoButtonTriggersBeforeHoverAsync(hapticplot, scene, hapticPlotData, controller, shape): Promise<boolean>{
+  await initAsync(hapticplot, scene, hapticPlotData);
+  return helpers.hasNoButtonTriggersBeforeHover(controller, scene, shape);
+}
+
+async function hasNoButtonTriggersAfterHoverAsync(hapticplot, scene, hapticPlotData, controller, shape): Promise<boolean>{
+  await initAsync(hapticplot, scene, hapticPlotData);
+  return helpers.hasNoButtonTriggersAfterHover(controller, scene, shape);
+}
+
+async function getAudioSrcSequenceAsync(hapticplot, scene, hapticPlotData, controller, shape): Promise<string[]>{
+  await initAsync(hapticplot, scene, hapticPlotData);
+  return helpers.getAudioSrcSequence(controller, scene, shape);
+}
+
+async function getRecenteredPointPositionsAsync(hapticplot, scene, hapticPlotData, controller, shape): Promise<Vector3[][]>{
+  await initAsync(hapticplot, scene, hapticPlotData);
+  return helpers.getRecenteredPointPositions(controller, scene, shape);
+}
+
+async function getRecenteredGridPositionsAsync(hapticplot, scene, hapticPlotData, controller): Promise<Vector3[][]>{
+  await initAsync(hapticplot, scene, hapticPlotData);
+  return helpers.getRecenteredGridPositions(controller, scene);
+}
+
