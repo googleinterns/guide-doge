@@ -93,7 +93,7 @@ export function getGuidanceInterval(controller: HTMLElement): number{
 // Returns haptic intensity when the controller is near a data point
 export function getGuidanceHapticIntensity(controller: HTMLElement): number{
   const controllerEntity = controller as Entity;
-  controllerEntity.object3D.position.set(0, 1.55, -0.35);
+  controllerEntity.object3D.position.set(0, 1.2, -0.35);
   controllerEntity.components.guide.init();
   controllerEntity.components.guide.tick!(1, 1);
   return (controllerEntity.components.guide as Guidance).state.intensity;
@@ -102,7 +102,7 @@ export function getGuidanceHapticIntensity(controller: HTMLElement): number{
 // Returns haptic intensity during the first half of the vibration interval when the controller is in contact with a data point
 export function getIntervalIntensityFront(controller: HTMLElement): number{
   const controllerEntity = controller as Entity;
-  controllerEntity.object3D.position.set(0, 1.7, -0.35);
+  controllerEntity.object3D.position.set(0, 1, -0.35);
   controllerEntity.components.guide.init();
   controllerEntity.components.guide.tick!(1, 1);
   return (controllerEntity.components.guide as Guidance).state.intensity;
@@ -111,7 +111,7 @@ export function getIntervalIntensityFront(controller: HTMLElement): number{
 // Returns haptic intensity during the second half of the vibration interval when the controller is in contact with a data point
 export function getIntervalIntensityBack(controller: HTMLElement): number{
   const controllerEntity = controller as Entity;
-  controllerEntity.object3D.position.set(0, 1.7, -0.35);
+  controllerEntity.object3D.position.set(0, 1, -0.35);
   controllerEntity.components.guide.init();
   controllerEntity.components.guide.tick!(65, 65);
   return (controllerEntity.components.guide as Guidance).state.intensity;
@@ -120,7 +120,7 @@ export function getIntervalIntensityBack(controller: HTMLElement): number{
 // Returns the current inteval value after a tick of duration 100ms
 export function getIntervalReset(controller: HTMLElement): number{
   const controllerEntity = controller as Entity;
-  controllerEntity.object3D.position.set(0, 1.7, -0.35);
+  controllerEntity.object3D.position.set(0, 1, -0.35);
   controllerEntity.components.guide.init();
   controllerEntity.components.guide.tick!(100, 100);
   return (controllerEntity.components.guide as Guidance).state.currInterval;
@@ -197,7 +197,7 @@ export function getRecenteredPointPositions(controller: HTMLElement, scene: HTML
 }
 
 // Returns the postions of the grids in the scene before and after a recenter event is triggered at position (100,100,100)
-export function getRecenteredGridPositions(controller: HTMLElement, scene: HTMLElement, shape: string): Vector3[][]{
+export function getRecenteredGridPositions(controller: HTMLElement, scene: HTMLElement): Vector3[][]{
   const controllerEntity = controller as Entity;
   controllerEntity.object3D.position.set(100, 100, 100);
   const gridPositionsBefore = getPositions(scene, '.grid');

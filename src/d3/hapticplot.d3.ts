@@ -77,26 +77,26 @@ export class Hapticplot{
   private setupScales() {
     this.xScale = d3.scaleLinear()
       .domain([
-        Math.min.apply(Math, this.data.map(function(datum) { return datum.x; })),
-        Math.max.apply(Math, this.data.map(function(datum) { return datum.x; }))])
+        Math.min.apply(Math, this.data.map((datum) => datum.x)),
+        Math.max.apply(Math, this.data.map((datum) => datum.x))])
       .range([- GRAPH_SIZE / 2, GRAPH_SIZE / 2]);
 
     this.yScale = d3.scaleLinear()
       .domain([
-        Math.min.apply(Math, this.data.map(function(datum) { return datum.y; })),
-        Math.max.apply(Math, this.data.map(function(datum) { return datum.y; }))])
+        Math.min.apply(Math, this.data.map((datum) => datum.y)),
+        Math.max.apply(Math, this.data.map((datum) => datum.y))])
       .range([- GRAPH_SIZE / 2, GRAPH_SIZE / 2]);
 
     this.zScale = d3.scaleLinear()
       .domain([
-        Math.min.apply(Math, this.data.map(function(datum) { return datum.z; })),
-        Math.max.apply(Math, this.data.map(function(datum) { return datum.z; }))])
+        Math.min.apply(Math, this.data.map((datum) => datum.z)),
+        Math.max.apply(Math, this.data.map((datum) => datum.z))])
       .range([- GRAPH_SIZE / 2, GRAPH_SIZE / 2]);
 
     this.audioScale = d3.scaleLinear()
       .domain([
-        Math.min.apply(Math, this.data.map(function(datum) { return datum.y; })),
-        Math.max.apply(Math, this.data.map(function(datum) { return datum.y; }))])
+        Math.min.apply(Math, this.data.map((datum) => datum.y)),
+        Math.max.apply(Math, this.data.map((datum) => datum.y))])
       .range([0, 27]);
   }
 
@@ -291,6 +291,6 @@ export class Hapticplot{
         .attr('class', 'grid')
         .attr('position', `${this.graphOffset.x} ${this.graphOffset.y} ${this.graphOffset.z}`)
         .attr('rotation', '-90 0 0');
-    }    
+    }
   }
 }
