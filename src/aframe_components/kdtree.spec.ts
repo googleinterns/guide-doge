@@ -27,13 +27,6 @@ describe('haptic plot with kd tree selection', () => {
     {categories: {}, x: -32.34, y: -5, z: 3},
     {categories: {}, x: 23, y: -45, z: 3},
   ];
-  const expPosArray0: Vector3[] = [];
-  const expPosArray1: Vector3[] = [new Vector3(0, 1, -0.35)];
-  const expPosArray2: Vector3[] = [
-    new Vector3(0, 0.30000000000000004, -0.35),
-    new Vector3(0, 1, -0.35),
-    new Vector3(0, 1.7, -0.35)
-  ];
 
   beforeEach( () =>  {
     // Scene and Controller Mock Setup
@@ -102,22 +95,22 @@ describe('haptic plot with kd tree selection', () => {
     promise.then((distance) => expect(distance).toEqual(null));
   });
 
-  it('correctly identifies the nearest data in a single point scene', () => {
+  it('correctly identifies the distance to the nearest datapoint in a single point scene', () => {
     const promise =  helpers.getDistToNearestPointAsync(hapticplot, scene, hapticPlotData1, controller, shape);
     promise.then((distance) => expect(distance).toEqual(1.0594810050208545));
   });
 
-  it('correctly identifies the nearest data point when its positon is the same as the controllers', () => {
+  it('correctly identifies the distance to the nearest datapoint when its positon is the same as the controllers', () => {
     const promise =  helpers.getDistToTouchingPointAsync(hapticplot, scene, hapticPlotData1, controller, shape);
     promise.then((distance) => expect(distance).toEqual(0));
   });
 
-  it('correctly identifies the nearest data point when that data point is the root of the kdtree', () => {
+  it('correctly identifies the distance to the nearest datapoint when that data point is the root of the kdtree', () => {
     const promise =  helpers.getDistToNearestPointAsync(hapticplot, scene, hapticPlotData1, controller, shape);
     promise.then((distance) => expect(distance).toEqual(1.0594810050208545));
   });
 
-  it('moves the controllers to two different position, then correctly identifies the nearest data point in multi point scene', () => {
+  it('correctly identifies the distance to the nearest datapoint in multi point scene after controller movement', () => {
     const promise =  helpers.getDistToNearestPointAfterMovementAsync(hapticplot, scene, hapticPlotData2, controller, shape);
     promise.then((distance) => expect(distance).toEqual(100));
   });
