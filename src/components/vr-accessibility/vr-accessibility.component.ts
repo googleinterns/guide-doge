@@ -28,7 +28,7 @@ export class VRAccessibilityComponent implements OnInit, OnChanges, OnDestroy, A
   @Input() endDate = new Date();
   @Input() startDate = new Date(this.endDate.getTime() - this.TIME_MAX * DAY);
   datasetPref: VRScatterplotMeta | null;
-  private vrHapticPlot: Hapticplot = new Hapticplot('a-sphere');
+  vrHapticPlot: Hapticplot = new Hapticplot('a-sphere');
   dataset$ = this.preferenceService.dataset$;
   DATA_PREFERENCE = DATA_PREFERENCE;
   componentMetas: Meta[];
@@ -86,22 +86,19 @@ export class VRAccessibilityComponent implements OnInit, OnChanges, OnDestroy, A
           break;
         }
       }
-      let dataValues: VRScatterPoint[] = [];
       if (this.datasetPref){
         this.queryOptions$
         .pipe(takeUntil(this.destroy$))
         .pipe(map(queryOption => {
           return this.datasetPref!.queryData(queryOption)[0];
         })).subscribe(this.datum$);
-        dataValues = this.datum$.value.points.slice(0, this.datum$.value.points.length * 3 / 8);
       }
-      this.initD3HapticPlot(dataValues);
+      this.initD3HapticPlot();
     });
   }
 
-  initD3HapticPlot(dataValues: VRScatterPoint[]){
-    const scene = this.theScene.nativeElement;
-    this.vrHapticPlot.init(scene, dataValues);
+  initD3HapticPlot(){
+    this.vrHapticPlot.init(document.querySelector('a-scene'), this.datum$.value.points.slice(0, this.datum$.value.points.length * 3 / 8));
   }
 
   get datum() {
