@@ -50,12 +50,12 @@ describe('haptic plot with kd tree selection', () => {
   });
 
   it('kdtree for an empty set of data points is null', () => {
-    const promise = get3DTreeAsync(hapticplot, scene, hapticPlotData0, shape);
+    const promise =  helpers.get3DTreeAsync(hapticplot, scene, hapticPlotData0, shape);
     promise.then((tree) => expect(tree).toEqual(null));
   });
 
   it('builds a correct k-d tree for a scene with a single datapoints', () => {
-    const promise = get3DTreeAsync(hapticplot, scene, hapticPlotData1, shape);
+    const promise =  helpers.get3DTreeAsync(hapticplot, scene, hapticPlotData1, shape);
     promise.then((tree) => expect(tree).toEqual({
       position: new Vector3(0, 1, -0.35),
       left: null,
@@ -64,7 +64,7 @@ describe('haptic plot with kd tree selection', () => {
   });
 
   it('builds a correct k-d tree of multiple datapoints', () => {
-    const promise = get3DTreeAsync(hapticplot, scene, hapticPlotData2, shape);
+    const promise =  helpers.get3DTreeAsync(hapticplot, scene, hapticPlotData2, shape);
     promise.then((tree) => expect(tree).toEqual({
       position: new Vector3(0, 1, -0.35),
       left: {
@@ -81,7 +81,7 @@ describe('haptic plot with kd tree selection', () => {
   });
 
   it('builds a correct k-d tree of negative and repeating values', () => {
-    const promise = get3DTreeAsync(hapticplot, scene, hapticPlotData3, shape);
+    const promise =  helpers.get3DTreeAsync(hapticplot, scene, hapticPlotData3, shape);
     promise.then((tree) => expect(tree).toEqual({
       position: new Vector3(0.14344054933140593, 1.7, 0.35),
       left: {
@@ -97,53 +97,30 @@ describe('haptic plot with kd tree selection', () => {
     }));
   });
 
-
   it('distance to closest point is null when no points are in the scene', () => {
-    const promise = getDistToNearestPointAsync(hapticplot, scene, hapticPlotData0, controller, shape);
+    const promise =  helpers.getDistToNearestPointAsync(hapticplot, scene, hapticPlotData0, controller, shape);
     promise.then((distance) => expect(distance).toEqual(null));
   });
 
   it('correctly identifies the nearest data in a single point scene', () => {
-    const promise = getDistToNearestPointAsync(hapticplot, scene, hapticPlotData1, controller, shape);
+    const promise =  helpers.getDistToNearestPointAsync(hapticplot, scene, hapticPlotData1, controller, shape);
     promise.then((distance) => expect(distance).toEqual(1.0594810050208545));
   });
 
   it('correctly identifies the nearest data point when its positon is the same as the controllers', () => {
-    const promise = getDistToTouchingPointAsync(hapticplot, scene, hapticPlotData1, controller, shape);
+    const promise =  helpers.getDistToTouchingPointAsync(hapticplot, scene, hapticPlotData1, controller, shape);
     promise.then((distance) => expect(distance).toEqual(0));
   });
 
   it('correctly identifies the nearest data point when that data point is the root of the kdtree', () => {
-    const promise = getDistToNearestPointAsync(hapticplot, scene, hapticPlotData1, controller, shape);
+    const promise =  helpers.getDistToNearestPointAsync(hapticplot, scene, hapticPlotData1, controller, shape);
     promise.then((distance) => expect(distance).toEqual(1.0594810050208545));
   });
 
   it('moves the controllers to two different position, then correctly identifies the nearest data point in multi point scene', () => {
-    const promise = getDistToNearestPointAfterMovementAsync(hapticplot, scene, hapticPlotData2, controller, shape);
+    const promise =  helpers.getDistToNearestPointAfterMovementAsync(hapticplot, scene, hapticPlotData2, controller, shape);
     promise.then((distance) => expect(distance).toEqual(100));
   });
 });
 
-async function initAsync(hapticplot, scene, hapticPlotData){
-  hapticplot.init(scene, hapticPlotData);
-}
-
-async function get3DTreeAsync(hapticplot, scene, hapticPlotData, shape): Promise<(object | null)>{
-  await initAsync(hapticplot, scene, hapticPlotData);
-  return helpers.get3DTree(scene, shape);
-}
-
-async function getDistToNearestPointAsync(hapticplot, scene, hapticPlotData, controller, shape): Promise<(number | null)>{
-  await initAsync(hapticplot, scene, hapticPlotData);
-  return helpers.getDistToNearestPoint(controller, scene, shape, new Vector3(0, 0, 0));
-}
-
-async function getDistToTouchingPointAsync(hapticplot, scene, hapticPlotData, controller, shape): Promise<(number | null)>{
-  await initAsync(hapticplot, scene, hapticPlotData);
-  return helpers.getDistToNearestPoint(controller, scene, shape, new Vector3(0, 1, -0.35));
-}
-async function getDistToNearestPointAfterMovementAsync(hapticplot, scene, hapticPlotData, controller, shape): Promise<(number | null)>{
-  await initAsync(hapticplot, scene, hapticPlotData);
-  return helpers.getDistToNearestPointAfterMovement(controller, scene, shape);
-}
 
