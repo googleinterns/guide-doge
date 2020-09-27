@@ -11,7 +11,6 @@ const HOVER_COLOR = 'red';
 const SKY_COLOR = '#4d4d4d';
 const ASSETS_FOLDER = 'assets/';
 const GRAPH_SIZE = 1.4;
-const GRAPH_OFFSET = new Vector3(0, 1, -0.35);
 
 interface Sound extends Component {
   isPlaying: boolean;
@@ -25,6 +24,7 @@ export class Hapticplot{
     private container: HTMLElement | null = null;
     private graphScale: d3.ScaleLinear<number, number>;
     private audioScale: d3.ScaleLinear<number, number>;
+    private graphOffset: Vector3;
 
   constructor(shape: string) {
     this.shape = shape;
@@ -33,6 +33,7 @@ export class Hapticplot{
   init(container: HTMLElement | null, data: number[]){
     this.data = data;
     this.container = container;
+    this.graphOffset = new Vector3(0, 1, -0.35);
     // Creates a linear mapping from this.data to graph positions, haptic intensities, and audio selection
     this.graphScale = d3.scaleLinear()
       .domain([0, d3.max(this.data) as number])  // max of dataset
@@ -41,15 +42,9 @@ export class Hapticplot{
       .domain([d3.min(this.data) as number, d3.max(this.data) as number])  // max of dataset
       .range([0, 27]);
     this.setupPoints(DEFAULT_COLOR, HOVER_COLOR, POINT_SIZE);
+    this.setupControllers();
     this.createSky();
     this.createGridPlane();
-  }
-
-  /**
-   * Selects all entities of type datapoint
-   */
-  private getShapes(){
-    return d3.select(this.container).selectAll('datapoint');
   }
 
   /**
@@ -64,7 +59,7 @@ export class Hapticplot{
       // Adds points of type this.shape to the scene
       //  - "enter" identifies any DOM elements to be added when # array
       //    elements & # DOM elements don't match
-      .data(this.data).enter().append(this.shape).classed('datapoint', true)
+      .data(this.data).enter().append(this.shape)
       // Adds given color property to all points
       .attr('color', defaultColor)
       // Sets points radius property
@@ -82,15 +77,22 @@ export class Hapticplot{
   }
 
   /**
+   * Selects all entities of class datapoint
+   */
+  private getShapes(){
+    return d3.select(this.container).selectAll(this.shape);
+  }
+
+  /**
    * Sets a world space position for each point, based on ingested data
    * @param data Ingested Data
    * @param index Current index in data array
    * @param point The point whos position is being set
    */
-  private setPosition(datum: number, index: number, point: BaseType){
-    const x = GRAPH_OFFSET.x + ((GRAPH_SIZE / 2) / this.data.length) * index;
-    const y = GRAPH_OFFSET.y + this.graphScale(datum);
-    const z = GRAPH_OFFSET.z;
+  private setPosition(datum, index, point){
+    const x = this.graphOffset.x + ((GRAPH_SIZE / 2) / this.data.length) * index;
+    const y = this.graphOffset.y + this.graphScale(datum);
+    const z = this.graphOffset.z;
     (point as Entity).object3D.position.set(x, y, z);
   }
 
@@ -132,9 +134,9 @@ export class Hapticplot{
   private speakPosition(datum: number, point: BaseType){
     const position = ((point as Entity).object3D.position as Vector3);
     const posString =
-      `X${Math.round((position.x - GRAPH_OFFSET.x) * 100) / 100}` +
-      `Y${Math.round((position.y - GRAPH_OFFSET.y) * 100) / 100}` +
-      `Z${Math.round((position.z - GRAPH_OFFSET.z) * 100) / 100}`;
+      `X${Math.round((position.x - this.graphOffset.x) * 100) / 100}` +
+      `Y${Math.round((position.y - this.graphOffset.y) * 100) / 100}` +
+      `Z${Math.round((position.z - this.graphOffset.z) * 100) / 100}`;
     this.speakStringRec(datum, posString, 0, point);
   }
 
@@ -174,6 +176,33 @@ export class Hapticplot{
   }
 
   /**
+   * Adds a listener to the each controller which recenters the grids and data points on thumbstickup events
+   */
+  private setupControllers() {
+    this.getControllers()
+      .on('thumbstickup',  (d, i, g) => this.recenterGrids(g[i]));
+  }
+
+   /**
+    * Selects all entities of class controller
+    */
+  private getControllers(){
+    return d3.select(this.container).selectAll('.controller');
+  }
+
+  /**
+   * Updates the position of the graph and datapoints to place the graph's origin at the controllers current position
+   * @param controller the controller who's position will determine the new graph origin
+   */
+  private recenterGrids(controller) {
+    this.graphOffset = (controller as Entity).object3D.position;
+    d3.select(this.container).selectAll('.grid').each((d, i, g) =>
+      (g[i] as Entity).object3D.position.set(this.graphOffset.x, this.graphOffset.y, this.graphOffset.z)
+    );
+    this.getShapes().each((d, i , g) => this.setPosition(d, i, g[i]));
+  }
+
+  /**
    * Creates and adds a sky box to the scene
    */
   private createSky(){
@@ -192,7 +221,8 @@ export class Hapticplot{
     this.container!.appendChild(xGrid);
     xGrid.object3D.add(new THREE.GridHelper(GRAPH_SIZE, 50, 0xffffff, 0xffffff));
     d3.select(this.container).select('#xGrid')
-      .attr('position', `${GRAPH_OFFSET.x} ${GRAPH_OFFSET.y} ${GRAPH_OFFSET.z}`)
+      .attr('class', 'grid')
+      .attr('position', `${this.graphOffset.x} ${this.graphOffset.y} ${this.graphOffset.z}`)
       .attr('rotation', '0 0 0');
 
     const yGrid = document.createElement('a-entity');
@@ -200,7 +230,8 @@ export class Hapticplot{
     this.container!.appendChild(yGrid);
     yGrid.object3D.add(new THREE.GridHelper(GRAPH_SIZE, 50, 0xffffff, 0xffffff));
     d3.select(this.container).select('#yGrid')
-      .attr('position', `${GRAPH_OFFSET.x} ${GRAPH_OFFSET.y} ${GRAPH_OFFSET.z}`)
+      .attr('class', 'grid')
+      .attr('position', `${this.graphOffset.x} ${this.graphOffset.y} ${this.graphOffset.z}`)
       .attr('rotation', '0 0 -90');
 
     const zGrid = document.createElement('a-entity');
@@ -208,7 +239,8 @@ export class Hapticplot{
     this.container!.appendChild(zGrid);
     zGrid.object3D.add(new THREE.GridHelper(GRAPH_SIZE, 50, 0xffffff, 0xffffff));
     d3.select(this.container).select('#zGrid')
-      .attr('position', `${GRAPH_OFFSET.x} ${GRAPH_OFFSET.y} ${GRAPH_OFFSET.z}`)
+      .attr('class', 'grid')
+      .attr('position', `${this.graphOffset.x} ${this.graphOffset.y} ${this.graphOffset.z}`)
       .attr('rotation', '-90 0 0');
   }
 }
