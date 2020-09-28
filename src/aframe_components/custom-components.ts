@@ -15,6 +15,7 @@ interface State {
   currDistance: number;
   currDistanceScaled: number;
   intensity: number;
+  interval: number;
 }
 
 export interface Guidance extends Component {
@@ -23,8 +24,8 @@ export interface Guidance extends Component {
   kdtree: KDNode | null;
 
   updateState(timeDelta: number): State;
-  setIntensityNear(newState: State): State;
-  setIntensityContact(newState: State, timeDelta: number): State;
+  setIntensityNear(newState: State, timeDelta: number): State;
+  setIntensityContact(newState: State): State;
 }
 
 export const guideComponent: Partial<Guidance> = {
@@ -34,6 +35,7 @@ export const guideComponent: Partial<Guidance> = {
     currDistance: HAPTIC_RANGE,
     currDistanceScaled: (HAPTIC_RANGE - COLLISION_DISTANCE) * (HAPTIC_RANGE) / (HAPTIC_RANGE - COLLISION_DISTANCE),
     intensity: 0,
+    interval: 1000
   },
 
   pointPositions: [],
@@ -80,12 +82,12 @@ export const guideComponent: Partial<Guidance> = {
     // If a datapoint is within haptic range, send haptic feedback based on its proximity
     // - uses a combination of quadratic functions to map proximity to haptic intensity
     else if (COLLISION_DISTANCE < newState.currDistance && newState.currDistance < HAPTIC_RANGE){
-      newState = this.setIntensityNear(newState);
+      newState = this.setIntensityNear(newState, timeDelta);
     }
     // If the controller is touching a data point, fire haptics in an on-off sequence of duration INTERVAL_DURATION
     // - uses timeDelta to maintain interval consistency between frame refresh rate changes
     else {
-      newState = this.setIntensityContact(newState, timeDelta);
+      newState = this.setIntensityContact(newState);
     }
     return newState;
   },
@@ -98,13 +100,23 @@ export const guideComponent: Partial<Guidance> = {
    * - the distance is also scaled, to a range from 0 to the haptic range, in order to map to the desired intensity values
    * @param newState the state variable being genrated from the current frame
    */
-  setIntensityNear(newState){
-    // Translates distance from COLLISION_DISTANCE -> HAPTIC_RANGE to 0 -> HAPTIC_RANGE, for use in intensity calculations
+  setIntensityNear(newState, timeDelta){
+    newState.currInterval -= timeDelta;
     newState.currDistanceScaled =
       (newState.currDistance - COLLISION_DISTANCE) * (HAPTIC_RANGE) / (HAPTIC_RANGE - COLLISION_DISTANCE);
-    newState.intensity = Math.max(
-      Math.pow((newState.currDistanceScaled - HAPTIC_RANGE) / (HAPTIC_RANGE * 2), HAPTIC_EXPONENT),
-      Math.pow((newState.currDistanceScaled - HAPTIC_RANGE) / HAPTIC_RANGE, HAPTIC_EXPONENT * HAPTIC_GROWTH_MODIFIER));
+    if (newState.currInterval > newState.interval / 2){
+      newState.interval = 1000 - 950 * Math.pow((newState.currDistanceScaled - HAPTIC_RANGE) / HAPTIC_RANGE, HAPTIC_EXPONENT),
+      newState.intensity = 1;
+    }
+    else{
+      newState.intensity = 0;
+      console.log('in the back');
+      console.log(newState.currInterval);
+      console.log(newState.interval);
+    }
+    if (newState.currInterval <= 0){
+      newState.currInterval = newState.interval;
+    }
     return newState;
   },
 
@@ -115,12 +127,8 @@ export const guideComponent: Partial<Guidance> = {
    * @param newState the state variable being genrated from the current frame
    * @param timeDelta the real world time elapsed since the previous frame
    */
-  setIntensityContact(newState, timeDelta){
-    newState.currInterval -= timeDelta;
-    newState.intensity = (newState.currInterval > INTERVAL_DURATION / 2) ? 1 : 0;
-    if (newState.currInterval <= 0){
-      newState.currInterval = INTERVAL_DURATION;
-    }
+  setIntensityContact(newState){
+    newState.intensity = 1;
     return newState;
   }
 };

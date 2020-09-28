@@ -114,7 +114,8 @@ export class Hapticplot{
       //    elements & # DOM elements don't match
       .data(this.data).enter().append(this.shape)
       // Adds given color property to all points
-      .attr('color', defaultColor)
+      .attr('color', 'orange')
+      .attr('material', 'metalness: 0.4;')
       // Sets points radius property
       .attr('radius', size)
       // Enables controller interaction with points using superhands' tags
@@ -255,7 +256,7 @@ export class Hapticplot{
   private createSky(){
     const aSky = document.createElement('a-sky');
     this.container!.appendChild(aSky);
-    d3.select(this.container).selectAll('a-sky').attr('color', SKY_COLOR);
+    d3.select(this.container).selectAll('a-sky').attr('src', "#diffuse");
   }
 
   /**
