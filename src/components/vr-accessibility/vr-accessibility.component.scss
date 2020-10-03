@@ -1,0 +1,41 @@
+@import "../../utils/constants";
+
+:host {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+
+  .card-container {
+    align-items: flex-start;
+    display: flex;
+    flex: 1 0;
+    flex-wrap: wrap;
+    justify-content: center;
+    overflow-y: auto;
+    padding-top: 1rem;
+    padding-left: 1rem;
+
+    > * {
+      margin-bottom: 1rem;
+      margin-right: 1rem;
+    }
+  }
+
+  .sidebar {
+    border-right: 1px solid $color-border;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 1rem;
+    width: 20rem;
+
+    .sidebar-title {
+      font-size: $font-size-large;
+      margin: 1rem 0;
+    }
+  }
+
+  .a-scene {
+    position: absolute;
+    height: 90vh;
+  }
+}

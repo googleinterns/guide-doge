@@ -6,12 +6,27 @@ import { Hapticplot } from '../d3/hapticplot.d3';
 import { Entity, Scene } from 'aframe';
 import { Vector3 } from 'three';
 import * as helpers from './kdtree-testhelpers';
+import { VRScatterPoint } from 'src/datasets/queries/vr.query';
 
 describe('haptic plot with kd tree selection', () => {
   const shape = 'a-sphere';
   let scene: HTMLElement;
   let controller: HTMLElement;
   let hapticplot: Hapticplot;
+  const hapticPlotData0: VRScatterPoint[]  = [];
+  const hapticPlotData1: VRScatterPoint[]  = [
+    {categories: {}, x: 0, y: 10, z: 0}
+  ];
+  const hapticPlotData2: VRScatterPoint[]  = [
+    {categories: {}, x: 0, y: 0, z: 0},
+    {categories: {}, x: 0, y: 10, z: 0},
+    {categories: {}, x: 0, y: 20, z: 0},
+  ];
+  const hapticPlotData3: VRScatterPoint[]  = [
+    {categories: {}, x: 1, y: -4, z: 45},
+    {categories: {}, x: -32.34, y: -5, z: 3},
+    {categories: {}, x: 23, y: -45, z: 3},
+  ];
 
   beforeEach( () =>  {
     // Scene and Controller Mock Setup
@@ -28,128 +43,77 @@ describe('haptic plot with kd tree selection', () => {
   });
 
   it('kdtree for an empty set of data points is null', () => {
-    const dataArray = [];
-    hapticplot.init(scene, dataArray);
-    expect(helpers.get3DTree(scene, shape)).toEqual(null);
+    const promise =  helpers.get3DTreeAsync(hapticplot, scene, hapticPlotData0, shape);
+    promise.then((tree) => expect(tree).toEqual(null));
   });
 
   it('builds a correct k-d tree for a scene with a single datapoints', () => {
-    const dataArray = [10];
-    hapticplot.init(scene, dataArray);
-    expect(helpers.get3DTree(scene, shape)).toEqual({
-      position: new Vector3(0, 1.7, -0.35),
+    const promise =  helpers.get3DTreeAsync(hapticplot, scene, hapticPlotData1, shape);
+    promise.then((tree) => expect(tree).toEqual({
+      position: new Vector3(0, 1, -0.35),
       left: null,
-      right: null });
+      right: null
+    }));
   });
 
-  it('builds a correct k-d tree of 4 datapoints', () => {
-    const dataArray = [10, 15, 20, 25];
-    hapticplot.init(scene, dataArray);
-    expect(helpers.get3DTree(scene, shape)).toEqual({
-      position: new Vector3(0.35, 1.56, -0.35),
+  it('builds a correct k-d tree of multiple datapoints', () => {
+    const promise =  helpers.get3DTreeAsync(hapticplot, scene, hapticPlotData2, shape);
+    promise.then((tree) => expect(tree).toEqual({
+      position: new Vector3(0, 1, -0.35),
       left: {
-        position: new Vector3(0.175, 1.42, -0.35),
-        left: {
-          position: new Vector3(0, 1.28, -0.35),
-          left: null,
-          right: null,
-        },
-        right: null,
-      },
-      right: {
-        position: new Vector3( 0.5249999999999999, 1.7, -0.35),
+        position: new Vector3( 0, 0.30000000000000004, -0.35),
         left: null,
-        right: null,
-      },
-    });
-  });
-
-  it('builds a correct k-d tree of 4 datapoints with increasing and deceasing values', () => {
-    const dataArray = [10, 15, 18, 13, 9, 17];
-    hapticplot.init(scene, dataArray);
-    expect(helpers.get3DTree(scene, shape)).toEqual({
-      position: new Vector3(0.35, 1.5055555555555555, -0.35),
-      left: {
-        position: new Vector3(0.11666666666666665, 1.5833333333333335, -0.35),
-        left: {
-          position: new Vector3(0, 1.3888888888888888, -0.35),
-          left: null,
-          right: null,
-        },
-        right: {
-             position: new Vector3(0.2333333333333333, 1.7, -0.35),
-             left: null,
-             right: null,
-        }
+        right: null
       },
       right: {
-        position: new Vector3(0.5833333333333333, 1.661111111111111, -0.35),
-        left: {
-          position: new Vector3(0.4666666666666666, 1.35, -0.35),
-          left: null,
-          right: null,
-        },
-        right: null,
+        position: new Vector3( 0, 1.7, -0.35),
+        left: null,
+        right: null
       }
-    });
+    }));
   });
 
-  it('builds a correct k-d tree for a scene with multiple datapoints with the same value', () => {
-    const dataArray = [5, 5, 5, 5];
-    hapticplot.init(scene, dataArray);
-    expect(helpers.get3DTree(scene, shape)).toEqual({
-      position: new Vector3(0.35, 1.7, -0.35),
+  it('builds a correct k-d tree of negative and repeating values', () => {
+    const promise =  helpers.get3DTreeAsync(hapticplot, scene, hapticPlotData3, shape);
+    promise.then((tree) => expect(tree).toEqual({
+      position: new Vector3(0.14344054933140593, 1.7, 0.35),
       left: {
-        position: new Vector3(0.175, 1.7, -0.35),
-        left: {
-          position: new Vector3(0, 1.7, -0.35),
-          left: null,
-          right: null,
-        },
-        right: null,
+        position: new Vector3(-0.7, 1.6658536585365853, -1.0499999999999998),
+        left: null,
+        right: null
       },
       right: {
-        position: new Vector3(0.5249999999999999, 1.7, -0.35),
+        position: new Vector3(0.7, 0.30000000000000004, -1.0499999999999998),
         left: null,
-        right: null,
-      },
-    });
+        right: null
+      }
+    }));
   });
 
   it('distance to closest point is null when no points are in the scene', () => {
-    const dataArray = [];
-    hapticplot.init(scene, dataArray);
-    expect(helpers.getDistToNearestPoint(controller, scene, shape, new Vector3(0, 0, 0))).toEqual(null);
+    const promise =  helpers.getDistToNearestPointAsync(hapticplot, scene, hapticPlotData0, controller, shape);
+    promise.then((distance) => expect(distance).toEqual(null));
   });
 
-  it('correctly identifies the nearest data in a single point scene', () => {
-    const dataArray = [10];
-    hapticplot.init(scene, dataArray);
-    expect(helpers.getDistToNearestPoint(controller, scene, shape, new Vector3(0, 0, 0))).toEqual(1.735655495770978);
+  it('correctly identifies the distance to the nearest datapoint in a single point scene', () => {
+    const promise =  helpers.getDistToNearestPointAsync(hapticplot, scene, hapticPlotData1, controller, shape);
+    promise.then((distance) => expect(distance).toEqual(1.0594810050208545));
   });
 
-  it('correctly identifies the nearest data point when its positon is the same as the controllers', () => {
-    const dataArray = [10];
-    hapticplot.init(scene, dataArray);
-    expect(helpers.getDistToNearestPoint(controller, scene, shape, new Vector3(0, 1.7, -0.35))).toEqual(0);
+  it('correctly identifies the distance to the nearest datapoint when its positon is the same as the controllers', () => {
+    const promise =  helpers.getDistToTouchingPointAsync(hapticplot, scene, hapticPlotData1, controller, shape);
+    promise.then((distance) => expect(distance).toEqual(0));
   });
 
-  it('correctly identifies the nearest data point when each point has the same value', () => {
-    const dataArray = [5, 5, 5, 5];
-    hapticplot.init(scene, dataArray);
-    expect(helpers.getDistToNearestPoint(controller, scene, shape, new Vector3(0, 0, 0))).toEqual(1.735655495770978);
+  it('correctly identifies the distance to the nearest datapoint when that data point is the root of the kdtree', () => {
+    const promise =  helpers.getDistToNearestPointAsync(hapticplot, scene, hapticPlotData1, controller, shape);
+    promise.then((distance) => expect(distance).toEqual(1.0594810050208545));
   });
 
-  it('correctly identifies the nearest data point when that data point is the root of the kdtree', () => {
-    const dataArray = [5, 10, 15, 20, 25];
-    hapticplot.init(scene, dataArray);
-    expect(helpers.getDistToNearestPoint(controller, scene, shape, new Vector3(0.27999999999999997, 1.42, -0.35))).toEqual(0);
+  it('correctly identifies the distance to the nearest datapoint in multi point scene after controller movement', () => {
+    const promise =  helpers.getDistToNearestPointAfterMovementAsync(hapticplot, scene, hapticPlotData2, controller, shape);
+    promise.then((distance) => expect(distance).toEqual(100));
   });
-
-  it('moves the controllers to two different position, then correctly identifies the nearest data point', () => {
-    const dataArray = [10, 15, 20, 25];
-    hapticplot.init(scene, dataArray);
-    expect(helpers.getDistToNearestPointAfterMovement(controller, scene, shape)).toEqual(100.00088199611042);
-  });
-
 });
+
+

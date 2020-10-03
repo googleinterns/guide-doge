@@ -19,6 +19,7 @@ In an attempt to improve accessibility to data visualization, a number of experi
 - [Data Table](http://go/guide-doge-planning-doc#heading=h.bf3mxk2orms0)
 - [Text Summary](http://go/guide-doge-planning-doc#heading=h.7pel9lpwn6gb)
 - [WebVR](http://go/guide-doge-planning-doc#heading=h.nu130go3qpw9)
+- [AccessibilityVR](http://go/guide-doge-planning-doc#heading=h.chsdn7rk7qr0)
 
 ## Contributing
 
