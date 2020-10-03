@@ -9,7 +9,6 @@ import { VRScatterPoint } from 'src/datasets/queries/vr.query';
 const POINT_SIZE = 0.02;
 const DEFAULT_COLOR = '#F0A202';
 const HOVER_COLOR = 'red';
-const SKY_COLOR = '#4d4d4d';
 const ASSETS_FOLDER = 'assets/';
 const GRAPH_SIZE = 1.4;
 const DEFAULT_ORIGIN = new Vector3(0, 1, -0.35);
@@ -41,7 +40,7 @@ export class Hapticplot{
     this.setupScene();
   }
 
-  // when dataset changes, clears current set of points and grids
+  // Clears the scene, then sets up datapoints, controllers, the skybox, and the grids
   private async setupScene(){
     await this.clearPointsAndGrids();
     this.setupScales();
@@ -109,22 +108,12 @@ export class Hapticplot{
    */
   private setupPoints(defaultColor: string, hoverColor: string, size: number) {
     this.getShapes()
-      // Adds points of type this.shape to the scene
-      //  - "enter" identifies any DOM elements to be added when # array
-      //    elements & # DOM elements don't match
       .data(this.data).enter().append(this.shape)
-      // Adds given color property to all points
       .attr('color', defaultColor)
-      // Sets points radius property
       .attr('radius', size)
-      // Enables controller interaction with points using superhands' tags
       .attr('hoverable', '')
-      // Updates points positions based on ingested data
       .each((d, i , g) => this.setPosition(d, g[i]))
-      // Adds audio triggers to points based on ingested data
       .each((d, i , g) => this.setAudio(d, g[i]))
-      // Adds listeners for state change events, which trigger a change in the
-      // point's color property when a hover event occurs
       .on('hover-start',  (d, i, g) => this.onHoverStart(d, g[i], hoverColor))
       .on('hover-end',  () => this.onHoverEnd());
   }
@@ -255,7 +244,7 @@ export class Hapticplot{
   private createSky(){
     const aSky = document.createElement('a-sky');
     this.container!.appendChild(aSky);
-    d3.select(this.container).selectAll('a-sky').attr('color', SKY_COLOR);
+    d3.select(this.container).selectAll('a-sky').attr('src', '#diffuse');
   }
 
   /**
