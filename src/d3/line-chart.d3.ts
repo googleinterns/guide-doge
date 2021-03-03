@@ -3,6 +3,7 @@ import { XYChartD3 } from './xy-chart.d3';
 import { LineChartDatum } from '../components/line-chart/line-chart.component';
 import { TimeSeriesPoint } from '../datasets/metas/types';
 import { formatX } from '../utils/formatters';
+import { assertExists } from '../utils/misc';
 
 export interface LegendItemStyle {
   color: string;
@@ -32,12 +33,12 @@ export class LineChartD3 extends XYChartD3<TimeSeriesPoint, LineChartDatum> {
   protected xAxis: d3.Axis<Date>;
   protected yAxis: d3.Axis<number>;
 
-  x(value: Date) {
-    return this.scaleX(value);
+  x(value: Date): number {
+    return assertExists(this.scaleX(value));
   }
 
   y(value: number) {
-    return this.scaleY(value);
+    return assertExists(this.scaleY(value));
   }
 
   protected renderData() {

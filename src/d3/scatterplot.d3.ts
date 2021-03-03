@@ -4,6 +4,8 @@ import { VRScatterPoint } from '../datasets/queries/vr.query';
 import { MetaType } from '../datasets/metas/types';
 import { Controls } from './scatterplot-ctrls';
 import { xml } from 'd3';
+import { assertExists } from '../utils/misc';
+
 const PROXY_FLAG = '__keyboard-controls-proxy';
 const DATA_PT_RADIUS = .05;
 const ROBOTO = 'https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/roboto/Roboto-Medium.json;';
@@ -145,9 +147,9 @@ export class Scatterplot{
     .attr('radius', DATA_PT_RADIUS)
     .attr('material', 'color: #4385f4')
     .attr('position', (d: VRScatterPoint, i) => {
-      const x = this.xScale(d.x);
-      const y = this.yScale(d.y);
-      const z = this.zScale(d.z);
+      const x = assertExists(this.xScale(d.x));
+      const y = assertExists(this.yScale(d.y));
+      const z = assertExists(this.zScale(d.z));
       return `${x.toFixed(2)} ${y.toFixed(2)} ${z.toFixed(2)}`;
     })
     // addEventListeners to spheres on whether to show corresponding cards/text or not

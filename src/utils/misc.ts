@@ -59,3 +59,11 @@ export function logScale(ratio: number, min: number, max: number) {
 export function isNotNullish<T>(value: T): value is NonNullable<T> {
   return value !== undefined && value !== null;
 }
+
+export function assertExists<T>(value: T|null|undefined): T {
+  if (value !== null && value !== undefined) {
+    return value;
+  } else {
+    throw new TypeError(`assertExists: expected ${value} to exist`);
+  }
+}
