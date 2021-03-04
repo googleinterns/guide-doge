@@ -26,7 +26,7 @@ export class BarChartD3 extends XYChartD3<CategoricalPoint, BarChartDatum> {
   }
 
   x(value: number) {
-    return this.scaleX(value);
+    return this.scaleX(value) || null;
   }
 
   y(value: string) {

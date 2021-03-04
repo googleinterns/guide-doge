@@ -4,6 +4,7 @@ import { Entity, Component } from 'aframe';
 import { sanitizeUrl } from '@braintree/sanitize-url';
 import { Vector3 } from 'three';
 import { BaseType } from 'd3';
+import { assertExists } from '../utils/misc';
 
 const POINT_SIZE = 0.02;
 const DEFAULT_COLOR = '#F0A202';
@@ -91,7 +92,7 @@ export class Hapticplot{
    */
   private setPosition(datum, index, point){
     const x = this.graphOffset.x + ((GRAPH_SIZE / 2) / this.data.length) * index;
-    const y = this.graphOffset.y + this.graphScale(datum);
+    const y = this.graphOffset.y + assertExists(this.graphScale(datum));
     const z = this.graphOffset.z;
     (point as Entity).object3D.position.set(x, y, z);
   }
@@ -102,7 +103,7 @@ export class Hapticplot{
    * @param point The point who's position is being set
    */
   private setAudio(datum: number, point: BaseType){
-    const sanitizedUrl = sanitizeUrl(`${ASSETS_FOLDER}marimbaNotes/${Math.round(this.audioScale(datum))}.mp3`);
+    const sanitizedUrl = sanitizeUrl(`${ASSETS_FOLDER}marimbaNotes/${Math.round(assertExists(this.audioScale(datum)))}.mp3`);
     d3.select(point)
       .attr('sound', `src: url(${sanitizedUrl}); on: hover-start`);
   }
