@@ -36,7 +36,7 @@
     "@angular/platform-browser": "~9.1.7",
     "@angular/platform-browser-dynamic": "~9.1.7",
     "@angular/router": "~9.1.7",
-    "@braintree/sanitize-url": "^4.1.1",
+    "@braintree/sanitize-url": "^6.0.1",
     "@types/aframe": "^1.0.1",
     "aframe": "^1.0.4",
     "aframe-extras": "^6.1.0",
