@@ -41,7 +41,7 @@
     "aframe": "^1.0.4",
     "aframe-extras": "^6.1.0",
     "aframe-haptics-component": "^1.6.1",
-    "axios": "^0.21.2",
+    "axios": "^0.28.0",
     "chroma-js": "^2.1.0",
     "d3": "^5.16.0",
     "espeak": "0.0.3",
